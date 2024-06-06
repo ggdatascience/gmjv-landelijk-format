@@ -1,0 +1,147 @@
+---
+title: ""
+author: ""
+format:
+  html:
+    page-layout: full
+    css: custom.css
+    toc: TRUE
+    toc-location: left
+    embed-resources: true
+editor: visual
+---
+
+```{r, echo=F, message=F}
+library(gt)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+
+source("hulpfuncties.R")
+# Links naar dingen IN het document maken (maakt dat uit als we en TOC hebben? Misschien voor PDF?) 
+#https://quarto.org/docs/authoring/cross-references-custom.html
+
+
+#TODO Hier later SPSS data inlezen
+#Nu nepdata genereren 
+
+vars = c("ziek_thuis","school_leuk","gespijbeld","school_zinloos","school_gepest")
+regios = paste0("GGD",seq(1:25))
+geslacht = c("Jongen","Meisje","Anders")
+klas = c("Klas 2","Klas 4")
+
+dataframe <- expand.grid(vars, regios, geslacht, klas)
+
+names(dataframe) <- c("variabele","regio","geslacht","klas")
+
+dataframe <- dataframe %>% 
+  rowwise() %>% 
+  mutate(
+  n_observaties = sample(1:200,1),
+  ja = round(n_observaties / sample(1.3:n_observaties/1.1,1)),
+  onze_regio = case_when(regio == "GGD1" ~ "Bij ons",
+                         TRUE ~ "De rest van NL")
+  
+  )
+
+
+
+
+```
+
+::: voorblad_achtergrond
+![](voorblad_alles.png)
+
+::: voorblad_gemeentenaam
+Rapportnaam
+:::
+
+::: voorblad_datum
+`r Sys.Date()`
+:::
+:::
+
+{{< pagebreak >}}
+
+::: pagina_header_img
+![](header_pagina.png)
+
+::: pagina_header_titel
+# Toelichting
+:::
+:::
+
+**Afname Gezondheidsmonitor Jeugd 2023**
+
+De Gezondheidsmonitor Jeugd is in het najaar van 2023 afgenomen onder jongeren in leerjaar 2 en 4 van het RVO. Op de volgende pagina’s zijn de belangrijkste resultaten van uw gemeente afgezet tegen het gemiddelde van uw GGD regio.
+
+Vanwege de betrouwbaarheid van de resultaten en de privacy van de respondenten hanteren wij bij de rapportage een minimum van 30 respondenten die de vraag ingevuld hebben en een minimum van 5 respondenten per specifiek antwoord. Indien de aantallen lager liggen, worden de cijfers niet weergegeven.
+
+```{r, echo=F}
+
+maak_responstabel()
+
+```
+
+{{< pagebreak >}}
+
+::: pagina_header_img
+![](header_pagina.png)
+
+::: pagina_header_titel
+# 2. School
+:::
+:::
+
+::: {layout="[[30,30,30],[30,30,30]]"}
+::: column
+Jongeren brengen een groot deel van hun tijd door op school. Op school doen jongeren kennis en vaardigheden op die belangrijk zijn voor hun ontwikkeling. Maar ook doen ze sociale contacten op en maken ze vrienden. Wanneer jongeren worden gepest, kan dit negatieve gevolgen hebben voor hun sociaal-emotionele gezondheid. In de monitor is gevraagd naar de schoolbeleving, ziekteverzuim, spijbelen en pesten.
+:::
+
+::: column
+```{r, echo=F}
+dataframe %>% 
+maak_staafdiagram_schoolprofiel(
+  var_inhoud = "ziek_thuis",
+  var_crossings = "geslacht",
+  titel = "ziek thuis ofzo")
+```
+:::
+
+::: column
+```{r, echo=F}
+dataframe %>% 
+maak_staafdiagram_schoolprofiel(var_inhoud = "school_leuk",
+                                var_crossings = "klas",
+                                titel = "school is superleuk")
+```
+:::
+
+::: column
+```{r, echo=F}
+dataframe %>% maak_staafdiagram_schoolprofiel(
+  var_inhoud = "gespijbeld",
+  var_crossings = c("geslacht","klas"),
+  titel = "SPIJBELEN"
+  
+)
+```
+:::
+
+::: column
+```{r, echo=F}
+dataframe %>% maak_staafdiagram_schoolprofiel(
+  var_inhoud = "school_zinloos",
+  var_crossings = c("geslacht","klas", "onze_regio"),
+  titel = "Vindt naar school gaan zinloos") + theme(legend.text = element_text(
+    margin = margin(r = 30, unit = "pt")))
+```
+:::
+
+::: column
+```{r, echo=F}
+maak_staafdiagram_schoolprofiel(
+  "Is de afgelopen 3 maanden gepest op school")
+```
+:::
+:::
