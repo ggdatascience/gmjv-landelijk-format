@@ -101,10 +101,11 @@ Jongeren brengen een groot deel van hun tijd door op school. Op school doen jong
 ::: column
 ```{r, echo=F}
 dataframe %>% 
-maak_staafdiagram_schoolprofiel(
-  var_inhoud = "ziek_thuis",
-  var_crossings = "geslacht",
-  titel = "ziek thuis ofzo")
+   maak_staafdiagram_dubbele_uitsplitsing(
+     var_inhoud = "ziek_thuis", 
+     var_crossing_groep = "geslacht",
+     var_crossing_kleur = "klas")
+
 ```
 :::
 
@@ -119,10 +120,11 @@ maak_staafdiagram_schoolprofiel(var_inhoud = "school_leuk",
 
 ::: column
 ```{r, echo=F}
-dataframe %>% maak_staafdiagram_schoolprofiel(
+dataframe %>% maak_staafdiagram_vergelijking(
   var_inhoud = "gespijbeld",
-  var_crossings = c("geslacht","klas"),
-  titel = "SPIJBELEN"
+  var_crossings = c("onze_regio"),
+  titel = "SPIJBELEN",
+  kleuren_grafiek = c("#009898","#E8525F")
   
 )
 ```
@@ -145,3 +147,52 @@ maak_staafdiagram_schoolprofiel(
 ```
 :::
 :::
+
+{{< pagebreak >}}
+
+```{r}
+#Staafdiagram met dubbele uitsplitsing
+dataframe %>% 
+   maak_staafdiagram_dubbele_uitsplitsing(
+     titel = "Staafdiagram met dubbele uitsplitsing",
+     var_inhoud = "ziek_thuis", 
+     var_crossing_groep = "geslacht",
+     var_crossing_kleur = "klas")
+
+
+```
+
+```{r}
+dataframe %>% maak_staafdiagram_vergelijking(
+  var_inhoud = "gespijbeld",
+  var_crossings = c("onze_regio"),
+  titel = "SPIJBELEN",
+  #Je kan de kleuren zelf aanpassen als je wilt
+  kleuren_grafiek = c("#009898","#E8525F")
+)
+```
+
+```{r}
+#Kan ook voor meerdere vergelijkingen naast elkaar gebruikt worden
+dataframe %>% maak_staafdiagram_vergelijking(
+  var_inhoud = "gespijbeld",
+  var_crossings = c("onze_regio","klas"),
+  titel = "SPIJBELEN!!!!",
+  #Je kan de kleuren zelf aanpassen als je wilt
+  kleuren_grafiek = c("#009898","#E8525F")
+)
+```
+
+```{r}
+
+#voor staafdiagram met meerdere staven; niet-dichotome onzindata genereren
+
+dataframe$reden1 <- round(dataframe$n_observaties / (sample(1:15)))
+dataframe$reden2 <- round((dataframe$n_observaties-dataframe$reden1) / (sample(1:15)))
+dataframe$reden3 <- dataframe$n_observaties - dataframe$reden1 - dataframe$reden2 
+
+
+#Te omslachtig voor droogzwemmen
+#TODO reelere nepdata maken vanaf het begin.
+  
+```
