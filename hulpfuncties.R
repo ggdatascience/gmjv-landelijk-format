@@ -4,9 +4,6 @@ library(ggplot2)
 library(tidyr)
 
 
-#Test aanpassing
-
-
 maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_groep, var_crossing_kleur, titel = "",
                                                    kleuren_grafiek = c("#009898","#91caca","#009428")){
   
@@ -214,3 +211,29 @@ maak_staafdiagram_meerdere_staven <- function(df, var_inhoud, var_crossings, tit
           axis.line.y.left = element_line(linewidth = 1)
     )
 }
+
+
+# Functie maken om cijfers te berekenen.
+# Gebaseerd op functie uitrapportage monitor GMJ 2023.
+# Zie https://github.com/ggdatascience/rapportage_monitor_gmj 
+# TODO verder gaan, dit is pas het begin van de code.
+
+bereken_cijfers <- function(data, indicator, niveau_indicator, niveau_waarde, 
+                            jaar_indicator, jaar, uitsplitsing, groepering, 
+                            weegfactor_indicator) {
+  data %>%
+    filter(.[niveau_indicator] == niveau_waarde & .[jaar_indicator] == jaar) %>%
+    select(all_of(setdiff(c(jaar_indicator, indicator, uitsplitsing, groepering, weegfactor_indicator), NA)))
+}
+
+# Testen functie
+bereken_cijfers(data = monitor_df, 
+                indicator = 'GZGGA402',
+                niveau_indicator = 'Gemeentecode',
+                niveau_waarde = 2,
+                jaar_indicator = 'AGOJB401',
+                jaar = 2022,
+                uitsplitsing = 'AGGSA402', 
+                groepering = 'AGLFA401', 
+                weegfactor_indicator = "Standaardisatiefactor")
+
