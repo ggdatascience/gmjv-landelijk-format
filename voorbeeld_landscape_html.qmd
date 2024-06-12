@@ -16,7 +16,9 @@ library(gt)
 library(dplyr)
 library(ggplot2)
 library(tidyr)
-
+library(haven)
+library(labelled)
+options(dplyr.summarise.inform = FALSE)
 source("hulpfuncties.R")
 # Links naar dingen IN het document maken (maakt dat uit als we en TOC hebben? Misschien voor PDF?) 
 #https://quarto.org/docs/authoring/cross-references-custom.html
@@ -79,7 +81,7 @@ Rapportnaam
 ![](header_pagina.png)
 
 ::: pagina_header_titel
-# Toelichting
+# 1. Toelichting
 :::
 :::
 
@@ -91,7 +93,8 @@ Vanwege de betrouwbaarheid van de resultaten en de privacy van de respondenten h
 
 ```{r, echo=F}
 
-maak_responstabel()
+#TODO tabelfunctie ombouwen naar test-monitordata
+#monitor_df %>% maak_responstabel(crossings = "geslacht_2cat","leeftijd_3cat")
 
 ```
 

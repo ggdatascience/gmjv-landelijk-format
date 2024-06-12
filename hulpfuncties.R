@@ -4,6 +4,7 @@ library(ggplot2)
 library(tidyr)
 
 
+#Test aanpassing
 
 
 maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_groep, var_crossing_kleur, titel = "",
@@ -148,9 +149,6 @@ maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel 
      ) 
  }
 
-
-#TODO
-#TEST MET EN ZONDER CROSSING
 maak_staafdiagram_meerdere_staven <- function(df, var_inhoud,var_crossing = NULL, 
                                               titel = "",
                                               kleuren_grafiek = c("#009898","#91caca","#009428"),
