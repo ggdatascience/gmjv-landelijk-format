@@ -4,6 +4,7 @@ library(ggplot2)
 library(tidyr)
 
 
+#Test aanpassing
 
 
 maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_groep, var_crossing_kleur, titel = "",
