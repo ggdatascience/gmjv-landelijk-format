@@ -32,6 +32,29 @@ file_path = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
 monitor_df = haven::read_spss(file_path,user_na =T) %>%
   labelled::user_na_to_na()
 
+#Vreselijke varcodes hernoemen naar iets leesbaars
+names(monitor_df) <- c("jaar","standaardisatiefactor","leeftijd_3cat","leeftijd_2cat","gender_3cat","gender_2cat","ggd_regio","ggd_regio_utrecht_samen","gemeentecode","stedelijkheid","migratie_3cat","opleiding","opleiding_4cat","opleiding_3cat","opleiding_2cat","ervaren_gezondheid_goed","psychische_klachten", "tevreden_zelf_3cat","tevreden_lichaam_3cat","tevreden_leven_3cat","vaak_stress","vertrouwen_toekomst_3cat","bezorgd_werkgelegenheid","bezorgd_woningmarkt","bezorgd_klimaat","bezorgd_discriminatie","bezorgd_polarisatie","bezorgd_oorlogen","eenzaamheid_3cat","is_eenzaam","sterk_eenzaam",
+                       "NIEUS101"#? Wat is dit
+                       )
+
+
+
+#Er is niet goed aangegeven wat missing is in SPSS.
+#tijdelijke functie om 9 Onbekend te verwijderen
+
+verwijder_9_onbekend <- function(data, var){
+  value_labels <- val_labels(data[[var]])
+  value_labels <- value_labels[value_labels!= 9]
+  val_labels(data[[var]]) <- value_labels
+
+  return(data)
+}
+
+for(var in names(monitor_df)){
+  
+  monitor_df <- monitor_df %>% verwijder_9_onbekend(var)
+
+}
 
 #TODO Afhankelijk van keuze werkgroep nog met survey:: conf. intervals & gewogen aantallen uitrekenen. 
 ```
@@ -91,10 +114,10 @@ Jongeren brengen een groot deel van hun tijd door op school. Op school doen jong
 ```{r, echo=F}
 monitor_df %>% 
    maak_staafdiagram_dubbele_uitsplitsing(
-     var_inhoud = "sport", 
-     var_crossing_groep = "geslacht",
+     var_inhoud = "vaak_stress", 
+     var_crossing_groep = "gender_2cat",
      var_crossing_kleur = "leeftijd_2cat",
-     titel = "SPORT")
+     titel = "STRESS!")
 
 ```
 :::
@@ -103,8 +126,8 @@ monitor_df %>%
 ```{r, echo=F}
 monitor_df %>% 
    maak_staafdiagram_dubbele_uitsplitsing(
-     var_inhoud = "sport", 
-     var_crossing_groep = "geslacht",
+     var_inhoud = "vaak_stress", 
+     var_crossing_groep = "gender_2cat",
      var_crossing_kleur = "leeftijd_3cat",
      titel = "SPORT?")
 ```
@@ -113,9 +136,9 @@ monitor_df %>%
 ::: column
 ```{r, echo=F}
 monitor_df %>% maak_staafdiagram_vergelijking(
-  var_inhoud = "sport",
-  var_crossings = "geslacht",
-  titel = "SPOOOORTTSS",
+  var_inhoud = "is_eenzaam",
+  var_crossings = "gender_2cat",
+  titel = "Eenzaam",
   kleuren_grafiek = c("#009898","#E8525F")
   
 )
@@ -124,17 +147,21 @@ monitor_df %>% maak_staafdiagram_vergelijking(
 
 ::: column
 ```{r, echo=F}
-monitor_df %>% maak_staafdiagram_vergelijking(
-  var_inhoud = "sport",
-  var_crossings = c("leeftijd_3cat"),
-  titel = "Vindt naar school gaan zinloos") 
+monitor_df %>% 
+   maak_staafdiagram_dubbele_uitsplitsing(
+     var_inhoud = "bezorgd_klimaat", 
+     var_crossing_groep = "leeftijd_3cat",
+     var_crossing_kleur = "gender_2cat",
+     titel = "Zorgen over klimaat?")
 ```
 :::
 
 ::: column
 ```{r, echo=F}
-maak_staafdiagram_schoolprofiel(
-  "Is de afgelopen 3 maanden gepest op school")
+monitor_df %>% maak_staafdiagram_vergelijking(
+  var_inhoud = "vaak_stress",
+  var_crossings = c("gender_2cat","leeftijd_2cat"),
+  titel = "meer stress")
 ```
 :::
 :::
@@ -143,20 +170,20 @@ maak_staafdiagram_schoolprofiel(
 
 ```{r}
 #Staafdiagram met dubbele uitsplitsing
-dataframe %>% 
+monitor_df %>% 
    maak_staafdiagram_dubbele_uitsplitsing(
      titel = "Staafdiagram met dubbele uitsplitsing",
-     var_inhoud = "ziek_thuis", 
-     var_crossing_groep = "geslacht",
-     var_crossing_kleur = "klas")
+     var_inhoud = "vaak_stress", 
+     var_crossing_groep = "gender_2cat",
+     var_crossing_kleur = "leeftijd_2cat")
 
 
 ```
 
 ```{r}
-dataframe %>% maak_staafdiagram_vergelijking(
-  var_inhoud = "gespijbeld",
-  var_crossings = c("onze_regio"),
+monitor_df %>% maak_staafdiagram_vergelijking(
+  var_inhoud = "is_eenzaam",
+  var_crossings = c("gender_2cat"),
   titel = "SPIJBELEN",
   #Je kan de kleuren zelf aanpassen als je wilt
   kleuren_grafiek = c("#009898","#E8525F")
@@ -165,25 +192,43 @@ dataframe %>% maak_staafdiagram_vergelijking(
 
 ```{r}
 #Kan ook voor meerdere vergelijkingen naast elkaar gebruikt worden
-dataframe %>% maak_staafdiagram_vergelijking(
-  var_inhoud = "gespijbeld",
-  var_crossings = c("onze_regio","klas"),
-  titel = "SPIJBELEN!!!!",
+monitor_df %>% maak_staafdiagram_vergelijking(
+  var_inhoud = "bezorgd_oorlogen",
+  var_crossings = c("gender_2cat","leeftijd_2cat"),
+  titel = "Zorgen over oorlog",
   #Je kan de kleuren zelf aanpassen als je wilt
   kleuren_grafiek = c("#009898","#E8525F")
 )
 ```
 
 ```{r}
+monitor_df %>% 
+  maak_staafdiagram_meerdere_staven(
+    var_inhoud = "tevreden_lichaam_3cat",
+    titel = "Tevreden over Lichaam"
+  )
+```
 
-#voor staafdiagram met meerdere staven; niet-dichotome onzindata genereren
+```{r}
 
-dataframe$reden1 <- round(dataframe$n_observaties / (sample(1:15)))
-dataframe$reden2 <- round((dataframe$n_observaties-dataframe$reden1) / (sample(1:15)))
-dataframe$reden3 <- dataframe$n_observaties - dataframe$reden1 - dataframe$reden2 
+monitor_df %>% 
+  maak_staafdiagram_meerdere_staven(
+    var_inhoud = "tevreden_lichaam_3cat",
+    var_crossing = "leeftijd_2cat",
+    titel = "Tevreden over Lichaam"
+  )
+```
 
+```{r}
+monitor_df %>% 
+  maak_staafdiagram_meerdere_staven(
+    var_inhoud = "tevreden_lichaam_3cat",
+    var_crossing = "leeftijd_2cat",
+    titel = "Tevreden over Lichaam",
+    flip = TRUE
+  )
+```
 
-#Te omslachtig voor droogzwemmen
-#TODO reelere nepdata maken vanaf het begin.
-  
+```{r}
+
 ```
