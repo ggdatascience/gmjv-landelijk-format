@@ -26,7 +26,7 @@ source("hulpfuncties.R")
 #Nu nepdata genereren 
 
 #SPSS data inlezen
-file_path = "fictieve_data.sav"
+file_path = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
 
 
 monitor_df = haven::read_spss(file_path,user_na =T) %>%
