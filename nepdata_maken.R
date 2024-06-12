@@ -1,16 +1,15 @@
 library(haven)
 library(labelled)
 library(dplyr)
-
-file_path = "" #een .sav bestand
+file_path = "C:/Users/p.seinen/Het Servicecentrum/HVB T Onderzoek - Documenten/Monitors en screening/Jongvolwassenenmonitor/2022/databestand/Analyses HvB/Rapportage/Regiobestand_CGMJV2022_GGD Hart voor Brabant_versie 4.sav"
 
 data = haven::read_spss(file_path,user_na =T) %>%
   labelled::user_na_to_na()
 
 #Wat achtegrond & inhoudelijke variabelen selecteren
-data <- data %>% select(Geslacht_standaardisatie, AGLFA401, Gemeentecode, GGDregio, AGOWS403, LFBWA403, OJWHB407)
+data <- data %>% select(Geslacht_standaardisatie, AGLFA401,AGLFA402, Gemeentecode, GGDregio, AGOWS403, LFBWA403, OJWHB407)
 
-names(data) <- c("geslacht","leeftijd_3cat","gemeentecode","ggdregio","opleiding_3cat","sport","weerbaarheid")
+names(data) <- c("geslacht","leeftijd_3cat","leeftijd_2cat", "gemeentecode","ggdregio","opleiding_3cat","sport","weerbaarheid")
 
 #Simpele variabelnamen namen
 var_label(data$geslacht) <- "Geslacht"
@@ -27,7 +26,7 @@ randomiseer_variabelen <- function(data, var){
   huidig_var_label <- var_label(data[[var]])
   huidig_value_labels <- val_labels(data[[var]])
   
-  nieuwe_waarden <- sample(unname(value_labels),nrow(data),replace = T)
+  nieuwe_waarden <- sample(unname(huidig_value_labels),nrow(data),replace = T)
   
   data[[var]] <- nieuwe_waarden
 

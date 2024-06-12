@@ -25,29 +25,18 @@ source("hulpfuncties.R")
 #TODO Hier later SPSS data inlezen
 #Nu nepdata genereren 
 
-vars = c("ziek_thuis","school_leuk","gespijbeld","school_zinloos","school_gepest")
-regios = paste0("GGD",seq(1:25))
-geslacht = c("Jongen","Meisje","Anders")
-klas = c("Klas 2","Klas 4")
-
-dataframe <- expand.grid(vars, regios, geslacht, klas)
-
-names(dataframe) <- c("variabele","regio","geslacht","klas")
-
-dataframe <- dataframe %>% 
-  rowwise() %>% 
-  mutate(
-  n_observaties = sample(1:200,1),
-  ja = round(n_observaties / sample(1.3:n_observaties/1.1,1)),
-  onze_regio = case_when(regio == "GGD1" ~ "Bij ons",
-                         TRUE ~ "De rest van NL")
-  
-  )
+#SPSS data inlezen
+file_path = "fictieve_data.sav"
 
 
+monitor_df = haven::read_spss(file_path,user_na =T) %>%
+  labelled::user_na_to_na()
 
 
+#TODO Afhankelijk van keuze werkgroep nog met survey:: conf. intervals & gewogen aantallen uitrekenen. 
 ```
+
+\
 
 ::: voorblad_achtergrond
 ![](voorblad_alles.png)
@@ -100,30 +89,33 @@ Jongeren brengen een groot deel van hun tijd door op school. Op school doen jong
 
 ::: column
 ```{r, echo=F}
-dataframe %>% 
+monitor_df %>% 
    maak_staafdiagram_dubbele_uitsplitsing(
-     var_inhoud = "ziek_thuis", 
+     var_inhoud = "sport", 
      var_crossing_groep = "geslacht",
-     var_crossing_kleur = "klas")
+     var_crossing_kleur = "leeftijd_2cat",
+     titel = "SPORT")
 
 ```
 :::
 
 ::: column
 ```{r, echo=F}
-dataframe %>% 
-maak_staafdiagram_schoolprofiel(var_inhoud = "school_leuk",
-                                var_crossings = "klas",
-                                titel = "school is superleuk")
+monitor_df %>% 
+   maak_staafdiagram_dubbele_uitsplitsing(
+     var_inhoud = "sport", 
+     var_crossing_groep = "geslacht",
+     var_crossing_kleur = "leeftijd_3cat",
+     titel = "SPORT?")
 ```
 :::
 
 ::: column
 ```{r, echo=F}
-dataframe %>% maak_staafdiagram_vergelijking(
-  var_inhoud = "gespijbeld",
-  var_crossings = c("onze_regio"),
-  titel = "SPIJBELEN",
+monitor_df %>% maak_staafdiagram_vergelijking(
+  var_inhoud = "sport",
+  var_crossings = "geslacht",
+  titel = "SPOOOORTTSS",
   kleuren_grafiek = c("#009898","#E8525F")
   
 )
@@ -132,11 +124,10 @@ dataframe %>% maak_staafdiagram_vergelijking(
 
 ::: column
 ```{r, echo=F}
-dataframe %>% maak_staafdiagram_schoolprofiel(
-  var_inhoud = "school_zinloos",
-  var_crossings = c("geslacht","klas", "onze_regio"),
-  titel = "Vindt naar school gaan zinloos") + theme(legend.text = element_text(
-    margin = margin(r = 30, unit = "pt")))
+monitor_df %>% maak_staafdiagram_vergelijking(
+  var_inhoud = "sport",
+  var_crossings = c("leeftijd_3cat"),
+  titel = "Vindt naar school gaan zinloos") 
 ```
 :::
 
