@@ -2,9 +2,8 @@ library(gt)
 library(dplyr)
 library(ggplot2)
 library(tidyr)
-
-
-#Test aanpassing
+library(stringr) # Voor str_replace
+library(labelled) # Package om te werken met datalabels, o.a. voor to_character()
 
 
 maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_groep, var_crossing_kleur, titel = "",
@@ -238,3 +237,61 @@ maak_staafdiagram_meerdere_staven <- function(df, var_inhoud,var_crossing = NULL
   plot
  
 }
+
+
+# Functie maken om cijfers te berekenen.
+# Gebaseerd op functie uitrapportage monitor GMJ 2023.
+# Zie https://github.com/ggdatascience/rapportage_monitor_gmj 
+# TODO verder gaan, dit is pas het begin van de code.
+
+bereken_cijfers <- function(data, indicator, waarde, omschrijving, niveau_indicator, niveau_waarde, 
+                            niveau_naam, jaar_indicator, jaar, uitsplitsing, groepering, 
+                            weegfactor_indicator = "geen", Nvar, Ncel) {
+  data %>%
+    filter(.[niveau_indicator] == niveau_waarde & .[jaar_indicator] == jaar) %>%
+    select(all_of(setdiff(c(jaar_indicator, indicator, uitsplitsing, groepering, weegfactor_indicator), NA))) %>%
+    group_by(across(all_of(setdiff(c(jaar_indicator, indicator, uitsplitsing, groepering), NA)))) %>%
+    {if(weegfactor_indicator == "geen") . else rename_at(., vars(matches(weegfactor_indicator)), ~ str_replace(., weegfactor_indicator, 'weegfactor'))} %>%
+    summarise(n_cel = n(), 
+              n_cel_gewogen = ifelse(weegfactor_indicator == 'geen', NA, sum(weegfactor)), 
+              .groups = 'drop') %>%
+    drop_na(-n_cel_gewogen) %>%
+    group_by(across(all_of(setdiff(c(jaar_indicator, uitsplitsing, groepering), NA)))) %>%
+    mutate(n_totaal = sum(n_cel),
+           n_totaal_gewogen = sum(n_cel_gewogen),
+           n_min = n_totaal-n_cel,
+           p = ifelse(test = n_totaal < Nvar | n_cel < Ncel | n_min < Ncel | n_cel == n_totaal, 
+                      yes = NA, 
+                      no = if(weegfactor_indicator == 'geen') n_cel/n_totaal else n_cel_gewogen/n_totaal_gewogen) %>% as.numeric(),
+           indicator = indicator,
+           omschrijving = omschrijving,
+           niveau = niveau_naam) %>%
+    {if(is.na(waarde)) . else filter_at(., vars(all_of(indicator)), function(x) x %in% waarde)} %>%
+    ungroup() %>%
+    rename(jaar = 1, aslabel = 2) %>%
+    {if(!is.na(omschrijving)) mutate(., aslabel = omschrijving) # TODO deze drie regels moeten mogelijk veranderd worden.
+      else if(type == 'staafgrafiek gestapeld' | type == 'tabel') . 
+      else mutate(., aslabel = omschrijving)}  %>%
+    {if(!is.na(uitsplitsing)) rename_at(., vars(matches(uitsplitsing)), ~ str_replace(., uitsplitsing, 'uitsplitsing')) else .} %>%
+    {if(!is.na(groepering)) rename_at(., vars(matches(groepering)), ~ str_replace(., groepering, 'groepering')) else .} %>%
+    mutate(across(!n_cel & !n_cel_gewogen & !n_totaal & !n_totaal_gewogen & !n_min & !p & !jaar, to_character)) %>%
+    select(indicator, omschrijving, jaar, niveau, aslabel, everything())
+  
+}
+
+# Testen functie
+bereken_cijfers(data = monitor_df, 
+                indicator = 'GZGGA402',
+                waarde = 1,
+                omschrijving = 'Ervaren Gezondheid',
+                niveau_indicator = 'Gemeentecode',
+                niveau_waarde = 2,
+                niveau_naam = 'Gemeente A',
+                jaar_indicator = 'AGOJB401',
+                jaar = 2022,
+                uitsplitsing = 'AGGSA402', 
+                groepering = 'AGLFA401', 
+                weegfactor_indicator = "Standaardisatiefactor",
+                Nvar = 100,
+                Ncel = 10)
+
