@@ -5,10 +5,48 @@ library(tidyr)
 library(stringr) # Voor str_replace
 library(labelled) # Package om te werken met datalabels, o.a. voor to_character()
 
+default_kleuren <- c("#009898","#91caca","#009428")
+
+##### Maak responstabel ####
+maak_responstabel <- function(df, crossings = NULL){
+  
+  
+  
+  
+  rijnamen <- c("Totaal", "Klas 2", "Klas 4", "Vmbo", "Havo/Vwo", "Jongen","Meisje")
+  waarden <- sample(1:300, 7)
+  waarden[1] <- sum(waarden[2:3])
+  waarden[6:7] <- waarden[1]/2
+  
+  nepdata <- data.frame("Groep" =  rijnamen, "Aantal ingevulde vragenlijsten" =  waarden)
+  
+  nepdata %>% 
+    gt() %>% 
+    # Bovenste rij roze kleur
+    tab_style(style = cell_fill(color = "#e8525f"), locations = cells_column_labels()) %>% 
+    # Totaal en gender donkergroen
+    tab_style(style = cell_fill(color = "#009898"), locations = cells_body(rows = c(1, 4, 5))) %>% 
+    # Klas lichtgroen
+    tab_style(style = cell_fill(color = "#91caca"), locations = cells_body(rows = c(2, 3,6,7))) %>% 
+    # Wit lettertype
+    tab_style(style = cell_text(color = "#FFFFFF"), locations = cells_column_labels()) %>% 
+    tab_style(style = cell_text(color = "#FFFFFF"), locations = cells_body()) %>% 
+    # Kolomnaam Aantal vetgedrukt
+    tab_style(style = cell_text(weight = "bold"), locations = cells_column_labels()) %>% 
+    # Verwijder kolomnaam boven eerste kolom
+    cols_label(matches("Groep") ~ "") %>% 
+    # Pas kolomnaam Aantal aan
+    cols_label(matches("Aantal") ~ "Aantal ingevulde vragenlijsten") %>% 
+    # Per default wordt de tabel gecentreerd op de pagina. Zet deze volledig naar links.
+    tab_options(table.margin.left = 0,
+                table.margin.right = 0) 
+  
+}
 
 maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_groep, var_crossing_kleur, titel = "",
-                                                   kleuren_grafiek = c("#009898","#91caca","#009428")){
-  
+                                                   kleuren_grafiek = default_kleuren){
+  #DIT IS EEN NAIEVE VERWERKING VH DATAFRAME MET ABSOLUTE AANTALLEN
+  #TODO Vervangen met gewogen aantallen.
   df_plot <- df %>% 
     filter(!is.na(!!sym(var_inhoud)),
            !is.na(!!sym(var_crossing_groep)),
@@ -24,7 +62,9 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_
     mutate(percentage = round((aantal_antwoord/aantal_vraag)*100)) %>% 
     filter(!!sym(var_inhoud) == 1)
   
+  #TODO; Bij te lage aantallen -> Kolom als leeg weergeven net een sterretje in de kolom
 
+  
   df_plot[[var_crossing_groep]] <- factor(df_plot[[var_crossing_groep]], 
                                           levels = val_labels(df_plot[[var_crossing_groep]]),
                                           labels = names(val_labels(df_plot[[var_crossing_groep]])))
@@ -34,8 +74,8 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_
                                           levels = val_labels(df_plot[[var_crossing_kleur]]),
                                           labels = names(val_labels(df_plot[[var_crossing_kleur]])))
   
-  namen_kleuren <- levels(df_plot[[var_crossing_kleur]]) 
   
+  namen_kleuren <- levels(df_plot[[var_crossing_kleur]])
   kleuren <- kleuren_grafiek[1:length(namen_kleuren)]
   
   ggplot(df_plot) +
@@ -72,7 +112,7 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_
 }
 
 maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel = "",
-                                           kleuren_grafiek = c("#009898","#91caca","#009428")
+                                           kleuren_grafiek = default_kleuren
                                              ){
 
    df_plot <- lapply(var_crossings, function(crossing){
@@ -150,7 +190,7 @@ maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel 
 
 maak_staafdiagram_meerdere_staven <- function(df, var_inhoud,var_crossing = NULL, 
                                               titel = "",
-                                              kleuren_grafiek = c("#009898","#91caca","#009428"),
+                                              kleuren_grafiek = default_kleuren,
                                               flip = FALSE
 ){
   remove_legend = F
@@ -250,7 +290,9 @@ bereken_cijfers <- function(data, indicator, waarde, omschrijving, niveau_indica
   data %>%
     filter(.[niveau_indicator] == niveau_waarde & .[jaar_indicator] == jaar) %>%
     select(all_of(setdiff(c(jaar_indicator, indicator, uitsplitsing, groepering, weegfactor_indicator), NA))) %>%
-    group_by(across(all_of(setdiff(c(jaar_indicator, indicator, uitsplitsing, groepering), NA)))) %>%
+    group_by(across(all_of(setdiff(c(jaar_indicator, indicator, uitsplitsing, groepering), NA)))) %>% 
+    #TODO checken; Is dit nodig? renamed weegfactor naar uniforme naam. Zou evt simpeler opgeschrevne kunnen worden?
+    #Misschien case_when
     {if(weegfactor_indicator == "geen") . else rename_at(., vars(matches(weegfactor_indicator)), ~ str_replace(., weegfactor_indicator, 'weegfactor'))} %>%
     summarise(n_cel = n(), 
               n_cel_gewogen = ifelse(weegfactor_indicator == 'geen', NA, sum(weegfactor)), 
@@ -279,8 +321,9 @@ bereken_cijfers <- function(data, indicator, waarde, omschrijving, niveau_indica
   
 }
 
-# Testen functie
-bereken_cijfers(data = monitor_df, 
+#Pieter: Test/Toepassing  functie tijdelijk uitgezet.  
+# # Testen functie
+bereken_cijfers(data = monitor_df,
                 indicator = 'GZGGA402',
                 waarde = 1,
                 omschrijving = 'Ervaren Gezondheid',
@@ -289,9 +332,9 @@ bereken_cijfers(data = monitor_df,
                 niveau_naam = 'Gemeente A',
                 jaar_indicator = 'AGOJB401',
                 jaar = 2022,
-                uitsplitsing = 'AGGSA402', 
-                groepering = 'AGLFA401', 
+                uitsplitsing = 'AGGSA402',
+                groepering = 'AGLFA401',
                 weegfactor_indicator = "Standaardisatiefactor",
-                Nvar = 100,
-                Ncel = 10)
+                Nvar = 0,
+                Ncel = 0)
 
