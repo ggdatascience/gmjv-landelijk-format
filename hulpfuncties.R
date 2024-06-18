@@ -1,3 +1,15 @@
+# Script met helpfuncties voor GMJV 2024.
+
+# Packages ----------------------------------------------------------------
+
+# Het script maakt gebruik van een aantal packages
+# Deze moeten bij de eerste keer lokaal worden geinstalleerd. 
+# Dat doe je met behulp van de functie: install.packages() 
+# (Verwijder de # aan het begin van onderstaande regel om de code te runnen en de benodigde packages te installeren.)
+# TODO hier nog iets van maken met een fucntie die checkt of deze package al is geinstalleerd, en anders installeren?
+# install.packages(c('tidyverse', 'haven', 'labelled'))
+
+# Hieronder worden de benodige packages geladen
 library(gt)
 library(dplyr)
 library(ggplot2)
@@ -5,7 +17,15 @@ library(tidyr)
 library(stringr) # Voor str_replace
 library(labelled) # Package om te werken met datalabels, o.a. voor to_character()
 
+
+# Standaard instellingen --------------------------------------------------
+
+# Standaard kleuren instellen
 default_kleuren <- c("#009898","#91caca","#009428")
+
+# Default minimum aantallen instellen
+default_Nvar = 100 # Minimum aantal invullers per vraag.
+default_Ncel = 10 # Minimum aantal invullers oper antwoordoptie.
 
 ##### Maak responstabel ####
 maak_responstabel <- function(df, crossings = NULL){
@@ -282,59 +302,110 @@ maak_staafdiagram_meerdere_staven <- function(df, var_inhoud,var_crossing = NULL
 # Functie maken om cijfers te berekenen.
 # Gebaseerd op functie uitrapportage monitor GMJ 2023.
 # Zie https://github.com/ggdatascience/rapportage_monitor_gmj 
-# TODO verder gaan, dit is pas het begin van de code.
 
 bereken_cijfers <- function(data, indicator, waarde, omschrijving, niveau_indicator, niveau_waarde, 
                             niveau_naam, jaar_indicator, jaar, uitsplitsing, groepering, 
-                            weegfactor_indicator = "geen", Nvar, Ncel) {
+                            weegfactor_indicator = "geen", Nvar = default_Nvar, Ncel = default_Ncel) {
   data %>%
     filter(.[niveau_indicator] == niveau_waarde & .[jaar_indicator] == jaar) %>%
     select(all_of(setdiff(c(jaar_indicator, indicator, uitsplitsing, groepering, weegfactor_indicator), NA))) %>%
-    group_by(across(all_of(setdiff(c(jaar_indicator, indicator, uitsplitsing, groepering), NA)))) %>% 
-    #TODO checken; Is dit nodig? renamed weegfactor naar uniforme naam. Zou evt simpeler opgeschrevne kunnen worden?
-    #Misschien case_when
-    {if(weegfactor_indicator == "geen") . else rename_at(., vars(matches(weegfactor_indicator)), ~ str_replace(., weegfactor_indicator, 'weegfactor'))} %>%
+    group_by(across(all_of(setdiff(c(jaar_indicator, indicator, uitsplitsing, groepering), NA)))) %>%
+    {if(weegfactor_indicator != "geen") rename_at(., vars(matches(weegfactor_indicator)), ~ str_replace(., weegfactor_indicator, 'weegfactor')) else .} %>%
     summarise(n_cel = n(), 
-              n_cel_gewogen = ifelse(weegfactor_indicator == 'geen', NA, sum(weegfactor)), 
+              n_cel_gewogen = ifelse(weegfactor_indicator == 'geen', NA, sum(weegfactor)),
               .groups = 'drop') %>%
     drop_na(-n_cel_gewogen) %>%
     group_by(across(all_of(setdiff(c(jaar_indicator, uitsplitsing, groepering), NA)))) %>%
     mutate(n_totaal = sum(n_cel),
            n_totaal_gewogen = sum(n_cel_gewogen),
            n_min = n_totaal-n_cel,
-           p = ifelse(test = n_totaal < Nvar | n_cel < Ncel | n_min < Ncel | n_cel == n_totaal, 
-                      yes = NA, 
+           p = ifelse(test = n_totaal < Nvar | n_cel < Ncel | n_min < Ncel | n_cel == n_totaal,
+                      yes = NA,
                       no = if(weegfactor_indicator == 'geen') n_cel/n_totaal else n_cel_gewogen/n_totaal_gewogen) %>% as.numeric(),
            indicator = indicator,
            omschrijving = omschrijving,
            niveau = niveau_naam) %>%
-    {if(is.na(waarde)) . else filter_at(., vars(all_of(indicator)), function(x) x %in% waarde)} %>%
+    {if(!is.na(waarde)) filter_at(., vars(all_of(indicator)), function(x) x %in% waarde) else .} %>%
     ungroup() %>%
     rename(jaar = 1, aslabel = 2) %>%
-    {if(!is.na(omschrijving)) mutate(., aslabel = omschrijving) # TODO deze drie regels moeten mogelijk veranderd worden.
-      else if(type == 'staafgrafiek gestapeld' | type == 'tabel') . 
-      else mutate(., aslabel = omschrijving)}  %>%
+    {if(!is.na(omschrijving)) mutate(., aslabel = omschrijving) else .} %>% # TODO deze kan misschien weg?
     {if(!is.na(uitsplitsing)) rename_at(., vars(matches(uitsplitsing)), ~ str_replace(., uitsplitsing, 'uitsplitsing')) else .} %>%
     {if(!is.na(groepering)) rename_at(., vars(matches(groepering)), ~ str_replace(., groepering, 'groepering')) else .} %>%
     mutate(across(!n_cel & !n_cel_gewogen & !n_totaal & !n_totaal_gewogen & !n_min & !p & !jaar, to_character)) %>%
-    select(indicator, omschrijving, jaar, niveau, aslabel, everything())
+    select(indicator, jaar, niveau, aslabel, everything()) 
   
 }
 
 #Pieter: Test/Toepassing  functie tijdelijk uitgezet.  
 # # Testen functie
-bereken_cijfers(data = monitor_df,
-                indicator = 'GZGGA402',
-                waarde = 1,
-                omschrijving = 'Ervaren Gezondheid',
-                niveau_indicator = 'Gemeentecode',
-                niveau_waarde = 2,
-                niveau_naam = 'Gemeente A',
-                jaar_indicator = 'AGOJB401',
-                jaar = 2022,
-                uitsplitsing = 'AGGSA402',
-                groepering = 'AGLFA401',
-                weegfactor_indicator = "Standaardisatiefactor",
-                Nvar = 0,
-                Ncel = 0)
+# bereken_cijfers(data = monitor_df,
+#                 indicator = 'GZGGA402',
+#                 waarde = 1,
+#                 omschrijving = 'Ervaren Gezondheid',
+#                 niveau_indicator = 'Gemeentecode',
+#                 niveau_waarde = 4,
+#                 niveau_naam = 'Gemeente D',
+#                 jaar_indicator = 'AGOJB401',
+#                 jaar = 2022,
+#                 uitsplitsing = 'AGGSA402',
+#                 groepering = 'AGLFA401',
+#                 weegfactor_indicator = "Standaardisatiefactor")
 
+# TODO: functie maken om verschil tussen groepen (en/of jaren?) vast te stellen en tekst hierover te printen
+# Mogelijk integreren in bereken cijfers functie?
+
+maak_adaptieve_tekst <- function(data, indicator, waarde, omschrijving, niveau_indicator, niveau_waarde, 
+                                 niveau_naam, jaar_indicator, jaar, uitsplitsing, groepering = NA, 
+                                 weegfactor_indicator = "geen") {
+  # Bereken gewogen cijfers
+  bereken_cijfers(data = data,
+                  indicator = indicator,
+                  waarde = waarde,
+                  omschrijving = omschrijving,
+                  niveau_indicator = niveau_indicator,
+                  niveau_waarde = niveau_waarde,
+                  niveau_naam = niveau_naam,
+                  jaar_indicator = jaar_indicator,
+                  jaar = jaar,
+                  uitsplitsing = uitsplitsing,
+                  groepering = groepering,
+                  weegfactor_indicator = weegfactor_indicator) -> result
+
+  # Gewogen cijfers vergelijken en op of groep 1 afwijkt van groep 2
+  # Vergelijk 2 groepen:
+  if (nrow(result == 2)) {
+    
+    # Groepen vergelijken
+    # TODO zoiets obv Confidence intervals
+    # TODo nog testen, wat gebeurd er met NAs? en kan ik dit robuster maken + werkend voor meer uitsplitsingen?
+    vergelijking_tekst <- case_when(result$p[1] == result$p[2] ~ "gelijk aan ",
+                                    result$p[1] < result$p[2] ~ "lager dan ",
+                                    result$p[1] > result$p[2] ~ "hoger dan ",)
+    
+    # Tekst printen
+    print(paste0("Het percentage ", 
+                 result$uitsplitsing[1], 
+                 " dat ", 
+                 result$omschrijving[1], 
+                 " is ", 
+                 vergelijking_tekst, 
+                 " het percentage ", 
+                 result$uitsplitsing[2]))
+
+  }
+
+  
+}
+
+# Test tekst
+# maak_adaptieve_tekst(data = monitor_df,
+#                 indicator = 'GZGGA402',
+#                 waarde = 1,
+#                 omschrijving = 'de gezondheid als (zeer) goed ervaart',
+#                 niveau_indicator = 'Gemeentecode',
+#                 niveau_waarde = 4,
+#                 niveau_naam = 'Gemeente D',
+#                 jaar_indicator = 'AGOJB401',
+#                 jaar = 2022,
+#                 uitsplitsing = 'AGGSA402',
+#                 weegfactor_indicator = "Standaardisatiefactor")
