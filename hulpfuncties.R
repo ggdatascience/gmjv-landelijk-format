@@ -20,50 +20,153 @@ library(labelled) # Package om te werken met datalabels, o.a. voor to_character(
 # Standaard instellingen --------------------------------------------------
 
 # Standaard kleuren instellen
-default_kleuren <- c("#009898","#91caca","#009428")
+default_kleuren_grafiek <- c("#009898","#91caca","#009428")
+default_kleuren_responstabel <- c("header" = "#e8525f",
+                                  "kleur_1" = "#009898",
+                                  "kleur_2" = "#91CACA",
+                                  "kleur_text" = "#FFFFFF"
+                                  )
 
 # Default minimum aantallen instellen
 default_Nvar = 100 # Minimum aantal invullers per vraag.
 default_Ncel = 10 # Minimum aantal invullers oper antwoordoptie.
 
-##### Maak responstabel ####
-maak_responstabel <- function(df, crossings = NULL){
+
+# utility -----------------------------------------------------------------
+
+#TODO vervangen met algemenere functie OF verwijderen en eindgebruikers instrueren
+#hun variabele goed te coderen zodat alle missing ook user missing zijn
+verwijder_9_onbekend <- function(data, var){
+  value_labels <- val_labels(data[[var]])
+  nieuwe_value_labels <- value_labels[value_labels!= 9]
+  #Omdat 9 is verwijderd uit de nieuwe val labels, resulteert
+  #het toeschrijven vna die labels aan de variabele
+  #in NA's voor de waarde 9.
+  val_labels(data[[var]]) <- nieuwe_value_labels
+  
+  return(data)
+}
+
+#Functie om labelled doubles om te zetten naar characters o.b.v. de labels (ipv de numerieke waarden)
+labelled_naar_character <- function(data,var){
+  
+  var_factor <- to_factor(data[[var]])
+  var_character <- as.character(var_factor)
+  
+  return(var_character)
+} 
+
+
+
+# Tabelfuncties -------------------------------------------------------
+maak_responstabel <- function(df, crossings = NULL, missing_label = "Onbekend",
+                              kleuren = default_kleuren_responstabel){
+
+  #TODO Hoe om te gaan met missing waarden? Meetellen als 'onbekend' of niet weergeven?
+  #In laatste geval kloppen de totalen van crossings onderling niet. Kan prima zijn
+  #Voorlopige keuze: Missings weergeven als "onebekend"
+  
+  aantallen_per_crossing <- lapply(crossings, function(x){
+    
+    #Variabelen naar character omzetten
+    df[[x]] <- labelled_naar_character(df, x)
+    
+    #Aantallen uitrekenen. Missing labelen als missing_label
+    aantallen_df = df %>% 
+      group_by(!!sym(x)) %>% 
+      summarise(n = n()) %>%
+      rename(crossing = 1) %>% 
+      mutate(crossing = replace(crossing, is.na(crossing),missing_label))  
+    
+    #Als het de 1e crossing is; totaal_df bovenaan df toevoegen
+    #NB Is maar 1 totaal in responstabel; dus n per crossing worden als gelijk beschouwd.
+    if(x == crossings[1]){
+      totaal_df <- data.frame(
+        crossing = "Totaal",
+        n = sum(aantallen_df$n)
+        )
+      
+      rbind(totaal_df,aantallen_df)
+    } else{
+    #Anders gewoon aantallen teruggeven
+      aantallen_df
+    }
+    
+  }) %>% do.call(rbind,.) #dataframes per crossing aan elkaar plakken
+  
+  #gegeven een vector met alle crossings willen we afwisselend een andere kleur geven
+  #aan iedere even en oneven crossing. Dus c("gender","klas","opleiding") 
+  #moet de crossing "gender" een andere kleur geven dan "klas" en dezelfde kleur als "opleiding"
+  
+  #We weten van te voren niet hoeveel niveaus een crossing heeft dus moet dat uitgerekend worden
+  levels_crossings <- lapply(crossings, function(x){
+    
+    df[[x]] %>% unique() %>% length()    
+  }) %>% unlist()
+  
+  #twee vectoren aanmaken die gevuld zullen worden met de rij-indexen voor kleur 1 en 2 
+  kleur_1_indexen <- c(1) #aanmaken met waarde 1 = bovenste totaalrij
+  kleur_2_indexen <- c()
+  current_index <- 1
   
   
+  for(i in 1:length(levels_crossings)){
+    
+    #even index
+    if(i %% 2 == 0){
+      
+      start_index = current_index + 1 
+      eind_index <- current_index + levels_crossings[i]
+      bereik = c(start_index:eind_index )
+      current_index <- max(bereik)
+      
+      kleur_1_indexen <- c(kleur_1_indexen, bereik)
+    } else {
+    #oneven index
+      
+      start_index = current_index + 1 
+      eind_index <- current_index + levels_crossings[i]
+      bereik = c(start_index:eind_index )
+      current_index <- max(bereik)
+      
+      kleur_2_indexen <- c(kleur_2_indexen,bereik)
+    }
+    
+    
+  }
+  
+  #we willen een vector met de rijnummers van alle oneven crossings 
   
   
-  rijnamen <- c("Totaal", "Klas 2", "Klas 4", "Vmbo", "Havo/Vwo", "Jongen","Meisje")
-  waarden <- sample(1:300, 7)
-  waarden[1] <- sum(waarden[2:3])
-  waarden[6:7] <- waarden[1]/2
-  
-  nepdata <- data.frame("Groep" =  rijnamen, "Aantal ingevulde vragenlijsten" =  waarden)
-  
-  nepdata %>% 
+  #aangepaste versie van joliens versie voor gemeenteprofielen
+  aantallen_per_crossing %>% 
     gt() %>% 
     # Bovenste rij roze kleur
-    tab_style(style = cell_fill(color = "#e8525f"), locations = cells_column_labels()) %>% 
+    tab_style(style = cell_fill(color = kleuren[1]), locations = cells_column_labels()) %>% 
+
     # Totaal en gender donkergroen
-    tab_style(style = cell_fill(color = "#009898"), locations = cells_body(rows = c(1, 4, 5))) %>% 
+    tab_style(style = cell_fill(color = kleuren[2]), locations = cells_body(rows = kleur_1_indexen)) %>% 
     # Klas lichtgroen
-    tab_style(style = cell_fill(color = "#91caca"), locations = cells_body(rows = c(2, 3,6,7))) %>% 
-    # Wit lettertype
-    tab_style(style = cell_text(color = "#FFFFFF"), locations = cells_column_labels()) %>% 
-    tab_style(style = cell_text(color = "#FFFFFF"), locations = cells_body()) %>% 
+    tab_style(style = cell_fill(color = kleuren[3]), locations = cells_body(rows = kleur_2_indexen)) %>%
+    #Wit lettertype
+    tab_style(style = cell_text(color = kleuren[4]), locations = cells_column_labels()) %>% 
+    tab_style(style = cell_text(color = kleuren[4]), locations = cells_body()) %>% 
     # Kolomnaam Aantal vetgedrukt
     tab_style(style = cell_text(weight = "bold"), locations = cells_column_labels()) %>% 
-    # Verwijder kolomnaam boven eerste kolom
-    cols_label(matches("Groep") ~ "") %>% 
     # Pas kolomnaam Aantal aan
-    cols_label(matches("Aantal") ~ "Aantal ingevulde vragenlijsten") %>% 
+    cols_label(matches("n") ~ "Aantal ingevulde vragenlijsten") %>%
+    # Verwijder kolomnaam boven eerste kolom
+    cols_label(matches("crossing") ~ "") %>% 
     # Per default wordt de tabel gecentreerd op de pagina. Zet deze volledig naar links.
     tab_options(table.margin.left = 0,
                 table.margin.right = 0) 
   
 }
 
+
+# Grafiekfuncties ---------------------------------------------------------
 maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_groep, var_crossing_kleur, titel = "",
-                                                   kleuren_grafiek = default_kleuren){
+                                                   kleuren_grafiek = default_kleuren_grafiek){
   #DIT IS EEN NAIEVE VERWERKING VH DATAFRAME MET ABSOLUTE AANTALLEN
   #TODO Vervangen met gewogen aantallen.
   df_plot <- df %>% 
@@ -131,7 +234,7 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_
 }
 
 maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel = "",
-                                           kleuren_grafiek = default_kleuren
+                                           kleuren_grafiek = default_kleuren_grafiek
                                              ){
 
    df_plot <- lapply(var_crossings, function(crossing){
@@ -209,7 +312,7 @@ maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel 
 
 maak_staafdiagram_meerdere_staven <- function(df, var_inhoud,var_crossing = NULL, 
                                               titel = "",
-                                              kleuren_grafiek = default_kleuren,
+                                              kleuren_grafiek = default_kleuren_grafiek,
                                               flip = FALSE
 ){
   remove_legend = F
@@ -297,6 +400,8 @@ maak_staafdiagram_meerdere_staven <- function(df, var_inhoud,var_crossing = NULL
  
 }
 
+
+# rekenfuncties -----------------------------------------------------------
 
 # Functie maken om cijfers te berekenen.
 # Gebaseerd op functie uitrapportage monitor GMJ 2023.
@@ -466,7 +571,6 @@ survey_design_maken <- function(data = NULL, strata = NULL, gewichten = NULL){
 # strata_var = "stratum"
 # gewicht_var = "weegfactor_gemeentelijk"
 # survey_design_maken(data, strata_var, gewicht_var)
-
 
 #prop_ci_berekenen()
 #functie die per antwoordmogelijkheid betrouwbaarheidsintervallen berekend voor proporties van in een kruistabel.
