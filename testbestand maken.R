@@ -43,6 +43,7 @@ library(labelled) # Package om labels aan te passen
 # Data 2022 laden, vul bij de select() functie de variabelen in voor jouw gewenste trends
 data2022 <- read_spss(data_naam) %>%
   select(AGOJB401,
+         Stratum,
          Standaardisatiefactor,
          AGLFA401,
          AGLFA402,
@@ -95,6 +96,7 @@ data2022$Gemeentecode <- car::recode(var = data2022$Gemeentecode,
 data2024 <- read_spss(data_naam) %>%
   select(#AGOJB401,
          Standaardisatiefactor,
+         Stratum,
          AGLFA401,
          AGLFA402,
          AGGSA401,
@@ -138,5 +140,6 @@ data <- data2022 %>%
 
 # Data opslaan ------------------------------------------------------------
 
-setwd("C:/Users/sjannes/OneDrive - VRLN/PSchijf/Gezondheidsmonitor/2024 Gezondheidsmonitor jongvolwassenen/4. Analyse/Rapportage maken")
+#setwd("C:/Users/sjannes/OneDrive - VRLN/PSchijf/Gezondheidsmonitor/2024 Gezondheidsmonitor jongvolwassenen/4. Analyse/Rapportage maken")
+setwd("~/gmjv-landelijk-format")
 write_sav(data, "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav")
