@@ -6,7 +6,15 @@
 # Dat doe je met behulp van de functie: install.packages() 
 # (Verwijder de # aan het begin van onderstaande regel om de code te runnen en de benodigde packages te installeren.)
 # TODO hier nog iets van maken met een fucntie die checkt of deze package al is geinstalleerd, en anders installeren?
+# TODO Pieter: Is het wel nodig om ziets te schrijven? moderne RStudio doet dat vanzelf voor je.
+
+
 # install.packages(c('tidyverse', 'haven', 'labelled'))
+
+#TODO keus maken in digitoegankelijkheid plots:
+#Alt text https://www.w3.org/WAI/tutorials/images/complex/
+#Plot als tabel toevoegen (evt achter tab-button?)
+#
 
 # Hieronder worden de benodige packages geladen
 library(gt)
@@ -15,7 +23,7 @@ library(ggplot2)
 library(tidyr)
 library(stringr) # Voor str_replace
 library(labelled) # Package om te werken met datalabels, o.a. voor to_character()
-
+library(glue) #om strings aangenaam aan elkaar te plakken
 
 # Standaard instellingen --------------------------------------------------
 
@@ -399,6 +407,167 @@ maak_staafdiagram_meerdere_staven <- function(df, var_inhoud,var_crossing = NULL
   plot
  
 }
+
+
+
+
+
+#TODO: Staafdiagram uitsplitsing naast elkaar
+#TODO zelfde maar dan met kleuren per uitsplitsing
+#TODO zowel op z'n kant als niet
+#TODO lijntjes tussen uitsplitsingen
+#TODO Overal chekc inbouwen of een var wel een lbl+dbl is
+#TODO dezelfde dfbewerkingen uit plotfuncties halen & naar eigen functies halen
+
+
+maak_staafdiagram_uitsplitsing_naast_elkaar <- function(df, var_inhoud, var_crossings, titel = "",
+                                                        kleuren_grafiek = default_kleuren_grafiek,
+                                                        kleuren_per_crossing = F,
+                                                        flip = TRUE){
+  
+  v_just_text = ifelse(flip,0.5,1.5)
+  h_just_text = ifelse(flip,1.5,0.5)
+  
+  
+  df_plot <- lapply(var_crossings, function(crossing){
+    
+    df_crossing = df %>% 
+      filter(!is.na(!!sym(var_inhoud)),
+             !is.na(!!sym(crossing))) %>%
+      select(!!sym(var_inhoud),!!sym(crossing)) %>% 
+      group_by(!!sym(var_inhoud),!!sym(crossing)) %>% 
+      summarise(aantal_antwoord = n()) %>% 
+      ungroup() %>% 
+      group_by(!!sym(crossing)) %>% 
+      mutate(aantal_vraag = sum(aantal_antwoord)) %>% 
+      ungroup() %>% 
+      mutate(percentage = round((aantal_antwoord/aantal_vraag)*100),
+             groep = var_label(!!sym(crossing)),
+      ) %>% 
+      rename("onderdeel" = 2) %>% 
+      filter(!!sym(var_inhoud) == 1) %>% 
+      mutate(onderdeel = val_labels(onderdeel) %>% names())
+    
+    
+    df_crossing$kleuren <- kleuren_grafiek[1:nrow(df_crossing)]
+    
+    df_crossing
+    
+  }) %>% do.call(rbind,.)
+  
+  
+  
+  #volgorde groepen op x-as vastzetten o.b.v. volgorde variabelen door er een factor vna te maken
+  df_plot$groep <- factor(df_plot$groep)
+  #volgorde onderdeel vastzetten o.b.v dataframe 
+  df_plot$onderdeel <- factor(df_plot$onderdeel, levels = df_plot$onderdeel)
+  
+  # 
+  # kleuren <- df_plot$kleuren
+  # names(kleuren) <- df_plot$onderdeel
+  # 
+  
+  ggplot(df_plot) +
+    geom_col(aes(x = onderdeel, y = percentage, fill = 1),
+             position = position_dodge(width = 0.8), width = 0.8) +
+    geom_text(aes(x = onderdeel,
+                  y = percentage,
+                  label = paste(percentage,"%"),
+                  vjust = v_just_text,
+                  hjust = h_just_text),
+              color = "white",
+              position = position_dodge2(width = 0.8),
+              size = 5,
+    ) +
+    ggtitle(titel) +
+    #Hier worden de kleuren en volgorde bepaald.
+    # scale_fill_manual(values= kleuren,
+    #                   guide = guide_legend(nrow = 1, byrow = TRUE, label.position = "right", title.position = "top")
+    # ) +
+    scale_y_continuous(limits = c(0,100),
+                       expand = expansion(mult = c(0, 0.05))
+    ) +
+   # coord_cartesian(ylim = c(0,100))+
+    #scale_x_discrete(values = var_crossings) +
+    theme(axis.title = element_blank(),
+          panel.background = element_blank(),
+          axis.ticks.x = element_blank(),
+          axis.ticks.y = element_blank(),
+          axis.text.x =  element_blank(),
+          # legend.title = element_blank(),
+          # legend.spacing.x = unit(.1, 'cm'),
+          legend.position = "none",
+          plot.title = element_text(hjust = .5),
+          #axis.line.x.bottom = element_line(linewidth = 1, colour = "black"),
+          axis.line.y.left = element_line(linewidth = 1)
+    ) +
+    coord_flip()
+  
+  # df_plot <-
+  # 
+  
+}
+
+#horizontaal gestapeld staafdiagram
+maak_staafdiagram_gestapeld <- function(df, var_inhoud, titel = "",
+                                        kleuren_grafiek = default_kleuren_grafiek, x_label = ""){
+  
+  if(!labelled::is.labelled(df[[var_inhoud]])){
+    warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
+  }
+  
+  df_plot <- df %>%
+    select(!!sym(var_inhoud)) %>%
+    filter(!is.na(!!sym(var_inhoud))) %>% 
+    group_by(!!sym(var_inhoud)) %>% 
+    summarise(n = n()) %>% 
+    ungroup() %>% 
+    mutate(totaal = sum(n),
+           percentage = n / totaal * 100) 
+  
+  df_plot[[var_inhoud]] <- factor(df_plot[[var_inhoud]], 
+                                  levels = val_labels(df_plot[[var_inhoud]]),
+                                  labels = names(val_labels(df_plot[[var_inhoud]])))
+  
+  
+  
+  namen_kleuren <- levels(df_plot[[var_inhoud]])
+  
+  kleuren <- kleuren_grafiek[1:length(namen_kleuren)]
+  
+  ggplot(df_plot, aes(x = percentage, y = x_label, fill = !!sym(var_inhoud))) + 
+  geom_bar(stat = "identity", position = "stack") +
+  geom_text(aes(label = paste0(round(percentage),"%")),
+            color = "#FFFFFF",
+            position = position_stack(vjust = 0.5),
+            size = 3) +
+    scale_fill_manual(values= kleuren) +
+    scale_x_continuous(
+      limits = c(0,100),
+      breaks = seq(0,100, by = 10),
+      labels = paste(seq(0,100, by = 10),"%"),
+      expand = expansion(mult = c(0, 0.05)))+
+    ggtitle(titel) + 
+#    ylim(c(0,2))+
+    ylab(x_label) + 
+      theme(
+        axis.title = element_blank(),
+          panel.background = element_blank(),
+          axis.ticks.x = element_blank(),
+          axis.ticks.y = element_blank(),
+          legend.title = element_blank(),
+          legend.spacing.x = unit(.1,"cm"),
+          legend.position = "bottom",
+          plot.title = element_text(hjust = .5),
+          axis.line.x.bottom = element_line(linewidth = 1),
+          axis.line.y.left = element_line(linewidth = 1,)) +
+   guides(fill = guide_legend(reverse = TRUE))  
+  
+}
+
+#TODO percentage in tekst
+#TODO Cirkeldiagram
+  #TODO Donut
 
 
 # rekenfuncties -----------------------------------------------------------
