@@ -1,5 +1,4 @@
 # Script met helpfuncties voor GMJV 2024.
-
 # Packages ----------------------------------------------------------------
 
 # Het script maakt gebruik van een aantal packages
