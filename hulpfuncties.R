@@ -7,14 +7,14 @@
 # (Verwijder de # aan het begin van onderstaande regel om de code te runnen en de benodigde packages te installeren.)
 # TODO hier nog iets van maken met een fucntie die checkt of deze package al is geinstalleerd, en anders installeren?
 # TODO Pieter: Is het wel nodig om ziets te schrijven? moderne RStudio doet dat vanzelf voor je.
-
+# TODO Alle grafieken automatisch van relevante alt text
 
 # install.packages(c('tidyverse', 'haven', 'labelled'))
 
 #TODO keus maken in digitoegankelijkheid plots:
 #Alt text https://www.w3.org/WAI/tutorials/images/complex/
 #Plot als tabel toevoegen (evt achter tab-button?)
-#
+#TODO ALT TEXT
 
 # Hieronder worden de benodige packages geladen
 library(gt)
@@ -410,25 +410,25 @@ maak_staafdiagram_meerdere_staven <- function(df, var_inhoud,var_crossing = NULL
 
 
 
-
-
-#TODO: Staafdiagram uitsplitsing naast elkaar
-#TODO zelfde maar dan met kleuren per uitsplitsing
-#TODO zowel op z'n kant als niet
 #TODO lijntjes tussen uitsplitsingen
-#TODO Overal chekc inbouwen of een var wel een lbl+dbl is
+#TODO namen uitsplitsingen onder x-as labels
+#TODO stoppen met uitsplitsing en crossing door elkaar gebruiken
+#TODO Overal chekc inbouwen of een var wel een lbl+dbl is. Of niet afh. van maak_kruistabel() output.
 #TODO dezelfde dfbewerkingen uit plotfuncties halen & naar eigen functies halen
 
 
 maak_staafdiagram_uitsplitsing_naast_elkaar <- function(df, var_inhoud, var_crossings, titel = "",
                                                         kleuren_grafiek = default_kleuren_grafiek,
-                                                        kleuren_per_crossing = F,
-                                                        flip = TRUE){
+                                                        kleuren_per_crossing = F, #TODO is deze nodig?
+                                                        fade_kleuren = F,
+                                                        flip = FALSE){
   
+  #o.b.v. de orientatie van de grafiek (flip = horizontaal)
+  #De correctie van de geom_text aanpassen  zodat deze netjes in het midden v.e. balk komt 
   v_just_text = ifelse(flip,0.5,1.5)
   h_just_text = ifelse(flip,1.5,0.5)
-  
-  
+
+  #% voor iedere crossing appart uitrekenen.
   df_plot <- lapply(var_crossings, function(crossing){
     
     df_crossing = df %>% 
@@ -448,12 +448,44 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(df, var_inhoud, var_cros
       filter(!!sym(var_inhoud) == 1) %>% 
       mutate(onderdeel = val_labels(onderdeel) %>% names())
     
+    #Als iedere crossing eigen kleuren moet hebben; kleuren toewijzen aan dataframe
+    if(kleuren_per_crossing){
+      n_crossing <- which(crossing == var_crossings)
+      
+      kleur_crossing = kleuren_grafiek[n_crossing]
+      
+      #als de kleuren steeds lichter moeten worden binnen een crossing; palette maken
+      #dat afloopt naar wit en hier een sample uit nemen
+      if(fade_kleuren){
+        
+        kleur_fade <- colorRampPalette(c(kleur_crossing,"#FFFFFF"))
+        n_kleuren <- nrow(df_crossing)
+        
+        kleuren_palet <- kleur_fade(n_kleuren + 4) #Als we niet + iets doen de laatste crossing wit.
+        
+        kleur_crossing <- kleuren_palet[1:n_kleuren]
+      }
+      
+      df_crossing$kleur <- kleur_crossing 
+    }
     
-    df_crossing$kleuren <- kleuren_grafiek[1:nrow(df_crossing)]
+
     
     df_crossing
     
   }) %>% do.call(rbind,.)
+  
+  #
+  if(kleuren_per_crossing){
+    
+    namen = df_plot$onderdeel
+    kleuren = df_plot$kleur
+    names(kleuren) <- namen
+    
+  } else{
+    
+    kleuren <- rep(kleuren_grafiek[1],nrow(df_plot))
+  }
   
   
   
@@ -462,14 +494,10 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(df, var_inhoud, var_cros
   #volgorde onderdeel vastzetten o.b.v dataframe 
   df_plot$onderdeel <- factor(df_plot$onderdeel, levels = df_plot$onderdeel)
   
-  # 
-  # kleuren <- df_plot$kleuren
-  # names(kleuren) <- df_plot$onderdeel
-  # 
-  
-  ggplot(df_plot) +
-    geom_col(aes(x = onderdeel, y = percentage, fill = 1),
-             position = position_dodge(width = 0.8), width = 0.8) +
+  plot <- ggplot(df_plot) +
+    geom_bar(aes(x = onderdeel, y = percentage, fill = onderdeel),
+             stat = "identity", width = 0.8
+             ) +
     geom_text(aes(x = onderdeel,
                   y = percentage,
                   label = paste(percentage,"%"),
@@ -479,34 +507,59 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(df, var_inhoud, var_cros
               position = position_dodge2(width = 0.8),
               size = 5,
     ) +
+    scale_fill_manual(values = kleuren) + 
+    
     ggtitle(titel) +
-    #Hier worden de kleuren en volgorde bepaald.
-    # scale_fill_manual(values= kleuren,
-    #                   guide = guide_legend(nrow = 1, byrow = TRUE, label.position = "right", title.position = "top")
-    # ) +
-    scale_y_continuous(limits = c(0,100),
-                       expand = expansion(mult = c(0, 0.05))
-    ) +
-   # coord_cartesian(ylim = c(0,100))+
-    #scale_x_discrete(values = var_crossings) +
-    theme(axis.title = element_blank(),
-          panel.background = element_blank(),
-          axis.ticks.x = element_blank(),
-          axis.ticks.y = element_blank(),
-          axis.text.x =  element_blank(),
-          # legend.title = element_blank(),
-          # legend.spacing.x = unit(.1, 'cm'),
+    theme(panel.background = element_blank(),
           legend.position = "none",
           plot.title = element_text(hjust = .5),
-          #axis.line.x.bottom = element_line(linewidth = 1, colour = "black"),
           axis.line.y.left = element_line(linewidth = 1)
-    ) +
-    coord_flip()
+    )
   
-  # df_plot <-
-  # 
-  
+  if(flip){
+    plot <- plot + 
+      scale_y_continuous(limits = c(0,100),
+                         expand = expansion(mult = c(0, 0.05))
+      ) +
+      coord_flip() +
+      theme(axis.title = element_blank(),
+            axis.ticks.x = element_blank(),
+            axis.ticks.y = element_blank(),
+            axis.text.x =  element_blank(),
+            )
+  } else{
+    plot <- plot + 
+      theme(axis.line.x.bottom = (element_line(linewidth = 1))) +
+      scale_y_continuous(limits = c(0,100),
+                         expand = expansion(mult = c(0, 0))) +
+      scale_x_discrete(labels = function(x) str_wrap(x,width = 20)) +
+      theme(
+        axis.text.x = element_text(angle = 90, hjust = .95, vjust = .2),
+        strip.background = element_blank(),
+        
+      ) + xlab("")
+      
+  }
+
+  return(plot)
+
 }
+
+maak_staafdiagram_uitsplitsing_naast_elkaar(
+  df = monitor_df,
+  var_inhoud = "vaak_stress",
+  var_crossings = c("gender_2cat","leeftijd_3cat","opleiding_4cat"),
+  kleuren_per_crossing = T,
+  fade_kleuren = T,
+  flip = F)
+
+
+maak_staafdiagram_uitsplitsing_naast_elkaar(
+  df = monitor_df,
+  var_inhoud = "vaak_stress",
+  var_crossings = c("gender_2cat","leeftijd_3cat"),
+  flip = T)
+
 
 #horizontaal gestapeld staafdiagram
 maak_staafdiagram_gestapeld <- function(df, var_inhoud, titel = "",
