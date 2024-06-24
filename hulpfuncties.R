@@ -199,23 +199,24 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_
     summarise(aantal_antwoord = n()) %>% 
     ungroup() %>% 
     group_by(!!sym(var_crossing_groep),!!sym(var_crossing_kleur)) %>% 
-    mutate(aantal_vraag = sum(aantal_antwoord)) %>% 
-    ungroup() %>% 
+    mutate(aantal_vraag = sum(aantal_antwoord))%>%
+    ungroup() %>%
+    #ungroup om % en n_antwoord uit te rekenen
     mutate(percentage = round((aantal_antwoord/aantal_vraag)*100),
            
-           #TODO; Bij te lage aantallen -> Kolom als leeg weergeven net een sterretje in de kolom
+           #Bij te lage aantallen -> Kolom als leeg weergeven net een sterretje in de kolom
            percentage = case_when(aantal_vraag < nvar ~ NA,
                                aantal_antwoord < ncel ~ NA,
-                               TRUE ~ percentage),
-           
-           weggestreept = ifelse(is.na(percentage), 30, NA)
-           ) %>%
-    
-    filter(!!sym(var_inhoud) == 1) 
-  
-  #Vector maken met weggestreepte waarden
-  
-  
+                               TRUE ~ percentage)) %>% 
+    #voor de kleine N voorwaarde moet de hele vraag weggestreept worden als er niet
+    #aan de voorwaarde wordt voldaan; groeperen op crossings:
+    group_by(!!sym(var_crossing_groep),!!sym(var_crossing_kleur)) %>% 
+    mutate(is_leeg = any(is.na(percentage))) %>% #is_leeg als één percentage van een vraag NA is.
+    ungroup() %>% 
+    mutate(percentage = ifelse(is_leeg, NA, percentage), #zet alle vragen met tenminste 1 NA antwoord op NA
+           weggestreept = ifelse(is_leeg, 30, NA) %>% as.numeric()) %>% #maak een vector met val 30 waar een antwoord ontbreekt (voor missing sterretjes in diagram) 
+    filter(!!sym(var_inhoud) == 1) #dichtome var; ja overhouden.
+
   #Vector maken met weggestreepte waarden
   df_plot[[var_crossing_groep]] <- factor(df_plot[[var_crossing_groep]], 
                                           levels = val_labels(df_plot[[var_crossing_groep]]),
@@ -281,16 +282,21 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_
     )
 }
 
-maak_staafdiagram_dubbele_uitsplitsing(df = monitor_df,
-                                       var_inhoud = "vaak_stress",
-                                       var_crossing_groep = "gender_2cat",
-                                       var_crossing_kleur = "leeftijd_3cat"
-                                       )
 
 maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel = "",
-                                           kleuren_grafiek = default_kleuren_grafiek
+                                           kleuren_grafiek = default_kleuren_grafiek,
+                                           nvar = default_Nvar, ncel = default_Ncel
                                              ){
 
+  if(val_labels(df[[var_inhoud]]) %>% length() > 2){
+    warning(
+      glue("{var_inhoud} is geen dichotome variabele. Kies een ander grafiektype of een andere var_inhoud"))
+    return(NULL)
+    
+    #TODO met Sjanne / Willeke overleggen hoe we foute invoer willen afhandelen.
+    #Verwachting is dat uitgebreide errorhandling nodig is. misschien naar aparte functie halen
+  }
+  
    df_plot <- lapply(var_crossings, function(crossing){
 
      df_crossing = df %>% 
@@ -305,8 +311,17 @@ maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel 
        ungroup() %>% 
        mutate(percentage = round((aantal_antwoord/aantal_vraag)*100),
               groep = var_label(!!sym(crossing)),
+              #Bij te lage aantallen -> Kolom als leeg weergeven net een sterretje in de kolom
+              percentage = case_when(aantal_vraag < nvar ~ NA,
+                                     aantal_antwoord < ncel ~ NA,
+                                     TRUE ~ percentage),
+              
+              weggestreept = ifelse(is.na(percentage), 30, NA) %>% as.numeric() #as numeric zodat ook een
+              #compleet lege vector als numeric telt.
+              
+              
               ) %>% 
-       rename("onderdeel" = 2) %>% 
+       rename("onderdeel" = 2) %>%
        filter(!!sym(var_inhoud) == 1) %>% 
        mutate(onderdeel = val_labels(onderdeel) %>% names())
      
@@ -321,12 +336,13 @@ maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel 
    
    #volgorde groepen op x-as vastzetten o.b.v. volgorde variabelen door er een factor vna te maken
    df_plot$groep <- factor(df_plot$groep)
-   #volgorde onderdeel vastzetten o.b.v dataframe 
-   df_plot$onderdeel <- factor(df_plot$onderdeel, levels = df_plot$onderdeel)
+   #volgorde onderdeel vastzetten o.b.v dataframe
+   onderdeel_levels <- df_plot$onderdeel %>% unique()
+   df_plot$onderdeel <- factor(df_plot$onderdeel, levels = onderdeel_levels)
 
    
    kleuren <- df_plot$kleuren
-   names(kleuren) <- df_plot$onderdeel
+   names(kleuren) <- onderdeel_levels
 
 
    ggplot(df_plot) +
@@ -339,18 +355,29 @@ maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel 
                position = position_dodge2(width = 0.8),
                size = 5,
      ) +
+     #sterretje invoegen bij weggestreepte data omdat nvar of ncel niet gehaald wordt
+     geom_point(aes(x = groep, y = weggestreept, color = onderdeel),
+                position = position_dodge(width = .8),
+                shape = 8,
+                size = 5,
+                stroke = 2,
+                show.legend = FALSE,
+                na.rm = T
+     ) +
      ggtitle(titel) +
      #Hier worden de kleuren en volgorde bepaald.
      scale_fill_manual(values= kleuren,
-                       guide = guide_legend(nrow = 1, byrow = TRUE, label.position = "right", title.position = "top")
-                       ) +
+                       guide = guide_legend(nrow = 1, byrow = TRUE,
+                                            label.position = "right", title.position = "top")) +
+     #kleuren voor sterretje
+     scale_color_manual(values= kleuren) + 
+     
      scale_y_continuous(limits = c(0,100),
                         breaks = seq(0,100, by = 10),
                         labels = paste(seq(0,100, by = 10),"%"),
                         expand = expansion(mult = c(0, 0.05))
      ) +
      coord_cartesian(ylim = c(0,100))+
-     #scale_x_discrete(values = var_crossings) +
      theme(axis.title = element_blank(),
            panel.background = element_blank(),
            axis.ticks.x = element_blank(),
@@ -367,7 +394,7 @@ maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel 
 maak_staafdiagram_meerdere_staven <- function(df, var_inhoud,var_crossing = NULL, 
                                               titel = "",
                                               kleuren_grafiek = default_kleuren_grafiek,
-                                              flip = FALSE
+                                              flip = FALSE, nvar = default_Nvar, ncel = default_Ncel
 ){
   remove_legend = F
 
@@ -391,7 +418,17 @@ maak_staafdiagram_meerdere_staven <- function(df, var_inhoud,var_crossing = NULL
     group_by(!!sym(var_crossing)) %>% 
     mutate(aantal_vraag = sum(aantal_antwoord)) %>% 
     ungroup() %>% 
-    mutate(percentage = round((aantal_antwoord/aantal_vraag)*100))
+    mutate(percentage = round((aantal_antwoord/aantal_vraag)*100),
+           #Bij te lage aantallen -> Kolom als leeg weergeven net een sterretje in de kolom
+           percentage = case_when(aantal_vraag < nvar ~ NA,
+                                  aantal_antwoord < ncel ~ NA,
+                                  TRUE ~ percentage),
+           #TODO hier wordt nu niet de hele vraag weggestreept; dat is raar, want het kan bij 1 antwoord missing gewoon teruggerekend worden.
+           #TODO bespreken wat we met kleine N moeten; ik zou zeggen NIET hanteren OF hele vraag wegstrepen.
+           
+           weggestreept = ifelse(is.na(percentage), 30, NA) %>% as.numeric() #as numeric zodat ook een
+           #compleet lege vector als numeric telt.
+           )
   
   
   #TODO hier een functie van maken: labelled_dbl_to_factor
@@ -418,11 +455,26 @@ maak_staafdiagram_meerdere_staven <- function(df, var_inhoud,var_crossing = NULL
               position = position_dodge2(width = 0.8),
               size = 5,
     ) +
+    
+    #sterretje invoegen bij weggestreepte data omdat nvar of ncel niet gehaald wordt
+    geom_point(aes(x = !!sym(var_inhoud), y = weggestreept, color = !!sym(var_crossing)),
+               position = position_dodge(width = .8),
+               shape = 8,
+               size = 5,
+               stroke = 2,
+               show.legend = FALSE,
+               na.rm = T
+    ) +
+    
     ggtitle(titel) +
     #Hier worden de kleuren en volgorde bepaald.
     scale_fill_manual(values= kleuren,
                       guide = guide_legend(nrow = 1, byrow = TRUE, label.position = "right", title.position = "top")
     ) +
+    
+    #kleuren voor sterretje
+    scale_color_manual(values= kleuren) + 
+    
     scale_y_continuous(limits = c(0,100),
                        breaks = seq(0,100, by = 10),
                        labels = paste(seq(0,100, by = 10),"%"),
@@ -462,12 +514,10 @@ maak_staafdiagram_meerdere_staven <- function(df, var_inhoud,var_crossing = NULL
 #TODO Overal chekc inbouwen of een var wel een lbl+dbl is. Of niet afh. van maak_kruistabel() output.
 #TODO dezelfde dfbewerkingen uit plotfuncties halen & naar eigen functies halen
 
-
 maak_staafdiagram_uitsplitsing_naast_elkaar <- function(df, var_inhoud, var_crossings, titel = "",
                                                         kleuren_grafiek = default_kleuren_grafiek,
-                                                        kleuren_per_crossing = F, #TODO is deze nodig?
-                                                        fade_kleuren = F,
-                                                        flip = FALSE){
+                                                        kleuren_per_crossing = F, fade_kleuren = F,
+                                                        flip = FALSE, nvar = default_Nvar, ncel = default_Ncel){
   
   #o.b.v. de orientatie van de grafiek (flip = horizontaal)
   #De correctie van de geom_text aanpassen  zodat deze netjes in het midden v.e. balk komt 
@@ -590,24 +640,6 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(df, var_inhoud, var_cros
   return(plot)
 
 }
-
-
-
-maak_staafdiagram_uitsplitsing_naast_elkaar(
-  df = monitor_df,
-  var_inhoud = "vaak_stress",
-  var_crossings = c("gender_2cat","leeftijd_3cat","opleiding_4cat"),
-  kleuren_per_crossing = T,
-  fade_kleuren = T,
-  flip = F
- )
-# 
-# 
-# maak_staafdiagram_uitsplitsing_naast_elkaar(
-#   df = monitor_df,
-#   var_inhoud = "vaak_stress",
-#   var_crossings = c("gender_2cat","leeftijd_3cat"),
-#   flip = T)
 
 
 #horizontaal gestapeld staafdiagram
