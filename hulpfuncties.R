@@ -203,19 +203,17 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_
     ungroup() %>% 
     mutate(percentage = round((aantal_antwoord/aantal_vraag)*100),
            
-           #TODO; Bij te lage aantallen -> Kolom als leeg weergeven net een sterretje in de kolom
+           #Bij te lage aantallen -> Kolom als leeg weergeven net een sterretje in de kolom
            percentage = case_when(aantal_vraag < nvar ~ NA,
                                aantal_antwoord < ncel ~ NA,
                                TRUE ~ percentage),
            
-           weggestreept = ifelse(is.na(percentage), 30, NA)
+           weggestreept = ifelse(is.na(percentage), 30, NA) %>% as.numeric() #as numeric zodat ook een
+           #compleet lege vector als numeric telt.
            ) %>%
     
     filter(!!sym(var_inhoud) == 1) 
-  
-  #Vector maken met weggestreepte waarden
-  
-  
+
   #Vector maken met weggestreepte waarden
   df_plot[[var_crossing_groep]] <- factor(df_plot[[var_crossing_groep]], 
                                           levels = val_labels(df_plot[[var_crossing_groep]]),
@@ -281,11 +279,11 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_
     )
 }
 
-maak_staafdiagram_dubbele_uitsplitsing(df = monitor_df,
-                                       var_inhoud = "vaak_stress",
-                                       var_crossing_groep = "gender_2cat",
-                                       var_crossing_kleur = "leeftijd_3cat"
-                                       )
+# maak_staafdiagram_dubbele_uitsplitsing(df = monitor_df,
+#                                        var_inhoud = "vaak_stress",
+#                                        var_crossing_groep = "gender_2cat",
+#                                        var_crossing_kleur = "leeftijd_3cat"
+#                                        )
 
 maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel = "",
                                            kleuren_grafiek = default_kleuren_grafiek
@@ -305,8 +303,17 @@ maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel 
        ungroup() %>% 
        mutate(percentage = round((aantal_antwoord/aantal_vraag)*100),
               groep = var_label(!!sym(crossing)),
+              #Bij te lage aantallen -> Kolom als leeg weergeven net een sterretje in de kolom
+              percentage = case_when(aantal_vraag < nvar ~ NA,
+                                     aantal_antwoord < ncel ~ NA,
+                                     TRUE ~ percentage),
+              
+              weggestreept = ifelse(is.na(percentage), 30, NA) %>% as.numeric() #as numeric zodat ook een
+              #compleet lege vector als numeric telt.
+              
+              
               ) %>% 
-       rename("onderdeel" = 2) %>% 
+       rename("onderdeel" = 2) %>%
        filter(!!sym(var_inhoud) == 1) %>% 
        mutate(onderdeel = val_labels(onderdeel) %>% names())
      
@@ -321,12 +328,13 @@ maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel 
    
    #volgorde groepen op x-as vastzetten o.b.v. volgorde variabelen door er een factor vna te maken
    df_plot$groep <- factor(df_plot$groep)
-   #volgorde onderdeel vastzetten o.b.v dataframe 
-   df_plot$onderdeel <- factor(df_plot$onderdeel, levels = df_plot$onderdeel)
+   #volgorde onderdeel vastzetten o.b.v dataframe
+   onderdeel_levels <- df_plot$onderdeel %>% unique()
+   df_plot$onderdeel <- factor(df_plot$onderdeel, levels = onderdeel_levels)
 
    
    kleuren <- df_plot$kleuren
-   names(kleuren) <- df_plot$onderdeel
+   names(kleuren) <- onderdeel_levels
 
 
    ggplot(df_plot) +
@@ -339,18 +347,29 @@ maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel 
                position = position_dodge2(width = 0.8),
                size = 5,
      ) +
+     #sterretje invoegen bij weggestreepte data omdat nvar of ncel niet gehaald wordt
+     geom_point(aes(x = groep, y = weggestreept, color = onderdeel),
+                position = position_dodge(width = .8),
+                shape = 8,
+                size = 5,
+                stroke = 2,
+                show.legend = FALSE,
+                na.rm = T
+     ) +
      ggtitle(titel) +
      #Hier worden de kleuren en volgorde bepaald.
      scale_fill_manual(values= kleuren,
-                       guide = guide_legend(nrow = 1, byrow = TRUE, label.position = "right", title.position = "top")
-                       ) +
+                       guide = guide_legend(nrow = 1, byrow = TRUE,
+                                            label.position = "right", title.position = "top")) +
+     #kleuren voor sterretje
+     scale_color_manual(values= kleuren) + 
+     
      scale_y_continuous(limits = c(0,100),
                         breaks = seq(0,100, by = 10),
                         labels = paste(seq(0,100, by = 10),"%"),
                         expand = expansion(mult = c(0, 0.05))
      ) +
      coord_cartesian(ylim = c(0,100))+
-     #scale_x_discrete(values = var_crossings) +
      theme(axis.title = element_blank(),
            panel.background = element_blank(),
            axis.ticks.x = element_blank(),
