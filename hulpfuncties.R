@@ -214,6 +214,9 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_
     filter(!!sym(var_inhoud) == 1) 
   
   #Vector maken met weggestreepte waarden
+  
+  
+  #Vector maken met weggestreepte waarden
   df_plot[[var_crossing_groep]] <- factor(df_plot[[var_crossing_groep]], 
                                           levels = val_labels(df_plot[[var_crossing_groep]]),
                                           labels = names(val_labels(df_plot[[var_crossing_groep]])))
@@ -250,16 +253,13 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_
                show.legend = FALSE,
                na.rm = T
                ) +
-    #TODO sterretje verwijderen uit legenda key
     #TODO toelichting op sterretje in grafiek?
-    #TODO na rows message voorkomen
     ggtitle(titel) +
     #Hier worden de kleuren en volgorde bepaald.
     #Voor de fill van de balken
     scale_fill_manual(values= kleuren,
                       guide = guide_legend(nrow = 1, byrow = TRUE,
-                                           label.position = "right", title.position = "top")
-    ) +
+                                           label.position = "right", title.position = "top")) +
     #voor de kleur van de sterretjes
     scale_color_manual(values= kleuren) +
     
