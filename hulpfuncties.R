@@ -217,6 +217,7 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_
            weggestreept = ifelse(is_leeg, 30, NA) %>% as.numeric()) %>% #maak een vector met val 30 waar een antwoord ontbreekt (voor missing sterretjes in diagram) 
     filter(!!sym(var_inhoud) == 1) #dichtome var; ja overhouden.
 
+
   #Vector maken met weggestreepte waarden
   df_plot[[var_crossing_groep]] <- factor(df_plot[[var_crossing_groep]], 
                                           levels = val_labels(df_plot[[var_crossing_groep]]),
@@ -282,6 +283,14 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_
     )
 }
 
+<<<<<<< HEAD
+=======
+# maak_staafdiagram_dubbele_uitsplitsing(df = monitor_df,
+#                                        var_inhoud = "vaak_stress",
+#                                        var_crossing_groep = "gender_2cat",
+#                                        var_crossing_kleur = "leeftijd_3cat"
+#                                        )
+>>>>>>> 4587de9627a58743010bbb85960e3da5293a8582
 
 maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel = "",
                                            kleuren_grafiek = default_kleuren_grafiek,
