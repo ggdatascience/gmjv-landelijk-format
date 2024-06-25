@@ -6,10 +6,9 @@
 # Dat doe je met behulp van de functie: install.packages() 
 # (Verwijder de # aan het begin van onderstaande regel om de code te runnen en de benodigde packages te installeren.)
 # TODO hier nog iets van maken met een fucntie die checkt of deze package al is geinstalleerd, en anders installeren?
+#install.packages(c('tidyverse', 'haven', 'labelled', 'survey'))
 # TODO Pieter: Is het wel nodig om ziets te schrijven? moderne RStudio doet dat vanzelf voor je.
 # TODO Alle grafieken automatisch van relevante alt text
-
-# install.packages(c('tidyverse', 'haven', 'labelled'))
 
 #TODO keus maken in digitoegankelijkheid plots:
 #Alt text https://www.w3.org/WAI/tutorials/images/complex/
@@ -23,6 +22,7 @@ library(ggplot2)
 library(tidyr)
 library(stringr) # Voor str_replace
 library(labelled) # Package om te werken met datalabels, o.a. voor to_character()
+library(survey) # Package om te werken met gewogen gemiddelds incl. betrouwbaarheidsintervallen
 library(glue) #om strings aangenaam aan elkaar te plakken
 
 # Standaard instellingen --------------------------------------------------
@@ -410,6 +410,7 @@ maak_staafdiagram_meerdere_staven <- function(df, var_inhoud,var_crossing = NULL
 
 
 
+
 #TODO lijntjes tussen uitsplitsingen
 #TODO namen uitsplitsingen onder x-as labels
 #TODO stoppen met uitsplitsing en crossing door elkaar gebruiken
@@ -630,7 +631,7 @@ maak_staafdiagram_gestapeld <- function(df, var_inhoud, titel = "",
 # Zie https://github.com/ggdatascience/rapportage_monitor_gmj 
 
 bereken_cijfers <- function(data, indicator, waarde, omschrijving, niveau_indicator, niveau_waarde, 
-                            niveau_naam, jaar_indicator, jaar, uitsplitsing, groepering, 
+                            niveau_naam, jaar_indicator, jaar, uitsplitsing = NA, groepering = NA, 
                             weegfactor_indicator = "geen", Nvar = default_Nvar, Ncel = default_Ncel) {
   data %>%
     filter(.[niveau_indicator] == niveau_waarde & .[jaar_indicator] == jaar) %>%
@@ -662,8 +663,7 @@ bereken_cijfers <- function(data, indicator, waarde, omschrijving, niveau_indica
   
 }
 
-#Pieter: Test/Toepassing  functie tijdelijk uitgezet.  
-# # Testen functie
+## Voorbeeld:
 # bereken_cijfers(data = monitor_df,
 #                 indicator = 'GZGGA402',
 #                 waarde = 1,
@@ -673,8 +673,8 @@ bereken_cijfers <- function(data, indicator, waarde, omschrijving, niveau_indica
 #                 niveau_naam = 'Gemeente D',
 #                 jaar_indicator = 'AGOJB401',
 #                 jaar = 2022,
-#                 uitsplitsing = 'AGGSA402',
-#                 groepering = 'AGLFA401',
+#                 #uitsplitsing = 'AGGSA402',
+#                 #groepering = 'AGLFA401',
 #                 weegfactor_indicator = "Standaardisatiefactor")
 
 # TODO: functie maken om verschil tussen groepen (en/of jaren?) vast te stellen en tekst hierover te printen
@@ -737,10 +737,7 @@ maak_adaptieve_tekst <- function(data, indicator, waarde, omschrijving, niveau_i
 #                 weegfactor_indicator = "Standaardisatiefactor")
 
 
-
 ##### Survey functies uit oud tabellenboekscript ####
-
-###hulpffuncties voor tabellenboeken###
 
 #survey_design_maken()
 #Functie om survey design te maken. Functioneert niet heel anders standaard survey fucntie svydesign(), geeft bij veelvoorkomende fouten leesbare errorberichten
@@ -789,10 +786,12 @@ survey_design_maken <- function(data = NULL, strata = NULL, gewichten = NULL){
   }
 }
 
-##Voorbeeld:
-# strata_var = "stratum"
-# gewicht_var = "weegfactor_gemeentelijk"
-# survey_design_maken(data, strata_var, gewicht_var)
+## Voorbeeld:
+# data = monitor_df
+# strata_var = "Stratum"
+# gewicht_var = "Standaardisatiefactor"
+# design <- survey_design_maken(data = monitor_df, strata = 'Stratum', 'Standaardisatiefactor')
+
 
 #prop_ci_berekenen()
 #functie die per antwoordmogelijkheid betrouwbaarheidsintervallen berekend voor proporties van in een kruistabel.
@@ -863,7 +862,7 @@ prop_ci_berekenen <- function(data = NULL, variabele = NULL, nummer = NULL, cros
   }
 }
 
-# #Voorbeeld
+## Voorbeeld
 # prop_ci_berekenen(variabele="FLCAO205", nummer = 1)
 
 # prop_ci_berekenen(variabele="FLCAO205", nummer = 1, crossing = "geslacht_3cat")
@@ -873,10 +872,12 @@ prop_ci_berekenen <- function(data = NULL, variabele = NULL, nummer = NULL, cros
 #functie die een kruistabel maaakt per variabele. Kan zonder of met crossing.
 #Maakt een kruistabel
 #Deze functie wordt niet direct gebruikt in het script, maar wordt binnen de functie tabellen_naar_csv gebruikt.
-kruistabel_maken <- function(data = data, variabele = NULL, crossing = NULL, survey_design = NULL){
+kruistabel_maken <- function(data, variabele = NULL, crossing = NULL, survey_design = NULL,
+                             min_observaties_per_vraag = default_Nvar){
   
   #Niet-valide invoer afvangen & warning geven
   if(is.null(data[[variabele]])) {
+    
     warning(paste("variabele",variabele, "bestaat niet in dataset. Wordt overgeslagen"))
     return(NULL)
     
@@ -885,7 +886,7 @@ kruistabel_maken <- function(data = data, variabele = NULL, crossing = NULL, sur
     antwoorden <-  attr(data[[variabele]], "labels") # value labels
     
     #Formule maken voor in svytable
-    formule_tekst <- paste0("~data[['",variabele,"']]")
+    formule_tekst <- paste0("~ ", substitute(data), "[['", variabele,"']]")
     
     tb <- svytable(formula = eval(parse(text = formule_tekst)), design = survey_design) 
     
@@ -893,7 +894,9 @@ kruistabel_maken <- function(data = data, variabele = NULL, crossing = NULL, sur
     #Betekend dit dat er een ongelabelde waarde is. Dat kan betekenen dat het een Missing is die niet zo is vastgelegd in spss
     #Of het kan betekenen dat een valide waarde ongelabeld is. vanwege deze onduidelijkheid. Harde error met melding
     if(length(antwoorden) < length(tb)){
+      
       stop(paste("Er zijn ongelabelde waarden. Controleer variabele", variabele, "in .sav bestand"))
+      
     }
     
     
@@ -926,8 +929,6 @@ kruistabel_maken <- function(data = data, variabele = NULL, crossing = NULL, sur
       
       #Confidence intervals worden gebruikt t.b.v. statistische toetsen. Deze toetsen moeten alleen uitgevoerd worden
       #wanneer het aantal observaties op een vraag minstens de waarde heeft van min_observaties.
-      #min_observaties is  gedefinieerd in configuratie.xlsx tablad 'algemeen'
-      
       
       #Als er minder dan min_observaties zijn bij een vraag; maak CI's NA.
       if(sum(table(data[[variabele]])) < min_observaties_per_vraag){
@@ -958,18 +959,19 @@ kruistabel_maken <- function(data = data, variabele = NULL, crossing = NULL, sur
                           "n_unweighted" = table(factor(data[[variabele]], levels = antwoorden))
       )
       
-      #Als er wel crossings zijn
+    #Als er wel crossings zijn
     }else{
+      
       #Warning als crossing niet bestaat
       if(is.null(data[[crossing]])){
         stop(paste("crossing",crossing, "bestaat niet in dataset. Kijk configuratie en dataset na"))
         return(NULL)
       }else{
         
-        # #Als er missings zijn op de crossing. Warning verplaatst naar tabellen_naar_csv
-        # if(any(is.na(data[[crossing]]))){
-        #   warning(paste("Missing data gevonden bij crossing",crossing))
-        # }
+        #Als er missings zijn op de crossing. Warning verplaatst naar tabellen_naar_csv
+        if(any(is.na(data[[crossing]]))){
+          warning(paste("Missing data gevonden bij crossing",crossing))
+        }
         
         #CI uitrekenen
         confidence_intervals <- lapply(unname(antwoorden), function(x){prop_ci_berekenen(data = data,
@@ -1072,9 +1074,16 @@ kruistabel_maken <- function(data = data, variabele = NULL, crossing = NULL, sur
         
       }
     }
-    return(kruistabel)
+    return(data.frame(kruistabel))
     
   }
   
 }
 
+## Voorbeeld:
+# data = monitor_df
+# variabele = GZGGA402
+# crossing = AGLFA401
+# design = design
+kruistabel_maken(data = monitor_df, variabele = 'GZGGA402', crossing = 'AGLFA401', survey_design = design)
+kruistabel_maken(data = monitor_df, variabele = 'GZGGA402', survey_design = design)

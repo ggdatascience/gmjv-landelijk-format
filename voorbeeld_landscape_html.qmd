@@ -12,6 +12,9 @@ editor: visual
 ---
 
 ```{r, echo=F, message=F}
+# Het script maakt gebruik van een aantal packages
+# Deze moeten bij de eerste keer lokaal worden geinstalleerd
+# Hieronder worden de benodige packages geladen
 library(gt)
 library(dplyr)
 library(ggplot2)
@@ -35,8 +38,12 @@ file_path = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
 monitor_df = haven::read_spss(file_path,user_na =T) %>%
   labelled::user_na_to_na()
 
-#Vreselijke varcodes hernoemen naar iets anders vreselijs
-names(monitor_df) <- c("jaar","standaardisatiefactor","leeftijd_3cat","leeftijd_2cat","gender_3cat","gender_2cat","ggd_regio","ggd_regio_utrecht_samen","gemeentecode","stedelijkheid","migratie_3cat","opleiding","opleiding_4cat","opleiding_3cat","opleiding_2cat","ervaren_gezondheid_goed","psychische_klachten", "tevreden_zelf_3cat","tevreden_lichaam_3cat","tevreden_leven_3cat","vaak_stress","vertrouwen_toekomst_3cat","bezorgd_werkgelegenheid","bezorgd_woningmarkt","bezorgd_klimaat","bezorgd_discriminatie","bezorgd_polarisatie","bezorgd_oorlogen","eenzaamheid_3cat","is_eenzaam","sterk_eenzaam","prestatiedruk")
+
+#Vreselijke varcodes hernoemen naar iets leesbaars
+names(monitor_df) <- c("jaar","Stratum","standaardisatiefactor","leeftijd_3cat","leeftijd_2cat","gender_3cat","gender_2cat","ggd_regio","ggd_regio_utrecht_samen","gemeentecode","stedelijkheid","migratie_3cat","opleiding","opleiding_4cat","opleiding_3cat","opleiding_2cat","ervaren_gezondheid_goed","psychische_klachten", "tevreden_zelf_3cat","tevreden_lichaam_3cat","tevreden_leven_3cat","vaak_stress","vertrouwen_toekomst_3cat","bezorgd_werkgelegenheid","bezorgd_woningmarkt","bezorgd_klimaat","bezorgd_discriminatie","bezorgd_polarisatie","bezorgd_oorlogen","eenzaamheid_3cat","is_eenzaam","sterk_eenzaam",
+                       "NIEUS101"#? Wat is dit
+                       )
+
 
 
 
@@ -231,3 +238,4 @@ monitor_df %>%
 ```{r}
 
 ```
+
