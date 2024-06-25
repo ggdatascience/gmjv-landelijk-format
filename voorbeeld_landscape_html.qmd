@@ -64,7 +64,7 @@ for(var in names(monitor_df)){
 \
 
 ::: voorblad_achtergrond
-![](voorblad_alles.png)
+![](Voorbeeld voorblad.png)
 
 ::: voorblad_gemeentenaam
 Rapportnaam

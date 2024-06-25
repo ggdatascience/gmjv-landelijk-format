@@ -28,10 +28,10 @@ library(glue) #om strings aangenaam aan elkaar te plakken
 # Standaard instellingen --------------------------------------------------
 
 # Standaard kleuren instellen
-default_kleuren_grafiek <- c("#009898","#91caca","#009428")
-default_kleuren_responstabel <- c("header" = "#e8525f",
-                                  "kleur_1" = "#009898",
-                                  "kleur_2" = "#91CACA",
+default_kleuren_grafiek <- c("#012C17","#76B82A","#007E48")
+default_kleuren_responstabel <- c("header" = "#012C17",
+                                  "kleur_1" = "#007E48",
+                                  "kleur_2" = "#76B82A",
                                   "kleur_text" = "#FFFFFF"
                                   )
 
@@ -1085,5 +1085,5 @@ kruistabel_maken <- function(data, variabele = NULL, crossing = NULL, survey_des
 # variabele = GZGGA402
 # crossing = AGLFA401
 # design = design
-kruistabel_maken(data = monitor_df, variabele = 'GZGGA402', crossing = 'AGLFA401', survey_design = design)
-kruistabel_maken(data = monitor_df, variabele = 'GZGGA402', survey_design = design)
+#kruistabel_maken(data = monitor_df, variabele = 'GZGGA402', crossing = 'AGLFA401', survey_design = design)
+#kruistabel_maken(data = monitor_df, variabele = 'GZGGA402', survey_design = design)
