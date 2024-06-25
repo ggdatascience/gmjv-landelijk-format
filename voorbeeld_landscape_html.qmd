@@ -8,14 +8,17 @@ format:
     toc: TRUE
     toc-location: left
     embed-resources: true
+  pdf: 
+    classoption: landscape
+    toc: TRUE
+params:
+  gemeentecode: 1 
 editor: visual
+format-links: false
 ---
 
-# Header
 
-# Header 2
-
-```{r, echo=F, message=F}
+```{r, echo=F, message=F, warning=F}
 # Het script maakt gebruik van een aantal packages
 # Deze moeten bij de eerste keer lokaal worden geinstalleerd
 # Hieronder worden de benodige packages geladen
@@ -41,6 +44,7 @@ file_path = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
 monitor_df = haven::read_spss(file_path,user_na =T) %>%
   labelled::user_na_to_na()
 
+
 #Vreselijke varcodes hernoemen naar iets anders vreselijs
 names(monitor_df) <- c("jaar","Stratum","standaardisatiefactor","leeftijd_3cat","leeftijd_2cat","gender_3cat","gender_2cat","ggd_regio","ggd_regio_utrecht_samen","gemeentecode","stedelijkheid","migratie_3cat","opleiding","opleiding_4cat","opleiding_3cat","opleiding_2cat","ervaren_gezondheid_goed","psychische_klachten", "tevreden_zelf_3cat","tevreden_lichaam_3cat","tevreden_leven_3cat","vaak_stress","vertrouwen_toekomst_3cat","bezorgd_werkgelegenheid","bezorgd_woningmarkt","bezorgd_klimaat","bezorgd_discriminatie","bezorgd_polarisatie","bezorgd_oorlogen","eenzaamheid_3cat","is_eenzaam","sterk_eenzaam","prestatiedruk")
 
@@ -53,7 +57,11 @@ for(var in names(monitor_df)){
 
 }
 
-#TODO Afhankelijk van keuze werkgroep nog met survey:: conf. intervals & gewogen aantallen uitrekenen. 
+#TODO Tijdelijke filter op alleen gemeente in parameter
+monitor_df <- monitor_df %>% 
+  filter(gemeentecode == params$gemeentecode)
+
+
 ```
 
 \

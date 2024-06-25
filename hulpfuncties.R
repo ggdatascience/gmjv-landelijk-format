@@ -324,7 +324,7 @@ maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel 
                                      TRUE ~ percentage)) %>% 
        #voor de kleine N voorwaarde moet de hele vraag weggestreept worden als er niet
        #aan de voorwaarde wordt voldaan; groeperen op crossings:
-       group_by(!!sym(var_crossings)) %>% 
+       group_by(!!sym(crossing)) %>% 
        mutate(is_leeg = any(is.na(percentage))) %>% #is_leeg als één percentage van een vraag NA is.
        ungroup() %>% 
        mutate(percentage = ifelse(is_leeg, NA, percentage), #zet alle vragen met tenminste 1 NA antwoord op NA
@@ -702,7 +702,8 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(df, var_inhoud, var_cros
 
 #horizontaal gestapeld staafdiagram
 maak_staafdiagram_gestapeld <- function(df, var_inhoud, titel = "",
-                                        kleuren_grafiek = default_kleuren_grafiek, x_label = ""){
+                                        kleuren_grafiek = default_kleuren_grafiek, x_label = "",
+                                        nvar = default_Nvar, ncel = default_Ncel){
   
   if(!labelled::is.labelled(df[[var_inhoud]])){
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
@@ -1233,5 +1234,6 @@ kruistabel_maken <- function(data, variabele = NULL, crossing = NULL, survey_des
 # variabele = GZGGA402
 # crossing = AGLFA401
 # design = design
-#kruistabel_maken(data = monitor_df, variabele = 'GZGGA402', crossing = 'AGLFA401', survey_design = design)
-#kruistabel_maken(data = monitor_df, variabele = 'GZGGA402', survey_design = design)
+
+# kruistabel_maken(data = monitor_df, variabele = 'GZGGA402', crossing = 'AGLFA401', survey_design = design)
+# kruistabel_maken(data = monitor_df, variabele = 'GZGGA402', survey_design = design)
