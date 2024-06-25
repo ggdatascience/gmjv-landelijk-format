@@ -11,6 +11,10 @@ format:
 editor: visual
 ---
 
+# Header
+
+# Header 2
+
 ```{r, echo=F, message=F}
 # Het script maakt gebruik van een aantal packages
 # Deze moeten bij de eerste keer lokaal worden geinstalleerd
@@ -27,7 +31,6 @@ source("hulpfuncties.R")
 # Links naar dingen IN het document maken (maakt dat uit als we een TOC hebben? Misschien voor PDF?)
 #https://quarto.org/docs/authoring/cross-references-custom.html
 
-
 #TODO Hier later SPSS data inlezen
 #Nu nepdata genereren 
 
@@ -38,17 +41,11 @@ file_path = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
 monitor_df = haven::read_spss(file_path,user_na =T) %>%
   labelled::user_na_to_na()
 
-
-#Vreselijke varcodes hernoemen naar iets leesbaars
-names(monitor_df) <- c("jaar","Stratum","standaardisatiefactor","leeftijd_3cat","leeftijd_2cat","gender_3cat","gender_2cat","ggd_regio","ggd_regio_utrecht_samen","gemeentecode","stedelijkheid","migratie_3cat","opleiding","opleiding_4cat","opleiding_3cat","opleiding_2cat","ervaren_gezondheid_goed","psychische_klachten", "tevreden_zelf_3cat","tevreden_lichaam_3cat","tevreden_leven_3cat","vaak_stress","vertrouwen_toekomst_3cat","bezorgd_werkgelegenheid","bezorgd_woningmarkt","bezorgd_klimaat","bezorgd_discriminatie","bezorgd_polarisatie","bezorgd_oorlogen","eenzaamheid_3cat","is_eenzaam","sterk_eenzaam",            "prestatiedruk")
-
-
-
+#Vreselijke varcodes hernoemen naar iets anders vreselijs
+names(monitor_df) <- c("jaar","Stratum","standaardisatiefactor","leeftijd_3cat","leeftijd_2cat","gender_3cat","gender_2cat","ggd_regio","ggd_regio_utrecht_samen","gemeentecode","stedelijkheid","migratie_3cat","opleiding","opleiding_4cat","opleiding_3cat","opleiding_2cat","ervaren_gezondheid_goed","psychische_klachten", "tevreden_zelf_3cat","tevreden_lichaam_3cat","tevreden_leven_3cat","vaak_stress","vertrouwen_toekomst_3cat","bezorgd_werkgelegenheid","bezorgd_woningmarkt","bezorgd_klimaat","bezorgd_discriminatie","bezorgd_polarisatie","bezorgd_oorlogen","eenzaamheid_3cat","is_eenzaam","sterk_eenzaam","prestatiedruk")
 
 #Er is niet goed aangegeven wat missing is in SPSS.
 #tijdelijke functie om 9 Onbekend te verwijderen & naar NA te zetten
-
-
 
 for(var in names(monitor_df)){
   
@@ -65,7 +62,7 @@ for(var in names(monitor_df)){
 ![](Voorbeeld voorblad.png)
 
 ::: voorblad_gemeentenaam
-Rapportnaam
+Naam gemeente Hier R code
 :::
 
 ::: voorblad_datum
@@ -233,6 +230,14 @@ monitor_df %>%
   )
 ```
 
+```{r, fig.width=12, fig.height=3}
+#Fig height & width settings zijn nodig om een gestapeld staafdiagram 
+# op de juiste hoogte / breedte te krijgen
+monitor_df %>% maak_staafdiagram_gestapeld(var_inhoud = "tevreden_lichaam_3cat",
+                                           x_label = "GEMEENTENAAM")
+
+```
+
 {{< pagebreak >}}
 
 ::: pagina_header_img
@@ -345,6 +350,14 @@ monitor_df %>%
      var_crossing_kleur = "gender_2cat", # gender nog wijzigen naar vergelijking met landelijk
      titel = "Voelt zich (heel) vaak gestrest")
 
+```{r}
+monitor_df %>% maak_staafdiagram_uitsplitsing_naast_elkaar(
+  var_inhoud = "vaak_stress",
+  var_crossings = c("gender_2cat","opleiding_3cat","leeftijd_3cat"),
+  flip = T,
+  kleuren_per_crossing = T,
+  fade_kleuren = T
+)
 ```
 :::
 
