@@ -12,11 +12,10 @@ Positie kan aangepast worden dmv "top" & "left".
 .pagina_header_img{
 
   position: relative;
+
 }
 
 .voorblad_gemeentenaam{
-  width: 100%;
-  height: 100%;
   position: absolute;
   top: 60%;
   left: 5%;
@@ -27,8 +26,6 @@ Positie kan aangepast worden dmv "top" & "left".
 }
 
 .voorblad_datum{
-  width: 100%;
-  height: 100%;
   position: absolute;
   top: 65%;
   left: 5%;

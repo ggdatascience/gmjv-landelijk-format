@@ -7,6 +7,13 @@
 # (Verwijder de # aan het begin van onderstaande regel om de code te runnen en de benodigde packages te installeren.)
 # TODO hier nog iets van maken met een fucntie die checkt of deze package al is geinstalleerd, en anders installeren?
 #install.packages(c('tidyverse', 'haven', 'labelled', 'survey'))
+# TODO Pieter: Is het wel nodig om ziets te schrijven? moderne RStudio doet dat vanzelf voor je.
+# TODO Alle grafieken automatisch van relevante alt text
+
+#TODO keus maken in digitoegankelijkheid plots:
+#Alt text https://www.w3.org/WAI/tutorials/images/complex/
+#Plot als tabel toevoegen (evt achter tab-button?)
+#TODO ALT TEXT
 
 # Hieronder worden de benodige packages geladen
 library(gt)
@@ -15,55 +22,159 @@ library(ggplot2)
 library(tidyr)
 library(stringr) # Voor str_replace
 library(labelled) # Package om te werken met datalabels, o.a. voor to_character()
-library(survey) # Pacakge om te werken met gewogen gemiddelds incl. betrouwbaarheidsintervallen
+library(survey) # Package om te werken met gewogen gemiddelds incl. betrouwbaarheidsintervallen
+library(glue) #om strings aangenaam aan elkaar te plakken
 
 # Standaard instellingen --------------------------------------------------
 
 # Standaard kleuren instellen
-default_kleuren <- c("#009898","#91caca","#009428")
+default_kleuren_grafiek <- c("#009898","#91caca","#009428")
+default_kleuren_responstabel <- c("header" = "#e8525f",
+                                  "kleur_1" = "#009898",
+                                  "kleur_2" = "#91CACA",
+                                  "kleur_text" = "#FFFFFF"
+                                  )
 
 # Default minimum aantallen instellen
 default_Nvar = 100 # Minimum aantal invullers per vraag.
 default_Ncel = 10 # Minimum aantal invullers oper antwoordoptie.
 
-##### Maak responstabel ####
-maak_responstabel <- function(df, crossings = NULL){
+
+# utility -----------------------------------------------------------------
+
+#TODO vervangen met algemenere functie OF verwijderen en eindgebruikers instrueren
+#hun variabele goed te coderen zodat alle missing ook user missing zijn
+verwijder_9_onbekend <- function(data, var){
+  value_labels <- val_labels(data[[var]])
+  nieuwe_value_labels <- value_labels[value_labels!= 9]
+  #Omdat 9 is verwijderd uit de nieuwe val labels, resulteert
+  #het toeschrijven vna die labels aan de variabele
+  #in NA's voor de waarde 9.
+  val_labels(data[[var]]) <- nieuwe_value_labels
+  
+  return(data)
+}
+
+#Functie om labelled doubles om te zetten naar characters o.b.v. de labels (ipv de numerieke waarden)
+labelled_naar_character <- function(data,var){
+  
+  var_factor <- to_factor(data[[var]])
+  var_character <- as.character(var_factor)
+  
+  return(var_character)
+} 
+
+
+
+# Tabelfuncties -------------------------------------------------------
+maak_responstabel <- function(df, crossings = NULL, missing_label = "Onbekend",
+                              kleuren = default_kleuren_responstabel){
+
+  #TODO Hoe om te gaan met missing waarden? Meetellen als 'onbekend' of niet weergeven?
+  #In laatste geval kloppen de totalen van crossings onderling niet. Kan prima zijn
+  #Voorlopige keuze: Missings weergeven als "onebekend"
+  
+  aantallen_per_crossing <- lapply(crossings, function(x){
+    
+    #Variabelen naar character omzetten
+    df[[x]] <- labelled_naar_character(df, x)
+    
+    #Aantallen uitrekenen. Missing labelen als missing_label
+    aantallen_df = df %>% 
+      group_by(!!sym(x)) %>% 
+      summarise(n = n()) %>%
+      rename(crossing = 1) %>% 
+      mutate(crossing = replace(crossing, is.na(crossing),missing_label))  
+    
+    #Als het de 1e crossing is; totaal_df bovenaan df toevoegen
+    #NB Is maar 1 totaal in responstabel; dus n per crossing worden als gelijk beschouwd.
+    if(x == crossings[1]){
+      totaal_df <- data.frame(
+        crossing = "Totaal",
+        n = sum(aantallen_df$n)
+        )
+      
+      rbind(totaal_df,aantallen_df)
+    } else{
+    #Anders gewoon aantallen teruggeven
+      aantallen_df
+    }
+    
+  }) %>% do.call(rbind,.) #dataframes per crossing aan elkaar plakken
+  
+  #gegeven een vector met alle crossings willen we afwisselend een andere kleur geven
+  #aan iedere even en oneven crossing. Dus c("gender","klas","opleiding") 
+  #moet de crossing "gender" een andere kleur geven dan "klas" en dezelfde kleur als "opleiding"
+  
+  #We weten van te voren niet hoeveel niveaus een crossing heeft dus moet dat uitgerekend worden
+  levels_crossings <- lapply(crossings, function(x){
+    
+    df[[x]] %>% unique() %>% length()    
+  }) %>% unlist()
+  
+  #twee vectoren aanmaken die gevuld zullen worden met de rij-indexen voor kleur 1 en 2 
+  kleur_1_indexen <- c(1) #aanmaken met waarde 1 = bovenste totaalrij
+  kleur_2_indexen <- c()
+  current_index <- 1
   
   
+  for(i in 1:length(levels_crossings)){
+    
+    #even index
+    if(i %% 2 == 0){
+      
+      start_index = current_index + 1 
+      eind_index <- current_index + levels_crossings[i]
+      bereik = c(start_index:eind_index )
+      current_index <- max(bereik)
+      
+      kleur_1_indexen <- c(kleur_1_indexen, bereik)
+    } else {
+    #oneven index
+      
+      start_index = current_index + 1 
+      eind_index <- current_index + levels_crossings[i]
+      bereik = c(start_index:eind_index )
+      current_index <- max(bereik)
+      
+      kleur_2_indexen <- c(kleur_2_indexen,bereik)
+    }
+    
+    
+  }
+  
+  #we willen een vector met de rijnummers van alle oneven crossings 
   
   
-  rijnamen <- c("Totaal", "Klas 2", "Klas 4", "Vmbo", "Havo/Vwo", "Jongen","Meisje")
-  waarden <- sample(1:300, 7)
-  waarden[1] <- sum(waarden[2:3])
-  waarden[6:7] <- waarden[1]/2
-  
-  nepdata <- data.frame("Groep" =  rijnamen, "Aantal ingevulde vragenlijsten" =  waarden)
-  
-  nepdata %>% 
+  #aangepaste versie van joliens versie voor gemeenteprofielen
+  aantallen_per_crossing %>% 
     gt() %>% 
     # Bovenste rij roze kleur
-    tab_style(style = cell_fill(color = "#e8525f"), locations = cells_column_labels()) %>% 
+    tab_style(style = cell_fill(color = kleuren[1]), locations = cells_column_labels()) %>% 
+
     # Totaal en gender donkergroen
-    tab_style(style = cell_fill(color = "#009898"), locations = cells_body(rows = c(1, 4, 5))) %>% 
+    tab_style(style = cell_fill(color = kleuren[2]), locations = cells_body(rows = kleur_1_indexen)) %>% 
     # Klas lichtgroen
-    tab_style(style = cell_fill(color = "#91caca"), locations = cells_body(rows = c(2, 3,6,7))) %>% 
-    # Wit lettertype
-    tab_style(style = cell_text(color = "#FFFFFF"), locations = cells_column_labels()) %>% 
-    tab_style(style = cell_text(color = "#FFFFFF"), locations = cells_body()) %>% 
+    tab_style(style = cell_fill(color = kleuren[3]), locations = cells_body(rows = kleur_2_indexen)) %>%
+    #Wit lettertype
+    tab_style(style = cell_text(color = kleuren[4]), locations = cells_column_labels()) %>% 
+    tab_style(style = cell_text(color = kleuren[4]), locations = cells_body()) %>% 
     # Kolomnaam Aantal vetgedrukt
     tab_style(style = cell_text(weight = "bold"), locations = cells_column_labels()) %>% 
-    # Verwijder kolomnaam boven eerste kolom
-    cols_label(matches("Groep") ~ "") %>% 
     # Pas kolomnaam Aantal aan
-    cols_label(matches("Aantal") ~ "Aantal ingevulde vragenlijsten") %>% 
+    cols_label(matches("n") ~ "Aantal ingevulde vragenlijsten") %>%
+    # Verwijder kolomnaam boven eerste kolom
+    cols_label(matches("crossing") ~ "") %>% 
     # Per default wordt de tabel gecentreerd op de pagina. Zet deze volledig naar links.
     tab_options(table.margin.left = 0,
                 table.margin.right = 0) 
   
 }
 
+
+# Grafiekfuncties ---------------------------------------------------------
 maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_groep, var_crossing_kleur, titel = "",
-                                                   kleuren_grafiek = default_kleuren){
+                                                   kleuren_grafiek = default_kleuren_grafiek){
   #DIT IS EEN NAIEVE VERWERKING VH DATAFRAME MET ABSOLUTE AANTALLEN
   #TODO Vervangen met gewogen aantallen.
   df_plot <- df %>% 
@@ -131,7 +242,7 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_
 }
 
 maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel = "",
-                                           kleuren_grafiek = default_kleuren
+                                           kleuren_grafiek = default_kleuren_grafiek
                                              ){
 
    df_plot <- lapply(var_crossings, function(crossing){
@@ -209,7 +320,7 @@ maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel 
 
 maak_staafdiagram_meerdere_staven <- function(df, var_inhoud,var_crossing = NULL, 
                                               titel = "",
-                                              kleuren_grafiek = default_kleuren,
+                                              kleuren_grafiek = default_kleuren_grafiek,
                                               flip = FALSE
 ){
   remove_legend = F
@@ -298,8 +409,224 @@ maak_staafdiagram_meerdere_staven <- function(df, var_inhoud,var_crossing = NULL
 }
 
 
-#bereken_cijfers() 
-#Functie maken om cijfers te berekenen.
+
+
+#TODO lijntjes tussen uitsplitsingen
+#TODO namen uitsplitsingen onder x-as labels
+#TODO stoppen met uitsplitsing en crossing door elkaar gebruiken
+#TODO Overal chekc inbouwen of een var wel een lbl+dbl is. Of niet afh. van maak_kruistabel() output.
+#TODO dezelfde dfbewerkingen uit plotfuncties halen & naar eigen functies halen
+
+
+maak_staafdiagram_uitsplitsing_naast_elkaar <- function(df, var_inhoud, var_crossings, titel = "",
+                                                        kleuren_grafiek = default_kleuren_grafiek,
+                                                        kleuren_per_crossing = F, #TODO is deze nodig?
+                                                        fade_kleuren = F,
+                                                        flip = FALSE){
+  
+  #o.b.v. de orientatie van de grafiek (flip = horizontaal)
+  #De correctie van de geom_text aanpassen  zodat deze netjes in het midden v.e. balk komt 
+  v_just_text = ifelse(flip,0.5,1.5)
+  h_just_text = ifelse(flip,1.5,0.5)
+
+  #% voor iedere crossing appart uitrekenen.
+  df_plot <- lapply(var_crossings, function(crossing){
+    
+    df_crossing = df %>% 
+      filter(!is.na(!!sym(var_inhoud)),
+             !is.na(!!sym(crossing))) %>%
+      select(!!sym(var_inhoud),!!sym(crossing)) %>% 
+      group_by(!!sym(var_inhoud),!!sym(crossing)) %>% 
+      summarise(aantal_antwoord = n()) %>% 
+      ungroup() %>% 
+      group_by(!!sym(crossing)) %>% 
+      mutate(aantal_vraag = sum(aantal_antwoord)) %>% 
+      ungroup() %>% 
+      mutate(percentage = round((aantal_antwoord/aantal_vraag)*100),
+             groep = var_label(!!sym(crossing)),
+      ) %>% 
+      rename("onderdeel" = 2) %>% 
+      filter(!!sym(var_inhoud) == 1) %>% 
+      mutate(onderdeel = val_labels(onderdeel) %>% names())
+    
+    #Als iedere crossing eigen kleuren moet hebben; kleuren toewijzen aan dataframe
+    if(kleuren_per_crossing){
+      n_crossing <- which(crossing == var_crossings)
+      
+      kleur_crossing = kleuren_grafiek[n_crossing]
+      
+      #als de kleuren steeds lichter moeten worden binnen een crossing; palette maken
+      #dat afloopt naar wit en hier een sample uit nemen
+      if(fade_kleuren){
+        
+        kleur_fade <- colorRampPalette(c(kleur_crossing,"#FFFFFF"))
+        n_kleuren <- nrow(df_crossing)
+        
+        kleuren_palet <- kleur_fade(n_kleuren + 4) #Als we niet + iets doen de laatste crossing wit.
+        
+        kleur_crossing <- kleuren_palet[1:n_kleuren]
+      }
+      
+      df_crossing$kleur <- kleur_crossing 
+    }
+    
+
+    
+    df_crossing
+    
+  }) %>% do.call(rbind,.)
+  
+  #
+  if(kleuren_per_crossing){
+    
+    namen = df_plot$onderdeel
+    kleuren = df_plot$kleur
+    names(kleuren) <- namen
+    
+  } else{
+    
+    kleuren <- rep(kleuren_grafiek[1],nrow(df_plot))
+  }
+  
+  
+  
+  #volgorde groepen op x-as vastzetten o.b.v. volgorde variabelen door er een factor vna te maken
+  df_plot$groep <- factor(df_plot$groep)
+  #volgorde onderdeel vastzetten o.b.v dataframe 
+  df_plot$onderdeel <- factor(df_plot$onderdeel, levels = df_plot$onderdeel)
+  
+  plot <- ggplot(df_plot) +
+    geom_bar(aes(x = onderdeel, y = percentage, fill = onderdeel),
+             stat = "identity", width = 0.8
+             ) +
+    geom_text(aes(x = onderdeel,
+                  y = percentage,
+                  label = paste(percentage,"%"),
+                  vjust = v_just_text,
+                  hjust = h_just_text),
+              color = "white",
+              position = position_dodge2(width = 0.8),
+              size = 5,
+    ) +
+    scale_fill_manual(values = kleuren) + 
+    
+    ggtitle(titel) +
+    theme(panel.background = element_blank(),
+          legend.position = "none",
+          plot.title = element_text(hjust = .5),
+          axis.line.y.left = element_line(linewidth = 1)
+    )
+  
+  if(flip){
+    plot <- plot + 
+      scale_y_continuous(limits = c(0,100),
+                         expand = expansion(mult = c(0, 0.05))
+      ) +
+      coord_flip() +
+      theme(axis.title = element_blank(),
+            axis.ticks.x = element_blank(),
+            axis.ticks.y = element_blank(),
+            axis.text.x =  element_blank(),
+            )
+  } else{
+    plot <- plot + 
+      theme(axis.line.x.bottom = (element_line(linewidth = 1))) +
+      scale_y_continuous(limits = c(0,100),
+                         expand = expansion(mult = c(0, 0))) +
+      scale_x_discrete(labels = function(x) str_wrap(x,width = 20)) +
+      theme(
+        axis.text.x = element_text(angle = 90, hjust = .95, vjust = .2),
+        strip.background = element_blank(),
+        
+      ) + xlab("")
+      
+  }
+
+  return(plot)
+
+}
+
+# maak_staafdiagram_uitsplitsing_naast_elkaar(
+#   df = monitor_df,
+#   var_inhoud = "vaak_stress",
+#   var_crossings = c("gender_2cat","leeftijd_3cat","opleiding_4cat"),
+#   kleuren_per_crossing = T,
+#   fade_kleuren = T,
+#   flip = F)
+# 
+# 
+# maak_staafdiagram_uitsplitsing_naast_elkaar(
+#   df = monitor_df,
+#   var_inhoud = "vaak_stress",
+#   var_crossings = c("gender_2cat","leeftijd_3cat"),
+#   flip = T)
+
+
+#horizontaal gestapeld staafdiagram
+maak_staafdiagram_gestapeld <- function(df, var_inhoud, titel = "",
+                                        kleuren_grafiek = default_kleuren_grafiek, x_label = ""){
+  
+  if(!labelled::is.labelled(df[[var_inhoud]])){
+    warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
+  }
+  
+  df_plot <- df %>%
+    select(!!sym(var_inhoud)) %>%
+    filter(!is.na(!!sym(var_inhoud))) %>% 
+    group_by(!!sym(var_inhoud)) %>% 
+    summarise(n = n()) %>% 
+    ungroup() %>% 
+    mutate(totaal = sum(n),
+           percentage = n / totaal * 100) 
+  
+  df_plot[[var_inhoud]] <- factor(df_plot[[var_inhoud]], 
+                                  levels = val_labels(df_plot[[var_inhoud]]),
+                                  labels = names(val_labels(df_plot[[var_inhoud]])))
+  
+  
+  
+  namen_kleuren <- levels(df_plot[[var_inhoud]])
+  
+  kleuren <- kleuren_grafiek[1:length(namen_kleuren)]
+  
+  ggplot(df_plot, aes(x = percentage, y = x_label, fill = !!sym(var_inhoud))) + 
+  geom_bar(stat = "identity", position = "stack") +
+  geom_text(aes(label = paste0(round(percentage),"%")),
+            color = "#FFFFFF",
+            position = position_stack(vjust = 0.5),
+            size = 3) +
+    scale_fill_manual(values= kleuren) +
+    scale_x_continuous(
+      limits = c(0,100),
+      breaks = seq(0,100, by = 10),
+      labels = paste(seq(0,100, by = 10),"%"),
+      expand = expansion(mult = c(0, 0.05)))+
+    ggtitle(titel) + 
+#    ylim(c(0,2))+
+    ylab(x_label) + 
+      theme(
+        axis.title = element_blank(),
+          panel.background = element_blank(),
+          axis.ticks.x = element_blank(),
+          axis.ticks.y = element_blank(),
+          legend.title = element_blank(),
+          legend.spacing.x = unit(.1,"cm"),
+          legend.position = "bottom",
+          plot.title = element_text(hjust = .5),
+          axis.line.x.bottom = element_line(linewidth = 1),
+          axis.line.y.left = element_line(linewidth = 1,)) +
+   guides(fill = guide_legend(reverse = TRUE))  
+  
+}
+
+#TODO percentage in tekst
+#TODO Cirkeldiagram
+  #TODO Donut
+
+
+# rekenfuncties -----------------------------------------------------------
+
+# Functie maken om cijfers te berekenen.
 # Gebaseerd op functie uitrapportage monitor GMJ 2023.
 # Zie https://github.com/ggdatascience/rapportage_monitor_gmj 
 
@@ -464,6 +791,7 @@ survey_design_maken <- function(data = NULL, strata = NULL, gewichten = NULL){
 # strata_var = "Stratum"
 # gewicht_var = "Standaardisatiefactor"
 # design <- survey_design_maken(data = monitor_df, strata = 'Stratum', 'Standaardisatiefactor')
+
 
 #prop_ci_berekenen()
 #functie die per antwoordmogelijkheid betrouwbaarheidsintervallen berekend voor proporties van in een kruistabel.
@@ -759,5 +1087,3 @@ kruistabel_maken <- function(data, variabele = NULL, crossing = NULL, survey_des
 # design = design
 kruistabel_maken(data = monitor_df, variabele = 'GZGGA402', crossing = 'AGLFA401', survey_design = design)
 kruistabel_maken(data = monitor_df, variabele = 'GZGGA402', survey_design = design)
-
-

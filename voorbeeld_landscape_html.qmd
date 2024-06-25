@@ -23,7 +23,8 @@ library(haven)
 library(labelled)
 options(dplyr.summarise.inform = FALSE)
 source("hulpfuncties.R")
-# Links naar dingen IN het document maken (maakt dat uit als we en TOC hebben? Misschien voor PDF?) 
+
+# Links naar dingen IN het document maken (maakt dat uit als we een TOC hebben? Misschien voor PDF?)
 #https://quarto.org/docs/authoring/cross-references-custom.html
 
 
@@ -37,6 +38,7 @@ file_path = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
 monitor_df = haven::read_spss(file_path,user_na =T) %>%
   labelled::user_na_to_na()
 
+
 #Vreselijke varcodes hernoemen naar iets leesbaars
 names(monitor_df) <- c("jaar","Stratum","standaardisatiefactor","leeftijd_3cat","leeftijd_2cat","gender_3cat","gender_2cat","ggd_regio","ggd_regio_utrecht_samen","gemeentecode","stedelijkheid","migratie_3cat","opleiding","opleiding_4cat","opleiding_3cat","opleiding_2cat","ervaren_gezondheid_goed","psychische_klachten", "tevreden_zelf_3cat","tevreden_lichaam_3cat","tevreden_leven_3cat","vaak_stress","vertrouwen_toekomst_3cat","bezorgd_werkgelegenheid","bezorgd_woningmarkt","bezorgd_klimaat","bezorgd_discriminatie","bezorgd_polarisatie","bezorgd_oorlogen","eenzaamheid_3cat","is_eenzaam","sterk_eenzaam",
                        "NIEUS101"#? Wat is dit
@@ -44,16 +46,11 @@ names(monitor_df) <- c("jaar","Stratum","standaardisatiefactor","leeftijd_3cat",
 
 
 
+
 #Er is niet goed aangegeven wat missing is in SPSS.
-#tijdelijke functie om 9 Onbekend te verwijderen
+#tijdelijke functie om 9 Onbekend te verwijderen & naar NA te zetten
 
-verwijder_9_onbekend <- function(data, var){
-  value_labels <- val_labels(data[[var]])
-  value_labels <- value_labels[value_labels!= 9]
-  val_labels(data[[var]]) <- value_labels
 
-  return(data)
-}
 
 for(var in names(monitor_df)){
   
@@ -96,8 +93,11 @@ Vanwege de betrouwbaarheid van de resultaten en de privacy van de respondenten h
 
 ```{r, echo=F}
 
-#TODO tabelfunctie ombouwen naar test-monitordata
-#monitor_df %>% maak_responstabel(crossings = "geslacht_2cat","leeftijd_3cat")
+
+monitor_df %>% 
+  maak_responstabel(crossings = c("gender_2cat","leeftijd_3cat"),
+                    missing_label = "Niet ingevuld"
+                    )
 
 ```
 
