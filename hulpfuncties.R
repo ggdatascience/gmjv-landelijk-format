@@ -287,7 +287,6 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_
 }
 
 
-
 maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel = "",
                                            kleuren_grafiek = default_kleuren_grafiek,
                                            nvar = default_Nvar, ncel = default_Ncel
