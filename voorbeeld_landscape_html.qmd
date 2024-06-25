@@ -248,12 +248,8 @@ monitor_df %>% maak_staafdiagram_gestapeld(var_inhoud = "tevreden_lichaam_3cat",
 
 {{< pagebreak >}}
 
-::: pagina_header_img
-![](header_pagina.png)
-
-::: pagina_header_titel
+::: pagina_header
 # Gezinssituatie, woon- en werksituatie en financiën
-:::
 :::
 
 ::: {layout="[[30,30,30],[30,30,30]]"}
@@ -311,12 +307,8 @@ Financieel gezien heeft XX% van de jongvolwassenen moeite rondkomen. XX% heeft h
 
 {{< pagebreak >}}
 
-::: pagina_header_img
-![](header_pagina.png)
-
-::: pagina_header_titel
+::: pagina_header
 # Mentaal welbevinden
-:::
 :::
 
 ::: {layout="[[30,30,30],[30,30,30]]"}
@@ -358,14 +350,6 @@ monitor_df %>%
      var_crossing_kleur = "gender_2cat", # gender nog wijzigen naar vergelijking met landelijk
      titel = "Voelt zich (heel) vaak gestrest")
 
-```{r}
-monitor_df %>% maak_staafdiagram_uitsplitsing_naast_elkaar(
-  var_inhoud = "vaak_stress",
-  var_crossings = c("gender_2cat","opleiding_3cat","leeftijd_3cat"),
-  flip = T,
-  kleuren_per_crossing = T,
-  fade_kleuren = T
-)
 ```
 :::
 
@@ -385,7 +369,7 @@ Top 5 bronnen van stress:
 # Staafgrafiek prestatiedruk vanuit zichzelf, uitgesplitst naar gender
 
 monitor_df %>% maak_staafdiagram_vergelijking(
-  var_inhoud = "prestatiedruk",
+  var_inhoud = "sterk_eenzaam",
   var_crossings = "gender_2cat",
   titel = "Ervaart regelmatig tot vaak prestatiedruk vanuit zichzelf",
   #kleuren_grafiek = default_kleuren_grafiek,
@@ -395,3 +379,12 @@ monitor_df %>% maak_staafdiagram_vergelijking(
 :::
 
 :::
+```{r}
+monitor_df %>% maak_staafdiagram_uitsplitsing_naast_elkaar(
+  var_inhoud = "vaak_stress",
+  var_crossings = c("gender_2cat","opleiding_3cat","leeftijd_3cat"),
+  flip = T,
+  kleuren_per_crossing = T,
+  fade_kleuren = T
+)
+```

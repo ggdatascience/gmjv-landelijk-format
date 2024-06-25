@@ -47,6 +47,15 @@ Positie kan aangepast worden dmv "top" & "left".
   font-size: 24px;
   color: white;
 }
+ 
+.pagina_header{
+  font-family: "Century Gothic";
+  font-size: 24px;
+  color: white;
+  background-color: #007E48;
+  padding: 15px;
+}
+
 /* Tijdelijk geen background image nodig?
 .voorblad {
   background-image: url("voorblad_alles.png");
