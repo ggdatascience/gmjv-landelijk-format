@@ -17,22 +17,23 @@ Positie kan aangepast worden dmv "top" & "left".
 
 .voorblad_gemeentenaam{
   position: absolute;
-  top: 60%;
-  left: 5%;
+  top: 65%;
+  left: 35%;
   z-index: 10;
   font-family: "Century Gothic";
-  font-size: 24px;
-  color: white;
+  font-size: 50px;
+  font-weight: bold;
+  color: #012C17;
 }
 
 .voorblad_datum{
   position: absolute;
-  top: 65%;
-  left: 5%;
+  top: 80%;
+  left: 40%;
   z-index: 10;
   font-family: "Century Gothic";
-  font-size: 18px;
-  color: white;
+  font-size: 30px;
+  color: #012C17;
 }
 
 .pagina_header_titel{
