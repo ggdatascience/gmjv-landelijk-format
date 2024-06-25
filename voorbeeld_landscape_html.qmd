@@ -16,6 +16,9 @@ editor: visual
 # Header 2
 
 ```{r, echo=F, message=F}
+# Het script maakt gebruik van een aantal packages
+# Deze moeten bij de eerste keer lokaal worden geinstalleerd
+# Hieronder worden de benodige packages geladen
 library(gt)
 library(dplyr)
 library(ggplot2)
@@ -244,3 +247,4 @@ monitor_df %>% maak_staafdiagram_uitsplitsing_naast_elkaar(
   fade_kleuren = T
 )
 ```
+
