@@ -1,0 +1,268 @@
+---
+title: ""
+author: ""
+format:
+  html:
+    page-layout: full
+    css: custom.css
+    toc: TRUE
+    toc-location: left
+    embed-resources: true
+  pdf: 
+    classoption: landscape
+    toc: TRUE
+params:
+  gemeentecode: 1 
+editor: visual
+format-links: false
+---
+
+```{r, echo=F, message=F, warning=F}
+# Het script maakt gebruik van een aantal packages
+# Deze moeten bij de eerste keer lokaal worden geinstalleerd
+# Hieronder worden de benodige packages geladen
+library(gt)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(haven)
+library(labelled)
+options(dplyr.summarise.inform = FALSE)
+source("hulpfuncties.R")
+
+# Links naar dingen IN het document maken (maakt dat uit als we een TOC hebben? Misschien voor PDF?)
+#https://quarto.org/docs/authoring/cross-references-custom.html
+
+#TODO Hier later SPSS data inlezen
+#Nu nepdata genereren 
+
+#SPSS data inlezen
+file_path = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
+
+
+monitor_df = haven::read_spss(file_path,user_na =T) %>%
+  labelled::user_na_to_na()
+
+
+#Vreselijke varcodes hernoemen naar iets anders vreselijs
+names(monitor_df) <- c("jaar","Stratum","standaardisatiefactor","leeftijd_3cat","leeftijd_2cat","gender_3cat","gender_2cat","ggd_regio","ggd_regio_utrecht_samen","gemeentecode","stedelijkheid","migratie_3cat","opleiding","opleiding_4cat","opleiding_3cat","opleiding_2cat","ervaren_gezondheid_goed","psychische_klachten", "tevreden_zelf_3cat","tevreden_lichaam_3cat","tevreden_leven_3cat","vaak_stress","vertrouwen_toekomst_3cat","bezorgd_werkgelegenheid","bezorgd_woningmarkt","bezorgd_klimaat","bezorgd_discriminatie","bezorgd_polarisatie","bezorgd_oorlogen","eenzaamheid_3cat","is_eenzaam","sterk_eenzaam","prestatiedruk")
+
+#Er is niet goed aangegeven wat missing is in SPSS.
+#tijdelijke functie om 9 Onbekend te verwijderen & naar NA te zetten
+
+for(var in names(monitor_df)){
+  
+  monitor_df <- monitor_df %>% verwijder_9_onbekend(var)
+
+}
+
+#TODO Tijdelijke filter op alleen gemeente in parameter
+monitor_df <- monitor_df %>% 
+  filter(gemeentecode == params$gemeentecode)
+
+
+```
+
+::: pagina_header_img
+![](header_pagina.png)
+
+::: pagina_header_titel
+# 1. Toelichting
+:::
+:::
+
+**Afname Gezondheidsmonitor Jeugd 2023**
+
+De Gezondheidsmonitor Jeugd is in het najaar van 2023 afgenomen onder jongeren in leerjaar 2 en 4 van het RVO. Op de volgende pagina’s zijn de belangrijkste resultaten van uw gemeente afgezet tegen het gemiddelde van uw GGD regio.
+
+Vanwege de betrouwbaarheid van de resultaten en de privacy van de respondenten hanteren wij bij de rapportage een minimum van 30 respondenten die de vraag ingevuld hebben en een minimum van 5 respondenten per specifiek antwoord. Indien de aantallen lager liggen, worden de cijfers niet weergegeven.
+
+```{r, echo=F}
+
+
+monitor_df %>% 
+  maak_responstabel(crossings = c("gender_2cat","leeftijd_3cat"),
+                    missing_label = "Niet ingevuld"
+                    )
+
+```
+
+{{< pagebreak >}}
+
+::: pagina_header_img
+![](header_pagina.png)
+
+::: pagina_header_titel
+# 2. School
+:::
+:::
+
+::: {layout="[[30,30,30],[30,30,30]]"}
+::: column
+Jongeren brengen een groot deel van hun tijd door op school. Op school doen jongeren kennis en vaardigheden op die belangrijk zijn voor hun ontwikkeling. Maar ook doen ze sociale contacten op en maken ze vrienden. Wanneer jongeren worden gepest, kan dit negatieve gevolgen hebben voor hun sociaal-emotionele gezondheid. In de monitor is gevraagd naar de schoolbeleving, ziekteverzuim, spijbelen en pesten.
+:::
+
+::: column
+```{r, echo=F, fig.alt = ggplot2::get_alt_text(plot)}
+plot <- monitor_df %>% 
+  maak_staafdiagram_dubbele_uitsplitsing(
+     var_inhoud = "vaak_stress", 
+     var_crossing_groep = "gender_2cat",
+     var_crossing_kleur = "leeftijd_2cat",
+     titel = "STRESS!")
+
+plot
+```
+:::
+
+::: column
+```{r, echo=F, fig.alt = ggplot2::get_alt_text(plot)}
+plot <- monitor_df %>%
+  maak_staafdiagram_dubbele_uitsplitsing(
+     var_inhoud = "vaak_stress", 
+     var_crossing_groep = "gender_2cat",
+     var_crossing_kleur = "leeftijd_3cat",
+     titel = "SPORT?")
+plot
+
+```
+:::
+
+::: column
+```{r, echo=F, fig.alt= ggplot2::get_alt_text(plot)}
+plot = monitor_df %>% maak_staafdiagram_vergelijking(
+  var_inhoud = "is_eenzaam",
+  var_crossings = "gender_2cat",
+  titel = "Eenzaam",
+  kleuren_grafiek = c("#009898","#E8525F")
+)
+
+
+plot
+```
+:::
+
+::: column
+```{r, echo=F, fig.alt=ggplot2::get_alt_text(plot)}
+plot = monitor_df %>% 
+   maak_staafdiagram_dubbele_uitsplitsing(
+     var_inhoud = "bezorgd_klimaat", 
+     var_crossing_groep = "leeftijd_3cat",
+     var_crossing_kleur = "gender_2cat",
+     titel = "Zorgen over klimaat?")
+
+plot
+```
+:::
+
+::: column
+```{r, echo=F, fig.alt=ggplot2::get_alt_text(plot)}
+plot = monitor_df %>% maak_staafdiagram_vergelijking(
+  var_inhoud = "vaak_stress",
+  var_crossings = c("gender_2cat","leeftijd_2cat"),
+  titel = "meer stress")
+
+plot
+
+```
+:::
+:::
+
+{{< pagebreak >}}
+
+```{r, fig.alt=ggplot2::get_alt_text(plot)}
+#Staafdiagram met dubbele uitsplitsing
+plot = monitor_df %>% 
+   maak_staafdiagram_dubbele_uitsplitsing(
+     titel = "Staafdiagram met dubbele uitsplitsing",
+     var_inhoud = "vaak_stress", 
+     var_crossing_groep = "gender_2cat",
+     var_crossing_kleur = "leeftijd_2cat")
+plot
+
+```
+
+```{r, fig.alt=ggplot2::get_alt_text(plot)}
+
+plot = monitor_df %>% maak_staafdiagram_vergelijking(
+  var_inhoud = "is_eenzaam",
+  var_crossings = c("gender_2cat"),
+  titel = "Eenzaam",
+  #Je kan de kleuren zelf aanpassen als je wilt
+  kleuren_grafiek = c("#009898","#E8525F")
+)
+
+plot
+```
+
+```{r, fig.alt=ggplot2::get_alt_text(plot)}
+#Kan ook voor meerdere vergelijkingen naast elkaar gebruikt worden
+plot = monitor_df %>% maak_staafdiagram_vergelijking(
+  var_inhoud = "bezorgd_oorlogen",
+  var_crossings = c("gender_2cat","leeftijd_2cat"),
+  titel = "Zorgen over oorlog",
+  #Je kan de kleuren zelf aanpassen als je wilt
+  kleuren_grafiek = c("#009898","#E8525F")
+)
+
+plot
+```
+
+```{r, fig.alt=ggplot2::get_alt_text(plot)}
+plot = monitor_df %>%
+  maak_staafdiagram_meerdere_staven(
+    var_inhoud = "tevreden_lichaam_3cat",
+    titel = "Tevreden over Lichaam"
+  )
+
+plot
+```
+
+```{r, fig.alt=ggplot2::get_alt_text(plot)}
+
+plot = monitor_df %>% 
+  maak_staafdiagram_meerdere_staven(
+    var_inhoud = "tevreden_lichaam_3cat",
+    var_crossing = "leeftijd_2cat",
+    titel = "Tevreden over Lichaam"
+  )
+
+plot
+```
+
+```{r}
+plot = monitor_df %>% 
+  maak_staafdiagram_meerdere_staven(
+    var_inhoud = "tevreden_lichaam_3cat",
+    var_crossing = "leeftijd_2cat",
+    titel = "Tevreden over Lichaam",
+    flip = TRUE
+  )
+
+plot
+```
+
+```{r, fig.width=12, fig.height=3, fig.alt=ggplot2::get_alt_text(plot)}
+#Fig height & width settings zijn nodig om een gestapeld staafdiagram 
+# op de juiste hoogte / breedte te krijgen
+plot = monitor_df %>% 
+  maak_staafdiagram_gestapeld(var_inhoud = "tevreden_lichaam_3cat",
+                              x_label = "GEMEENTENAAM")
+
+plot
+
+```
+
+{{< pagebreak >}}
+
+```{r}
+plot = monitor_df %>% maak_staafdiagram_uitsplitsing_naast_elkaar(
+  var_inhoud = "vaak_stress",
+  var_crossings = c("gender_2cat","opleiding_3cat","leeftijd_3cat"),
+  flip = T,
+  kleuren_per_crossing = T,
+  fade_kleuren = T
+)
+
+plot
+```

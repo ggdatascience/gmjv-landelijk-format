@@ -64,45 +64,107 @@ labelled_naar_character <- function(data,var){
   return(var_character)
 } 
 
-#wordt in grafiekfuncties aangeroepen om automatisch alt_text te maken
-#als alt-text NULL is
-maak_alt_text <- function(df#, var_inhhoud,crossings
-                          ,doelgroep = "jongvolwassenen",
-                          type_grafiek = "staafdiagram"){
+#wordt in grafiekfuncties aangeroepen om automatisch alt_text te maken; 
+#functie vertaald waarschijnlijk slecht naar andere contexten; verwacht df op specifieke volgorde &
+#met specifiek vartypen
+maak_alt_text <- function(df, doelgroep = "jongvolwassenen", type_grafiek = "staafdiagram",
+                          is_vergelijking = F, is_dichotoom = T, is_gestapeld = F){
+  
+  #TODO Functie is onnodig complex. Oplossen door dataverwerking uniformer te maken; 
+  #En/OF meer info over te selecteren variabelen naar de argumenten halen
   
   label_var_inhoud <- var_label(df[,1])
   
-  string_waarden <- df[,-1] %>% 
-    select(-c(aantal_antwoord,aantal_vraag,is_leeg,weggestreept)) %>%
-    #labelled double naar character
-    mutate(across(where(~ is.labelled(.) && is.double(.)),
-                  ~ labelled_naar_character(df, cur_column()))) %>%
-    #rowwise voor string_var
-    rowwise() %>% 
-    mutate(percentage = ifelse(is.na(percentage),
-                               "percentage onbekend",
-                               paste0(percentage,"%")
-    ),
-    cat = str_c(across(!percentage), collapse = " "),
-    string = paste0(cat,": ", percentage)
+  #Als crossings naast elkaar gelegd worden worden de character variabelen onderdeel & groep gebruikt in
+  #output df ipv de oorspronkelijke labelled+dbl
+  #TODO gelijktrekken zodat er 1 alt-text functie kan komen zonder heel veel if-condities
+  if(is_vergelijking){
+    string_waarden <- df %>% 
+      select(onderdeel, percentage) %>%
+      rowwise() %>% 
+      mutate(
+        percentage = ifelse(is.na(percentage),
+                            "percentage onbekend",
+                            paste0(percentage,"%")),
+        string = paste0(onderdeel,": ", percentage)) %>% 
+      pull(string) %>% 
+      paste0(collapse = ",")
     
-    ) %>% 
-    pull(string) %>% 
-    paste0(collapse = ", ")
+    crossing_labels <- df$groep %>% unique() %>% paste0(collapse = " en ")
+    
+  }else if(is_gestapeld) {
+    string_waarden <- df %>% 
+      select(-c(n,totaal,te_weinig_n)) %>% 
+      mutate(across(where(~ is.labelled(.) && is.double(.)),
+                    ~ labelled_naar_character(df, cur_column()))) %>%
+      rowwise() %>% 
+      mutate(
+        percentage = paste0(round(percentage,1),"%"),
+        string = str_c(across(everything()), collapse = ": ")) %>% 
+      pull(string) %>% 
+      paste0(collapse = ", ")
+    
+    crossing_labels <- NULL
+      
+  } else if(is_dichotoom){
+    string_waarden <- df[,-1] %>% 
+      select(-c(aantal_antwoord,aantal_vraag,is_leeg,weggestreept)) %>%
+      #labelled double naar character
+      mutate(across(where(~ is.labelled(.) && is.double(.)),
+                    ~ labelled_naar_character(df, cur_column()))) %>%
+      #rowwise voor string_var
+      rowwise() %>% 
+      mutate(percentage = ifelse(is.na(percentage),
+                                 "percentage onbekend",
+                                 paste0(percentage,"%")
+      ),
+      cat = str_c(across(!percentage), collapse = " "),
+      string = paste0(cat,": ", percentage)
+      
+      ) %>% 
+      pull(string) %>% 
+      paste0(collapse = ", ")
   
-  crossing_labels <- var_label(df[,-1] %>% select(-c(aantal_antwoord,aantal_vraag,
+    crossing_labels <- var_label(df[,-1] %>% select(-c(aantal_antwoord,aantal_vraag,
                                                      is_leeg, weggestreept, percentage))) %>% 
     paste(collapse = " en ")
+    
+    }else {
+    df$leeg <- NULL
+    
+    string_waarden <- df %>% 
+      select(-c(aantal_antwoord,aantal_vraag,is_leeg,weggestreept)) %>%
+      #labelled double naar character
+      mutate(across(where(~ is.labelled(.) && is.double(.)),
+                    ~ labelled_naar_character(df, cur_column()))) %>%
+      #rowwise voor string_var
+      rowwise() %>% 
+      mutate(percentage = ifelse(is.na(percentage),
+                                 "percentage onbekend",
+                                 paste0(percentage,"%")
+      ),
+      cat = str_c(across(!percentage), collapse = " "),
+      string = paste0(cat,": ", percentage)
+      
+      ) %>% 
+      pull(string) %>% 
+      paste0(collapse = ", ")
+    
+    crossing_labels <- var_label(df[,-1] %>% select(-c(aantal_antwoord,aantal_vraag,
+                                                       is_leeg, weggestreept, percentage))) %>% 
+      paste(collapse = " en ")
+      
+    }
+
+
+
+  if(is.null(crossing_labels)){
+    #Grafiek zonder crossings:
+    glue("{type_grafiek} met percentages voor de indicator '{label_var_inhoud}' bij {doelgroep}: {string_waarden}")
+  } else{
+    glue("{type_grafiek} met percentages voor de indicator '{label_var_inhoud}' bij {doelgroep} per {crossing_labels}: {string_waarden}")  
+  }
   
-  glue(
-    
-    "{type_grafiek} met percentages '{label_var_inhoud}' bij {doelgroep} per {crossing_labels}:
-    {string_waarden}
-    
-    
-    
-    "
-  )
   
 }
 
@@ -341,7 +403,8 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_
 
 maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel = "",
                                            kleuren_grafiek = default_kleuren_grafiek,
-                                           nvar = default_Nvar, ncel = default_Ncel
+                                           nvar = default_Nvar, ncel = default_Ncel,
+                                           alt_text = NULL
                                              ){
   
   if(!labelled::is.labelled(df[[var_inhoud]])){
@@ -391,8 +454,13 @@ maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel 
      df_crossing
        
    }) %>% do.call(rbind,.)
+
    
-    
+   if(is.null(alt_text)){
+     
+     alt_text = maak_alt_text(df_plot, is_vergelijking = T)
+     
+   } 
    
    #volgorde groepen op x-as vastzetten o.b.v. volgorde variabelen door er een factor vna te maken
    df_plot$groep <- factor(df_plot$groep)
@@ -450,13 +518,18 @@ maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel 
            plot.title = element_text(hjust = .5),
            axis.line.x.bottom = element_line(linewidth = 1, colour = "black"),
            axis.line.y.left = element_line(linewidth = 1)
-     ) 
+     ) +
+     labs(
+       alt = alt_text
+     )
  }
 
 maak_staafdiagram_meerdere_staven <- function(df, var_inhoud,var_crossing = NULL, 
                                               titel = "",
                                               kleuren_grafiek = default_kleuren_grafiek,
-                                              flip = FALSE, nvar = default_Nvar, ncel = default_Ncel
+                                              flip = FALSE, nvar = default_Nvar, ncel = default_Ncel,
+                                              alt_text = NULL
+                                              
 ){
   
   
@@ -501,6 +574,12 @@ maak_staafdiagram_meerdere_staven <- function(df, var_inhoud,var_crossing = NULL
     mutate(percentage = ifelse(is_leeg, NA, percentage), #zet alle vragen met tenminste 1 NA antwoord op NA
            weggestreept = ifelse(is_leeg, 10, NA) %>% as.numeric()) #maak een vector met val 30 waar een antwoord ontbreekt (voor missing sterretjes in diagram) 
 
+  #Alt text toevoegen o.b.v. data als er nog niks is ingevuld
+  if(is.null(alt_text)){
+    
+    alt_text <- maak_alt_text(df_plot, is_dichotoom = F)
+    
+  }
   
   #TODO hier een functie van maken: labelled_dbl_to_factor
   df_plot[[var_crossing]] <- factor(df_plot[[var_crossing]], 
@@ -562,6 +641,9 @@ maak_staafdiagram_meerdere_staven <- function(df, var_inhoud,var_crossing = NULL
           plot.title = element_text(hjust = .5),
           axis.line.x.bottom = element_line(linewidth = 1),
           axis.line.y.left = element_line(linewidth = 1,)
+    ) +
+    labs(
+      alt = alt_text
     )
   
   if(remove_legend){
@@ -590,7 +672,8 @@ maak_staafdiagram_meerdere_staven <- function(df, var_inhoud,var_crossing = NULL
 maak_staafdiagram_uitsplitsing_naast_elkaar <- function(df, var_inhoud, var_crossings, titel = "",
                                                         kleuren_grafiek = default_kleuren_grafiek,
                                                         kleuren_per_crossing = F, fade_kleuren = F,
-                                                        flip = FALSE, nvar = default_Nvar, ncel = default_Ncel){
+                                                        flip = FALSE, nvar = default_Nvar, ncel = default_Ncel,
+                                                        alt_text = NULL){
   
   if(!labelled::is.labelled(df[[var_inhoud]])){
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
@@ -666,7 +749,14 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(df, var_inhoud, var_cros
     
   }) %>% do.call(rbind,.)
   
-  #
+  #Alt text maken o.b.v. data als geen eigen tekst is ingegeven
+  if(is.null(alt_text)){
+    
+    alt_text = maak_alt_text(df_plot, is_vergelijking = T)
+    
+  } 
+  
+  
   if(kleuren_per_crossing){
     
     namen = df_plot$onderdeel
@@ -718,6 +808,9 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(df, var_inhoud, var_cros
           legend.position = "none",
           plot.title = element_text(hjust = .5),
           axis.line.y.left = element_line(linewidth = 1)
+    ) +
+    labs(
+      alt = alt_text
     )
   
   if(flip){
@@ -745,9 +838,7 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(df, var_inhoud, var_cros
       
   }
 
-  return(plot %>%  suppressWarnings()) #suppreswarnings toegevoegd omdat scale_y_continues geen na.rm=T setting heeft en daaorm steeds warnings geeft 
-  #voor bedoelde missings
-  #TODO oplossing verzinnen die warnings niet onderdrukt
+  return(plot)
 
 }
 
@@ -755,7 +846,8 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(df, var_inhoud, var_cros
 #horizontaal gestapeld staafdiagram
 maak_staafdiagram_gestapeld <- function(df, var_inhoud, titel = "",
                                         kleuren_grafiek = default_kleuren_grafiek, x_label = "",
-                                        nvar = default_Nvar, ncel = default_Ncel){
+                                        nvar = default_Nvar, ncel = default_Ncel,
+                                        alt_text = NULL){
   
   if(!labelled::is.labelled(df[[var_inhoud]])){
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
@@ -780,9 +872,15 @@ maak_staafdiagram_gestapeld <- function(df, var_inhoud, titel = "",
     
   }
   
+  if(is.null(alt_text)){
+    
+    alt_text <- maak_alt_text(df_plot, is_gestapeld = T)
+    
+  }
+  
   df_plot[[var_inhoud]] <- factor(df_plot[[var_inhoud]], 
-                                  levels = val_labels(df_plot[[var_inhoud]]),
-                                  labels = names(val_labels(df_plot[[var_inhoud]])))
+                                  levels = rev(val_labels(df_plot[[var_inhoud]])),
+                                  labels = rev(names(val_labels(df_plot[[var_inhoud]]))))
   
   
   
@@ -803,7 +901,6 @@ maak_staafdiagram_gestapeld <- function(df, var_inhoud, titel = "",
       labels = paste(seq(0,100, by = 10),"%"),
       expand = expansion(mult = c(0, 0.05)))+
     ggtitle(titel) + 
-#    ylim(c(0,2))+
     ylab(x_label) + 
       theme(
         axis.title = element_blank(),
@@ -815,8 +912,10 @@ maak_staafdiagram_gestapeld <- function(df, var_inhoud, titel = "",
           legend.position = "bottom",
           plot.title = element_text(hjust = .5),
           axis.line.x.bottom = element_line(linewidth = 1),
-          axis.line.y.left = element_line(linewidth = 1,)) +
-   guides(fill = guide_legend(reverse = TRUE))  
+          axis.line.y.left = element_line(linewidth = 1,)
+        ) +
+    guides(fill = guide_legend(reverse = TRUE))  +
+    labs(alt = alt_text)
   
 }
 

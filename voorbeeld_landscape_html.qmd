@@ -17,7 +17,6 @@ editor: visual
 format-links: false
 ---
 
-
 ```{r, echo=F, message=F, warning=F}
 # Het script maakt gebruik van een aantal packages
 # Deze moeten bij de eerste keer lokaal worden geinstalleerd
@@ -67,10 +66,10 @@ monitor_df <- monitor_df %>%
 \
 
 ::: voorblad_achtergrond
-![](Voorbeeld voorblad.png)
+![](Voorbeeld%20voorblad.png)
 
 ::: voorblad_gemeentenaam
-Naam gemeente Hier R code
+`r params$gemeentecode`
 :::
 
 ::: voorblad_datum
@@ -80,181 +79,13 @@ Naam gemeente Hier R code
 
 {{< pagebreak >}}
 
-::: pagina_header_img
-![](header_pagina.png)
-
-::: pagina_header_titel
-# 1. Toelichting
-:::
-:::
-
-**Afname Gezondheidsmonitor Jeugd 2023**
-
-De Gezondheidsmonitor Jeugd is in het najaar van 2023 afgenomen onder jongeren in leerjaar 2 en 4 van het RVO. Op de volgende pagina’s zijn de belangrijkste resultaten van uw gemeente afgezet tegen het gemiddelde van uw GGD regio.
-
-Vanwege de betrouwbaarheid van de resultaten en de privacy van de respondenten hanteren wij bij de rapportage een minimum van 30 respondenten die de vraag ingevuld hebben en een minimum van 5 respondenten per specifiek antwoord. Indien de aantallen lager liggen, worden de cijfers niet weergegeven.
-
-```{r, echo=F}
-
-
-monitor_df %>% 
-  maak_responstabel(crossings = c("gender_2cat","leeftijd_3cat"),
-                    missing_label = "Niet ingevuld"
-                    )
-
-```
-
-{{< pagebreak >}}
-
-::: pagina_header_img
-![](header_pagina.png)
-
-::: pagina_header_titel
-# 2. School
-:::
-:::
-
-::: {layout="[[30,30,30],[30,30,30]]"}
-::: column
-Jongeren brengen een groot deel van hun tijd door op school. Op school doen jongeren kennis en vaardigheden op die belangrijk zijn voor hun ontwikkeling. Maar ook doen ze sociale contacten op en maken ze vrienden. Wanneer jongeren worden gepest, kan dit negatieve gevolgen hebben voor hun sociaal-emotionele gezondheid. In de monitor is gevraagd naar de schoolbeleving, ziekteverzuim, spijbelen en pesten.
-:::
-
-::: column
-```{r, echo=F}
-monitor_df %>% 
-   maak_staafdiagram_dubbele_uitsplitsing(
-     var_inhoud = "vaak_stress", 
-     var_crossing_groep = "gender_2cat",
-     var_crossing_kleur = "leeftijd_2cat",
-     titel = "STRESS!")
-
-```
-:::
-
-::: column
-```{r, echo=F}
-monitor_df %>% 
-   maak_staafdiagram_dubbele_uitsplitsing(
-     var_inhoud = "vaak_stress", 
-     var_crossing_groep = "gender_2cat",
-     var_crossing_kleur = "leeftijd_3cat",
-     titel = "SPORT?")
-```
-:::
-
-::: column
-```{r, echo=F}
-monitor_df %>% maak_staafdiagram_vergelijking(
-  var_inhoud = "is_eenzaam",
-  var_crossings = "gender_2cat",
-  titel = "Eenzaam",
-  kleuren_grafiek = c("#009898","#E8525F")
-  
-)
-```
-:::
-
-::: column
-```{r, echo=F}
-monitor_df %>% 
-   maak_staafdiagram_dubbele_uitsplitsing(
-     var_inhoud = "bezorgd_klimaat", 
-     var_crossing_groep = "leeftijd_3cat",
-     var_crossing_kleur = "gender_2cat",
-     titel = "Zorgen over klimaat?")
-```
-:::
-
-::: column
-```{r, echo=F}
-monitor_df %>% maak_staafdiagram_vergelijking(
-  var_inhoud = "vaak_stress",
-  var_crossings = c("gender_2cat","leeftijd_2cat"),
-  titel = "meer stress")
-```
-:::
-:::
-
-{{< pagebreak >}}
-
-```{r}
-#Staafdiagram met dubbele uitsplitsing
-monitor_df %>% 
-   maak_staafdiagram_dubbele_uitsplitsing(
-     titel = "Staafdiagram met dubbele uitsplitsing",
-     var_inhoud = "vaak_stress", 
-     var_crossing_groep = "gender_2cat",
-     var_crossing_kleur = "leeftijd_2cat")
-
-
-```
-
-```{r}
-monitor_df %>% maak_staafdiagram_vergelijking(
-  var_inhoud = "is_eenzaam",
-  var_crossings = c("gender_2cat"),
-  titel = "SPIJBELEN",
-  #Je kan de kleuren zelf aanpassen als je wilt
-  kleuren_grafiek = c("#009898","#E8525F")
-)
-```
-
-```{r}
-#Kan ook voor meerdere vergelijkingen naast elkaar gebruikt worden
-monitor_df %>% maak_staafdiagram_vergelijking(
-  var_inhoud = "bezorgd_oorlogen",
-  var_crossings = c("gender_2cat","leeftijd_2cat"),
-  titel = "Zorgen over oorlog",
-  #Je kan de kleuren zelf aanpassen als je wilt
-  kleuren_grafiek = c("#009898","#E8525F")
-)
-```
-
-```{r}
-monitor_df %>% 
-  maak_staafdiagram_meerdere_staven(
-    var_inhoud = "tevreden_lichaam_3cat",
-    titel = "Tevreden over Lichaam"
-  )
-```
-
-```{r}
-
-monitor_df %>% 
-  maak_staafdiagram_meerdere_staven(
-    var_inhoud = "tevreden_lichaam_3cat",
-    var_crossing = "leeftijd_2cat",
-    titel = "Tevreden over Lichaam"
-  )
-```
-
-```{r}
-monitor_df %>% 
-  maak_staafdiagram_meerdere_staven(
-    var_inhoud = "tevreden_lichaam_3cat",
-    var_crossing = "leeftijd_2cat",
-    titel = "Tevreden over Lichaam",
-    flip = TRUE
-  )
-```
-
-```{r, fig.width=12, fig.height=3}
-#Fig height & width settings zijn nodig om een gestapeld staafdiagram 
-# op de juiste hoogte / breedte te krijgen
-monitor_df %>% maak_staafdiagram_gestapeld(var_inhoud = "tevreden_lichaam_3cat",
-                                           x_label = "GEMEENTENAAM")
-
-```
-
-{{< pagebreak >}}
-
 ::: pagina_header
 # Gezinssituatie, woon- en werksituatie en financiën
 :::
 
 ::: {layout="[[30,30,30],[30,30,30]]"}
 ::: column
-De woon-, werk- en financiële situatie van jongvolwassenen kan veel invloed hebben op het welzijn en de mentale en fysieke gezondheid van jongvolwassenen. In een tijd waarin er sprake is van een woning- en financiële crisis is het van belang om inzichtelijk te hebben in welke situaties de jongvolwassenen zitten. 
+De woon-, werk- en financiële situatie van jongvolwassenen kan veel invloed hebben op het welzijn en de mentale en fysieke gezondheid van jongvolwassenen. In een tijd waarin er sprake is van een woning- en financiële crisis is het van belang om inzichtelijk te hebben in welke situaties de jongvolwassenen zitten.
 :::
 
 ::: column
@@ -266,7 +97,7 @@ De meeste respondenten wonen xx (xx%). Dit geldt met name voor jongvolwassenen v
 ::: column
 **Werk- en financiële situatie**
 
-XX% van de jongvolwassenen volgt een opleiding en XX% heeft betaald werk. De meeste werkende jongvolwassenen werken XX uur per week (XX%). De oudere groep jongvolwassenen werkt meer uren. Dit is toegenomen/afgenomen/gelijk gebleven in vergelijking met de resultaten uit 2022. 
+XX% van de jongvolwassenen volgt een opleiding en XX% heeft betaald werk. De meeste werkende jongvolwassenen werken XX uur per week (XX%). De oudere groep jongvolwassenen werkt meer uren. Dit is toegenomen/afgenomen/gelijk gebleven in vergelijking met de resultaten uit 2022.
 
 <br>
 
@@ -274,35 +105,36 @@ Onder de niet-werkende en niet-studerende respondenten is XX% werkloos, XX% arbe
 :::
 
 ::: column
-```{r, echo = F}
-
-monitor_df %>% 
+```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot)}
+plot = monitor_df %>% 
   maak_staafdiagram_meerdere_staven(
     var_inhoud = "tevreden_lichaam_3cat",
     titel = "Test Financiële problemen (labels moeten nog aangepast)",
     flip = T
   )
 
+plot
+
 ```
 :::
 
 ::: column
-```{r, echo = F}
+```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot)}
 
-monitor_df %>% maak_staafdiagram_vergelijking(
+plot = monitor_df %>% maak_staafdiagram_vergelijking(
   var_inhoud = "is_eenzaam",
   var_crossings = "leeftijd_3cat",
-  titel = "Woont bij ouder(s)/verzorger(s)",
-  #kleuren_grafiek = default_kleuren_grafiek,
+  titel = "Woont bij ouder(s)/verzorger(s)"
 )
+
+plot
 
 ```
 :::
 
 ::: column
-Financieel gezien heeft XX% van de jongvolwassenen moeite rondkomen. XX% heeft het idee weinig controle over geldzaken te hebben. Van de jongvolwassenen heeft XX% een schuld (studieschuld en hypotheek niet meegerekend). Deze financiële moeilijkheden komen vaker voor bij oudere jongvolwassenen. Het lijkt erop dat financiële problemen toenemen naarmate jongvolwassenen ouder worden. De financiële situatie is beter/-- dan twee jaar geleden; toen had xx% moeite met rondkomen. 
+Financieel gezien heeft XX% van de jongvolwassenen moeite rondkomen. XX% heeft het idee weinig controle over geldzaken te hebben. Van de jongvolwassenen heeft XX% een schuld (studieschuld en hypotheek niet meegerekend). Deze financiële moeilijkheden komen vaker voor bij oudere jongvolwassenen. Het lijkt erop dat financiële problemen toenemen naarmate jongvolwassenen ouder worden. De financiële situatie is beter/-- dan twee jaar geleden; toen had xx% moeite met rondkomen.
 :::
-
 :::
 
 {{< pagebreak >}}
@@ -319,9 +151,9 @@ Het hebben van stress (spanning of druk) kan zowel gezond als ongezond zijn. Gez
 :::
 
 ::: column
-Het percentage mannen dat zich (heel) vaak gestrest voelt is hoger dan/lager dan/gelijk onder vrouwen. Vrouwen ervaren de meeste stress van studie of school, de combinatie van alles wat zij moeten doen en de eisen die zij aan zichzelf stellen. 
+Het percentage mannen dat zich (heel) vaak gestrest voelt is hoger dan/lager dan/gelijk onder vrouwen. Vrouwen ervaren de meeste stress van studie of school, de combinatie van alles wat zij moeten doen en de eisen die zij aan zichzelf stellen.
 
-Het percentage dat zich (heel) vaak gestrest voelt is hoger onder de 21-25-jarigen dan onder de 16-17-jarigen.  Jongvolwassenen in de leeftijd van 21 – 25 jaar ervaren de meeste stress op het gebied van de combinatie van alles wat zij moeten doen, de eisen die zij aan zichzelf stellen, en studie of school. 
+Het percentage dat zich (heel) vaak gestrest voelt is hoger onder de 21-25-jarigen dan onder de 16-17-jarigen. Jongvolwassenen in de leeftijd van 21 – 25 jaar ervaren de meeste stress op het gebied van de combinatie van alles wat zij moeten doen, de eisen die zij aan zichzelf stellen, en studie of school.
 :::
 
 ::: column
@@ -331,13 +163,11 @@ Sommige jongvolwassenen voelen druk om aan verwachtingen te voldoen. Ze hebben v
 
 <br>
 
-Meer jongvolwassenen ervaren prestatiedruk vanuit zichzelf dan vanuit anderen.  Het percentage dat prestatiedruk ervaart vanuit zichzelf is hoger/lager onder de xx-xx-jarigen dan onder de 16-17-jarigen. 
+Meer jongvolwassenen ervaren prestatiedruk vanuit zichzelf dan vanuit anderen. Het percentage dat prestatiedruk ervaart vanuit zichzelf is hoger/lager onder de xx-xx-jarigen dan onder de 16-17-jarigen.
 :::
 
 ::: column
-```{r, echo = F}
-#| fig-alt: !expr ggplot2::get_alt_text(test)
-
+```{r, echo = F, fig.alt= ggplot2::get_alt_text(plot)}
 
 # Staafgrafiek met trend (zeer) vaak gestresst, regio vergeleken met landelijk
 # TODO kleuren werken niet omdat jaar geen label heeft. Checken in echte data. 
@@ -345,54 +175,47 @@ Meer jongvolwassenen ervaren prestatiedruk vanuit zichzelf dan vanuit anderen.  
 monitor_df$jaar %>% 
   labelled(c('2022' = 2022, '2024' = 2024)) -> monitor_df$jaar #
 
-#Pieter: ook var_label toegevoegd
-
+#Pieter: ook var_label toegevoegd voor alt-text
 var_label(monitor_df$jaar) <- "Jaar"
 
 
-test = monitor_df %>% 
+plot = monitor_df %>% 
    maak_staafdiagram_dubbele_uitsplitsing(
      var_inhoud = "vaak_stress", 
      var_crossing_groep = "jaar",
      var_crossing_kleur = "gender_2cat", # gender nog wijzigen naar vergelijking met landelijk
      titel = "Voelt zich (heel) vaak gestrest")
 
-test
+plot
+
 ```
 :::
 
 ::: column
 Top 5 bronnen van stress:
 
-- bron 1
-- bron 2
-- bron 3
-- bron 4
-- bron 5
+-   bron 1
+-   bron 2
+-   bron 3
+-   bron 4
+-   bron 5
 :::
 
 ::: column
-```{r, echo = F}
+```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot)}
 
 # Staafgrafiek prestatiedruk vanuit zichzelf, uitgesplitst naar gender
 
-monitor_df %>% maak_staafdiagram_vergelijking(
+plot = monitor_df %>% maak_staafdiagram_vergelijking(
   var_inhoud = "sterk_eenzaam",
   var_crossings = "gender_2cat",
   titel = "Ervaart regelmatig tot vaak prestatiedruk vanuit zichzelf",
   #kleuren_grafiek = default_kleuren_grafiek,
 )
 
+plot
+
 ```
+:::
 :::
 
-:::
-```{r}
-monitor_df %>% maak_staafdiagram_uitsplitsing_naast_elkaar(
-  var_inhoud = "vaak_stress",
-  var_crossings = c("gender_2cat","opleiding_3cat","leeftijd_3cat"),
-  flip = T,
-  kleuren_per_crossing = T,
-  fade_kleuren = T
-)
-```
