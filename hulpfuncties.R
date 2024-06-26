@@ -842,7 +842,6 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(df, var_inhoud, var_cros
 
 }
 
-
 #horizontaal gestapeld staafdiagram
 maak_staafdiagram_gestapeld <- function(df, var_inhoud, titel = "",
                                         kleuren_grafiek = default_kleuren_grafiek, x_label = "",
