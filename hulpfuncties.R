@@ -8,13 +8,12 @@
 # TODO hier nog iets van maken met een fucntie die checkt of deze package al is geinstalleerd, en anders installeren?
 #install.packages(c('tidyverse', 'haven', 'labelled', 'survey'))
 # TODO Pieter: Is het wel nodig om ziets te schrijven? moderne RStudio doet dat vanzelf voor je.
-# TODO Alle grafieken automatisch van relevante alt text
-# TODO Alle grafieken; data wegstrepen als er te weinig observaties ten grondslag liggen
 
-#TODO keus maken in digitoegankelijkheid plots:
-#Alt text https://www.w3.org/WAI/tutorials/images/complex/
-#Plot als tabel toevoegen (evt achter tab-button?)
-#TODO ALT TEXT
+
+# TODO Alle grafieken automatisch van relevante alt text voorzien
+
+# TODO code opschonen; dataverwerking voor grafiek in eigen functies stoppen om complexiteit / lengte van functies te verkleinen.
+
 
 # Hieronder worden de benodige packages geladen
 library(gt)
@@ -65,6 +64,47 @@ labelled_naar_character <- function(data,var){
   return(var_character)
 } 
 
+#wordt in grafiekfuncties aangeroepen om automatisch alt_text te maken
+#als alt-text NULL is
+maak_alt_text <- function(df#, var_inhhoud,crossings
+                          ,doelgroep = "jongvolwassenen",
+                          type_grafiek = "staafdiagram"){
+  
+  label_var_inhoud <- var_label(df[,1])
+  
+  string_waarden <- df[,-1] %>% 
+    select(-c(aantal_antwoord,aantal_vraag,is_leeg,weggestreept)) %>%
+    #labelled double naar character
+    mutate(across(where(~ is.labelled(.) && is.double(.)),
+                  ~ labelled_naar_character(df, cur_column()))) %>%
+    #rowwise voor string_var
+    rowwise() %>% 
+    mutate(percentage = ifelse(is.na(percentage),
+                               "percentage onbekend",
+                               paste0(percentage,"%")
+    ),
+    cat = str_c(across(!percentage), collapse = " "),
+    string = paste0(cat,": ", percentage)
+    
+    ) %>% 
+    pull(string) %>% 
+    paste0(collapse = ", ")
+  
+  crossing_labels <- var_label(df[,-1] %>% select(-c(aantal_antwoord,aantal_vraag,
+                                                     is_leeg, weggestreept, percentage))) %>% 
+    paste(collapse = " en ")
+  
+  glue(
+    
+    "{type_grafiek} met percentages '{label_var_inhoud}' bij {doelgroep} per {crossing_labels}:
+    {string_waarden}
+    
+    
+    
+    "
+  )
+  
+}
 
 
 # Tabelfuncties -------------------------------------------------------
@@ -176,7 +216,8 @@ maak_responstabel <- function(df, crossings = NULL, missing_label = "Onbekend",
 # Grafiekfuncties ---------------------------------------------------------
 maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_groep, var_crossing_kleur, titel = "",
                                                    kleuren_grafiek = default_kleuren_grafiek,
-                                                   nvar = default_Nvar, ncel = default_Ncel
+                                                   nvar = default_Nvar, ncel = default_Ncel,
+                                                   alt_text = NULL
                                                    ){
   
   if(!labelled::is.labelled(df[[var_inhoud]])){
@@ -219,9 +260,17 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_
     mutate(percentage = ifelse(is_leeg, NA, percentage), #zet alle vragen met tenminste 1 NA antwoord op NA
            weggestreept = ifelse(is_leeg, 10, NA) %>% as.numeric()) %>% #maak een vector met val 30 waar een antwoord ontbreekt (voor missing sterretjes in diagram) 
     filter(!!sym(var_inhoud) == 1) #dichtome var; ja overhouden.
+  
+  
+  #alt text aanmaken voor grafiek als deze niet handmatig is opgegeven
+  if(is.null(alt_text)){
+    
+    alt_text <- maak_alt_text(df_plot)
+    
+  }
+  
 
-
-  #Vector maken met weggestreepte waarden
+  #variabelen naar factor omzetten zodat volgorde intact blijft in ggplot
   df_plot[[var_crossing_groep]] <- factor(df_plot[[var_crossing_groep]], 
                                           levels = val_labels(df_plot[[var_crossing_groep]]),
                                           labels = names(val_labels(df_plot[[var_crossing_groep]])))
@@ -283,6 +332,9 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_
           plot.title = element_text(hjust = .5),
           axis.line.x.bottom = element_line(linewidth = 1),
           axis.line.y.left = element_line(linewidth = 1,)
+    ) + 
+    labs(
+      alt = alt_text
     )
 }
 
