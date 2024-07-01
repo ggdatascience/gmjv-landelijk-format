@@ -9,7 +9,7 @@ for(gemeentecode in alle_gemeentecodes){
   quarto::quarto_render(
     input = "voorbeeld_rapportage.qmd",
     output_format = "html",
-    output_file = glue::glue("rapporten/gemeenterapport_{gemeentecode}.html"),
+    output_file = glue::glue("gemeenterapport_{gemeentecode}.html"),
     execute_params = list(
       gemeentecode = gemeentecode
     )
@@ -17,23 +17,13 @@ for(gemeentecode in alle_gemeentecodes){
   
 }
 
-
-#Output als pdf
-#NB het kan zijn dat je het e.e.a moet updaten aan 'TinyTex'
-#om pdf uit te draaien;
-# klik op: View -> Move focus to terminal.
-# Er opent nu linksonder een Terminal;
-#hier type je: 'quarto install tinytex --update-path'
-
-for(gemeentecode in alle_gemeentecodes){
+#TEST PDF. Via chrome_print() om .css te bewaren
+#TODO pagebreaks via css class regelen doen
+#TODO flexbox / width & alignment instellingen goed krijgen voor landscape pdf
+# pagedown::chrome_print(
+#   input = glue("gemeenterapport_{gemeentecode}.html"),
+#   
+#   options = list(#preferCSSPageSize = FALSE,
+#                  printBackground = TRUE,
+#                  landscape = TRUE))
   
-  quarto::quarto_render(
-    input = "voorbeeld_rapportage.qmd",
-    output_format = "pdf",
-    output_file = glue::glue("rapporten/gemeenterapport_{gemeentecode}.pdf"),
-    execute_params = list(
-      gemeentecode = gemeentecode
-    )
-  )
-  
-}
