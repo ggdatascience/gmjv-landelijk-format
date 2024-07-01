@@ -7,8 +7,9 @@ alle_gemeentecodes <- 1:6
 for(gemeentecode in alle_gemeentecodes){
   
   quarto::quarto_render(
-    input = "voorbeeld_landscape_html.qmd",
-    output_file = glue::glue("gemeenterapport_{gemeentecode}.html"),
+    input = "voorbeeld_rapportage.qmd",
+    output_format = "html",
+    output_file = glue::glue("rapporten/gemeenterapport_{gemeentecode}.html"),
     execute_params = list(
       gemeentecode = gemeentecode
     )
@@ -27,9 +28,9 @@ for(gemeentecode in alle_gemeentecodes){
 for(gemeentecode in alle_gemeentecodes){
   
   quarto::quarto_render(
-    input = "voorbeeld_landscape_html.qmd",
+    input = "voorbeeld_rapportage.qmd",
     output_format = "pdf",
-    output_file = glue::glue("gemeenterapport_{gemeentecode}.pdf"),
+    output_file = glue::glue("rapporten/gemeenterapport_{gemeentecode}.pdf"),
     execute_params = list(
       gemeentecode = gemeentecode
     )
