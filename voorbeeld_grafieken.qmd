@@ -15,6 +15,10 @@ params:
   gemeentecode: 1 
 editor: visual
 format-links: false
+crossref:
+  fig-title: Grafiek
+  fig-prefix: Grafiek
+
 ---
 
 ```{r, echo=F, message=F, warning=F}
@@ -103,7 +107,9 @@ Jongeren brengen een groot deel van hun tijd door op school. Op school doen jong
 :::
 
 ::: column
-```{r, echo=F, fig.alt = ggplot2::get_alt_text(plot)}
+```{r, echo=F}
+#| fig.alt: !expr ggplot2::get_alt_text(plot)
+#| label: fig-plot
 plot <- monitor_df %>% 
   maak_staafdiagram_dubbele_uitsplitsing(
      var_inhoud = "vaak_stress", 
@@ -266,3 +272,6 @@ plot = monitor_df %>% maak_staafdiagram_uitsplitsing_naast_elkaar(
 
 plot
 ```
+
+
+Test cross-ref, see @fig-plot.
