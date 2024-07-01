@@ -8,9 +8,6 @@ format:
     toc: TRUE
     toc-location: left
     embed-resources: true
-  pdf: 
-    classoption: landscape
-    toc: TRUE
 params:
   gemeentecode: 1 
 editor: visual
