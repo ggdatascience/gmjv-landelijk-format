@@ -33,33 +33,35 @@ library(labelled)
 options(dplyr.summarise.inform = FALSE)
 source("hulpfuncties.R")
 
-# Links naar dingen IN het document maken (maakt dat uit als we een TOC hebben? Misschien voor PDF?)
-#https://quarto.org/docs/authoring/cross-references-custom.html
+#Standaardwaarden in te stellen door gebruiker:
+# Standaard kleuren
+default_kleuren_grafiek <- c("#012C17","#76B82A","#007E48")
+default_kleuren_responstabel <- c("header" = "#012C17",
+                                  "kleur_1" = "#007E48",
+                                  "kleur_2" = "#76B82A",
+                                  "kleur_tekst" = "#FFFFFF"
+                                  )
 
-#TODO Hier later SPSS data inlezen
-#Nu nepdata genereren 
+# Standaard minima voor groep & cel
+default_Nvar = 100 # Minimum aantal invullers per vraag.
+default_Ncel = 10 # Minimum aantal invullers oper antwoordoptie.
 
 #SPSS data inlezen
+#bestandsnaam
 file_path = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
 
-
+#lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
 monitor_df = haven::read_spss(file_path,user_na =T) %>%
   labelled::user_na_to_na()
 
-
-# #Vreselijke varcodes hernoemen naar iets anders vreselijs
-# names(monitor_df) <- c("jaar","Stratum","standaardisatiefactor","leeftijd_3cat","leeftijd_2cat","gender_3cat","gender_2cat","ggd_regio","ggd_regio_utrecht_samen","gemeentecode","stedelijkheid","migratie_3cat","opleiding","opleiding_4cat","opleiding_3cat","opleiding_2cat","ervaren_gezondheid_goed","psychische_klachten", "tevreden_zelf_3cat","tevreden_lichaam_3cat","tevreden_leven_3cat","vaak_stress","vertrouwen_toekomst_3cat","bezorgd_werkgelegenheid","bezorgd_woningmarkt","bezorgd_klimaat","bezorgd_discriminatie","bezorgd_polarisatie","bezorgd_oorlogen","eenzaamheid_3cat","is_eenzaam","sterk_eenzaam","prestatiedruk")
-
-#Er is bij deze dataset niet goed aangegeven wat missing is in SPSS.
-#Tijdelijke functie om 9 Onbekend te verwijderen & naar NA om te zetten
+#Er is bij deze dataset onvolledig aangegeven wat user missing is in SPSS.
+#Tijdelijke functie om '9 Onbekend'  te verwijderen & naar NA om te zetten
 
 for(var in names(monitor_df)){
   
   monitor_df <- monitor_df %>% verwijder_9_onbekend(var)
 
 }
-
-
 
 ```
 
@@ -90,29 +92,28 @@ Alle functies in dit document hebben als eerste argument 'df', waar een datafram
 
 # Responstabel
 
-#TODO default waarden naar boven verplaatsten
-
 De functie **maak_responstabel()** maakt een responstabel met het totaal aantal respondenten & deze respondenten uitgesplitst naar kruisvariabelen. Missing waarden op die kruisvariabelen worden standaard weergeven als 'Onbekend'
 
-## Nodige argumenten: 
+## Nodige argumenten:
 
--   **crossings:** \
+-   **crossings:**\
     Een character vector met kruisvariabelen waarover je N ingevulde vragenlijsten over wilt opsplitsen. Kan 1 of meer zijn.
 
 ## Optionele argumenten:
 
--   **missing_label:** \
+-   **missing_label:**\
     Een character variabele met een alternatief label voor missing waarden (standaard 'Onbekend').
 
--   **kleuren: \
+-   **kleuren:\
     **Een named character vector met alternatieve kleuren voor de tabel
 
 ```{r}
 #Standaard responstabel met twee crossings:
-monitor_df %>% maak_responstabel(crossings = c("AGGSA402","AGLFA401"))
+monitor_df %>% maak_responstabel(
+  crossings = c("AGGSA402","AGLFA401"))
 
 #Responstabel met drie crossings, aangepast missing_label en aangepaste kleuren.
-monitor_df %>% maak_responstabel(
+monitor_df %>% maak_responstabel( 
   crossings = c("AGGSA402","AGLFA401","AGOWS404"),
   missing_label = "Niet ingevuld",
   kleuren = c(header =  "#FEC805",
@@ -125,36 +126,221 @@ monitor_df %>% maak_responstabel(
 
 ```
 
-# Staafdiagram: Dubbele uitsplitsing
+# Grafieken
 
-De functie **maak_staafdiagram_dubbele_uitsplitsing()** maakt een staafdiagram voor een **dichotome variabelen** waarbij er twee kruisvariabelen ingevoerd kunnen worden. De eerste kruisvariabele splitst de data op de X-as en de tweede kruisvariabele op kleur.
+Hieronder volgt uitleg voor de grafiekfuncties. De functies genereren automatisch alt-text, maar deze kan ook handmatig ingevoerd worden.
 
-## Nodige argumenten:
+::: callout-caution
+Als je in Quarto zelf nieuwe blokjes code maakt met grafiek functies is het is het belangrijk dat alt-text goed wordt meegenomen bij het renderen van het document. Hier zijn 2 dingen voor nodig:
+
+-   De grafiek moet opgeslagen worden in een object (hieronder 'plot')
+
+-   De alt-text moet opgehaald worden uit het object d.m.v. get_alt_text() en ingevuld worden het argument fig.alt in de 'chunk-options' van het codeblock.
+
+Dit is bij de standaardrapportage uiteraard al geregeld en ziet er dan zo uit:
+
+```{r, echo = T, eval = F}
+
+{r, fig.alt = ggplot2::get_alt_text(plot)}
+plot = maak_staafdiagram(...)
+
+plot
+```
+:::
+
+## Staafdiagram: Dubbele uitsplitsing
+
+De functie **maak_staafdiagram_dubbele_uitsplitsing()** maakt een staafdiagram voor een **dichotome variabele** waarbij de percentages 'ja' worden weergeven. Er kunnen twee kruisvariabelen ingevoerd worden. De eerste kruisvariabele splitst de data op de X-as en de tweede kruisvariabele op kleur.
+
+### Nodige argumenten:
 
 -   **var_inhoud:** Een character met de naam van een dichotome variabele
 
--   **var_crossing_groep**
+-   **var_crossing_groep:** Een character met de naam van een kruisvariabele
 
--   **var_crossing_kleur**
+-   **var_crossing_kleur:** Een character met de naam van een kruisvariabele
 
-## Optionele argumenten:
+### Optionele argumenten:
 
--   **titel**
+-   **titel:** Een character met een titel voor het plot
 
--   **kleuren**
+-   **kleuren:** Een character vector met alternatieve kleuren voor de grafiek
 
--   **alt_text**
+-   **alt_text:** Een character met de 'alt-text' voor de grafiek. Als deze waarde leeg is, wordt er automatisch gegenereerde alt-text meegegeven die alle waarden in de grafiek bevat
 
--   **nvar**
+-   **nvar:** Een numeric met het minimum aantal observaties per vraag. Als deze waarde leeg is, wordt de standaardwaarde voor nvar aangehouden.
 
--   **ncel**
+-   **ncel:** Een numeric met het minimum aantal observaties per antwoord. Als deze waarde leeg is, wordt de standaardwaarde voor ncel aangehouden.
 
-```{r}
-#Standaard diagram met dubbele uitsplitsing
-monitor_df %>% 
+```{r, fig.alt= ggplot2::get_alt_text(plot)}
+
+#Standaard staafdiagram met dubbele uitsplitsing
+plot = monitor_df %>% 
   maak_staafdiagram_dubbele_uitsplitsing(
     var_inhoud = "LVEES404",
     var_crossing_groep = "AGGSA402",
     var_crossing_kleur = "AGLFA401"
   )
+
+plot
+
+```
+
+```{r, fig.alt= ggplot2::get_alt_text(plot)}
+#Staafdiagram met eigen titel, kleuren, alt-text, nvar en ncel
+plot = monitor_df %>% 
+  maak_staafdiagram_dubbele_uitsplitsing(
+    var_inhoud = "LVEES404",
+    var_crossing_groep = "AGGSA402",
+    var_crossing_kleur = "AGLFA401",
+    titel = "Titel staafdiagram",
+    kleuren = c("#FEC805","#1A2C54","#009BD9"),
+    alt_text = "Tekst die de grafiek toelicht t.b.v. digitoegankelijkheid",
+    nvar = 100,
+    ncel = 75
+  )
+
+plot
+```
+
+## Staafdiagram vergelijking
+
+De functie **maak_staafdiagram_vergelijking()** maakt een staafdiagram voor een **dichotome variabele** waarbij er meerdere kruisvariabelen ingevoerd kunnen worden. De percentages 'ja' worden los voor iedere individuele kruisvariabele naast elkaar weergeven.
+
+### Nodige argumenten:
+
+-   **var_inhoud:** Een character met de naam van een dichotome variabele
+
+-   **var_crossings:** Een character vector met de naam van één of meer kruisvariabelen
+
+### Optionele argumenten:
+
+Dezelfde optionele argumenten als in **maak_staafdiagram_dubbele_uitsplitsing()**
+
+```{r, fig.alt = ggplot2::get_alt_text(plot)}
+#Standaard staafdiagram met vergelijking
+plot = monitor_df %>% 
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "LVEES404",
+    var_crossings = c("AGGSA402","AGLFA401")
+    )
+
+plot
+
+```
+
+## Staafdiagram met meerdere staven
+
+De functie **maak_staafdiagram_meerdere_staven()** maakt een staafdiagram voor ieder soort variabele waarbij de percentages per antwoord worden weergeven. Optioneel kan een kruisvariabele ingevoerd worden, de grafiek zal de percentages dan opsplitsen op kleur. De grafiek kan ook horizontaal weergeven worden.
+
+### Nodige argumenten:
+
+-   **var_inhoud:** Een character met de naam van een dichotome variabele
+
+### Optionele argumenten:
+
+Naast dezelfde optionele argumenten als in **maak_staafdiagram_dubbele_uitsplitsing()**:
+
+-   **var_crossing:** Een character met de naam van één kruisvariabele
+-   **flip:** TRUE of FALSE. Als TRUE wordt de grafiek horizontaal weergeven
+
+```{r, fig.alt = ggplot2::get_alt_text(plot)}
+#Standaard staafdiagram met meerdere staven
+plot = monitor_df %>% 
+  maak_staafdiagram_meerdere_staven(
+    var_inhoud = "LVVTA404"
+    
+  )
+
+plot
+```
+
+```{r, fig.alt = ggplot2::get_alt_text(plot)}
+#Staafdiagram met meerdere staven, kruisvariabele en flip = TRUE
+plot = monitor_df %>% 
+  maak_staafdiagram_meerdere_staven(
+    var_inhoud = "LVVTA404",
+    var_crossing = "AGGSA402",
+    flip = TRUE
+    
+  )
+
+plot
+```
+
+## Staafdiagram uitsplitsing naast elkaar
+
+De functie **maak_staafdiagram_uitsplitsing_naast_elkaar()** maakt een staafdiagram voor **dichotome variabelen** waarbij de percentages 'ja' voor meerdere kruisvariabelen per uitsplitsing worden weergeven. Optioneel worden de onderscheiden op kleur. De grafiek kan ook horizontaal weergeven worden.
+
+### Nodige argumenten:
+
+-   **var_inhoud:** Een character met de naam van een dichotome variabele
+-   **var_crossings:** Een character vector met de naam van één of meer kruisvariabelen
+
+### Optionele argumenten:
+
+Naast dezelfde optionele argumenten als in **maak_staafdiagram_dubbele_uitsplitsing()**: - **kleuren_per_crossing:** TRUE of FALSE. Als TRUE krijgt iedere kruisvariabele een eigen kleur. - **fade_kleuren:** TRUE of FALSE. Als TRUE is er overloop in de kleuren per uitsplitsing - **flip:** TRUE of FALSE. Als TRUE wordt de grafiek horizontaal weergeven
+
+```{r, fig.alt = ggplot2::get_alt_text(plot)}
+#Standaard staafdiagram met uitsplitsingen naast elkaar
+plot = monitor_df %>% 
+  maak_staafdiagram_uitsplitsing_naast_elkaar(
+    var_inhoud = "LVEES404",
+    var_crossings = c("AGGSA402","AGLFA401","AGOWS404")
+  )
+
+plot
+```
+
+```{r, fig.alt = ggplot2::get_alt_text(plot)}
+#Staafdiagram met uitsplitsingen naast elkaar, met overlopende kleuren & horizontaal
+plot = monitor_df %>% 
+  maak_staafdiagram_uitsplitsing_naast_elkaar(
+    var_inhoud = "LVEES404",
+    var_crossings = c("AGGSA402","AGLFA401","AGOWS404"),
+    kleuren_per_crossing = TRUE,
+    fade_kleuren = TRUE,
+    flip = TRUE
+  )
+
+plot
+```
+
+## Staafdiagram gestapeld
+
+De functie **maak_staafdiagram_gestapeld()** maakt een horizontaal gestapeld staafdiagram voor ieder soort variabele.
+
+::: callout-tip
+figuren die met R worden gemaakt schalen automatisch naar de ruimte die ze hebben. Dit betekend dat het gestapeld staafdiagram standaard 'hoger' is dan gewenst.
+
+De dimensies van een figuur in Quarto kunnen aangepast worden in de chunk-options met de argumenten 'fig.width' en 'fig.height' zoals hier:
+
+```{r, echo = T, eval = F}
+
+{r, fig.alt = ggplot2::get_alt_text(plot), fig.width = 12, fig.height = 3}
+plot = maak_staafdiagram(…)
+
+plot
+```
+
+\
+:::
+
+### Nodige argumenten
+
+-   **var_inhoud:** Een character met de naam van een variabele
+
+### Optionele argumenten
+
+Dezelfde optionele argumenten als in **maak_staafdiagram_dubbele_uitsplitsing()**
+
+```{r, fig.alt = ggplot2::get_alt_text(plot), fig.width = 12, fig.height = 3}
+#Standaard gestapeld staafdiagram
+plot = monitor_df %>% 
+  maak_staafdiagram_gestapeld(
+    var_inhoud = "LVVTA404"
+    
+  )
+
+plot
 ```

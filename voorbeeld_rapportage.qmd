@@ -1,0 +1,229 @@
+---
+title: ""
+author: ""
+format:
+  html:
+    page-layout: full
+    css: custom.css
+    toc: TRUE
+    toc-location: left
+    embed-resources: true
+  pdf: 
+    classoption: landscape
+    toc: TRUE
+params:
+  gemeentecode: 1 
+editor: visual
+format-links: false
+---
+
+```{r, echo=F, message=F, warning=F}
+# Het script maakt gebruik van een aantal packages
+# Deze moeten bij de eerste keer lokaal worden geinstalleerd
+# Hieronder worden de benodige packages geladen
+library(gt)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(haven)
+library(labelled)
+options(dplyr.summarise.inform = FALSE)
+source("hulpfuncties.R")
+
+
+
+#Standaardwaarden in te stellen door gebruiker:
+# Standaard kleuren
+default_kleuren_grafiek <- c("#012C17","#76B82A","#007E48")
+default_kleuren_responstabel <- c("header" = "#012C17",
+                                  "kleur_1" = "#007E48",
+                                  "kleur_2" = "#76B82A",
+                                  "kleur_tekst" = "#FFFFFF"
+                                  )
+
+# Standaard minima voor groep & cel
+default_Nvar = 100 # Minimum aantal invullers per vraag.
+default_Ncel = 10 # Minimum aantal invullers oper antwoordoptie.
+
+#SPSS data inlezen
+#bestandsnaam
+file_path = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
+
+#lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
+monitor_df = haven::read_spss(file_path,user_na =T) %>%
+  labelled::user_na_to_na()
+
+#Vreselijke varcodes hernoemen naar iets anders vreselijks
+names(monitor_df) <- c("jaar","Stratum","standaardisatiefactor","leeftijd_3cat","leeftijd_2cat","gender_3cat","gender_2cat","ggd_regio","ggd_regio_utrecht_samen","gemeentecode","stedelijkheid","migratie_3cat","opleiding","opleiding_4cat","opleiding_3cat","opleiding_2cat","ervaren_gezondheid_goed","psychische_klachten", "tevreden_zelf_3cat","tevreden_lichaam_3cat","tevreden_leven_3cat","vaak_stress","vertrouwen_toekomst_3cat","bezorgd_werkgelegenheid","bezorgd_woningmarkt","bezorgd_klimaat","bezorgd_discriminatie","bezorgd_polarisatie","bezorgd_oorlogen","eenzaamheid_3cat","is_eenzaam","sterk_eenzaam","prestatiedruk")
+
+#Er is niet goed aangegeven wat missing is in SPSS.
+#tijdelijke functie om 9 Onbekend te verwijderen & naar NA te zetten
+
+for(var in names(monitor_df)){
+  
+  monitor_df <- monitor_df %>% verwijder_9_onbekend(var)
+
+}
+
+#TODO Tijdelijke filter op alleen gemeente in parameter
+monitor_df <- monitor_df %>% 
+  filter(gemeentecode == params$gemeentecode)
+
+
+```
+
+\
+
+::: voorblad_achtergrond
+![](Voorbeeld%20voorblad.png)
+
+::: voorblad_gemeentenaam
+`r labelled_naar_character(monitor_df, "gemeentecode") %>% unique()`
+:::
+
+::: voorblad_datum
+`r Sys.Date()`
+:::
+:::
+
+{{< pagebreak >}}
+
+::: pagina_header
+# Gezinssituatie, woon- en werksituatie en financiën
+:::
+
+::: {layout="[[30,30,30],[30,30,30]]"}
+::: column
+De woon-, werk- en financiële situatie van jongvolwassenen kan veel invloed hebben op het welzijn en de mentale en fysieke gezondheid van jongvolwassenen. In een tijd waarin er sprake is van een woning- en financiële crisis is het van belang om inzichtelijk te hebben in welke situaties de jongvolwassenen zitten.
+:::
+
+::: column
+**Gezins- en woonsituatie**
+
+De meeste respondenten wonen xx (xx%). Dit geldt met name voor jongvolwassenen van xxx leeftijd of gender. Dit is gelijk gebleven / veranderd t.o.v. 2022 . xx% wonen alleen, xx% wonen samen met anderen, xx% wonen samen met een partner, kind(eren), of partner en kind(eren), xx% hebben geen vaste woon-/verblijfplek.
+:::
+
+::: column
+**Werk- en financiële situatie**
+
+XX% van de jongvolwassenen volgt een opleiding en XX% heeft betaald werk. De meeste werkende jongvolwassenen werken XX uur per week (XX%). De oudere groep jongvolwassenen werkt meer uren. Dit is toegenomen/afgenomen/gelijk gebleven in vergelijking met de resultaten uit 2022.
+
+<br>
+
+Onder de niet-werkende en niet-studerende respondenten is XX% werkloos, XX% arbeidsongeschikt of langdurend ziek, XX% heeft een bijstandsuitkering en op XX% is niks van bovenstaande van toepassing. Dat is gelijk aan/anders dan respondenten uit 2022.
+:::
+
+::: column
+```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot)}
+plot = monitor_df %>% 
+  maak_staafdiagram_meerdere_staven(
+    var_inhoud = "tevreden_lichaam_3cat",
+    titel = "Test Financiële problemen (labels moeten nog aangepast)",
+    flip = T
+  )
+
+plot
+
+```
+:::
+
+::: column
+```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot)}
+
+plot = monitor_df %>% maak_staafdiagram_vergelijking(
+  var_inhoud = "is_eenzaam",
+  var_crossings = "leeftijd_3cat",
+  titel = "Woont bij ouder(s)/verzorger(s)"
+)
+
+plot
+
+```
+:::
+
+::: column
+Financieel gezien heeft XX% van de jongvolwassenen moeite rondkomen. XX% heeft het idee weinig controle over geldzaken te hebben. Van de jongvolwassenen heeft XX% een schuld (studieschuld en hypotheek niet meegerekend). Deze financiële moeilijkheden komen vaker voor bij oudere jongvolwassenen. Het lijkt erop dat financiële problemen toenemen naarmate jongvolwassenen ouder worden. De financiële situatie is beter/-- dan twee jaar geleden; toen had xx% moeite met rondkomen.
+:::
+:::
+
+{{< pagebreak >}}
+
+::: pagina_header
+# Mentaal welbevinden
+:::
+
+::: {layout="[[30,30,30],[30,30,30]]"}
+::: column
+**Stress**
+
+Het hebben van stress (spanning of druk) kan zowel gezond als ongezond zijn. Gezonde stress kan ervoor zorgen dat je extra alert kunt reageren en geconcentreerd kunt werken. Deze spanning zal snel afnemen na de gebeurtenis. Wanneer stress te lang duurt (ongezonde stress), is er meer tijd nodig om te herstellen. Bij te veel stress is er te weinig tijd om tussendoor te herstellen en kan dit leiden tot spanningsklachten en een burn-out.
+:::
+
+::: column
+Het percentage mannen dat zich (heel) vaak gestrest voelt is hoger dan/lager dan/gelijk onder vrouwen. Vrouwen ervaren de meeste stress van studie of school, de combinatie van alles wat zij moeten doen en de eisen die zij aan zichzelf stellen.
+
+Het percentage dat zich (heel) vaak gestrest voelt is hoger onder de 21-25-jarigen dan onder de 16-17-jarigen. Jongvolwassenen in de leeftijd van 21 -- 25 jaar ervaren de meeste stress op het gebied van de combinatie van alles wat zij moeten doen, de eisen die zij aan zichzelf stellen, en studie of school.
+:::
+
+::: column
+**Prestatiedruk**
+
+Sommige jongvolwassenen voelen druk om aan verwachtingen te voldoen. Ze hebben vaak het gevoel dat ze iets goed of beter moeten doen. Bijvoorbeeld hoge cijfers halen, een goede baan hebben of voldoen aan het perfecte plaatje.
+
+<br>
+
+Meer jongvolwassenen ervaren prestatiedruk vanuit zichzelf dan vanuit anderen. Het percentage dat prestatiedruk ervaart vanuit zichzelf is hoger/lager onder de xx-xx-jarigen dan onder de 16-17-jarigen.
+:::
+
+::: column
+```{r, echo = F, fig.alt= ggplot2::get_alt_text(plot)}
+
+# Staafgrafiek met trend (zeer) vaak gestresst, regio vergeleken met landelijk
+# TODO kleuren werken niet omdat jaar geen label heeft. Checken in echte data. 
+# voor nu handmatig gehercodeerd
+monitor_df$jaar %>% 
+  labelled(c('2022' = 2022, '2024' = 2024)) -> monitor_df$jaar #
+
+#Pieter: ook var_label toegevoegd voor alt-text
+var_label(monitor_df$jaar) <- "Jaar"
+
+
+plot = monitor_df %>% 
+   maak_staafdiagram_dubbele_uitsplitsing(
+     var_inhoud = "vaak_stress", 
+     var_crossing_groep = "jaar",
+     var_crossing_kleur = "gender_2cat", # gender nog wijzigen naar vergelijking met landelijk
+     titel = "Voelt zich (heel) vaak gestrest")
+
+plot
+
+```
+:::
+
+::: column
+Top 5 bronnen van stress:
+
+-   bron 1
+-   bron 2
+-   bron 3
+-   bron 4
+-   bron 5
+:::
+
+::: column
+```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot)}
+
+# Staafgrafiek prestatiedruk vanuit zichzelf, uitgesplitst naar gender
+
+plot = monitor_df %>% maak_staafdiagram_vergelijking(
+  var_inhoud = "sterk_eenzaam",
+  var_crossings = "gender_2cat",
+  titel = "Ervaart regelmatig tot vaak prestatiedruk vanuit zichzelf",
+  #kleuren_grafiek = default_kleuren_grafiek,
+)
+
+plot
+
+```
+:::
+:::

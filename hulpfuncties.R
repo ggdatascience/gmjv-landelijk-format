@@ -27,17 +27,19 @@ library(glue) #om strings aangenaam aan elkaar te plakken
 
 # Standaard instellingen --------------------------------------------------
 
-# Standaard kleuren instellen
-default_kleuren_grafiek <- c("#012C17","#76B82A","#007E48")
-default_kleuren_responstabel <- c("header" = "#012C17",
-                                  "kleur_1" = "#007E48",
-                                  "kleur_2" = "#76B82A",
-                                  "kleur_tekst" = "#FFFFFF"
-                                  )
+# Naar .qmd gehaald.
 
-# Default minimum aantallen instellen
-default_Nvar = 100 # Minimum aantal invullers per vraag.
-default_Ncel = 10 # Minimum aantal invullers oper antwoordoptie.
+# # Standaard kleuren instellen
+# default_kleuren_grafiek <- c("#012C17","#76B82A","#007E48")
+# default_kleuren_responstabel <- c("header" = "#012C17",
+#                                   "kleur_1" = "#007E48",
+#                                   "kleur_2" = "#76B82A",
+#                                   "kleur_tekst" = "#FFFFFF"
+#                                   )
+# 
+# # Default minimum aantallen instellen
+# default_Nvar = 100 # Minimum aantal invullers per vraag.
+# default_Ncel = 10 # Minimum aantal invullers oper antwoordoptie.
 
 
 # utility -----------------------------------------------------------------
@@ -645,6 +647,9 @@ maak_staafdiagram_meerdere_staven <- function(df, var_inhoud,var_crossing = NULL
                        labels = paste(seq(0,100, by = 10),"%"),
                        expand = expansion(mult = c(0, 0.05))
     ) +
+    #lange labels opsplitsen
+    scale_x_discrete(labels = function(x) str_wrap(x, width = 20)) + 
+    
     theme(axis.title = element_blank(),
           panel.background = element_blank(),
           axis.ticks.x = element_blank(),
@@ -845,7 +850,7 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(df, var_inhoud, var_cros
                          expand = expansion(mult = c(0, 0))) +
       scale_x_discrete(labels = function(x) str_wrap(x,width = 20)) +
       theme(
-        axis.text.x = element_text(angle = 90, hjust = .95, vjust = .2),
+#        axis.text.x = element_text(angle = 90, hjust = .95, vjust = .2),
         strip.background = element_blank(),
         
       ) + xlab("")
@@ -907,7 +912,10 @@ maak_staafdiagram_gestapeld <- function(df, var_inhoud, titel = "",
             color = "#FFFFFF",
             position = position_stack(vjust = 0.5),
             size = 3) +
-    scale_fill_manual(values= kleuren) +
+    
+    scale_fill_manual(values= kleuren,
+                      labels = function(x) str_wrap(x, width = 40)
+                      ) +
     scale_x_continuous(
       limits = c(0,100),
       breaks = seq(0,100, by = 10),
