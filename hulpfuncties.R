@@ -32,7 +32,7 @@ default_kleuren_grafiek <- c("#012C17","#76B82A","#007E48")
 default_kleuren_responstabel <- c("header" = "#012C17",
                                   "kleur_1" = "#007E48",
                                   "kleur_2" = "#76B82A",
-                                  "kleur_text" = "#FFFFFF"
+                                  "kleur_tekst" = "#FFFFFF"
                                   )
 
 # Default minimum aantallen instellen
@@ -170,15 +170,22 @@ maak_alt_text <- function(df, doelgroep = "jongvolwassenen", type_grafiek = "sta
 
 
 # Tabelfuncties -------------------------------------------------------
-maak_responstabel <- function(df, crossings = NULL, missing_label = "Onbekend",
+maak_responstabel <- function(df, crossings, missing_label = "Onbekend",
                               kleuren = default_kleuren_responstabel){
 
   #TODO Hoe om te gaan met missing waarden? Meetellen als 'onbekend' of niet weergeven?
   #In laatste geval kloppen de totalen van crossings onderling niet. Kan prima zijn
   #Voorlopige keuze: Missings weergeven als "onebekend"
   
+  
   aantallen_per_crossing <- lapply(crossings, function(x){
     
+    if(is.null(df[[x]])){
+      
+      warning(glue("De variabele {x} bestaat niet in de data. Typefout?"))
+      return(NULL)
+      
+    }
     #Variabelen naar character omzetten
     df[[x]] <- labelled_naar_character(df, x)
     
@@ -204,6 +211,13 @@ maak_responstabel <- function(df, crossings = NULL, missing_label = "Onbekend",
     }
     
   }) %>% do.call(rbind,.) #dataframes per crossing aan elkaar plakken
+  
+  if(is.null(aantallen_per_crossing)){
+    
+    warning(glue("De variabelen: {str_c(crossings, collapse = ', ')} bestaan niet. Er kan geen tabel gemaakt worden"))
+    return(NULL)
+  }
+  
   
   #gegeven een vector met alle crossings willen we afwisselend een andere kleur geven
   #aan iedere even en oneven crossing. Dus c("gender","klas","opleiding") 
@@ -277,7 +291,7 @@ maak_responstabel <- function(df, crossings = NULL, missing_label = "Onbekend",
 
 # Grafiekfuncties ---------------------------------------------------------
 maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_groep, var_crossing_kleur, titel = "",
-                                                   kleuren_grafiek = default_kleuren_grafiek,
+                                                   kleuren = default_kleuren_grafiek,
                                                    nvar = default_Nvar, ncel = default_Ncel,
                                                    alt_text = NULL
                                                    ){
@@ -344,7 +358,7 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_
   
   
   namen_kleuren <- levels(df_plot[[var_crossing_kleur]])
-  kleuren <- kleuren_grafiek[1:length(namen_kleuren)]
+  kleuren <- kleuren[1:length(namen_kleuren)]
   
   ggplot(df_plot) +
     geom_col(aes(x = !!sym(var_crossing_groep), y = percentage, fill = !!sym(var_crossing_kleur)),
@@ -402,7 +416,7 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_
 
 
 maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel = "",
-                                           kleuren_grafiek = default_kleuren_grafiek,
+                                           kleuren = default_kleuren_grafiek,
                                            nvar = default_Nvar, ncel = default_Ncel,
                                            alt_text = NULL
                                              ){
@@ -449,7 +463,7 @@ maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel 
        mutate(onderdeel = val_labels(onderdeel) %>% names())
      
      
-     df_crossing$kleuren <- kleuren_grafiek[1:nrow(df_crossing)]
+     df_crossing$kleuren <- kleuren[1:nrow(df_crossing)]
       
      df_crossing
        
@@ -526,7 +540,7 @@ maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel 
 
 maak_staafdiagram_meerdere_staven <- function(df, var_inhoud,var_crossing = NULL, 
                                               titel = "",
-                                              kleuren_grafiek = default_kleuren_grafiek,
+                                              kleuren = default_kleuren_grafiek,
                                               flip = FALSE, nvar = default_Nvar, ncel = default_Ncel,
                                               alt_text = NULL
                                               
@@ -592,7 +606,7 @@ maak_staafdiagram_meerdere_staven <- function(df, var_inhoud,var_crossing = NULL
   
   namen_kleuren <- levels(df_plot[[var_crossing]])
   
-  kleuren <- kleuren_grafiek[1:length(namen_kleuren)]
+  kleuren <- kleuren[1:length(namen_kleuren)]
   
   plot = ggplot(df_plot) +
     geom_col(aes(x = !!sym(var_inhoud), y = percentage, fill = !!sym(var_crossing)),
@@ -670,7 +684,7 @@ maak_staafdiagram_meerdere_staven <- function(df, var_inhoud,var_crossing = NULL
 #TODO dezelfde dfbewerkingen uit plotfuncties halen & naar eigen functies halen
 
 maak_staafdiagram_uitsplitsing_naast_elkaar <- function(df, var_inhoud, var_crossings, titel = "",
-                                                        kleuren_grafiek = default_kleuren_grafiek,
+                                                        kleuren = default_kleuren_grafiek,
                                                         kleuren_per_crossing = F, fade_kleuren = F,
                                                         flip = FALSE, nvar = default_Nvar, ncel = default_Ncel,
                                                         alt_text = NULL){
@@ -726,7 +740,7 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(df, var_inhoud, var_cros
     if(kleuren_per_crossing){
       n_crossing <- which(crossing == var_crossings)
       
-      kleur_crossing = kleuren_grafiek[n_crossing]
+      kleur_crossing = kleuren[n_crossing]
       
       #als de kleuren steeds lichter moeten worden binnen een crossing; palette maken
       #dat afloopt naar wit en hier een sample uit nemen
@@ -765,7 +779,7 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(df, var_inhoud, var_cros
     
   } else{
     
-    kleuren <- rep(kleuren_grafiek[1],nrow(df_plot))
+    kleuren <- rep(kleuren[1],nrow(df_plot))
   }
  
   #volgorde groepen op x-as vastzetten o.b.v. volgorde variabelen door er een factor vna te maken
@@ -844,7 +858,7 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(df, var_inhoud, var_cros
 
 #horizontaal gestapeld staafdiagram
 maak_staafdiagram_gestapeld <- function(df, var_inhoud, titel = "",
-                                        kleuren_grafiek = default_kleuren_grafiek, x_label = "",
+                                        kleuren = default_kleuren_grafiek, x_label = "",
                                         nvar = default_Nvar, ncel = default_Ncel,
                                         alt_text = NULL){
   
@@ -885,7 +899,7 @@ maak_staafdiagram_gestapeld <- function(df, var_inhoud, titel = "",
   
   namen_kleuren <- levels(df_plot[[var_inhoud]])
   
-  kleuren <- kleuren_grafiek[1:length(namen_kleuren)]
+  kleuren <- kleuren[1:length(namen_kleuren)]
   
   ggplot(df_plot, aes(x = percentage, y = x_label, fill = !!sym(var_inhoud))) + 
   geom_bar(stat = "identity", position = "stack") +
