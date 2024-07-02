@@ -172,14 +172,6 @@ Meer jongvolwassenen ervaren prestatiedruk vanuit zichzelf dan vanuit anderen. H
 ```{r, echo = F, fig.alt= ggplot2::get_alt_text(plot)}
 
 # Staafgrafiek met trend (zeer) vaak gestresst, regio vergeleken met landelijk
-# TODO kleuren werken niet omdat jaar geen label heeft. Checken in echte data. 
-# voor nu handmatig gehercodeerd
-monitor_df$AGOJB401 %>% 
-  labelled(c('2022' = 2022, '2024' = 2024)) -> monitor_df$AGOJB401 #
-
-#Pieter: ook var_label toegevoegd voor alt-text
-var_label(monitor_df$AGOJB401) <- "Jaar"
-
 
 plot = monitor_df %>% 
    maak_staafdiagram_dubbele_uitsplitsing(
