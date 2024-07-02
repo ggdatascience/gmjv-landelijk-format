@@ -5,7 +5,7 @@ Bijvoorbeeld:
 De div's voorblad_gemeentenaam en voorblad_datum zitten IN de div voorblad_achtergrond 
 CSS bij de elementen IN de overkoepelende div bepaald de positie van die elementen relatief aan het het grotere plaatje.
 Positie kan aangepast worden dmv "top" & "left".
-
+TODO alle H1 standaard de opmaak van pagina_header geven
 */
 
 .voorblad_achtergrond,
