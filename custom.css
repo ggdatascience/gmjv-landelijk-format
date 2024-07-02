@@ -5,8 +5,17 @@ Bijvoorbeeld:
 De div's voorblad_gemeentenaam en voorblad_datum zitten IN de div voorblad_achtergrond 
 CSS bij de elementen IN de overkoepelende div bepaald de positie van die elementen relatief aan het het grotere plaatje.
 Positie kan aangepast worden dmv "top" & "left".
-TODO alle H1 standaard de opmaak van pagina_header geven
+TODO overleggen: alle H1 hebben nu standaard de opmaak van pagina_header 
+Maakt het makkelijker voor eindgebruikers?
+
+
 */
+
+/*experiment met page-breaks/ pagedown & custom toc functie*/
+.page-break { 
+    page-break-before: always; 
+}
+
 
 .voorblad_achtergrond,
 .pagina_header_img{
@@ -47,8 +56,8 @@ TODO alle H1 standaard de opmaak van pagina_header geven
   font-size: 24px;
   color: white;
 }
- 
-.pagina_header{
+ /*
+ .pagina_header, h1{
   font-family: "Century Gothic";
   font-size: 24px;
   color: white;
@@ -56,6 +65,14 @@ TODO alle H1 standaard de opmaak van pagina_header geven
   padding: 15px;
 }
 
+*/
+h1 {
+  font-family: "Century Gothic";
+  font-size: 24px;
+  color: white;
+  background-color: #007E48;
+  padding: 20px;
+}
 /* Tijdelijk geen background image nodig?
 .voorblad {
   background-image: url("voorblad_alles.png");
