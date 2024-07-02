@@ -133,10 +133,25 @@ data2024 <- read_spss(data_naam) %>%
 # Gemeentenamen wijzigen: labels voor nepgemeentes toevoegen
 data2024$Gemeentecode <- set_value_labels(data2024$Gemeentecode, get_value_labels(data2022$Gemeentecode))
 
+
 # Data samenvoegen --------------------------------------------------------
 
 data <- data2022 %>%
   full_join(data2024)
+
+
+# meer value labels aanpassen -------------------------
+
+#alleen nepgemeenten overhouden
+nieuwe_labels <- labelled::val_labels(data$Gemeentecode) %>% head() #1e 6 codes zijn Nepgemeenten
+val_labels(data$Gemeentecode) <- nieuwe_labels #oude labels overschrijven
+
+#labels toevoegen aan jaarvariabele
+data$AGOJB401 %>% 
+  labelled(c('2022' = 2022, '2024' = 2024)) -> data$AGOJB401 #
+
+#ook var_label toegevoegd voor alt-text
+var_label(data$AGOJB401) <- "Jaar"
 
 # Data opslaan ------------------------------------------------------------
 
