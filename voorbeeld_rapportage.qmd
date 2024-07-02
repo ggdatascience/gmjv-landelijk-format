@@ -82,10 +82,6 @@ monitor_df <- monitor_df %>%
 :::
 :::
 
-
-::: page-break
-:::
-
 ::: pagina_header
 # Gezinssituatie, woon- en werksituatie en financiën
 :::
@@ -144,8 +140,6 @@ Financieel gezien heeft XX% van de jongvolwassenen moeite rondkomen. XX% heeft h
 :::
 :::
 
-::: page-break
-:::
 
 ::: pagina_header
 # Mentaal welbevinden
