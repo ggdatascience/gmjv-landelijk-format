@@ -48,7 +48,7 @@ Positie kan aangepast worden dmv "top" & "left".
   color: white;
 }
  
-.pagina_header{
+.pagina_header, .level1{
   font-family: "Century Gothic";
   font-size: 24px;
   color: white;
