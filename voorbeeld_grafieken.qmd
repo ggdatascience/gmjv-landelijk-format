@@ -11,6 +11,7 @@ format:
   pdf: 
     classoption: landscape
     toc: TRUE
+    tol: TRUE
 params:
   gemeentecode: 1 
 editor: visual
@@ -73,7 +74,7 @@ In dit document worden de verschillende grafiekfuncties uitgelegd en hoe hier aa
 ::: callout-tip
 In dit document wordt gebruikt gemaakt van de 'pipe-operator' *%\>%*.
 
-De pipe-operator stuurt een resultaat door naar de volgende functie. Op deze manier kunnen meerdere bewerkingen in R overzichtelijk aan elkaar gekoppeld worden. Lees in dat geval [hier](#0) een uitgebreidere uitleg van de magrittr pipe (en de voordelen).
+De pipe-operator stuurt een resultaat door naar de volgende functie. Op deze manier kunnen meerdere bewerkingen in R overzichtelijk aan elkaar gekoppeld worden. Lees [hier](#0) een uitleg van de magrittr pipe (en de voordelen).
 
 Zonder de pipe-operator zou het aanroepen van maak_responstabel er zo uit zien:
 
@@ -87,7 +88,7 @@ Met pipe-operator
 monitor_df %>% maak_responstabel(crossings = "gender_2cat", ...)
 ```
 
-Alle functies in dit document hebben als eerste argument 'df', waar een dataframe wordt verwacht. Dit argument zal niet expliciet genoemd worden in de uitleg, omdat het altijd nodig is en .
+Alle functies in dit document hebben als eerste argument 'df', waar een dataframe wordt verwacht. Dit argument zal niet expliciet genoemd worden in de uitleg, omdat het altijd nodig is.
 :::
 
 # Responstabel
@@ -107,11 +108,17 @@ De functie **maak_responstabel()** maakt een responstabel met het totaal aantal 
 -   **kleuren:\
     **Een named character vector met alternatieve kleuren voor de tabel
 
+### Standaard responstabel met twee crossings
+
 ```{r}
 #Standaard responstabel met twee crossings:
 monitor_df %>% maak_responstabel(
   crossings = c("AGGSA402","AGLFA401"))
+```
 
+### Aangepaste responstabel met drie crossings
+
+```{r}
 #Responstabel met drie crossings, aangepast missing_label en aangepaste kleuren.
 monitor_df %>% maak_responstabel( 
   crossings = c("AGGSA402","AGLFA401","AGOWS404"),
@@ -122,8 +129,6 @@ monitor_df %>% maak_responstabel(
               kleur_tekst = "#FFFFFF"
               )
   )
-
-
 ```
 
 # Grafieken
@@ -131,7 +136,7 @@ monitor_df %>% maak_responstabel(
 Hieronder volgt uitleg voor de grafiekfuncties. De functies genereren automatisch alt-text, maar deze kan ook handmatig ingevoerd worden.
 
 ::: callout-caution
-Als je in Quarto zelf nieuwe blokjes code maakt met grafiek functies is het is het belangrijk dat alt-text goed wordt meegenomen bij het renderen van het document. Hier zijn 2 dingen voor nodig:
+Als je in Quarto zelf nieuwe blokjes code maakt met grafieken is het belangrijk dat alt-text goed wordt meegenomen bij het renderen van het document. Hier zijn 2 dingen voor nodig:
 
 -   De grafiek moet opgeslagen worden in een object (hieronder 'plot')
 
@@ -150,7 +155,7 @@ plot
 
 ## Staafdiagram: Dubbele uitsplitsing
 
-De functie **maak_staafdiagram_dubbele_uitsplitsing()** maakt een staafdiagram voor een **dichotome variabele** waarbij de percentages 'ja' worden weergeven. Er kunnen twee kruisvariabelen ingevoerd worden. De eerste kruisvariabele splitst de data op de X-as en de tweede kruisvariabele op kleur.
+De functie **maak_staafdiagram_dubbele_uitsplitsing()** maakt een staafdiagram voor een **dichotome variabele** waarbij de percentages 'ja' (1) worden weergeven. Er kunnen twee kruisvariabelen ingevoerd worden. De eerste kruisvariabele splitst de data op de X-as en de tweede kruisvariabele op kleur.
 
 ### Nodige argumenten:
 
@@ -172,6 +177,8 @@ De functie **maak_staafdiagram_dubbele_uitsplitsing()** maakt een staafdiagram v
 
 -   **ncel:** Een numeric met het minimum aantal observaties per antwoord. Als deze waarde leeg is, wordt de standaardwaarde voor ncel aangehouden.
 
+### Standaard staafdiagram met dubbele uitsplitsing
+
 ```{r, fig.alt= ggplot2::get_alt_text(plot)}
 
 #Standaard staafdiagram met dubbele uitsplitsing
@@ -186,8 +193,10 @@ plot
 
 ```
 
+### Aangepast staafdiagram met dubbele uitsplitsing
+
 ```{r, fig.alt= ggplot2::get_alt_text(plot)}
-#Staafdiagram met eigen titel, kleuren, alt-text, nvar en ncel
+#Staafdiagram met dubbele uitsplitsing, eigen titel, kleuren, alt-text, nvar en ncel
 plot = monitor_df %>% 
   maak_staafdiagram_dubbele_uitsplitsing(
     var_inhoud = "LVEES404",
@@ -205,7 +214,7 @@ plot
 
 ## Staafdiagram vergelijking
 
-De functie **maak_staafdiagram_vergelijking()** maakt een staafdiagram voor een **dichotome variabele** waarbij er meerdere kruisvariabelen ingevoerd kunnen worden. De percentages 'ja' worden los voor iedere individuele kruisvariabele naast elkaar weergeven.
+De functie **maak_staafdiagram_vergelijking()** maakt een staafdiagram voor een **dichotome variabele** waarbij er meerdere kruisvariabelen ingevoerd kunnen worden. De percentages 'ja' (1) worden voor iedere individuele kruisvariabele naast elkaar weergeven.
 
 ### Nodige argumenten:
 
@@ -216,6 +225,8 @@ De functie **maak_staafdiagram_vergelijking()** maakt een staafdiagram voor een 
 ### Optionele argumenten:
 
 Dezelfde optionele argumenten als in **maak_staafdiagram_dubbele_uitsplitsing()**
+
+### Standaard staafdiagram met vergelijking
 
 ```{r, fig.alt = ggplot2::get_alt_text(plot)}
 #Standaard staafdiagram met vergelijking
@@ -244,16 +255,19 @@ Naast dezelfde optionele argumenten als in **maak_staafdiagram_dubbele_uitsplits
 -   **var_crossing:** Een character met de naam van één kruisvariabele
 -   **flip:** TRUE of FALSE. Als TRUE wordt de grafiek horizontaal weergeven
 
+### Standaard staafdiagram met meerdere staven
+
 ```{r, fig.alt = ggplot2::get_alt_text(plot)}
 #Standaard staafdiagram met meerdere staven
 plot = monitor_df %>% 
   maak_staafdiagram_meerdere_staven(
     var_inhoud = "LVVTA404"
-    
-  )
+    )
 
 plot
 ```
+
+### Aangepast staafdiagram met meerdere staven
 
 ```{r, fig.alt = ggplot2::get_alt_text(plot)}
 #Staafdiagram met meerdere staven, kruisvariabele en flip = TRUE
@@ -270,7 +284,7 @@ plot
 
 ## Staafdiagram uitsplitsing naast elkaar
 
-De functie **maak_staafdiagram_uitsplitsing_naast_elkaar()** maakt een staafdiagram voor **dichotome variabelen** waarbij de percentages 'ja' voor meerdere kruisvariabelen per uitsplitsing worden weergeven. Optioneel worden de onderscheiden op kleur. De grafiek kan ook horizontaal weergeven worden.
+De functie **maak_staafdiagram_uitsplitsing_naast_elkaar()** maakt een staafdiagram voor **dichotome variabelen** waarbij de percentages 'ja' (1) voor meerdere kruisvariabelen per uitsplitsing worden weergeven. Optioneel worden de onderscheiden op kleur. De grafiek kan ook horizontaal weergeven worden.
 
 ### Nodige argumenten:
 
@@ -280,6 +294,8 @@ De functie **maak_staafdiagram_uitsplitsing_naast_elkaar()** maakt een staafdiag
 ### Optionele argumenten:
 
 Naast dezelfde optionele argumenten als in **maak_staafdiagram_dubbele_uitsplitsing()**: - **kleuren_per_crossing:** TRUE of FALSE. Als TRUE krijgt iedere kruisvariabele een eigen kleur. - **fade_kleuren:** TRUE of FALSE. Als TRUE is er overloop in de kleuren per uitsplitsing - **flip:** TRUE of FALSE. Als TRUE wordt de grafiek horizontaal weergeven
+
+### Standaard staafdiagram met uitsplitsingen naast elkaar
 
 ```{r, fig.alt = ggplot2::get_alt_text(plot)}
 #Standaard staafdiagram met uitsplitsingen naast elkaar
@@ -291,6 +307,8 @@ plot = monitor_df %>%
 
 plot
 ```
+
+### Aangepast staafdiagram met uitsplitsingen naast elkaar
 
 ```{r, fig.alt = ggplot2::get_alt_text(plot)}
 #Staafdiagram met uitsplitsingen naast elkaar, met overlopende kleuren & horizontaal
@@ -333,6 +351,8 @@ plot
 ### Optionele argumenten
 
 Dezelfde optionele argumenten als in **maak_staafdiagram_dubbele_uitsplitsing()**
+
+### Standaard gestapeld staafdiagram
 
 ```{r, fig.alt = ggplot2::get_alt_text(plot), fig.width = 12, fig.height = 3}
 #Standaard gestapeld staafdiagram
