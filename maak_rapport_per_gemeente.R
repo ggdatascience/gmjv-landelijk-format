@@ -50,39 +50,49 @@ for(gemeentecode in alle_gemeentecodes){
 #Dit in qmd zetten: (zie render_toc() hieronder)
 #YAML
 #voor_pdf: false
-
-# ```{r, echo=F}
-# if(params$voor_pdf){
-#   render_toc(
-#     toc_header_name = "Inhoudsopgave",
-#     "voorbeeld_rapportage.qmd")
-# }
-# 
+# ::: page-break
+# :::
+#   
+#   # Inhoudsopgave
+#   
+#   ```{r}
+# render_toc(
+#   toc_header_name = "Inhoudsopgave",
+#   "voorbeeld_rapportage.qmd")
 # ```
-
-#Test pdf
-# gemeentecode = 1
 # 
+# #Test pdf
+#  gemeentecode = 1
+# # 
 # quarto::quarto_render(
 #   input = "voorbeeld_rapportage.qmd",
 #   output_format = "html",
 #   output_file = glue::glue("gemeenterapport_{gemeentecode}.html"),
 #   execute_params = list(
-#     gemeentecode = gemeentecode,
-#     voor_pdf = TRUE
+#     gemeentecode = gemeentecode
 #   ),
 #   metadata = list(`toc-location` = "body",
-#                   `toc-title` = "Inhoudsopgave")
+#                   `toc-title` = "Inhoudsopgave",
+#                   `toc-float` = "false")
 #   )
-# #TEST PDF. Via chrome_print() om .css te bewaren
-# #TODO pagebreaks via css class regelen doen
-# #TODO flexbox / width & alignment instellingen goed krijgen voor landscape pdf
+# # #TEST PDF. Via chrome_print() om .css te bewaren
+# # #TODO pagebreaks via css class regelen doen
+# # #TODO flexbox / width & alignment instellingen goed krijgen voor landscape pdf
 # pagedown::chrome_print(
 #   input = glue::glue("gemeenterapport_{gemeentecode}.html"),
 # 
-#   options = list(#preferCSSPageSize = FALSE,
+#   options = list(preferCSSPageSize = FALSE,
 #                  printBackground = TRUE,
-#                  landscape = TRUE))
+#                  scale = .9,
+#                  landscape = TRUE,
+#                  margin = list(
+#                    top = "0.5in",
+#                    bottom = "0.5in",
+#                    left = "0.5in",
+#                    right = "0.5in"
+#                  )
+#                  
+#                  ))
 
 
 #RENDER TOC
@@ -119,7 +129,7 @@ for(gemeentecode in alle_gemeentecodes){
 #' @param toc_depth Maximum depth for TOC, relative to base_level. Default is
 #'   `toc_depth = 3`, which results in a TOC of at most 3 levels.
 # render_toc <- function(
-#     filename, 
+#     filename,
 #     toc_header_name = "Table of Contents",
 #     base_level = NULL,
 #     toc_depth = 3
@@ -133,7 +143,7 @@ for(gemeentecode in alle_gemeentecodes){
 #   }
 #   x <- strsplit(x, "\n")[[1]]
 #   x <- x[grepl("^#+", x)]
-#   if (!is.null(toc_header_name)) 
+#   if (!is.null(toc_header_name))
 #     x <- x[!grepl(paste0("^#+ ", toc_header_name), x)]
 #   if (is.null(base_level))
 #     base_level <- min(sapply(gsub("(#+).+", "\\1", x), nchar))
