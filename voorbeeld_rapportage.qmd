@@ -6,7 +6,6 @@ format:
     page-layout: full
     css: custom.css
     toc: TRUE
-    toc-location: left
     embed-resources: true
 params:
   gemeentecode: 1 
@@ -83,7 +82,9 @@ monitor_df <- monitor_df %>%
 :::
 :::
 
-{{< pagebreak >}}
+
+::: page-break
+:::
 
 ::: pagina_header
 # Gezinssituatie, woon- en werksituatie en financiën
@@ -143,7 +144,8 @@ Financieel gezien heeft XX% van de jongvolwassenen moeite rondkomen. XX% heeft h
 :::
 :::
 
-{{< pagebreak >}}
+::: page-break
+:::
 
 ::: pagina_header
 # Mentaal welbevinden
