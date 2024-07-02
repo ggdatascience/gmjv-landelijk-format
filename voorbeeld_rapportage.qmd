@@ -51,7 +51,7 @@ monitor_df = haven::read_spss(file_path,user_na =T) %>%
   labelled::user_na_to_na()
 
 #Vreselijke varcodes hernoemen naar iets anders vreselijks
-names(monitor_df) <- c("jaar","Stratum","standaardisatiefactor","leeftijd_3cat","leeftijd_2cat","gender_3cat","gender_2cat","ggd_regio","ggd_regio_utrecht_samen","gemeentecode","stedelijkheid","migratie_3cat","opleiding","opleiding_4cat","opleiding_3cat","opleiding_2cat","ervaren_gezondheid_goed","psychische_klachten", "tevreden_zelf_3cat","tevreden_lichaam_3cat","tevreden_leven_3cat","vaak_stress","vertrouwen_toekomst_3cat","bezorgd_werkgelegenheid","bezorgd_woningmarkt","bezorgd_klimaat","bezorgd_discriminatie","bezorgd_polarisatie","bezorgd_oorlogen","eenzaamheid_3cat","is_eenzaam","sterk_eenzaam","prestatiedruk")
+
 
 #Er is niet goed aangegeven wat missing is in SPSS.
 #tijdelijke functie om 9 Onbekend te verwijderen & naar NA te zetten
@@ -63,8 +63,8 @@ for(var in names(monitor_df)){
 }
 
 #TODO Tijdelijke filter op alleen gemeente in parameter
-monitor_df <- monitor_df %>% 
-  filter(gemeentecode == params$gemeentecode)
+monitor_df <- monitor_df %>%
+  filter(Gemeentecode == params$gemeentecode)
 
 
 ```
@@ -75,7 +75,7 @@ monitor_df <- monitor_df %>%
 ![](Voorbeeld%20voorblad.png)
 
 ::: voorblad_gemeentenaam
-`r labelled_naar_character(monitor_df, "gemeentecode") %>% unique()`
+`r labelled_naar_character(monitor_df, "Gemeentecode") %>% unique()`
 :::
 
 ::: voorblad_datum
@@ -114,8 +114,8 @@ Onder de niet-werkende en niet-studerende respondenten is XX% werkloos, XX% arbe
 ```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot)}
 plot = monitor_df %>% 
   maak_staafdiagram_meerdere_staven(
-    var_inhoud = "tevreden_lichaam_3cat",
-    titel = "Test Financiële problemen (labels moeten nog aangepast)",
+    var_inhoud = "LVTEA403",
+    titel = "Test Financiële problemen",
     flip = T
   )
 
@@ -128,8 +128,8 @@ plot
 ```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot)}
 
 plot = monitor_df %>% maak_staafdiagram_vergelijking(
-  var_inhoud = "is_eenzaam",
-  var_crossings = "leeftijd_3cat",
+  var_inhoud = "LVEES403",
+  var_crossings = "AGLFA401",
   titel = "Woont bij ouder(s)/verzorger(s)"
 )
 
@@ -178,18 +178,18 @@ Meer jongvolwassenen ervaren prestatiedruk vanuit zichzelf dan vanuit anderen. H
 # Staafgrafiek met trend (zeer) vaak gestresst, regio vergeleken met landelijk
 # TODO kleuren werken niet omdat jaar geen label heeft. Checken in echte data. 
 # voor nu handmatig gehercodeerd
-monitor_df$jaar %>% 
-  labelled(c('2022' = 2022, '2024' = 2024)) -> monitor_df$jaar #
+monitor_df$AGOJB401 %>% 
+  labelled(c('2022' = 2022, '2024' = 2024)) -> monitor_df$AGOJB401 #
 
 #Pieter: ook var_label toegevoegd voor alt-text
-var_label(monitor_df$jaar) <- "Jaar"
+var_label(monitor_df$AGOJB401) <- "Jaar"
 
 
 plot = monitor_df %>% 
    maak_staafdiagram_dubbele_uitsplitsing(
-     var_inhoud = "vaak_stress", 
-     var_crossing_groep = "jaar",
-     var_crossing_kleur = "gender_2cat", # gender nog wijzigen naar vergelijking met landelijk
+     var_inhoud = "LVSTA415", 
+     var_crossing_groep = "AGOJB401",
+     var_crossing_kleur = "AGGSA402", # gender nog wijzigen naar vergelijking met landelijk
      titel = "Voelt zich (heel) vaak gestrest")
 
 plot
@@ -213,8 +213,8 @@ Top 5 bronnen van stress:
 # Staafgrafiek prestatiedruk vanuit zichzelf, uitgesplitst naar gender
 
 plot = monitor_df %>% maak_staafdiagram_vergelijking(
-  var_inhoud = "sterk_eenzaam",
-  var_crossings = "gender_2cat",
+  var_inhoud = "LVEES404",
+  var_crossings = "AGGSA402",
   titel = "Ervaart regelmatig tot vaak prestatiedruk vanuit zichzelf",
   #kleuren_grafiek = default_kleuren_grafiek,
 )
