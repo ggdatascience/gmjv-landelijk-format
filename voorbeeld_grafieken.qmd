@@ -30,7 +30,11 @@ library(dplyr)
 library(ggplot2)
 library(tidyr)
 library(haven)
-library(labelled)
+library(stringr) # Voor str_replace
+library(labelled) # Package om te werken met datalabels, o.a. voor to_character()
+library(survey) # Package om te werken met gewogen gemiddelds incl. betrouwbaarheidsintervallen
+library(glue) #om strings aangenaam aan elkaar te plakken
+
 options(dplyr.summarise.inform = FALSE)
 source("hulpfuncties.R")
 
