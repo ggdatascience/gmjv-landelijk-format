@@ -10,7 +10,6 @@
 # TODO Pieter: Is het wel nodig om ziets te schrijven? moderne RStudio doet dat vanzelf voor je.
 
 
-# TODO Alle grafieken automatisch van relevante alt text voorzien
 
 # TODO code opschonen; dataverwerking voor grafiek in eigen functies stoppen om complexiteit / lengte van functies te verkleinen.
 
@@ -42,7 +41,46 @@ library(glue) #om strings aangenaam aan elkaar te plakken
 # default_Ncel = 10 # Minimum aantal invullers oper antwoordoptie.
 
 
-# utility -----------------------------------------------------------------
+# utility ----------------------------------------------------------------
+
+#TODO algemene survey-verwerk functie?
+bereken_kruistabel <- function(data,
+                               design_2022,
+                               design_2024,
+                               var_inhoud,
+                               var_crossing,
+                               subset,
+                               vergelijk_regio,
+                               vergelijk_landelijk,
+                               vergelijk_jaar){
+  
+  #landelijk dataset heeft; landelijk & regio
+  #regiodataset heeft; eigen regio & gemeentes
+  
+  #Jaar & Regiovariabelen moeten we anders verwerken
+  #omdat die een eigen geassocieerd surveydesign hebben.
+
+  #TODO we halen regiodata uit gemeentedata; omdat mensen die altijd
+  #zullen gebruiken
+  
+  #TODO omgaan met vergelijk_landelijk terwijl er geen landelijk df is
+  if(vergelijk_landelijk & !exists(landelijk_df)){
+    stop("ERROR")
+  }
+  
+  #TODO omgaan met foutieve invoer crossing/inhoud
+  if(var_crossing %in% c("placeholder_jaar","placeholder_regio") |
+     var_inhoud %in% c("placeholder_jaar","placeholder_regio") |
+     var_inhoud == var_crossing
+     ){
+    
+    stop("Let eens op; dat is een jaarvariabele of regiovairabele")
+  }
+  
+  
+}
+
+
 
 #TODO vervangen met algemenere functie OF verwijderen en eindgebruikers instrueren
 #hun variabele goed te coderen zodat alle missing ook user missing zijn

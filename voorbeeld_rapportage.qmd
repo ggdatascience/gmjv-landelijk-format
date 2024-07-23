@@ -51,6 +51,9 @@ file_path = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
 monitor_df = haven::read_spss(file_path,user_na =T) %>%
   labelled::user_na_to_na()
 
+#TODO maak surveydesign over hele set
+#TODO bedenken of dit apart moet per jaar
+
 #Vreselijke varcodes hernoemen naar iets anders vreselijks
 
 
@@ -66,6 +69,9 @@ for(var in names(monitor_df)){
 #TODO Tijdelijke filter op alleen gemeente in parameter
 monitor_df <- monitor_df %>%
   filter(Gemeentecode == params$gemeentecode)
+
+#TODO PER JAAR  svydesign subsetten o.b.v. gemeentenaam &
+#TODO regio - gemeente. (evnetueel optie om het op de oude manier te doen)
 
 
 ```
