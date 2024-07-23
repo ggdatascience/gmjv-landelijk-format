@@ -53,7 +53,7 @@ bereken_kruistabel <- function(data,
   #TODO Mensen moeten ook grafieken kunnen maken zonder
   #Gemeenteniveau
   #misschien in plaats van vergelijk_regio etc. een
-  #includeer_gebied = c("gemeente","regio","landelijk")?
+  #regios = c("gemeente","regio","landelijk")?
   
   
   #landelijk dataset heeft; landelijk & regio
