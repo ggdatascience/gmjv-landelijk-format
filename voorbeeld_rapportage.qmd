@@ -9,6 +9,7 @@ format:
     embed-resources: true
 params:
   gemeentecode: 1 
+  is_pdf: false
 editor: visual
 format-links: false
 ---
@@ -72,6 +73,17 @@ monitor_df <- monitor_df %>%
 
 \
 
+```{r, echo=F}
+
+if(params$is_pdf){
+  
+ render_toc(
+   toc_header_name = "Inhoudsopgave",
+   "voorbeeld_rapportage.qmd"
+   )
+}
+```
+
 ::: voorblad_achtergrond
 ![](Voorbeeld%20voorblad.png)
 
@@ -84,9 +96,7 @@ monitor_df <- monitor_df %>%
 :::
 :::
 
-::: pagina_header
 # Gezinssituatie, woon- en werksituatie en financiën
-:::
 
 ::: {layout="[[30,30,30],[30,30,30]]"}
 ::: column
@@ -142,10 +152,7 @@ Financieel gezien heeft XX% van de jongvolwassenen moeite rondkomen. XX% heeft h
 :::
 :::
 
-
-::: pagina_header
 # Mentaal welbevinden
-:::
 
 ::: {layout="[[30,30,30],[30,30,30]]"}
 ::: column
