@@ -59,16 +59,7 @@ maakt het makkelijker voor eindgebruikers?
   font-size: 24px;
   color: white;
 }
- /*
- .pagina_header, h1{
-  font-family: "Century Gothic";
-  font-size: 24px;
-  color: white;
-  background-color: #007E48;
-  padding: 15px;
-}
 
-*/
 h1 {
   page-break-before: always; 
   font-family: "Century Gothic";
@@ -77,16 +68,4 @@ h1 {
   background-color: #007E48;
   padding: 20px;
 }
-/* Tijdelijk geen background image nodig?
-.voorblad {
-  background-image: url("voorblad_alles.png");
-  
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  
-  height: 100%;
-  width: 100%;
-}
-*/
 
