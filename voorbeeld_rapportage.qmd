@@ -44,7 +44,7 @@ default_Nvar = 100 # Minimum aantal invullers per vraag.
 default_Ncel = 10 # Minimum aantal invullers oper antwoordoptie.
 
 #SPSS data inlezen
-#bestandsnaam
+# Regionaal bestand
 file_path = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
 
 #lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
@@ -147,7 +147,6 @@ plot
 Financieel gezien heeft XX% van de jongvolwassenen moeite rondkomen. XX% heeft het idee weinig controle over geldzaken te hebben. Van de jongvolwassenen heeft XX% een schuld (studieschuld en hypotheek niet meegerekend). Deze financiële moeilijkheden komen vaker voor bij oudere jongvolwassenen. Het lijkt erop dat financiële problemen toenemen naarmate jongvolwassenen ouder worden. De financiële situatie is beter/-- dan twee jaar geleden; toen had xx% moeite met rondkomen.
 :::
 :::
-
 
 ::: pagina_header
 # Mentaal welbevinden
