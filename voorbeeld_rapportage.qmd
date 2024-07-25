@@ -82,12 +82,16 @@ for(var in names(monitor_df)){
 }
 
 #TODO Tijdelijke filter op alleen gemeente in parameter
+monitor_df_regio <- monitor_df
 monitor_df <- monitor_df %>%
   filter(Gemeentecode == params$gemeentecode)
 
-#TODO PER JAAR  svydesign subsetten o.b.v. gemeentenaam &
-#TODO regio - gemeente. (evnetueel optie om het op de oude manier te doen)
-
+#Maak survey design gemeente
+# Gemeente 2022 en 2024
+design_gem <- survey_design_maken(
+                          strata = 'Stratum', 
+                          gewichten = 'Standaardisatiefactor', 
+                          data = monitor_df)
 
 ```
 

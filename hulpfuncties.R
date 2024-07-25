@@ -188,7 +188,7 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
     n_ontbrekende_antwoorden <- length(antwoorden) - length(tb) 
     
     lege_antwoorden <- rep(0,n_ontbrekende_antwoorden)
-    names(lege_antwoorden) <- unname(antwoorden)[!unname(antwoorden)%in% names(tb)]
+    names(lege_antwoorden) <- unname(antwoorden)[!unname(antwoorden) %in% names(tb)]
     
     tb <- c(tb, lege_antwoorden) 
     
@@ -199,15 +199,14 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
   
   ct <- prop.table(tb) * 100 # ct bevat estimates als percentages
   
-  print(ct)
-  
   #Als er geen crossings zijn
   if(is.null(crossing)){
     
     #Check of voldaan wordt aan kleine N regels.
     #Als er minder min_observaties_per_antwoord per antwoordoptie zijn OF 
     #minder dan min_observaties zijn bij een vraag; maak CI's en estimates NA.
-    if (any(table(monitor_df[['GZGGA402']]) < min_observaties_per_antwoord) | # TODO dit werkt nog niet als één categorie 0 is, want dan wordt deze niet meegerekend. HIERVOOR ct/tb gebruiken?
+    if (any(table(monitor_df[['GZGGA402']]) < min_observaties_per_antwoord) |
+        exists('lege_antwoorden') & min_observaties_per_antwoord != 0 |
         sum(table(data[[variabele]])) < min_observaties_per_vraag) {
       
       confidence_intervals <- matrix(data = NA, 
@@ -380,8 +379,8 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
 }
 
 ## Voorbeeld:
-#bereken_kruistabel(data = monitor_df, design = design_regio, variabele = 'GZGGA402')
-bereken_kruistabel(data = df_2024, design = design_regio_2024, variabele = 'LVVTA405', crossing = "AGETS414")
+#bereken_kruistabel(data = monitor_df_regio, design = design_regio, variabele = 'Stedelijkheid')
+#bereken_kruistabel(data = monitor_df_regio, design = design_regio, variabele = 'GZGGA402', crossing = "AGLFA401")
 
 #TODO vervangen met algemenere functie OF verwijderen en eindgebruikers instrueren
 #hun variabele goed te coderen zodat alle missing ook user missing zijn
