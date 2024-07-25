@@ -125,12 +125,12 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
   # TODO functie werkbaar maken voor dubbele uitsplitsing?
   
   # Foute invoer afvangen
-  #TODO omgaan met vergelijk_landelijk terwijl er geen landelijk df is
+  #TODO omgaan met vergelijk_landelijk terwijl er geen landelijk df is > deze error verplaatsen
   #if("land" %in% niveau & data != 'monitor_df_land'){
   #  stop("ERROR")
   #}
   
-  #TODO omgaan met foutieve invoer crossing/inhoud
+  #TODO omgaan met foutieve invoer crossing/inhoud > deze error verplaatsen
   #if(var_crossing %in% c("placeholder_jaar","placeholder_regio") |
   #   variabele %in% c("placeholder_jaar","placeholder_regio") |
   #   variabele == var_crossing ){
@@ -141,7 +141,7 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
   #TODO Op dit moment wordt ervoor gekozen geen trendbestand op gemeenteniveua
   #op te leveren
   #als mensen dus vergelijk_jaar & gemeente ingeven kan dat niet
-  #warning of error geven
+  #warning of error geven > deze error verplaatsen
   
   #Niet-valide invoer afvangen & warning geven
   if(is.null(data[[variabele]])) {
@@ -157,8 +157,7 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
     warning(paste("Er is een crossingsvariabele ", crossing, " en een jaar variabele ", var_jaar, "ingevuld. Verwijder één van de twee. Kruistabel wordt niet berekend."))
     return(NULL)
     
-  } 
-  else if(!is.null(var_jaar) & is.null(crossing)) {
+  } else if (!is.null(var_jaar) & is.null(crossing)) {
     
     crossing = var_jaar
     
@@ -199,7 +198,7 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
   }
   
   ct <- prop.table(tb) * 100 # ct bevat estimates als percentages
-   
+  
   print(ct)
   
   #Als er geen crossings zijn
@@ -207,15 +206,16 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
     
     #Check of voldaan wordt aan kleine N regels.
     #Als er minder min_observaties_per_antwoord per antwoordoptie zijn OF 
-    #minder dan min_observaties zijn bij een vraag; maak CI's NA.
-    if (any(table(monitor_df[['GZGGA402']]) < min_observaties_per_antwoord) | 
+    #minder dan min_observaties zijn bij een vraag; maak CI's en estimates NA.
+    if (any(table(monitor_df[['GZGGA402']]) < min_observaties_per_antwoord) | # TODO dit werkt nog niet als één categorie 0 is, want dan wordt deze niet meegerekend. HIERVOOR ct/tb gebruiken?
         sum(table(data[[variabele]])) < min_observaties_per_vraag) {
-      confidence_intervals <- matrix(data = NA, 
-                                     nrow = ncol(ct), 
-                                     ncol = 2, 
-                                     dimnames = list(paste0("[", 1:ncol(ct),",]"), c("2.5%", "97.5%")))
       
-      estimate <- 
+      confidence_intervals <- matrix(data = NA, 
+                                     nrow = length(ct), 
+                                     ncol = 2, 
+                                     dimnames = list(paste0("[", 1:length(ct),",]"), c("2.5%", "97.5%")))
+      
+      estimate <- ct %>% replace(values = NA)
 
     } else {
       #reken voor ieder antwoord de ci uit
@@ -254,15 +254,19 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
       
     #Warning als crossing niet bestaat
     if(is.null(data[[crossing]])){
-      stop(paste("crossing",crossing, "bestaat niet in dataset. Kijk configuratie en dataset na"))
+      
+      stop(paste("Crossing",crossing, "bestaat niet in dataset. Kijk configuratie en dataset na."))
       return(NULL)
+      
     }else{
         
-      #Als er missings zijn op de crossing. Warning verplaatst naar tabellen_naar_csv
+      #Als er missings zijn op de crossing. 
       if(any(is.na(data[[crossing]]))){
-        warning(paste("Missing data gevonden bij crossing",crossing))
-      }
         
+        warning(paste("Missing data gevonden bij crossing ",crossing))
+      
+      }
+      
       #CI uitrekenen
       confidence_intervals <- lapply(unname(antwoorden), function(x){prop_ci_berekenen(data = data,
                                                                                        variabele = variabele,
@@ -321,22 +325,29 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
         estimate <- confidence_intervals[confidence_intervals$crossing_var == x,2]*100
         if(length(estimate) == 0){estimate <- NA}
         
-          
         #Ditzelfde moet ook gebeuren voor confidence intervals
-        #Voor confidence intervals  geld ook dat ze  op NA willen zetten als het aantal obs op een vraag per level v.e. crossing
-        #lager is dan de opgegeven min_obs. (een makkelijke manier om de vraag te excluderen v.  toetsing sign.)
-        te_weinig_obs <- sum(table(factor(data[[variabele]][data[[crossing]] == x], levels = antwoorden))) < min_observaties_per_vraag
         
+        #Check of voldaan wordt aan kleine N regels.
+        # Confidence intervals + estimates moeten NA woden als het aantal observaties
+        # op een vraag per level v.e. crossing lager is dan de opgegeven min_obs. 
+        # OF als er te weinig observaties per antwoordoptie zijn.
+        # LET OP: gebruik dit altijd op data zonder lege missing categorieën, bv. door eerst functie verwijder_9_onbekend() over data te runnen.
+
+        te_weinig_obs <- sum(table(factor(data[[variabele]][data[[crossing]] == x], levels = antwoorden))) < min_observaties_per_vraag |
+          any(table(factor(data[[variabele]][data[[crossing]] == x], levels = antwoorden)) < min_observaties_per_antwoord)
+
         ci_upper <- confidence_intervals[confidence_intervals$crossing_var == x,4]
           
         if(te_weinig_obs | length(ci_upper) == 0){
           ci_upper <- NA
+          estimate <- NA
         }
           
         ci_lower <- confidence_intervals[confidence_intervals$crossing_var == x,3]
         
         if(te_weinig_obs | length(ci_lower) == 0){
           ci_lower <- NA
+          estimate <- NA
         }
           
         #Kolommen koppelen
@@ -365,10 +376,12 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
     select(-c(n_weighted, n_unweighted))
   
   return(kruistabel)
+  
 }
 
 ## Voorbeeld:
-bereken_kruistabel(data = monitor_df, design = design_regio, variabele = 'GZGGA402')
+#bereken_kruistabel(data = monitor_df, design = design_regio, variabele = 'GZGGA402')
+bereken_kruistabel(data = df_2024, design = design_regio_2024, variabele = 'LVVTA405', crossing = "AGETS414")
 
 #TODO vervangen met algemenere functie OF verwijderen en eindgebruikers instrueren
 #hun variabele goed te coderen zodat alle missing ook user missing zijn
