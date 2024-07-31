@@ -414,23 +414,20 @@ kruistabel_met_subset <- function(data, variabele = NULL, crossing = NULL, subse
 
   #nb; lapply crasht hier waar een for loop het prima doet. helaas for loop dan maar
   
-  meerdere_kruistabellen <- list()
-  
-  for(lvl_subset in alle_subsets){
+  meerdere_kruistabellen <- lapply(alle_subsets, function(lvl_subset){
     
     #subset maken v design
-    subset_design <- subset(survey_design, get(subsetvar) == lvl_subset)
+    subset_design <<- subset(survey_design, get(subsetvar) == lvl_subset)
     #subset maken van dataset
-    subset_data <- data %>% filter(!!sym(subsetvar) == lvl_subset)
+    subset_data <<- data %>% filter(!!sym(subsetvar) == lvl_subset)
     
-    kruistabel = kruistabel_maken(data = subset_data, variabele = variabele,
+    kruistabel_maken(data = subset_data, variabele = variabele,
                                   crossing = crossing, survey_design =subset_design) %>%
       mutate(subset = lvl_subset)
     
-    
-    meerdere_kruistabellen <- rbind(meerdere_kruistabellen, kruistabel)
-    
-  }
+  }) %>% do.call(rbind,.)
+  
+  rm(subset_design, subset_data) #cleanup; tijdelijke subsetsinfo verwijderen.
   
   return(meerdere_kruistabellen)
   
@@ -664,16 +661,16 @@ maak_responstabel <- function(df, crossings, missing_label = "Onbekend",
 
 
 # Grafiekfuncties ---------------------------------------------------------
-maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_groep, var_crossing_kleur, titel = "",
+maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud, var_crossing_groep, var_crossing_kleur, titel = "",
                                                    kleuren = default_kleuren_grafiek,
                                                    nvar = default_Nvar, ncel = default_Ncel,
                                                    alt_text = NULL
                                                    ){
   
-  if(!labelled::is.labelled(df[[var_inhoud]])){
+  if(!labelled::is.labelled(data[[var_inhoud]])){
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
   }
-  if(val_labels(df[[var_inhoud]]) %>% length() > 2){
+  if(val_labels(data[[var_inhoud]]) %>% length() > 2){
     warning(
       glue("{var_inhoud} is geen dichotome variabele. Kies een ander grafiektype of een andere var_inhoud"))
     return(NULL)
@@ -681,9 +678,22 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_
     #TODO met Sjanne / Willeke overleggen hoe we foute invoer willen afhandelen.
   }
   
+  kruistabel_met_subset(data, variabele = var_inhoud,
+                        crossing = var_crossing_kleur,
+                        subsetvar = var_crossing_groep,
+                        #TODO aangeven dat de crossing op groepsniveau een subset is
+                        survey_design = design_gem
+                        )
+  
+  
+  #kruistabel maken
+  df_plot <- kruistabel_met_subset(data, variabele = var_inhoud,
+                              crossing = var_crossing_groep, subsetvar = var_crossing_kleur, survey_design = design_gem)
+  
+  
   #DIT IS EEN NAIEVE VERWERKING VH DATAFRAME MET ABSOLUTE AANTALLEN
   #TODO Vervangen met gewogen aantallen.
-  df_plot <- df %>% 
+  df_plot <- data %>% 
     filter(!is.na(!!sym(var_inhoud)),
            !is.na(!!sym(var_crossing_groep)),
            !is.na(!!sym(var_crossing_kleur))       
