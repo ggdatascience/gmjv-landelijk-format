@@ -423,7 +423,8 @@ kruistabel_met_subset <- function(data, variabele = NULL, crossing = NULL, subse
     
     kruistabel_maken(data = subset_data, variabele = variabele,
                                   crossing = crossing, survey_design =subset_design) %>%
-      mutate(subset = lvl_subset)
+      mutate(!!sym(subsetvar) := factor(lvl_subset))
+    
     
   }) %>% do.call(rbind,.)
   
