@@ -1278,6 +1278,28 @@ maak_staafdiagram_gestapeld <- function(df, var_inhoud, titel = "",
   
 }
 
+
+
+bol_met_cijfer <- function(getal, kleur = "#b41257", kleur_outline = "#FFFFFF",kleur_text = "#FFFFFF"){
+  
+  
+  # Voeg de ingevoerde informatie op de juiste plekken in de svg code met behulp van glue
+  svg_code <- glue::glue('<svg class="cirkel" role="img" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality;"
+                viewBox="0 0 50 50">
+                <title>{getal}</title>
+                
+                <g id="circle">
+                    <circle style="fill:{kleur};" cx="25" cy="25" r="20" stroke = "{kleur_outline}">
+                    </circle>
+                    <text x=25 y="25" text-anchor="middle" fill="{kleur_text}" stroke="{kleur_text}" stroke-width="1px" dy=".3em" font-size="1em">{getal}</text>
+                </g>
+                
+                </svg>')
+  
+  
+  return(svg_code %>% knitr::raw_html())
+}
+
 #TODO percentage in tekst
 #TODO Cirkeldiagram
   #TODO Donut
