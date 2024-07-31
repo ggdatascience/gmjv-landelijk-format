@@ -414,23 +414,20 @@ kruistabel_met_subset <- function(data, variabele = NULL, crossing = NULL, subse
 
   #nb; lapply crasht hier waar een for loop het prima doet. helaas for loop dan maar
   
-  meerdere_kruistabellen <- list()
-  
-  for(lvl_subset in alle_subsets){
+  meerdere_kruistabellen <- lapply(alle_subsets, function(lvl_subset){
     
     #subset maken v design
-    subset_design <- subset(survey_design, get(subsetvar) == lvl_subset)
+    subset_design <<- subset(survey_design, get(subsetvar) == lvl_subset)
     #subset maken van dataset
-    subset_data <- data %>% filter(!!sym(subsetvar) == lvl_subset)
+    subset_data <<- data %>% filter(!!sym(subsetvar) == lvl_subset)
     
-    kruistabel = kruistabel_maken(data = subset_data, variabele = variabele,
+    kruistabel_maken(data = subset_data, variabele = variabele,
                                   crossing = crossing, survey_design =subset_design) %>%
-      mutate(subset = lvl_subset)
+      mutate(!!sym(subsetvar) := factor(lvl_subset))
     
-    
-    meerdere_kruistabellen <- rbind(meerdere_kruistabellen, kruistabel)
-    
-  }
+  }) %>% do.call(rbind,.)
+  
+  rm(subset_design, subset_data, envir = .GlobalEnv) #cleanup; tijdelijke subsetsinfo verwijderen.
   
   return(meerdere_kruistabellen)
   
@@ -664,16 +661,16 @@ maak_responstabel <- function(df, crossings, missing_label = "Onbekend",
 
 
 # Grafiekfuncties ---------------------------------------------------------
-maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_groep, var_crossing_kleur, titel = "",
+maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud, var_crossing_groep, var_crossing_kleur, titel = "",
                                                    kleuren = default_kleuren_grafiek,
                                                    nvar = default_Nvar, ncel = default_Ncel,
                                                    alt_text = NULL
                                                    ){
   
-  if(!labelled::is.labelled(df[[var_inhoud]])){
+  if(!labelled::is.labelled(data[[var_inhoud]])){
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
   }
-  if(val_labels(df[[var_inhoud]]) %>% length() > 2){
+  if(val_labels(data[[var_inhoud]]) %>% length() > 2){
     warning(
       glue("{var_inhoud} is geen dichotome variabele. Kies een ander grafiektype of een andere var_inhoud"))
     return(NULL)
@@ -681,36 +678,15 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_
     #TODO met Sjanne / Willeke overleggen hoe we foute invoer willen afhandelen.
   }
   
-  #DIT IS EEN NAIEVE VERWERKING VH DATAFRAME MET ABSOLUTE AANTALLEN
-  #TODO Vervangen met gewogen aantallen.
-  df_plot <- df %>% 
-    filter(!is.na(!!sym(var_inhoud)),
-           !is.na(!!sym(var_crossing_groep)),
-           !is.na(!!sym(var_crossing_kleur))       
-           ) %>% 
-    select(!!sym(var_inhoud),!!sym(var_crossing_groep),!!sym(var_crossing_kleur)) %>% 
-    group_by(!!sym(var_inhoud),!!sym(var_crossing_groep),!!sym(var_crossing_kleur)) %>% 
-    summarise(aantal_antwoord = n()) %>% 
-    ungroup() %>% 
-    group_by(!!sym(var_crossing_groep),!!sym(var_crossing_kleur)) %>% 
-    mutate(aantal_vraag = sum(aantal_antwoord))%>%
-    ungroup() %>%
-    #ungroup om % en n_antwoord uit te rekenen
-    mutate(percentage = round((aantal_antwoord/aantal_vraag)*100),
-           
-           #Bij te lage aantallen -> Kolom als leeg weergeven net een sterretje in de kolom
-           percentage = case_when(aantal_vraag < nvar ~ NA,
-                               aantal_antwoord < ncel ~ NA,
-                               TRUE ~ percentage)) %>% 
-    #voor de kleine N voorwaarde moet de hele vraag weggestreept worden als er niet
-    #aan de voorwaarde wordt voldaan; groeperen op crossings:
-    group_by(!!sym(var_crossing_groep),!!sym(var_crossing_kleur)) %>% 
-    mutate(is_leeg = any(is.na(percentage))) %>% #is_leeg als één percentage van een vraag NA is.
-    ungroup() %>% 
-    mutate(percentage = ifelse(is_leeg, NA, percentage), #zet alle vragen met tenminste 1 NA antwoord op NA
-           weggestreept = ifelse(is_leeg, 10, NA) %>% as.numeric()) %>% #maak een vector met val 30 waar een antwoord ontbreekt (voor missing sterretjes in diagram) 
-    filter(!!sym(var_inhoud) == 1) #dichtome var; ja overhouden.
+  df_plot <- kruistabel_met_subset(data, variabele = var_inhoud,
+                        crossing = var_crossing_kleur,
+                        subsetvar = var_crossing_groep,
+                        #TODO aangeven dat de crossing op groepsniveau een subset is
+                        survey_design = design_gem
+                        ) %>% 
+    filter(waarde == 1)
   
+
   
   #alt text aanmaken voor grafiek als deze niet handmatig is opgegeven
   if(is.null(alt_text)){
@@ -720,16 +696,6 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_
   }
   
 
-  #variabelen naar factor omzetten zodat volgorde intact blijft in ggplot
-  df_plot[[var_crossing_groep]] <- factor(df_plot[[var_crossing_groep]], 
-                                          levels = val_labels(df_plot[[var_crossing_groep]]),
-                                          labels = names(val_labels(df_plot[[var_crossing_groep]])))
-  
-  
-  df_plot[[var_crossing_kleur]] <- factor(df_plot[[var_crossing_kleur]], 
-                                          levels = val_labels(df_plot[[var_crossing_kleur]]),
-                                          labels = names(val_labels(df_plot[[var_crossing_kleur]])))
-  
   
   namen_kleuren <- levels(df_plot[[var_crossing_kleur]])
   kleuren <- kleuren[1:length(namen_kleuren)]
@@ -789,16 +755,16 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_
 }
 
 
-maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel = "",
+maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, titel = "",
                                            kleuren = default_kleuren_grafiek,
                                            nvar = default_Nvar, ncel = default_Ncel,
                                            alt_text = NULL
                                              ){
   
-  if(!labelled::is.labelled(df[[var_inhoud]])){
+  if(!labelled::is.labelled(data[[var_inhoud]])){
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
   }
-  if(val_labels(df[[var_inhoud]]) %>% length() > 2){
+  if(val_labels(data[[var_inhoud]]) %>% length() > 2){
     warning(
       glue("{var_inhoud} is geen dichotome variabele. Kies een ander grafiektype of een andere var_inhoud"))
     return(NULL)
@@ -807,42 +773,24 @@ maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel 
     #Verwachting is dat uitgebreide errorhandling nodig is. misschien naar aparte functie halen
   }
   
+  
    df_plot <- lapply(var_crossings, function(crossing){
-
-     df_crossing = df %>% 
-       filter(!is.na(!!sym(var_inhoud)),
-              !is.na(!!sym(crossing))) %>%
-       select(!!sym(var_inhoud),!!sym(crossing)) %>% 
-       group_by(!!sym(var_inhoud),!!sym(crossing)) %>% 
-       summarise(aantal_antwoord = n()) %>% 
-       ungroup() %>% 
-       group_by(!!sym(crossing)) %>% 
-       mutate(aantal_vraag = sum(aantal_antwoord)) %>% 
-       ungroup() %>% 
-       mutate(percentage = round((aantal_antwoord/aantal_vraag)*100),
-              groep = var_label(!!sym(crossing)),
-              #Bij te lage aantallen -> Kolom als leeg weergeven net een sterretje in de kolom
-              percentage = case_when(aantal_vraag < nvar ~ NA,
-                                     aantal_antwoord < ncel ~ NA,
-                                     TRUE ~ percentage)) %>% 
-       #voor de kleine N voorwaarde moet de hele vraag weggestreept worden als er niet
-       #aan de voorwaarde wordt voldaan; groeperen op crossings:
-       group_by(!!sym(crossing)) %>% 
-       mutate(is_leeg = any(is.na(percentage))) %>% #is_leeg als één percentage van een vraag NA is.
-       ungroup() %>% 
-       mutate(percentage = ifelse(is_leeg, NA, percentage), #zet alle vragen met tenminste 1 NA antwoord op NA
-              weggestreept = ifelse(is_leeg, 10, NA) %>% as.numeric()) %>% #maak een vector met val 30 waar een antwoord ontbreekt (voor missing sterretjes in diagram) 
-       filter(!!sym(var_inhoud) == 1) %>%  #dichtome var; ja overhouden.
-       rename("onderdeel" = 2) %>%
-       mutate(onderdeel = val_labels(onderdeel) %>% names())
      
+     var_label_crossing = var_label(data[[crossing]])
      
+     df_crossing <- kruistabel_maken(data, variabele = var_inhoud, crossing = crossing, survey_design = design_gem) %>% 
+       filter(waarde == 1) %>% 
+       rename(onderdeel = !!sym(crossing)) %>%  #crossinglevel naar 'onderdeel' hernoemen
+       mutate(groep = factor(var_label_crossing),  #varlabel crossing als 'groep' toevoegen
+              weggestreept = as.numeric(weggestreept)
+              )      
      df_crossing$kleuren <- kleuren[1:nrow(df_crossing)]
-      
+     
      df_crossing
-       
+     
    }) %>% do.call(rbind,.)
-
+   
+   
    
    if(is.null(alt_text)){
      
@@ -1048,6 +996,7 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(df, var_inhoud, var_cros
                                                         flip = FALSE, nvar = default_Nvar, ncel = default_Ncel,
                                                         alt_text = NULL){
   
+  #TODO hier gebleven
   if(!labelled::is.labelled(df[[var_inhoud]])){
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
   }
