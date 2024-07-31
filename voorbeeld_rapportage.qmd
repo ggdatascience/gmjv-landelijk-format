@@ -14,6 +14,8 @@ editor: visual
 format-links: false
 ---
 
+\
+
 ```{r, echo=F, message=F, warning=F}
 # Het script maakt gebruik van een aantal packages
 # Deze moeten bij de eerste keer lokaal worden geinstalleerd
@@ -45,15 +47,31 @@ default_Nvar = 100 # Minimum aantal invullers per vraag.
 default_Ncel = 10 # Minimum aantal invullers oper antwoordoptie.
 
 #SPSS data inlezen
-#bestandsnaam
-file_path = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
+# Regionaal bestand
+file_path_regio = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
 
-#lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
-monitor_df = haven::read_spss(file_path,user_na =T) %>%
+# Landelijk bestand
+#file_path_land = "Totaalbestand_CGMJV2022_2024_GGD_versie 1 (N = xxx).sav"
+
+#Lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
+monitor_df = haven::read_spss(file_path_regio,user_na =T) %>%
   labelled::user_na_to_na()
 
-#Vreselijke varcodes hernoemen naar iets anders vreselijks
+#monitor_df_land = haven::read_spss(file_path_land,user_na =T) %>%
+#  labelled::user_na_to_na()
 
+#Maak survey designs
+# Regionaal 2022 en 2024
+design_regio <- survey_design_maken(
+                          strata = 'Stratum', 
+                          gewichten = 'Standaardisatiefactor', 
+                          data = monitor_df)
+
+# Landelijk 2022 en 2024
+#design_land <- survey_design_maken(
+#                          strata = 'Stratum', 
+#                          gewichten = 'Standaardisatiefactor', 
+#                          data = monitor_df_land)
 
 #Er is niet goed aangegeven wat missing is in SPSS.
 #tijdelijke functie om 9 Onbekend te verwijderen & naar NA te zetten
@@ -65,9 +83,16 @@ for(var in names(monitor_df)){
 }
 
 #TODO Tijdelijke filter op alleen gemeente in parameter
+monitor_df_regio <- monitor_df
 monitor_df <- monitor_df %>%
   filter(Gemeentecode == params$gemeentecode)
 
+#Maak survey design gemeente
+# Gemeente 2022 en 2024
+design_gem <- survey_design_maken(
+                          strata = 'Stratum', 
+                          gewichten = 'Standaardisatiefactor', 
+                          data = monitor_df)
 
 ```
 
