@@ -789,7 +789,8 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
      
      alt_text <- maak_alt_text(plot, 
                                label_inhoud = var_label(data[[var_inhoud]]),
-                               label_crossings = sapply(var_crossings, function(var) var_label(data[[var]])))
+                               label_crossings = sapply(var_crossings, function(var) var_label(data[[var]]))
+                               )
      
      
    } 
@@ -991,15 +992,7 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
     df_crossing
     
   }) %>% do.call(rbind,.)
-  
-  #Alt text maken o.b.v. data als geen eigen tekst is ingegeven
-  if(is.null(alt_text)){
-    
-    alt_text = maak_alt_text(df_plot, is_vergelijking = T)
-    
-  } 
-  
-  
+
   if(kleuren_per_crossing){
     
     namen = df_plot$onderdeel
@@ -1083,14 +1076,26 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
       ) + xlab("")
       
   }
-
-  return(plot) 
   
-
+  
+  #Alt text maken o.b.v. data als geen eigen tekst is ingegeven
+  if(is.null(alt_text)){
+    
+    alt_text = maak_alt_text(plot)
+    
+    alt_text <- maak_alt_text(plot,
+                              label_inhoud = var_label(data[[var_inhoud]]),
+                              label_crossings = sapply(var_crossings, function(var) var_label(data[[var]]))
+                              )
+    
+  } 
+ 
+  return(plot) 
+ 
 }
 
 #horizontaal gestapeld staafdiagram
-maak_staafdiagram_gestapeld <- function(df, var_inhoud, titel = "",
+maak_staafdiagram_gestapeld <- function(df, var_inhoud, var_crossing = NULL, titel = "",
                                         kleuren = default_kleuren_grafiek, x_label = "",
                                         nvar = default_Nvar, ncel = default_Ncel,
                                         alt_text = NULL){
@@ -1099,54 +1104,45 @@ maak_staafdiagram_gestapeld <- function(df, var_inhoud, titel = "",
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
   }
   
-  df_plot <- df %>%
-    select(!!sym(var_inhoud)) %>%
-    filter(!is.na(!!sym(var_inhoud))) %>% 
-    group_by(!!sym(var_inhoud)) %>% 
-    summarise(n = n()) %>% 
-    ungroup() %>% 
-    mutate(totaal = sum(n),
-           percentage = n / totaal * 100,
-           te_weinig_n = n < ncel | totaal < nvar
-           
-           ) 
+  
+  #kruistabel maken
+  df_plot <- kruistabel_maken(data, variabele = var_inhoud, crossing = var_crossing, survey_design = design_gem) %>% 
+    mutate(weggestreept = as.numeric(weggestreept))
+  
+  #Als crossing niet is ingevuld; dummy crossing maken zodat plot met beide kan omgaan
+  if(is.null(var_crossing)){
+    df_plot$leeg = ""
+    var_crossing = "leeg"
+    remove_legend = T
+  }
+  
   
   #Als er een te lage N is: plot kan niet gemaakt worden.
-  if(any(df_plot$te_weinig_n)){
+  if(any(is.na(df_plot$percentage))){
     warning(glue("Plot kan niet gemaakt worden! Te weinig observaties voor {var_inhoud}. De instellingen zijn: nvar = {nvar} en ncel = {ncel}"))
     return(NULL)
     
   }
   
-  if(is.null(alt_text)){
-    
-    alt_text <- maak_alt_text(df_plot, is_gestapeld = T)
-    
-  }
-  
-  df_plot[[var_inhoud]] <- factor(df_plot[[var_inhoud]], 
-                                  levels = rev(val_labels(df_plot[[var_inhoud]])),
-                                  labels = rev(names(val_labels(df_plot[[var_inhoud]]))))
-  
-  
-  
+
   namen_kleuren <- levels(df_plot[[var_inhoud]])
   
   kleuren <- kleuren[1:length(namen_kleuren)]
   
-  ggplot(df_plot, aes(x = percentage, y = x_label, fill = !!sym(var_inhoud))) + 
-  geom_bar(stat = "identity", position = "stack") +
-  geom_text(aes(label = paste0(round(percentage),"%")),
-            color = "#FFFFFF",
-            position = position_stack(vjust = 0.5),
-            size = 3) +
+  plot <- ggplot(df_plot, aes(x = percentage, y = !!sym(var_crossing), fill = !!sym(var_inhoud))) + 
+    geom_bar(stat = "identity", position = "stack") +
+    geom_text(aes(
+      label = paste0(round(percentage),"%")),
+      color = "#FFFFFF",
+      position = position_stack(vjust = 0.5),
+      size = 3) +
     
     scale_fill_manual(values= kleuren,
                       labels = function(x) str_wrap(x, width = 40)
                       ) +
     scale_x_continuous(
-      limits = c(0,100),
-      breaks = seq(0,100, by = 10),
+      limits = c(0,101),
+      breaks = seq(0,101, by = 10),
       labels = paste(seq(0,100, by = 10),"%"),
       expand = expansion(mult = c(0, 0.05)))+
     ggtitle(titel) + 
@@ -1163,9 +1159,23 @@ maak_staafdiagram_gestapeld <- function(df, var_inhoud, titel = "",
           axis.line.x.bottom = element_line(linewidth = 1),
           axis.line.y.left = element_line(linewidth = 1,)
         ) +
-    guides(fill = guide_legend(reverse = TRUE))  +
-    labs(alt = alt_text)
+    guides(fill = guide_legend(reverse = TRUE))
   
+  
+  if(is.null(alt_text)){
+    
+    alt_text <- maak_alt_text(plot,
+                              type_grafiek = "gestapeld staafdiagram",
+                              label_inhoud = var_label(data[[var_inhoud]]),
+                              label_crossings = var_label(data[[var_crossing]]),
+                              vars_crossing = c(var_crossing,var_inhoud)
+    )
+    
+  }
+    
+  plot <- plot + labs(alt = alt_text)
+  
+  return(plot)
 }
 
 
