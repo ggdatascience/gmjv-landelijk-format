@@ -1403,7 +1403,7 @@ maak_vergelijking <- function(data, design, variabele, vergelijking, vergelijkin
   # Gewogen cijfers vergelijken 
   
   if (nrow(result) == 2 ) { # Vergelijk 2 groepen:
-    
+    # TODO ifelse wijzigen voor case_when()
     resultaat_vergelijking <- ifelse(result$ci_lower[1] > result$ci_upper[2], " is hoger dan ",
                                      ifelse(result$ci_lower[2] > result$ci_upper[1], " is lager dan ",
                                             " is gelijk aan "))
