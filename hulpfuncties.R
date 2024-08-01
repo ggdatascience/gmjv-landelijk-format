@@ -398,6 +398,7 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
   rm(data_temp, envir = .GlobalEnv)
   
   return(kruistabel)
+
   
 }
 
