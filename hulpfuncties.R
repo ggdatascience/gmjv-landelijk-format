@@ -826,7 +826,10 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud,var_crossing = NU
                                               titel = "",
                                               kleuren = default_kleuren_grafiek,
                                               flip = FALSE, nvar = default_Nvar, ncel = default_Ncel,
-                                              alt_text = NULL#,
+                                              alt_text = NULL,
+                                              huidig_jaar = 2024,
+                                              jaarvar = "AGOJB401"
+                                              #,
                                               # confidence_intervals = FALSE, #TODO nadenken of dit de moeite is
                                               # kleur_ci = "red" #TODO kleur ci nog laten instellen aan de voorkant
                                               ){
@@ -842,12 +845,32 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud,var_crossing = NU
   v_just_text = ifelse(flip,0.5,-1)
   h_just_text = ifelse(flip,-1,0.5)
  
-
+  #TODO HIERONDER is een werkende procedure voor wegfilteren van vorige jaren; Toepassen op andere
+  #grafieken die geen jaren hoeven te vergelijken
   
+  #NB als-dan conditie naar context aanpassen (%in% var_crossings, %in% c(var_crossing_kleur, var_crossing_groep)
+  #verder als het goed is prima te kopieren
+  if(var_crossing != jaarvar){
+    #standaard alleen laatste jaar weergeven.
+    #subset maken van dataset.
+    design_temp <<- subset(design_gem, get(jaarvar) == huidig_jaar) #TODO checken of design_gem hardcode wel slim is.
+    #subset maken v design
+    data_temp <<- data %>% filter(!!sym(jaarvar) == huidig_jaar)
+  } else {
+    #jaren bewaren want het is een crossing!
+    data_temp <<- data
+    design_temp <<- design_gem
+  }
+
+    
   #kruistabel maken
-  df_plot <- bereken_kruistabel(data, variabele = var_inhoud, crossing = var_crossing, design = design_gem) %>% 
+  df_plot <- bereken_kruistabel(data_temp, variabele = var_inhoud, crossing = var_crossing, design = design_temp) %>% 
     mutate(weggestreept = as.numeric(weggestreept))
 
+  
+  #temp dataframe & design verwijdere uit globalEnv.
+  rm(design_temp, data_temp, envir = .GlobalEnv)
+  
     #Als crossing niet is ingevuld; dummy crossing maken zodat plot met beide kan omgaan
     if(is.null(var_crossing)){
       df_plot$leeg = ""
