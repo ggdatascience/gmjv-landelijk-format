@@ -21,23 +21,6 @@ library(labelled) # Package om te werken met datalabels, o.a. voor to_character(
 library(survey) # Package om te werken met gewogen gemiddelds incl. betrouwbaarheidsintervallen
 library(glue) #om strings aangenaam aan elkaar te plakken
 
-# Standaard instellingen --------------------------------------------------
-
-# Naar .qmd gehaald.
-
-# # Standaard kleuren instellen
-# default_kleuren_grafiek <- c("#012C17","#76B82A","#007E48")
-# default_kleuren_responstabel <- c("header" = "#012C17",
-#                                   "kleur_1" = "#007E48",
-#                                   "kleur_2" = "#76B82A",
-#                                   "kleur_tekst" = "#FFFFFF"
-#                                   )
-# 
-# # Default minimum aantallen instellen
-# default_Nvar = 100 # Minimum aantal invullers per vraag.
-# default_Ncel = 10 # Minimum aantal invullers oper antwoordoptie.
-
-
 # utility ----------------------------------------------------------------
 
 ##### Survey functies gebaseerd op oud tabellenboekscript ####
@@ -102,7 +85,7 @@ survey_design_maken <- function(data = NULL, strata = NULL, gewichten = NULL){
 #kan met of zonder crossings gebruikt worden. 
 #enkele fouten worden afgevangen met warnings & een veelvoorkomende warning dat er NaN's zijn uitgerekend bij lege velden is onderdrukt.
 
-#Deze functie wordt niet direct gebruikt in het script, maar wordt binnen de functie kruistabel_maken gebruikt.
+#Deze functie wordt niet direct gebruikt in het script, maar wordt binnen de functie bereken_kruistabel gebruikt.
 
 #Reken confindence interval uit voor proportie van bepaalde waarde binnen variabele o.b.v. surveydesign
 prop_ci_berekenen <- function(data = NULL, variabele = NULL, nummer = NULL, crossing = NULL, survey_design = NULL){
@@ -181,6 +164,10 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
                                min_observaties_per_antwoord = default_Ncel) { 
   # TODO functie werkbaar maken voor dubbele uitsplitsing?
   
+  #survey pikt het niet als delen v formules niet in .globalEnv staan. Daarom <<- en later
+  #opruimen.
+  data_temp <<- data
+  
   # Foute invoer afvangen
   #TODO omgaan met vergelijk_landelijk terwijl er geen landelijk df is > deze error verplaatsen
   #if("land" %in% niveau & data != 'monitor_df_land'){
@@ -201,7 +188,7 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
   #warning of error geven > deze error verplaatsen
   
   #Niet-valide invoer afvangen & warning geven
-  if(is.null(data[[variabele]])) {
+  if(is.null(data_temp[[variabele]])) {
     
     warning(paste("Variabele", variabele, "bestaat niet in dataset. Kruistabel wordt niet berekend."))
     return(NULL)
@@ -221,10 +208,11 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
   }
 
   #Bereken kruistabel  
-  antwoorden <-  attr(data[[variabele]], "labels") # value labels
-  
+
+  antwoorden <-  attr(data_temp[[variabele]], "labels") # value labels
+    
   #Formule maken voor in svytable
-  formule_tekst <- paste0("~ ", substitute(data), "[['", variabele,"']]")
+  formule_tekst <- paste0("~ ", substitute(data_temp), "[['", variabele,"']]")
     
   tb <- svytable(formula = eval(parse(text = formule_tekst)), design = design) 
     
@@ -264,7 +252,7 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
     #minder dan min_observaties zijn bij een vraag; maak CI's en estimates NA.
     if (any(table(monitor_df[['GZGGA402']]) < min_observaties_per_antwoord) |
         exists('lege_antwoorden') & min_observaties_per_antwoord != 0 |
-        sum(table(data[[variabele]])) < min_observaties_per_vraag) {
+        sum(table(data_temp[[variabele]])) < min_observaties_per_vraag) {
       
       confidence_intervals <- matrix(data = NA, 
                                      nrow = length(ct), 
@@ -275,7 +263,7 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
 
     } else {
       #reken voor ieder antwoord de ci uit
-      confidence_intervals <- t(sapply(unname(antwoorden), function(x){prop_ci_berekenen(data = data, 
+      confidence_intervals <- t(sapply(unname(antwoorden), function(x){prop_ci_berekenen(data = data_temp, 
                                                                                            variabele = variabele,
                                                                                            nummer = x, 
                                                                                            survey_design = design)}))
@@ -302,14 +290,14 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
                         "estimate" = estimate,
                         "ci_upper" = confidence_intervals[,2],
                         "ci_lower" = confidence_intervals[,1],
-                        "n_unweighted" = table(factor(data[[variabele]], levels = antwoorden))
+                        "n_unweighted" = table(factor(data_temp[[variabele]], levels = antwoorden))
     )
       
   #Als er wel crossings zijn
   }else{
       
     #Warning als crossing niet bestaat
-    if(is.null(data[[crossing]])){
+    if(is.null(data_temp[[crossing]])){
       
       stop(paste("Crossing",crossing, "bestaat niet in dataset. Kijk configuratie en dataset na."))
       return(NULL)
@@ -317,14 +305,14 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
     }else{
         
       #Als er missings zijn op de crossing. 
-      if(any(is.na(data[[crossing]]))){
+      if(any(is.na(data_temp[[crossing]]))){
         
         warning(paste("Missing data gevonden bij crossing ",crossing))
       
       }
       
       #CI uitrekenen
-      confidence_intervals <- lapply(unname(antwoorden), function(x){prop_ci_berekenen(data = data,
+      confidence_intervals <- lapply(unname(antwoorden), function(x){prop_ci_berekenen(data = data_temp,
                                                                                        variabele = variabele,
                                                                                        nummer = x, 
                                                                                        crossing = crossing, 
@@ -338,8 +326,8 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
       population_count <- lapply(unname(antwoorden), function(x){
         
         #Als var. in subset alleen maar NA heeft; lege tabel voor pop.count maken
-        if(all(is.na(data[[variabele]]))){
-          levels_crossing <- unname(val_labels(data[[crossing]]))
+        if(all(is.na(data_temp[[variabele]]))){
+          levels_crossing <- unname(val_labels(data_temp[[crossing]]))
           
           cbind("antwoord" = x, crossing_var = levels_crossing, n_weighted = "NA") %>%
             as.data.frame()
@@ -361,7 +349,7 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
       population_count <- do.call(rbind, population_count)
       
       #Wat zijn alle crossing_levels?
-      crossing_levels <- attr(data[[crossing]],"labels")
+      crossing_levels <- attr(data_temp[[crossing]],"labels")
         
       #Maak matrix met info kruistabel per crossing-level
       kruistabel <- lapply(crossing_levels, function(x){
@@ -389,8 +377,8 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
         # OF als er te weinig observaties per antwoordoptie zijn.
         # LET OP: gebruik dit altijd op data zonder lege missing categorieën, bv. door eerst functie verwijder_9_onbekend() over data te runnen.
 
-        te_weinig_obs <- sum(table(factor(data[[variabele]][data[[crossing]] == x], levels = antwoorden))) < min_observaties_per_vraag |
-          any(table(factor(data[[variabele]][data[[crossing]] == x], levels = antwoorden)) < min_observaties_per_antwoord)
+        te_weinig_obs <- sum(table(factor(data_temp[[variabele]][data_temp[[crossing]] == x], levels = antwoorden))) < min_observaties_per_vraag |
+          any(table(factor(data_temp[[variabele]][data_temp[[crossing]] == x], levels = antwoorden)) < min_observaties_per_antwoord)
 
         ci_upper <- confidence_intervals[confidence_intervals$crossing_var == x,4]
           
@@ -418,7 +406,7 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
               "ci_lower" = ci_lower,
               #n_unweighted moet (net als alle andere vectors) de lengte hebben van alle mogelijke values in de variabele
               #Wanneer table() een factor-variabele gevoerd krijgt worden ook alle values/levels gegeven, ook waar geen observaties voor zijn.
-              "n_unweighted" =  table(factor(data[[variabele]][data[[crossing]] == x], levels = antwoorden)))
+              "n_unweighted" =  table(factor(data_temp[[variabele]][data_temp[[crossing]] == x], levels = antwoorden)))
       
       })
         
@@ -427,11 +415,31 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
     }
   }
  
-  # Zet kruistabel om tot dataframe en selecteer relevante kolommen.
-  kruistabel <- data.frame(kruistabel) %>%
-    select(-c(n_weighted, n_unweighted))
+  
+  #variabelen aanpassen voor plotfuncties
+  kruistabel <- kruistabel %>% 
+    as_tibble() %>%
+    mutate(
+      label = factor(label),
+      estimate = as.numeric(estimate) %>% round(),
+      weggestreept = ifelse(is.na(estimate),10,NA),
+      ci_upper = as.numeric(ci_upper) * 100,
+      ci_lower = as.numeric(ci_lower) * 100
+    ) %>% 
+    
+    rename(!!sym(variabele):= label, aantal_antwoord = n_unweighted, percentage = estimate) 
+  
+  if(!is.null(crossing)){
+    kruistabel <- kruistabel %>% 
+      mutate(crossing_var = factor(crossing_var)) %>% 
+      rename(!!sym(crossing):= crossing_var)
+  }
+  
+  #data_temp uit globalEnvironment verwijderen
+  rm(data_temp, envir = .GlobalEnv)
   
   return(kruistabel)
+
   
 }
 
@@ -461,105 +469,65 @@ labelled_naar_character <- function(data,var){
   return(var_character)
 } 
 
-#wordt in grafiekfuncties aangeroepen om automatisch alt_text te maken; 
-#functie vertaald waarschijnlijk slecht naar andere contexten; verwacht df op specifieke volgorde &
-#met specifiek vartypen
-maak_alt_text <- function(df, doelgroep = "jongvolwassenen", type_grafiek = "staafdiagram",
-                          is_vergelijking = F, is_dichotoom = T, is_gestapeld = F){
-  
-  #TODO Functie is onnodig complex. Oplossen door dataverwerking uniformer te maken; 
-  #En/OF meer info over te selecteren variabelen naar de argumenten halen
-  
-  label_var_inhoud <- var_label(df[,1])
-  
-  #Als crossings naast elkaar gelegd worden worden de character variabelen onderdeel & groep gebruikt in
-  #output df ipv de oorspronkelijke labelled+dbl
-  #TODO gelijktrekken zodat er 1 alt-text functie kan komen zonder heel veel if-condities
-  if(is_vergelijking){
-    string_waarden <- df %>% 
-      select(onderdeel, percentage) %>%
-      rowwise() %>% 
-      mutate(
-        percentage = ifelse(is.na(percentage),
-                            "percentage onbekend",
-                            paste0(percentage,"%")),
-        string = paste0(onderdeel,": ", percentage)) %>% 
-      pull(string) %>% 
-      paste0(collapse = ",")
-    
-    crossing_labels <- df$groep %>% unique() %>% paste0(collapse = " en ")
-    
-  }else if(is_gestapeld) {
-    string_waarden <- df %>% 
-      select(-c(n,totaal,te_weinig_n)) %>% 
-      mutate(across(where(~ is.labelled(.) && is.double(.)),
-                    ~ labelled_naar_character(df, cur_column()))) %>%
-      rowwise() %>% 
-      mutate(
-        percentage = paste0(round(percentage,1),"%"),
-        string = str_c(across(everything()), collapse = ": ")) %>% 
-      pull(string) %>% 
-      paste0(collapse = ", ")
-    
-    crossing_labels <- NULL
-      
-  } else if(is_dichotoom){
-    string_waarden <- df[,-1] %>% 
-      select(-c(aantal_antwoord,aantal_vraag,is_leeg,weggestreept)) %>%
-      #labelled double naar character
-      mutate(across(where(~ is.labelled(.) && is.double(.)),
-                    ~ labelled_naar_character(df, cur_column()))) %>%
-      #rowwise voor string_var
-      rowwise() %>% 
-      mutate(percentage = ifelse(is.na(percentage),
-                                 "percentage onbekend",
-                                 paste0(percentage,"%")
-      ),
-      cat = str_c(across(!percentage), collapse = " "),
-      string = paste0(cat,": ", percentage)
-      
-      ) %>% 
-      pull(string) %>% 
-      paste0(collapse = ", ")
-  
-    crossing_labels <- var_label(df[,-1] %>% select(-c(aantal_antwoord,aantal_vraag,
-                                                     is_leeg, weggestreept, percentage))) %>% 
-    paste(collapse = " en ")
-    
-    }else {
-    df$leeg <- NULL
-    
-    string_waarden <- df %>% 
-      select(-c(aantal_antwoord,aantal_vraag,is_leeg,weggestreept)) %>%
-      #labelled double naar character
-      mutate(across(where(~ is.labelled(.) && is.double(.)),
-                    ~ labelled_naar_character(df, cur_column()))) %>%
-      #rowwise voor string_var
-      rowwise() %>% 
-      mutate(percentage = ifelse(is.na(percentage),
-                                 "percentage onbekend",
-                                 paste0(percentage,"%")
-      ),
-      cat = str_c(across(!percentage), collapse = " "),
-      string = paste0(cat,": ", percentage)
-      
-      ) %>% 
-      pull(string) %>% 
-      paste0(collapse = ", ")
-    
-    crossing_labels <- var_label(df[,-1] %>% select(-c(aantal_antwoord,aantal_vraag,
-                                                       is_leeg, weggestreept, percentage))) %>% 
-      paste(collapse = " en ")
-      
-    }
 
+kruistabel_met_subset <- function(data, variabele = NULL, crossing = NULL, subsetvar,
+                                  survey_design = NULL){
 
+  #alle lvls van subsetvar
+  alle_subsets <- unique(data[[subsetvar]])
 
-  if(is.null(crossing_labels)){
+  #nb; lapply crasht hier waar een for loop het prima doet. helaas for loop dan maar
+  
+  meerdere_kruistabellen <- lapply(alle_subsets, function(lvl_subset){
+    
+    #subset maken v design
+    subset_design <<- subset(survey_design, get(subsetvar) == lvl_subset)
+    #subset maken van dataset
+    subset_data <<- data %>% filter(!!sym(subsetvar) == lvl_subset)
+    
+    bereken_kruistabel(data = subset_data, variabele = variabele,
+                       crossing = crossing, survey_design = subset_design) %>%
+      mutate(!!sym(subsetvar) := factor(lvl_subset))
+    
+  }) %>% do.call(rbind,.)
+  
+  rm(subset_design, subset_data, envir = .GlobalEnv) #cleanup; tijdelijke subsetsinfo verwijderen.
+  
+  return(meerdere_kruistabellen)
+  
+  
+}
+  
+ 
+maak_alt_text <- function(plot, doelgroep = "jongvolwassenen", type_grafiek = "staafdiagram",
+                          vars_crossing = "onderdeel",label_inhoud, label_crossings = NULL){
+  
+  
+  plot_data <- ggplot_build(plot)
+  
+  percentages = plot_data[["plot"]][["data"]][["percentage"]]
+  
+  #0 of NA naar "Onbekend" zetten
+  percentages[is.na(percentages) | percentages == 0] <- "Onbekend"
+  
+  percentages[percentages != "Onbekend"] <- paste0(percentages[percentages != "Onbekend"],"%") #alles wat niet Onbekend is "%" geven
+  
+  #labels grafiek maken o.b.v. vars_crossing
+  labels = lapply(vars_crossing,function(var){
+    plot_data[["plot"]][["data"]][[var]] %>% as.character()
+  }) %>% do.call(paste,.)
+
+  
+  string_waarden = paste0(labels,": ",percentages, collapse = ", ")
+
+  
+  if(is.null(label_crossings)){
     #Grafiek zonder crossings:
-    glue("{type_grafiek} met percentages voor de indicator '{label_var_inhoud}' bij {doelgroep}: {string_waarden}")
+    glue("{type_grafiek} met percentages voor de indicator '{label_inhoud}' bij {doelgroep}: {string_waarden}")
   } else{
-    glue("{type_grafiek} met percentages voor de indicator '{label_var_inhoud}' bij {doelgroep} per {crossing_labels}: {string_waarden}")  
+    #Grafiek met crossings
+    label_crossings = label_crossings %>% paste(collapse = " en ")
+    glue("{type_grafiek} met percentages voor de indicator '{label_inhoud}' bij {doelgroep} per {label_crossings}: {string_waarden}")  
   }
   
   
@@ -687,16 +655,16 @@ maak_responstabel <- function(df, crossings, missing_label = "Onbekend",
 
 
 # Grafiekfuncties ---------------------------------------------------------
-maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_groep, var_crossing_kleur, titel = "",
+maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud, var_crossing_groep, var_crossing_kleur, titel = "",
                                                    kleuren = default_kleuren_grafiek,
                                                    nvar = default_Nvar, ncel = default_Ncel,
                                                    alt_text = NULL
                                                    ){
   
-  if(!labelled::is.labelled(df[[var_inhoud]])){
+  if(!labelled::is.labelled(data[[var_inhoud]])){
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
   }
-  if(val_labels(df[[var_inhoud]]) %>% length() > 2){
+  if(val_labels(data[[var_inhoud]]) %>% length() > 2){
     warning(
       glue("{var_inhoud} is geen dichotome variabele. Kies een ander grafiektype of een andere var_inhoud"))
     return(NULL)
@@ -704,60 +672,18 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_
     #TODO met Sjanne / Willeke overleggen hoe we foute invoer willen afhandelen.
   }
   
-  #DIT IS EEN NAIEVE VERWERKING VH DATAFRAME MET ABSOLUTE AANTALLEN
-  #TODO Vervangen met gewogen aantallen.
-  df_plot <- df %>% 
-    filter(!is.na(!!sym(var_inhoud)),
-           !is.na(!!sym(var_crossing_groep)),
-           !is.na(!!sym(var_crossing_kleur))       
-           ) %>% 
-    select(!!sym(var_inhoud),!!sym(var_crossing_groep),!!sym(var_crossing_kleur)) %>% 
-    group_by(!!sym(var_inhoud),!!sym(var_crossing_groep),!!sym(var_crossing_kleur)) %>% 
-    summarise(aantal_antwoord = n()) %>% 
-    ungroup() %>% 
-    group_by(!!sym(var_crossing_groep),!!sym(var_crossing_kleur)) %>% 
-    mutate(aantal_vraag = sum(aantal_antwoord))%>%
-    ungroup() %>%
-    #ungroup om % en n_antwoord uit te rekenen
-    mutate(percentage = round((aantal_antwoord/aantal_vraag)*100),
-           
-           #Bij te lage aantallen -> Kolom als leeg weergeven net een sterretje in de kolom
-           percentage = case_when(aantal_vraag < nvar ~ NA,
-                               aantal_antwoord < ncel ~ NA,
-                               TRUE ~ percentage)) %>% 
-    #voor de kleine N voorwaarde moet de hele vraag weggestreept worden als er niet
-    #aan de voorwaarde wordt voldaan; groeperen op crossings:
-    group_by(!!sym(var_crossing_groep),!!sym(var_crossing_kleur)) %>% 
-    mutate(is_leeg = any(is.na(percentage))) %>% #is_leeg als één percentage van een vraag NA is.
-    ungroup() %>% 
-    mutate(percentage = ifelse(is_leeg, NA, percentage), #zet alle vragen met tenminste 1 NA antwoord op NA
-           weggestreept = ifelse(is_leeg, 10, NA) %>% as.numeric()) %>% #maak een vector met val 30 waar een antwoord ontbreekt (voor missing sterretjes in diagram) 
-    filter(!!sym(var_inhoud) == 1) #dichtome var; ja overhouden.
-  
-  
-  #alt text aanmaken voor grafiek als deze niet handmatig is opgegeven
-  if(is.null(alt_text)){
-    
-    alt_text <- maak_alt_text(df_plot)
-    
-  }
-  
-
-  #variabelen naar factor omzetten zodat volgorde intact blijft in ggplot
-  df_plot[[var_crossing_groep]] <- factor(df_plot[[var_crossing_groep]], 
-                                          levels = val_labels(df_plot[[var_crossing_groep]]),
-                                          labels = names(val_labels(df_plot[[var_crossing_groep]])))
-  
-  
-  df_plot[[var_crossing_kleur]] <- factor(df_plot[[var_crossing_kleur]], 
-                                          levels = val_labels(df_plot[[var_crossing_kleur]]),
-                                          labels = names(val_labels(df_plot[[var_crossing_kleur]])))
-  
+  df_plot <- kruistabel_met_subset(data, variabele = var_inhoud,
+                        crossing = var_crossing_kleur,
+                        subsetvar = var_crossing_groep,
+                        #TODO aangeven dat de crossing op groepsniveau een subset is
+                        survey_design = design_gem
+                        ) %>% 
+    filter(waarde == 1)
   
   namen_kleuren <- levels(df_plot[[var_crossing_kleur]])
   kleuren <- kleuren[1:length(namen_kleuren)]
   
-  ggplot(df_plot) +
+  plot = ggplot(df_plot) +
     geom_col(aes(x = !!sym(var_crossing_groep), y = percentage, fill = !!sym(var_crossing_kleur)),
              position = position_dodge(width = 0.8), width = 0.8,
              na.rm = T
@@ -805,23 +731,37 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(df, var_inhoud, var_crossing_
           plot.title = element_text(hjust = .5),
           axis.line.x.bottom = element_line(linewidth = 1),
           axis.line.y.left = element_line(linewidth = 1,)
-    ) + 
-    labs(
-      alt = alt_text
     )
+  
+  #alt text aanmaken voor grafiek als deze niet handmatig is opgegeven
+  if(is.null(alt_text)){
+    
+    alt_text <- maak_alt_text(plot, 
+                              label_inhoud = var_label(data[[var_inhoud]]),
+                              label_crossings =  c(
+                                var_label(data[[var_crossing_groep]]),
+                                var_label(data[[var_crossing_kleur]])
+                              ),
+                              vars_crossing = c(var_crossing_groep, var_crossing_kleur)
+                              )
+    }
+  
+  plot <- plot + labs(alt = alt_text)
+  
+  return(plot)
 }
 
 
-maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel = "",
+maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, titel = "",
                                            kleuren = default_kleuren_grafiek,
                                            nvar = default_Nvar, ncel = default_Ncel,
                                            alt_text = NULL
                                              ){
   
-  if(!labelled::is.labelled(df[[var_inhoud]])){
+  if(!labelled::is.labelled(data[[var_inhoud]])){
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
   }
-  if(val_labels(df[[var_inhoud]]) %>% length() > 2){
+  if(val_labels(data[[var_inhoud]]) %>% length() > 2){
     warning(
       glue("{var_inhoud} is geen dichotome variabele. Kies een ander grafiektype of een andere var_inhoud"))
     return(NULL)
@@ -830,49 +770,24 @@ maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel 
     #Verwachting is dat uitgebreide errorhandling nodig is. misschien naar aparte functie halen
   }
   
+  
    df_plot <- lapply(var_crossings, function(crossing){
-
-     df_crossing = df %>% 
-       filter(!is.na(!!sym(var_inhoud)),
-              !is.na(!!sym(crossing))) %>%
-       select(!!sym(var_inhoud),!!sym(crossing)) %>% 
-       group_by(!!sym(var_inhoud),!!sym(crossing)) %>% 
-       summarise(aantal_antwoord = n()) %>% 
-       ungroup() %>% 
-       group_by(!!sym(crossing)) %>% 
-       mutate(aantal_vraag = sum(aantal_antwoord)) %>% 
-       ungroup() %>% 
-       mutate(percentage = round((aantal_antwoord/aantal_vraag)*100),
-              groep = var_label(!!sym(crossing)),
-              #Bij te lage aantallen -> Kolom als leeg weergeven net een sterretje in de kolom
-              percentage = case_when(aantal_vraag < nvar ~ NA,
-                                     aantal_antwoord < ncel ~ NA,
-                                     TRUE ~ percentage)) %>% 
-       #voor de kleine N voorwaarde moet de hele vraag weggestreept worden als er niet
-       #aan de voorwaarde wordt voldaan; groeperen op crossings:
-       group_by(!!sym(crossing)) %>% 
-       mutate(is_leeg = any(is.na(percentage))) %>% #is_leeg als één percentage van een vraag NA is.
-       ungroup() %>% 
-       mutate(percentage = ifelse(is_leeg, NA, percentage), #zet alle vragen met tenminste 1 NA antwoord op NA
-              weggestreept = ifelse(is_leeg, 10, NA) %>% as.numeric()) %>% #maak een vector met val 30 waar een antwoord ontbreekt (voor missing sterretjes in diagram) 
-       filter(!!sym(var_inhoud) == 1) %>%  #dichtome var; ja overhouden.
-       rename("onderdeel" = 2) %>%
-       mutate(onderdeel = val_labels(onderdeel) %>% names())
      
+     var_label_crossing = var_label(data[[crossing]])
      
+     df_crossing <- bereken_kruistabel(data, variabele = var_inhoud, crossing = crossing, design = design_gem) %>% 
+       filter(waarde == 1) %>% 
+       rename(onderdeel = !!sym(crossing)) %>%  #crossinglevel naar 'onderdeel' hernoemen
+       mutate(groep = factor(var_label_crossing),  #varlabel crossing als 'groep' toevoegen
+              weggestreept = as.numeric(weggestreept)
+              )      
      df_crossing$kleuren <- kleuren[1:nrow(df_crossing)]
-      
+     
      df_crossing
-       
+     
    }) %>% do.call(rbind,.)
+   
 
-   
-   if(is.null(alt_text)){
-     
-     alt_text = maak_alt_text(df_plot, is_vergelijking = T)
-     
-   } 
-   
    #volgorde groepen op x-as vastzetten o.b.v. volgorde variabelen door er een factor vna te maken
    df_plot$groep <- factor(df_plot$groep)
    #volgorde onderdeel vastzetten o.b.v dataframe
@@ -884,7 +799,7 @@ maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel 
    names(kleuren) <- onderdeel_levels
 
 
-   ggplot(df_plot) +
+   plot = ggplot(df_plot) +
      geom_col(aes(x = groep, y = percentage, fill = onderdeel),
               position = position_dodge(width = 0.8), width = 0.8,
               na.rm = T) +
@@ -929,22 +844,39 @@ maak_staafdiagram_vergelijking <- function(df, var_inhoud, var_crossings, titel 
            plot.title = element_text(hjust = .5),
            axis.line.x.bottom = element_line(linewidth = 1, colour = "black"),
            axis.line.y.left = element_line(linewidth = 1)
-     ) +
-     labs(
-       alt = alt_text
      )
+   
+   
+   #Alt text toevoegen als deze niet handmatig is opgegeven
+   if(is.null(alt_text)){
+     
+     alt_text <- maak_alt_text(plot, 
+                               label_inhoud = var_label(data[[var_inhoud]]),
+                               label_crossings = sapply(var_crossings, function(var) var_label(data[[var]]))
+                               )
+     
+     
+   } 
+   
+   plot <- plot + labs(alt = alt_text)
+   
+   return(plot)
  }
 
-maak_staafdiagram_meerdere_staven <- function(df, var_inhoud,var_crossing = NULL, 
+maak_staafdiagram_meerdere_staven <- function(data, var_inhoud,var_crossing = NULL, 
                                               titel = "",
                                               kleuren = default_kleuren_grafiek,
                                               flip = FALSE, nvar = default_Nvar, ncel = default_Ncel,
-                                              alt_text = NULL
-                                              
-){
+                                              alt_text = NULL,
+                                              huidig_jaar = 2024,
+                                              jaarvar = "AGOJB401"
+                                              #,
+                                              # confidence_intervals = FALSE, #TODO nadenken of dit de moeite is
+                                              # kleur_ci = "red" #TODO kleur ci nog laten instellen aan de voorkant
+                                              ){
   
   
-  if(!labelled::is.labelled(df[[var_inhoud]])){
+  if(!labelled::is.labelled(data[[var_inhoud]])){
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
   }
   
@@ -953,53 +885,39 @@ maak_staafdiagram_meerdere_staven <- function(df, var_inhoud,var_crossing = NULL
 
   v_just_text = ifelse(flip,0.5,-1)
   h_just_text = ifelse(flip,-1,0.5)
-
-  if(is.null(var_crossing)){
-    df$leeg = labelled(c(1),c("%" = 1))
-    var_crossing = "leeg"
-    remove_legend = T
+ 
+  #TODO HIERONDER is een werkende procedure voor wegfilteren van vorige jaren; Toepassen op andere
+  #grafieken die geen jaren hoeven te vergelijken
+  
+  #NB als-dan conditie naar context aanpassen (%in% var_crossings, %in% c(var_crossing_kleur, var_crossing_groep)
+  #verder als het goed is prima te kopieren
+  if(var_crossing != jaarvar){
+    #standaard alleen laatste jaar weergeven.
+    #subset maken van dataset.
+    design_temp <<- subset(design_gem, get(jaarvar) == huidig_jaar) #TODO checken of design_gem hardcode wel slim is.
+    #subset maken v design
+    data_temp <<- data %>% filter(!!sym(jaarvar) == huidig_jaar)
+  } else {
+    #jaren bewaren want het is een crossing!
+    data_temp <<- data
+    design_temp <<- design_gem
   }
-  
-  df_plot <- df %>% 
-    filter(!is.na(!!sym(var_inhoud)),
-           !is.na(!!sym(var_crossing))      
-    ) %>% 
-    select(!!sym(var_inhoud),!!sym(var_crossing)) %>% 
-    group_by(!!sym(var_inhoud),!!sym(var_crossing)) %>% 
-    summarise(aantal_antwoord = n()) %>% 
-    ungroup() %>% 
-    group_by(!!sym(var_crossing)) %>% 
-    mutate(aantal_vraag = sum(aantal_antwoord)) %>% 
-    ungroup() %>% 
-    mutate(percentage = round((aantal_antwoord/aantal_vraag)*100),
-           #Bij te lage aantallen -> Kolom als leeg weergeven net een sterretje in de kolom
-           percentage = case_when(aantal_vraag < nvar ~ NA,
-                                  aantal_antwoord < ncel ~ NA,
-                                  TRUE ~ percentage)
-           ) %>% 
-    #voor de kleine N voorwaarde moet de hele vraag weggestreept worden als er niet
-    #aan de voorwaarde wordt voldaan; groeperen op crossings:
-    group_by(!!sym(var_crossing)) %>% 
-    mutate(is_leeg = any(is.na(percentage))) %>% #is_leeg als één percentage van een vraag NA is.
-    ungroup() %>% 
-    mutate(percentage = ifelse(is_leeg, NA, percentage), #zet alle vragen met tenminste 1 NA antwoord op NA
-           weggestreept = ifelse(is_leeg, 10, NA) %>% as.numeric()) #maak een vector met val 30 waar een antwoord ontbreekt (voor missing sterretjes in diagram) 
 
-  #Alt text toevoegen o.b.v. data als er nog niks is ingevuld
-  if(is.null(alt_text)){
     
-    alt_text <- maak_alt_text(df_plot, is_dichotoom = F)
-    
-  }
+  #kruistabel maken
+  df_plot <- bereken_kruistabel(data_temp, variabele = var_inhoud, crossing = var_crossing, design = design_temp) %>% 
+    mutate(weggestreept = as.numeric(weggestreept))
+
   
-  #TODO hier een functie van maken: labelled_dbl_to_factor
-  df_plot[[var_crossing]] <- factor(df_plot[[var_crossing]], 
-                                          levels = val_labels(df_plot[[var_crossing]]),
-                                          labels = names(val_labels(df_plot[[var_crossing]])))
+  #temp dataframe & design verwijdere uit globalEnv.
+  rm(design_temp, data_temp, envir = .GlobalEnv)
   
-  df_plot[[var_inhoud]] <- factor(df_plot[[var_inhoud]], 
-                                    levels = val_labels(df_plot[[var_inhoud]]),
-                                    labels = names(val_labels(df_plot[[var_inhoud]])))
+    #Als crossing niet is ingevuld; dummy crossing maken zodat plot met beide kan omgaan
+    if(is.null(var_crossing)){
+      df_plot$leeg = ""
+      var_crossing = "leeg"
+      remove_legend = T
+    }
   
   namen_kleuren <- levels(df_plot[[var_crossing]])
   
@@ -1031,7 +949,8 @@ maak_staafdiagram_meerdere_staven <- function(df, var_inhoud,var_crossing = NULL
     ggtitle(titel) +
     #Hier worden de kleuren en volgorde bepaald.
     scale_fill_manual(values= kleuren,
-                      guide = guide_legend(nrow = 1, byrow = TRUE, label.position = "right", title.position = "top")
+                      guide = guide_legend(nrow = 1, byrow = TRUE,
+                                           label.position = "right", title.position = "top")
     ) +
     
     #kleuren voor sterretje
@@ -1055,20 +974,31 @@ maak_staafdiagram_meerdere_staven <- function(df, var_inhoud,var_crossing = NULL
           plot.title = element_text(hjust = .5),
           axis.line.x.bottom = element_line(linewidth = 1),
           axis.line.y.left = element_line(linewidth = 1,)
-    ) +
-    labs(
-      alt = alt_text
     )
+  
+  
+  if(is.null(alt_text)){
+    
+    alt_text <- maak_alt_text(plot,
+                              label_inhoud = var_label(data[[var_inhoud]]),
+                              label_crossings = var_label(data[[var_crossing]]),
+                              vars_crossing = c(var_crossing,var_inhoud)
+                              )
+    
+  }
+  plot <- plot +  labs(alt = alt_text)
   
   if(remove_legend){
     plot <- plot + theme(legend.position = "none")
   }
+  
   
   if(flip){
     plot <- plot +
       
       coord_flip()
   }
+  
   
   plot
  
@@ -1083,21 +1013,23 @@ maak_staafdiagram_meerdere_staven <- function(df, var_inhoud,var_crossing = NULL
 #TODO Overal chekc inbouwen of een var wel een lbl+dbl is. Of niet afh. van maak_kruistabel() output.
 #TODO dezelfde dfbewerkingen uit plotfuncties halen & naar eigen functies halen
 
-maak_staafdiagram_uitsplitsing_naast_elkaar <- function(df, var_inhoud, var_crossings, titel = "",
+maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_crossings, titel = "",
                                                         kleuren = default_kleuren_grafiek,
                                                         kleuren_per_crossing = F, fade_kleuren = F,
                                                         flip = FALSE, nvar = default_Nvar, ncel = default_Ncel,
                                                         alt_text = NULL){
   
-  if(!labelled::is.labelled(df[[var_inhoud]])){
+  #TODO hier gebleven
+  if(!labelled::is.labelled(data[[var_inhoud]])){
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
   }
-  if(val_labels(df[[var_inhoud]]) %>% length() > 2){
+  if(val_labels(data[[var_inhoud]]) %>% length() > 2){
     warning(
       glue("{var_inhoud} is geen dichotome variabele. Kies een ander grafiektype of een andere var_inhoud"))
     return(NULL)
     
     #TODO met Sjanne / Willeke overleggen hoe we foute invoer willen afhandelen.
+    #TODO crossings ook valideren op aanwezigheid labels
   }
   
   #o.b.v. de orientatie van de grafiek (flip = horizontaal)
@@ -1105,36 +1037,20 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(df, var_inhoud, var_cros
   v_just_text = ifelse(flip,0.5,1.5)
   h_just_text = ifelse(flip,1.5,0.5)
 
+  
+  
+  
   #% voor iedere crossing appart uitrekenen.
   df_plot <- lapply(var_crossings, function(crossing){
     
-    df_crossing = df %>% 
-      filter(!is.na(!!sym(var_inhoud)),
-             !is.na(!!sym(crossing))) %>%
-      select(!!sym(var_inhoud),!!sym(crossing)) %>% 
-      group_by(!!sym(var_inhoud),!!sym(crossing)) %>% 
-      summarise(aantal_antwoord = n()) %>% 
-      ungroup() %>% 
-      group_by(!!sym(crossing)) %>% 
-      mutate(aantal_vraag = sum(aantal_antwoord)) %>% 
-      ungroup() %>% 
-      mutate(percentage = round((aantal_antwoord/aantal_vraag)*100),
-             groep = var_label(!!sym(crossing)),
-             #Bij te lage aantallen -> Kolom als leeg weergeven net een sterretje in de kolom
-             percentage = case_when(aantal_vraag < nvar ~ NA,
-                                    aantal_antwoord < ncel ~ NA,
-                                    TRUE ~ percentage)
-      ) %>% 
-      #voor de kleine N voorwaarde moet de hele vraag weggestreept worden als er niet
-      #aan de voorwaarde wordt voldaan; groeperen op crossings:
-      group_by(!!sym(crossing)) %>% 
-      mutate(is_leeg = any(is.na(percentage))) %>% #is_leeg als één percentage van een vraag NA is.
-      ungroup() %>% 
-      mutate(percentage = ifelse(is_leeg, NA, percentage), #zet alle vragen met tenminste 1 NA antwoord op NA
-             weggestreept = ifelse(is_leeg, 10, NA) %>% as.numeric()) %>%  #maak een vector met val 30 waar een antwoord ontbreekt (voor missing sterretjes in diagram) 
-      rename("onderdeel" = 2) %>% 
-      filter(!!sym(var_inhoud) == 1) %>% 
-      mutate(onderdeel = val_labels(onderdeel) %>% names())
+    var_label_crossing = var_label(data[[crossing]])
+    
+    df_crossing <- bereken_kruistabel(data, variabele = var_inhoud, crossing = crossing, design = design_gem) %>% 
+      filter(waarde == 1) %>% 
+      rename(onderdeel = !!sym(crossing)) %>%  #crossinglevel naar 'onderdeel' hernoemen
+      mutate(groep = factor(var_label_crossing),  #varlabel crossing als 'groep' toevoegen
+             weggestreept = as.numeric(weggestreept)
+             ) 
     
     #Als iedere crossing eigen kleuren moet hebben; kleuren toewijzen aan dataframe
     if(kleuren_per_crossing){
@@ -1162,15 +1078,7 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(df, var_inhoud, var_cros
     df_crossing
     
   }) %>% do.call(rbind,.)
-  
-  #Alt text maken o.b.v. data als geen eigen tekst is ingegeven
-  if(is.null(alt_text)){
-    
-    alt_text = maak_alt_text(df_plot, is_vergelijking = T)
-    
-  } 
-  
-  
+
   if(kleuren_per_crossing){
     
     namen = df_plot$onderdeel
@@ -1187,10 +1095,13 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(df, var_inhoud, var_cros
   #volgorde onderdeel vastzetten o.b.v dataframe 
   df_plot$onderdeel <- factor(df_plot$onderdeel, levels = df_plot$onderdeel)
   
+  
+  #missing percentages met 0 vervangen (na.rm = T werkt niet bij geom_bar() bij position_stack)
+  df_plot$percentage[is.na(df_plot$percentage)] <- 0
+  
   plot <- ggplot(df_plot) +
     geom_bar(aes(x = onderdeel, y = percentage, fill = onderdeel),
-             stat = "identity", width = 0.8,
-             na.rm = T
+             stat = "identity", width = 0.8
              ) +
     geom_text(aes(x = onderdeel,
                   y = percentage,
@@ -1245,19 +1156,32 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(df, var_inhoud, var_cros
                          expand = expansion(mult = c(0, 0))) +
       scale_x_discrete(labels = function(x) str_wrap(x,width = 20)) +
       theme(
-#        axis.text.x = element_text(angle = 90, hjust = .95, vjust = .2),
+        #axis.text.x = element_text(angle = 90, hjust = .95, vjust = .2),
         strip.background = element_blank(),
         
       ) + xlab("")
       
   }
-
-  return(plot)
-
+  
+  
+  #Alt text maken o.b.v. data als geen eigen tekst is ingegeven
+  if(is.null(alt_text)){
+    
+    alt_text = maak_alt_text(plot)
+    
+    alt_text <- maak_alt_text(plot,
+                              label_inhoud = var_label(data[[var_inhoud]]),
+                              label_crossings = sapply(var_crossings, function(var) var_label(data[[var]]))
+                              )
+    
+  } 
+ 
+  return(plot) 
+ 
 }
 
 #horizontaal gestapeld staafdiagram
-maak_staafdiagram_gestapeld <- function(df, var_inhoud, titel = "",
+maak_staafdiagram_gestapeld <- function(df, var_inhoud, var_crossing = NULL, titel = "",
                                         kleuren = default_kleuren_grafiek, x_label = "",
                                         nvar = default_Nvar, ncel = default_Ncel,
                                         alt_text = NULL){
@@ -1266,54 +1190,45 @@ maak_staafdiagram_gestapeld <- function(df, var_inhoud, titel = "",
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
   }
   
-  df_plot <- df %>%
-    select(!!sym(var_inhoud)) %>%
-    filter(!is.na(!!sym(var_inhoud))) %>% 
-    group_by(!!sym(var_inhoud)) %>% 
-    summarise(n = n()) %>% 
-    ungroup() %>% 
-    mutate(totaal = sum(n),
-           percentage = n / totaal * 100,
-           te_weinig_n = n < ncel | totaal < nvar
-           
-           ) 
+  
+  #kruistabel maken
+  df_plot <- bereken_kruistabel(data, variabele = var_inhoud, crossing = var_crossing, design = design_gem) %>% 
+    mutate(weggestreept = as.numeric(weggestreept))
+  
+  #Als crossing niet is ingevuld; dummy crossing maken zodat plot met beide kan omgaan
+  if(is.null(var_crossing)){
+    df_plot$leeg = ""
+    var_crossing = "leeg"
+    remove_legend = T
+  }
+  
   
   #Als er een te lage N is: plot kan niet gemaakt worden.
-  if(any(df_plot$te_weinig_n)){
+  if(any(is.na(df_plot$percentage))){
     warning(glue("Plot kan niet gemaakt worden! Te weinig observaties voor {var_inhoud}. De instellingen zijn: nvar = {nvar} en ncel = {ncel}"))
     return(NULL)
     
   }
   
-  if(is.null(alt_text)){
-    
-    alt_text <- maak_alt_text(df_plot, is_gestapeld = T)
-    
-  }
-  
-  df_plot[[var_inhoud]] <- factor(df_plot[[var_inhoud]], 
-                                  levels = rev(val_labels(df_plot[[var_inhoud]])),
-                                  labels = rev(names(val_labels(df_plot[[var_inhoud]]))))
-  
-  
-  
+
   namen_kleuren <- levels(df_plot[[var_inhoud]])
   
   kleuren <- kleuren[1:length(namen_kleuren)]
   
-  ggplot(df_plot, aes(x = percentage, y = x_label, fill = !!sym(var_inhoud))) + 
-  geom_bar(stat = "identity", position = "stack") +
-  geom_text(aes(label = paste0(round(percentage),"%")),
-            color = "#FFFFFF",
-            position = position_stack(vjust = 0.5),
-            size = 3) +
+  plot <- ggplot(df_plot, aes(x = percentage, y = !!sym(var_crossing), fill = !!sym(var_inhoud))) + 
+    geom_bar(stat = "identity", position = "stack") +
+    geom_text(aes(
+      label = paste0(round(percentage),"%")),
+      color = "#FFFFFF",
+      position = position_stack(vjust = 0.5),
+      size = 3) +
     
     scale_fill_manual(values= kleuren,
                       labels = function(x) str_wrap(x, width = 40)
                       ) +
     scale_x_continuous(
-      limits = c(0,100),
-      breaks = seq(0,100, by = 10),
+      limits = c(0,101),
+      breaks = seq(0,101, by = 10),
       labels = paste(seq(0,100, by = 10),"%"),
       expand = expansion(mult = c(0, 0.05)))+
     ggtitle(titel) + 
@@ -1330,9 +1245,23 @@ maak_staafdiagram_gestapeld <- function(df, var_inhoud, titel = "",
           axis.line.x.bottom = element_line(linewidth = 1),
           axis.line.y.left = element_line(linewidth = 1,)
         ) +
-    guides(fill = guide_legend(reverse = TRUE))  +
-    labs(alt = alt_text)
+    guides(fill = guide_legend(reverse = TRUE))
   
+  
+  if(is.null(alt_text)){
+    
+    alt_text <- maak_alt_text(plot,
+                              type_grafiek = "gestapeld staafdiagram",
+                              label_inhoud = var_label(data[[var_inhoud]]),
+                              label_crossings = var_label(data[[var_crossing]]),
+                              vars_crossing = c(var_crossing,var_inhoud)
+    )
+    
+  }
+    
+  plot <- plot + labs(alt = alt_text)
+  
+  return(plot)
 }
 
 
@@ -1361,11 +1290,7 @@ bol_met_cijfer <- function(getal, kleur = "#b41257", kleur_outline = "#FFFFFF",k
 #TODO Cirkeldiagram
   #TODO Donut
 
-
-
-
 # Tekstfuncties -----------------------------------------------------------
-
 maak_vergelijking <- function(data, design, variabele, vergelijking, vergelijking_type = NULL) {
   
   # Bereken gewogen cijfers
@@ -1379,8 +1304,6 @@ maak_vergelijking <- function(data, design, variabele, vergelijking, vergelijkin
     stop(paste("Er zijn te weinig of te veel vergelijkingen. Controleer vergelijkingsvariabele ", vergelijking, "."))
     
   }  
-  ## TODO NOG ERROR FIXEN OMDAT DATA NAAM DOORGEGEVEN MOET WORDEN MAAR NU DATA OBJECT DOORGEGEVEN WORDT
-  
   # TODO toevoegen variabele omschrijving, waarin je kan specificeren hoe je de tekst wil als je niet het label wil gebruiken
   # TODO als vergelijken op iets anders dan jaar, DAN alleen van een bepaald jaar selecteren.
   # TODo nog testen, wat gebeurd er met NAs? en kan ik dit robuster maken + werkend voor meer uitsplitsingen?
@@ -1399,15 +1322,13 @@ maak_vergelijking <- function(data, design, variabele, vergelijking, vergelijkin
     crossing2 <- '18-20 jarigen'
     crossing3 <- '21-25 jarigen'
   } 
-  
-  # Gewogen cijfers vergelijken 
-  
   if (nrow(result) == 2 ) { # Vergelijk 2 groepen:
     # TODO ifelse wijzigen voor case_when()
     resultaat_vergelijking <- ifelse(result$ci_lower[1] > result$ci_upper[2], " is hoger dan ",
                                      ifelse(result$ci_lower[2] > result$ci_upper[1], " is lager dan ",
                                             " is gelijk aan "))
     
+
     return(paste0("Het percentage ", crossing1, " dat " , result$label[1], resultaat_vergelijking, "het percentage ", crossing2, "."))
   
   } else if (nrow(result) == 3 ) { # Vergelijking 3 groepen:
@@ -1424,16 +1345,6 @@ maak_vergelijking <- function(data, design, variabele, vergelijking, vergelijkin
   }
 }
 
-## Voorbeeld vergelijking in tekst
-maak_vergelijking(data = monitor_df_regio, 
-                  design = design_regio,
-                  variabele = 'GZGGA402',
-                  vergelijking = 'AGLFA401',
-                  vergelijking_type = "leeftijd"
-                  )
-bereken_kruistabel(data = monitor_df_regio, design = design_regio, variabele = 'GZGGA402', crossing = 'AGOJB401')
-bereken_kruistabel(data = monitor_df_regio, design = design_regio, variabele = 'GZGGA402', crossing = 'AGLFA401') %>%
-  filter(waarde == 1) -> result
 
 # table of contents voor pdf ----------------------------------------------
 #Geleend van https://gist.github.com/gadenbuie/c83e078bf8c81b035e32c3fc0cf04ee8
@@ -1484,4 +1395,3 @@ render_toc <- function(
   x <- x[x != ""]
   knitr::asis_output(paste(x, collapse = "\n"))
 }
-

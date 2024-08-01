@@ -57,6 +57,8 @@ file_path_regio = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
 monitor_df = haven::read_spss(file_path_regio,user_na =T) %>%
   labelled::user_na_to_na()
 
+#TODO verwijderen bij echte data. tijdelijk varlabel voor jaarvariabele
+var_label(monitor_df$AGOJB401) <- "Jaar"
 #monitor_df_land = haven::read_spss(file_path_land,user_na =T) %>%
 #  labelled::user_na_to_na()
 
