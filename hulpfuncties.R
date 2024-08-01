@@ -434,106 +434,37 @@ kruistabel_met_subset <- function(data, variabele = NULL, crossing = NULL, subse
   
 }
   
+ 
+maak_alt_text <- function(plot, doelgroep = "jongvolwassenen", type_grafiek = "staafdiagram",
+                          vars_crossing = "onderdeel",label_inhoud, label_crossings = NULL){
   
-
-
-#wordt in grafiekfuncties aangeroepen om automatisch alt_text te maken; 
-#functie vertaald waarschijnlijk slecht naar andere contexten; verwacht df op specifieke volgorde &
-#met specifiek vartypen
-maak_alt_text <- function(df, doelgroep = "jongvolwassenen", type_grafiek = "staafdiagram",
-                          is_vergelijking = F, is_dichotoom = T, is_gestapeld = F){
   
-  #TODO Functie is onnodig complex. Oplossen door dataverwerking uniformer te maken; 
-  #En/OF meer info over te selecteren variabelen naar de argumenten halen
   
-  label_var_inhoud <- var_label(df[,1])
+  plot_data <- ggplot_build(plot)
   
-  #Als crossings naast elkaar gelegd worden worden de character variabelen onderdeel & groep gebruikt in
-  #output df ipv de oorspronkelijke labelled+dbl
-  #TODO gelijktrekken zodat er 1 alt-text functie kan komen zonder heel veel if-condities
-  if(is_vergelijking){
-    string_waarden <- df %>% 
-      select(onderdeel, percentage) %>%
-      rowwise() %>% 
-      mutate(
-        percentage = ifelse(is.na(percentage),
-                            "percentage onbekend",
-                            paste0(percentage,"%")),
-        string = paste0(onderdeel,": ", percentage)) %>% 
-      pull(string) %>% 
-      paste0(collapse = ",")
-    
-    crossing_labels <- df$groep %>% unique() %>% paste0(collapse = " en ")
-    
-  }else if(is_gestapeld) {
-    string_waarden <- df %>% 
-      select(-c(n,totaal,te_weinig_n)) %>% 
-      mutate(across(where(~ is.labelled(.) && is.double(.)),
-                    ~ labelled_naar_character(df, cur_column()))) %>%
-      rowwise() %>% 
-      mutate(
-        percentage = paste0(round(percentage,1),"%"),
-        string = str_c(across(everything()), collapse = ": ")) %>% 
-      pull(string) %>% 
-      paste0(collapse = ", ")
-    
-    crossing_labels <- NULL
-      
-  } else if(is_dichotoom){
-    string_waarden <- df[,-1] %>% 
-      select(-c(aantal_antwoord,weggestreept)) %>%
-      #labelled double naar character
-      mutate(across(where(~ is.labelled(.) && is.double(.)),
-                    ~ labelled_naar_character(df, cur_column()))) %>%
-      #rowwise voor string_var
-      rowwise() %>% 
-      mutate(percentage = ifelse(is.na(percentage),
-                                 "percentage onbekend",
-                                 paste0(percentage,"%")
-      ),
-      cat = str_c(across(!percentage), collapse = " "),
-      string = paste0(cat,": ", percentage)
-      
-      ) %>% 
-      pull(string) %>% 
-      paste0(collapse = ", ")
+  percentages = plot_data[["plot"]][["data"]][["percentage"]]
   
-    crossing_labels <- var_label(df[,-1] %>% select(-c(aantal_antwoord, weggestreept, percentage))) %>% 
-    paste(collapse = " en ")
-    
-    }else {
-    df$leeg <- NULL
-    
-    string_waarden <- df %>% 
-      select(-c(aantal_antwoord,weggestreept)) %>%
-      #labelled double naar character
-      mutate(across(where(~ is.labelled(.) && is.double(.)),
-                    ~ labelled_naar_character(df, cur_column()))) %>%
-      #rowwise voor string_var
-      rowwise() %>% 
-      mutate(percentage = ifelse(is.na(percentage),
-                                 "percentage onbekend",
-                                 paste0(percentage,"%")
-      ),
-      cat = str_c(across(!percentage), collapse = " "),
-      string = paste0(cat,": ", percentage)
-      
-      ) %>% 
-      pull(string) %>% 
-      paste0(collapse = ", ")
-    
-    crossing_labels <- var_label(df[,-1] %>% select(-c(aantal_antwoord, weggestreept, percentage))) %>% 
-      paste(collapse = " en ")
-      
-    }
+  #0 of NA naar "Onbekend" zetten
+  percentages[is.na(percentages) | percentages == 0] <- "Onbekend"
+  
+  percentages[percentages != "Onbekend"] <- paste0(percentages[percentages != "Onbekend"],"%") #alles wat niet Onbekend is "%" geven
+  
+  #labels grafiek maken o.b.v. vars_crossing
+  labels = lapply(vars_crossing,function(var){
+    plot_data[["plot"]][["data"]][[var]] %>% as.character()
+  }) %>% do.call(paste,.)
 
+  
+  string_waarden = paste0(labels,": ",percentages, collapse = ", ")
 
-
-  if(is.null(crossing_labels)){
+  
+  if(is.null(label_crossings)){
     #Grafiek zonder crossings:
-    glue("{type_grafiek} met percentages voor de indicator '{label_var_inhoud}' bij {doelgroep}: {string_waarden}")
+    glue("{type_grafiek} met percentages voor de indicator '{label_inhoud}' bij {doelgroep}: {string_waarden}")
   } else{
-    glue("{type_grafiek} met percentages voor de indicator '{label_var_inhoud}' bij {doelgroep} per {crossing_labels}: {string_waarden}")  
+    #Grafiek met crossings
+    label_crossings = label_crossings %>% paste(collapse = " en ")
+    glue("{type_grafiek} met percentages voor de indicator '{label_inhoud}' bij {doelgroep} per {label_crossings}: {string_waarden}")  
   }
   
   
@@ -686,21 +617,10 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud, var_crossin
                         ) %>% 
     filter(waarde == 1)
   
-
-  
-  #alt text aanmaken voor grafiek als deze niet handmatig is opgegeven
-  if(is.null(alt_text)){
-    
-    alt_text <- maak_alt_text(df_plot)
-    
-  }
-  
-
-  
   namen_kleuren <- levels(df_plot[[var_crossing_kleur]])
   kleuren <- kleuren[1:length(namen_kleuren)]
   
-  ggplot(df_plot) +
+  plot = ggplot(df_plot) +
     geom_col(aes(x = !!sym(var_crossing_groep), y = percentage, fill = !!sym(var_crossing_kleur)),
              position = position_dodge(width = 0.8), width = 0.8,
              na.rm = T
@@ -748,10 +668,24 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud, var_crossin
           plot.title = element_text(hjust = .5),
           axis.line.x.bottom = element_line(linewidth = 1),
           axis.line.y.left = element_line(linewidth = 1,)
-    ) + 
-    labs(
-      alt = alt_text
     )
+  
+  #alt text aanmaken voor grafiek als deze niet handmatig is opgegeven
+  if(is.null(alt_text)){
+    
+    alt_text <- maak_alt_text(plot, 
+                              label_inhoud = var_label(data[[var_inhoud]]),
+                              label_crossings =  c(
+                                var_label(data[[var_crossing_groep]]),
+                                var_label(data[[var_crossing_kleur]])
+                              ),
+                              vars_crossing = c(var_crossing_groep, var_crossing_kleur)
+                              )
+    }
+  
+  plot <- plot + labs(alt = alt_text)
+  
+  return(plot)
 }
 
 
@@ -790,14 +724,7 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
      
    }) %>% do.call(rbind,.)
    
-   
-   
-   if(is.null(alt_text)){
-     
-     alt_text = maak_alt_text(df_plot, is_vergelijking = T)
-     
-   } 
-   
+
    #volgorde groepen op x-as vastzetten o.b.v. volgorde variabelen door er een factor vna te maken
    df_plot$groep <- factor(df_plot$groep)
    #volgorde onderdeel vastzetten o.b.v dataframe
@@ -809,7 +736,7 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
    names(kleuren) <- onderdeel_levels
 
 
-   ggplot(df_plot) +
+   plot = ggplot(df_plot) +
      geom_col(aes(x = groep, y = percentage, fill = onderdeel),
               position = position_dodge(width = 0.8), width = 0.8,
               na.rm = T) +
@@ -854,10 +781,22 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
            plot.title = element_text(hjust = .5),
            axis.line.x.bottom = element_line(linewidth = 1, colour = "black"),
            axis.line.y.left = element_line(linewidth = 1)
-     ) +
-     labs(
-       alt = alt_text
      )
+   
+   
+   #Alt text toevoegen als deze niet handmatig is opgegeven
+   if(is.null(alt_text)){
+     
+     alt_text <- maak_alt_text(plot, 
+                               label_inhoud = var_label(data[[var_inhoud]]),
+                               label_crossings = sapply(var_crossings, function(var) var_label(data[[var]])))
+     
+     
+   } 
+   
+   plot <- plot + labs(alt = alt_text)
+   
+   return(plot)
  }
 
 maak_staafdiagram_meerdere_staven <- function(data, var_inhoud,var_crossing = NULL, 
@@ -888,7 +827,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud,var_crossing = NU
 
     #Als crossing niet is ingevuld; dummy crossing maken zodat plot met beide kan omgaan
     if(is.null(var_crossing)){
-      df_plot$leeg = "1"
+      df_plot$leeg = ""
       var_crossing = "leeg"
       remove_legend = T
     }
@@ -948,33 +887,30 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud,var_crossing = NU
           plot.title = element_text(hjust = .5),
           axis.line.x.bottom = element_line(linewidth = 1),
           axis.line.y.left = element_line(linewidth = 1,)
-    ) +
-    labs(
-      alt = alt_text
     )
+  
+  
+  if(is.null(alt_text)){
+    
+    alt_text <- maak_alt_text(plot,
+                              label_inhoud = var_label(data[[var_inhoud]]),
+                              label_crossings = var_label(data[[var_crossing]]),
+                              vars_crossing = c(var_crossing,var_inhoud)
+                              )
+    
+  }
+  plot <- plot +  labs(alt = alt_text)
   
   if(remove_legend){
     plot <- plot + theme(legend.position = "none")
   }
   
-  # if(confidence_intervals){
-  #  plot <- plot + 
-  #    geom_errorbar(
-  #      aes(x = !!sym(var_inhoud), ymin = ci_lower, ymax = ci_upper),
-  #      width = .4, colour = kleur_ci, alpha = .9, size = 1.3,
-  #      position = position_dodge2(width = 0),
-  #      na.rm = T) 
-  #   
-  # }
   
   if(flip){
     plot <- plot +
       
       coord_flip()
   }
-  
-  
-
   
   
   plot
@@ -990,22 +926,23 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud,var_crossing = NU
 #TODO Overal chekc inbouwen of een var wel een lbl+dbl is. Of niet afh. van maak_kruistabel() output.
 #TODO dezelfde dfbewerkingen uit plotfuncties halen & naar eigen functies halen
 
-maak_staafdiagram_uitsplitsing_naast_elkaar <- function(df, var_inhoud, var_crossings, titel = "",
+maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_crossings, titel = "",
                                                         kleuren = default_kleuren_grafiek,
                                                         kleuren_per_crossing = F, fade_kleuren = F,
                                                         flip = FALSE, nvar = default_Nvar, ncel = default_Ncel,
                                                         alt_text = NULL){
   
   #TODO hier gebleven
-  if(!labelled::is.labelled(df[[var_inhoud]])){
+  if(!labelled::is.labelled(data[[var_inhoud]])){
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
   }
-  if(val_labels(df[[var_inhoud]]) %>% length() > 2){
+  if(val_labels(data[[var_inhoud]]) %>% length() > 2){
     warning(
       glue("{var_inhoud} is geen dichotome variabele. Kies een ander grafiektype of een andere var_inhoud"))
     return(NULL)
     
     #TODO met Sjanne / Willeke overleggen hoe we foute invoer willen afhandelen.
+    #TODO crossings ook valideren op aanwezigheid labels
   }
   
   #o.b.v. de orientatie van de grafiek (flip = horizontaal)
@@ -1013,36 +950,20 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(df, var_inhoud, var_cros
   v_just_text = ifelse(flip,0.5,1.5)
   h_just_text = ifelse(flip,1.5,0.5)
 
+  
+  
+  
   #% voor iedere crossing appart uitrekenen.
   df_plot <- lapply(var_crossings, function(crossing){
     
-    df_crossing = df %>% 
-      filter(!is.na(!!sym(var_inhoud)),
-             !is.na(!!sym(crossing))) %>%
-      select(!!sym(var_inhoud),!!sym(crossing)) %>% 
-      group_by(!!sym(var_inhoud),!!sym(crossing)) %>% 
-      summarise(aantal_antwoord = n()) %>% 
-      ungroup() %>% 
-      group_by(!!sym(crossing)) %>% 
-      mutate(aantal_vraag = sum(aantal_antwoord)) %>% 
-      ungroup() %>% 
-      mutate(percentage = round((aantal_antwoord/aantal_vraag)*100),
-             groep = var_label(!!sym(crossing)),
-             #Bij te lage aantallen -> Kolom als leeg weergeven net een sterretje in de kolom
-             percentage = case_when(aantal_vraag < nvar ~ NA,
-                                    aantal_antwoord < ncel ~ NA,
-                                    TRUE ~ percentage)
-      ) %>% 
-      #voor de kleine N voorwaarde moet de hele vraag weggestreept worden als er niet
-      #aan de voorwaarde wordt voldaan; groeperen op crossings:
-      group_by(!!sym(crossing)) %>% 
-      mutate(is_leeg = any(is.na(percentage))) %>% #is_leeg als één percentage van een vraag NA is.
-      ungroup() %>% 
-      mutate(percentage = ifelse(is_leeg, NA, percentage), #zet alle vragen met tenminste 1 NA antwoord op NA
-             weggestreept = ifelse(is_leeg, 10, NA) %>% as.numeric()) %>%  #maak een vector met val 30 waar een antwoord ontbreekt (voor missing sterretjes in diagram) 
-      rename("onderdeel" = 2) %>% 
-      filter(!!sym(var_inhoud) == 1) %>% 
-      mutate(onderdeel = val_labels(onderdeel) %>% names())
+    var_label_crossing = var_label(data[[crossing]])
+    
+    df_crossing <- kruistabel_maken(data, variabele = var_inhoud, crossing = crossing, survey_design = design_gem) %>% 
+      filter(waarde == 1) %>% 
+      rename(onderdeel = !!sym(crossing)) %>%  #crossinglevel naar 'onderdeel' hernoemen
+      mutate(groep = factor(var_label_crossing),  #varlabel crossing als 'groep' toevoegen
+             weggestreept = as.numeric(weggestreept)
+             ) 
     
     #Als iedere crossing eigen kleuren moet hebben; kleuren toewijzen aan dataframe
     if(kleuren_per_crossing){
@@ -1095,10 +1016,13 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(df, var_inhoud, var_cros
   #volgorde onderdeel vastzetten o.b.v dataframe 
   df_plot$onderdeel <- factor(df_plot$onderdeel, levels = df_plot$onderdeel)
   
+  
+  #missing percentages met 0 vervangen (na.rm = T werkt niet bij geom_bar() bij position_stack)
+  df_plot$percentage[is.na(df_plot$percentage)] <- 0
+  
   plot <- ggplot(df_plot) +
     geom_bar(aes(x = onderdeel, y = percentage, fill = onderdeel),
-             stat = "identity", width = 0.8,
-             na.rm = T
+             stat = "identity", width = 0.8
              ) +
     geom_text(aes(x = onderdeel,
                   y = percentage,
@@ -1153,14 +1077,15 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(df, var_inhoud, var_cros
                          expand = expansion(mult = c(0, 0))) +
       scale_x_discrete(labels = function(x) str_wrap(x,width = 20)) +
       theme(
-#        axis.text.x = element_text(angle = 90, hjust = .95, vjust = .2),
+        #axis.text.x = element_text(angle = 90, hjust = .95, vjust = .2),
         strip.background = element_blank(),
         
       ) + xlab("")
       
   }
 
-  return(plot)
+  return(plot) 
+  
 
 }
 
