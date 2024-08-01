@@ -45,7 +45,7 @@ library(glue) #om strings aangenaam aan elkaar te plakken
 #kan met of zonder crossings gebruikt worden. 
 #enkele fouten worden afgevangen met warnings & een veelvoorkomende warning dat er NaN's zijn uitgerekend bij lege velden is onderdrukt.
 
-#Deze functie wordt niet direct gebruikt in het script, maar wordt binnen de functie kruistabel_maken gebruikt.
+#Deze functie wordt niet direct gebruikt in het script, maar wordt binnen de functie bereken_kruistabel gebruikt.
 
 #Reken confindence interval uit voor proportie van bepaalde waarde binnen variabele o.b.v. surveydesign
 prop_ci_berekenen <- function(data = NULL, variabele = NULL, nummer = NULL, crossing = NULL, survey_design = NULL){
@@ -124,6 +124,10 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
                                min_observaties_per_antwoord = default_Ncel) { 
   # TODO functie werkbaar maken voor dubbele uitsplitsing?
   
+  #survey pikt het niet als delen v formules niet in .globalEnv staan. Daarom <<- en later
+  #opruimen.
+  data_temp <<- data
+  
   # Foute invoer afvangen
   #TODO omgaan met vergelijk_landelijk terwijl er geen landelijk df is > deze error verplaatsen
   #if("land" %in% niveau & data != 'monitor_df_land'){
@@ -144,7 +148,7 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
   #warning of error geven > deze error verplaatsen
   
   #Niet-valide invoer afvangen & warning geven
-  if(is.null(data[[variabele]])) {
+  if(is.null(data_temp[[variabele]])) {
     
     warning(paste("Variabele", variabele, "bestaat niet in dataset. Kruistabel wordt niet berekend."))
     return(NULL)
@@ -164,10 +168,10 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
   }
   
   #Bereken kruistabel  
-  antwoorden <-  attr(data[[variabele]], "labels") # value labels
+  antwoorden <-  attr(data_temp[[variabele]], "labels") # value labels
     
   #Formule maken voor in svytable
-  formule_tekst <- paste0("~ ", substitute(data), "[['", variabele,"']]")
+  formule_tekst <- paste0("~ ", substitute(data_temp), "[['", variabele,"']]")
     
   tb <- svytable(formula = eval(parse(text = formule_tekst)), design = design) 
     
@@ -207,7 +211,7 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
     #minder dan min_observaties zijn bij een vraag; maak CI's en estimates NA.
     if (any(table(monitor_df[['GZGGA402']]) < min_observaties_per_antwoord) |
         exists('lege_antwoorden') & min_observaties_per_antwoord != 0 |
-        sum(table(data[[variabele]])) < min_observaties_per_vraag) {
+        sum(table(data_temp[[variabele]])) < min_observaties_per_vraag) {
       
       confidence_intervals <- matrix(data = NA, 
                                      nrow = length(ct), 
@@ -218,7 +222,7 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
 
     } else {
       #reken voor ieder antwoord de ci uit
-      confidence_intervals <- t(sapply(unname(antwoorden), function(x){prop_ci_berekenen(data = data, 
+      confidence_intervals <- t(sapply(unname(antwoorden), function(x){prop_ci_berekenen(data = data_temp, 
                                                                                            variabele = variabele,
                                                                                            nummer = x, 
                                                                                            survey_design = design)}))
@@ -245,14 +249,14 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
                         "estimate" = estimate,
                         "ci_upper" = confidence_intervals[,2],
                         "ci_lower" = confidence_intervals[,1],
-                        "n_unweighted" = table(factor(data[[variabele]], levels = antwoorden))
+                        "n_unweighted" = table(factor(data_temp[[variabele]], levels = antwoorden))
     )
       
   #Als er wel crossings zijn
   }else{
       
     #Warning als crossing niet bestaat
-    if(is.null(data[[crossing]])){
+    if(is.null(data_temp[[crossing]])){
       
       stop(paste("Crossing",crossing, "bestaat niet in dataset. Kijk configuratie en dataset na."))
       return(NULL)
@@ -260,14 +264,14 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
     }else{
         
       #Als er missings zijn op de crossing. 
-      if(any(is.na(data[[crossing]]))){
+      if(any(is.na(data_temp[[crossing]]))){
         
         warning(paste("Missing data gevonden bij crossing ",crossing))
       
       }
       
       #CI uitrekenen
-      confidence_intervals <- lapply(unname(antwoorden), function(x){prop_ci_berekenen(data = data,
+      confidence_intervals <- lapply(unname(antwoorden), function(x){prop_ci_berekenen(data = data_temp,
                                                                                        variabele = variabele,
                                                                                        nummer = x, 
                                                                                        crossing = crossing, 
@@ -281,8 +285,8 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
       population_count <- lapply(unname(antwoorden), function(x){
         
         #Als var. in subset alleen maar NA heeft; lege tabel voor pop.count maken
-        if(all(is.na(data[[variabele]]))){
-          levels_crossing <- unname(val_labels(data[[crossing]]))
+        if(all(is.na(data_temp[[variabele]]))){
+          levels_crossing <- unname(val_labels(data_temp[[crossing]]))
           
           cbind("antwoord" = x, crossing_var = levels_crossing, n_weighted = "NA") %>%
             as.data.frame()
@@ -304,7 +308,7 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
       population_count <- do.call(rbind, population_count)
       
       #Wat zijn alle crossing_levels?
-      crossing_levels <- attr(data[[crossing]],"labels")
+      crossing_levels <- attr(data_temp[[crossing]],"labels")
         
       #Maak matrix met info kruistabel per crossing-level
       kruistabel <- lapply(crossing_levels, function(x){
@@ -332,8 +336,8 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
         # OF als er te weinig observaties per antwoordoptie zijn.
         # LET OP: gebruik dit altijd op data zonder lege missing categorieën, bv. door eerst functie verwijder_9_onbekend() over data te runnen.
 
-        te_weinig_obs <- sum(table(factor(data[[variabele]][data[[crossing]] == x], levels = antwoorden))) < min_observaties_per_vraag |
-          any(table(factor(data[[variabele]][data[[crossing]] == x], levels = antwoorden)) < min_observaties_per_antwoord)
+        te_weinig_obs <- sum(table(factor(data_temp[[variabele]][data_temp[[crossing]] == x], levels = antwoorden))) < min_observaties_per_vraag |
+          any(table(factor(data_temp[[variabele]][data_temp[[crossing]] == x], levels = antwoorden)) < min_observaties_per_antwoord)
 
         ci_upper <- confidence_intervals[confidence_intervals$crossing_var == x,4]
           
@@ -361,7 +365,7 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
               "ci_lower" = ci_lower,
               #n_unweighted moet (net als alle andere vectors) de lengte hebben van alle mogelijke values in de variabele
               #Wanneer table() een factor-variabele gevoerd krijgt worden ook alle values/levels gegeven, ook waar geen observaties voor zijn.
-              "n_unweighted" =  table(factor(data[[variabele]][data[[crossing]] == x], levels = antwoorden)))
+              "n_unweighted" =  table(factor(data_temp[[variabele]][data_temp[[crossing]] == x], levels = antwoorden)))
       
       })
         
@@ -370,11 +374,37 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
     }
   }
  
-  # Zet kruistabel om tot dataframe en selecteer relevante kolommen.
-  kruistabel <- data.frame(kruistabel) %>%
-    select(-c(n_weighted, n_unweighted))
+  
+  #variabelen aanpassen voor plotfuncties
+  kruistabel <- kruistabel %>% 
+    as_tibble() %>%
+    mutate(
+      label = factor(label),
+      estimate = as.numeric(estimate) %>% round(),
+      weggestreept = ifelse(is.na(estimate),10,NA),
+      ci_upper = as.numeric(ci_upper) * 100,
+      ci_lower = as.numeric(ci_lower) * 100
+    ) %>% 
+    
+    rename(!!sym(variabele):= label, aantal_antwoord = n_unweighted, percentage = estimate) 
+  
+  if(!is.null(crossing)){
+    kruistabel <- kruistabel %>% 
+      mutate(crossing_var = factor(crossing_var)) %>% 
+      rename(!!sym(crossing):= crossing_var)
+  }
+  
+  #data_temp uit globalEnvironment verwijderen
+  rm(data_temp, envir = .GlobalEnv)
   
   return(kruistabel)
+  
+  
+  # # Zet kruistabel om tot dataframe en selecteer relevante kolommen.
+  # kruistabel <- data.frame(kruistabel) %>%
+  #   select(-c(n_weighted, n_unweighted))
+  # 
+  # return(kruistabel)
   
 }
 
@@ -406,8 +436,7 @@ labelled_naar_character <- function(data,var){
 
 
 kruistabel_met_subset <- function(data, variabele = NULL, crossing = NULL, subsetvar,
-                                  survey_design = NULL,
-                                  min_observaties_per_vraag = default_Nvar){
+                                  survey_design = NULL){
 
   #alle lvls van subsetvar
   alle_subsets <- unique(data[[subsetvar]])
@@ -421,8 +450,8 @@ kruistabel_met_subset <- function(data, variabele = NULL, crossing = NULL, subse
     #subset maken van dataset
     subset_data <<- data %>% filter(!!sym(subsetvar) == lvl_subset)
     
-    kruistabel_maken(data = subset_data, variabele = variabele,
-                                  crossing = crossing, survey_design =subset_design) %>%
+    bereken_kruistabel(data = subset_data, variabele = variabele,
+                       crossing = crossing, survey_design = subset_design) %>%
       mutate(!!sym(subsetvar) := factor(lvl_subset))
     
   }) %>% do.call(rbind,.)
@@ -437,7 +466,6 @@ kruistabel_met_subset <- function(data, variabele = NULL, crossing = NULL, subse
  
 maak_alt_text <- function(plot, doelgroep = "jongvolwassenen", type_grafiek = "staafdiagram",
                           vars_crossing = "onderdeel",label_inhoud, label_crossings = NULL){
-  
   
   
   plot_data <- ggplot_build(plot)
@@ -712,7 +740,7 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
      
      var_label_crossing = var_label(data[[crossing]])
      
-     df_crossing <- kruistabel_maken(data, variabele = var_inhoud, crossing = crossing, survey_design = design_gem) %>% 
+     df_crossing <- bereken_kruistabel(data, variabele = var_inhoud, crossing = crossing, design = design_gem) %>% 
        filter(waarde == 1) %>% 
        rename(onderdeel = !!sym(crossing)) %>%  #crossinglevel naar 'onderdeel' hernoemen
        mutate(groep = factor(var_label_crossing),  #varlabel crossing als 'groep' toevoegen
@@ -823,7 +851,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud,var_crossing = NU
 
   
   #kruistabel maken
-  df_plot <- kruistabel_maken(data, variabele = var_inhoud, crossing = var_crossing, survey_design = design_gem) %>% 
+  df_plot <- bereken_kruistabel(data, variabele = var_inhoud, crossing = var_crossing, design = design_gem) %>% 
     mutate(weggestreept = as.numeric(weggestreept))
 
     #Als crossing niet is ingevuld; dummy crossing maken zodat plot met beide kan omgaan
@@ -959,7 +987,7 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
     
     var_label_crossing = var_label(data[[crossing]])
     
-    df_crossing <- kruistabel_maken(data, variabele = var_inhoud, crossing = crossing, survey_design = design_gem) %>% 
+    df_crossing <- bereken_kruistabel(data, variabele = var_inhoud, crossing = crossing, design = design_gem) %>% 
       filter(waarde == 1) %>% 
       rename(onderdeel = !!sym(crossing)) %>%  #crossinglevel naar 'onderdeel' hernoemen
       mutate(groep = factor(var_label_crossing),  #varlabel crossing als 'groep' toevoegen
@@ -1106,7 +1134,7 @@ maak_staafdiagram_gestapeld <- function(df, var_inhoud, var_crossing = NULL, tit
   
   
   #kruistabel maken
-  df_plot <- kruistabel_maken(data, variabele = var_inhoud, crossing = var_crossing, survey_design = design_gem) %>% 
+  df_plot <- bereken_kruistabel(data, variabele = var_inhoud, crossing = var_crossing, design = design_gem) %>% 
     mutate(weggestreept = as.numeric(weggestreept))
   
   #Als crossing niet is ingevuld; dummy crossing maken zodat plot met beide kan omgaan
@@ -1211,52 +1239,6 @@ bol_met_cijfer <- function(getal, kleur = "#b41257", kleur_outline = "#FFFFFF",k
 # Gebaseerd op functie uitrapportage monitor GMJ 2023.
 # Zie https://github.com/ggdatascience/rapportage_monitor_gmj 
 
-bereken_cijfers <- function(data, indicator, waarde, omschrijving, niveau_indicator, niveau_waarde, 
-                            niveau_naam, jaar_indicator, jaar, uitsplitsing = NA, groepering = NA, 
-                            weegfactor_indicator = "geen", Nvar = default_Nvar, Ncel = default_Ncel) {
-  data %>%
-    filter(.[niveau_indicator] == niveau_waarde & .[jaar_indicator] == jaar) %>%
-    select(all_of(setdiff(c(jaar_indicator, indicator, uitsplitsing, groepering, weegfactor_indicator), NA))) %>%
-    group_by(across(all_of(setdiff(c(jaar_indicator, indicator, uitsplitsing, groepering), NA)))) %>%
-    {if(weegfactor_indicator != "geen") rename_at(., vars(matches(weegfactor_indicator)), ~ str_replace(., weegfactor_indicator, 'weegfactor')) else .} %>%
-    summarise(n_cel = n(), 
-              n_cel_gewogen = ifelse(weegfactor_indicator == 'geen', NA, sum(weegfactor)),
-              .groups = 'drop') %>%
-    drop_na(-n_cel_gewogen) %>%
-    group_by(across(all_of(setdiff(c(jaar_indicator, uitsplitsing, groepering), NA)))) %>%
-    mutate(n_totaal = sum(n_cel),
-           n_totaal_gewogen = sum(n_cel_gewogen),
-           n_min = n_totaal-n_cel,
-           p = ifelse(test = n_totaal < Nvar | n_cel < Ncel | n_min < Ncel | n_cel == n_totaal,
-                      yes = NA,
-                      no = if(weegfactor_indicator == 'geen') n_cel/n_totaal else n_cel_gewogen/n_totaal_gewogen) %>% as.numeric(),
-           indicator = indicator,
-           omschrijving = omschrijving,
-           niveau = niveau_naam) %>%
-    {if(!is.na(waarde)) filter_at(., vars(all_of(indicator)), function(x) x %in% waarde) else .} %>%
-    ungroup() %>%
-    rename(jaar = 1, aslabel = 2) %>%
-    {if(!is.na(omschrijving)) mutate(., aslabel = omschrijving) else .} %>% # TODO deze kan misschien weg?
-    {if(!is.na(uitsplitsing)) rename_at(., vars(matches(uitsplitsing)), ~ str_replace(., uitsplitsing, 'uitsplitsing')) else .} %>%
-    {if(!is.na(groepering)) rename_at(., vars(matches(groepering)), ~ str_replace(., groepering, 'groepering')) else .} %>%
-    mutate(across(!n_cel & !n_cel_gewogen & !n_totaal & !n_totaal_gewogen & !n_min & !p & !jaar, to_character)) %>%
-    select(indicator, jaar, niveau, aslabel, everything()) 
-  
-}
-
-## Voorbeeld:
-# bereken_cijfers(data = monitor_df,
-#                 indicator = 'GZGGA402',
-#                 waarde = 1,
-#                 omschrijving = 'Ervaren Gezondheid',
-#                 niveau_indicator = 'Gemeentecode',
-#                 niveau_waarde = 4,
-#                 niveau_naam = 'Gemeente D',
-#                 jaar_indicator = 'AGOJB401',
-#                 jaar = 2022,
-#                 #uitsplitsing = 'AGGSA402',
-#                 #groepering = 'AGLFA401',
-#                 weegfactor_indicator = "Standaardisatiefactor")
 
 # TODO: functie maken om verschil tussen groepen (en/of jaren?) vast te stellen en tekst hierover te printen
 # Mogelijk integreren in bereken cijfers functie?
@@ -1381,7 +1363,7 @@ survey_design_maken <- function(data = NULL, strata = NULL, gewichten = NULL){
 #kan met of zonder crossings gebruikt worden. 
 #enkele fouten worden afgevangen met warnings & een veelvoorkomende warning dat er NaN's zijn uitgerekend bij lege velden is onderdrukt.
 
-#Deze functie wordt niet direct gebruikt in het script, maar wordt binnen de functie kruistabel_maken gebruikt.
+#Deze functie wordt niet direct gebruikt in het script, maar wordt binnen de functie bereken_kruistabel gebruikt.
 
 #Reken confindence interval uit voor proportie van bepaalde waarde binnen variabele o.b.v. surveydesign
 prop_ci_berekenen <- function(data = NULL, variabele = NULL, nummer = NULL, crossing = NULL, survey_design = NULL){
@@ -1451,246 +1433,246 @@ prop_ci_berekenen <- function(data = NULL, variabele = NULL, nummer = NULL, cros
 # prop_ci_berekenen(variabele="FLCAO205", nummer = 1, crossing = "geslacht_3cat")
 
 
-#kruistabel_maken()
+#bereken_kruistabel()
 #functie die een kruistabel maaakt per variabele. Kan zonder of met crossing.
 #Maakt een kruistabel
 #Deze functie wordt niet direct gebruikt in het script, maar wordt binnen de functie tabellen_naar_csv gebruikt.
-kruistabel_maken <- function(data, variabele = NULL, crossing = NULL, survey_design = NULL,
-                             min_observaties_per_vraag = default_Nvar){
-  
-  #Niet-valide invoer afvangen & warning geven
-  if(is.null(data[[variabele]])) {
-    
-    warning(paste("variabele",variabele, "bestaat niet in dataset. Wordt overgeslagen"))
-    return(NULL)
-    
-  }else{
-    
-    antwoorden <-  attr(data[[variabele]], "labels") # value labels
-    
-    #Formule maken voor in svytable
-    formule_tekst <- paste0("~ ", substitute(data), "[['", variabele,"']]")
-    
-    tb <- svytable(formula = eval(parse(text = formule_tekst)), design = survey_design) 
-    
-    #Als het aantal waarden in tb meer is dan het aantal antwoorden (obv value labels)
-    #Betekend dit dat er een ongelabelde waarde is. Dat kan betekenen dat het een Missing is die niet zo is vastgelegd in spss
-    #Of het kan betekenen dat een valide waarde ongelabeld is. vanwege deze onduidelijkheid. Harde error met melding
-    if(length(antwoorden) < length(tb)){
-      
-      stop(paste("Er zijn ongelabelde waarden. Controleer variabele", variabele, "in .sav bestand"))
-      
-    }
-    
-    
-    #svytable slaat antwoorden zonder respondenten over; aanvullen.
-    #Als er iets in tb zit; maar het is niet even lang als het aantal antwoorden
-    if(length(tb) > 0 & length(tb) < length(antwoorden)){
-      
-      #verschil lengte tb met lengte antwoorden 
-      n_ontbrekende_antwoorden <- length(antwoorden) - length(tb) 
-      
-      lege_antwoorden <- rep(0,n_ontbrekende_antwoorden)
-      names(lege_antwoorden) <- unname(antwoorden)[!unname(antwoorden)%in% names(tb)]
-      
-      tb <- c(tb, lege_antwoorden) 
-      
-      #Volgorde van NAMEN tb matchen aan antwoorden.
-      tb <- tb[order(match(names(tb),antwoorden))]
-      
-    }
-    ct <- prop.table(tb)*100 # ct bevat estimates als percentages
-    
-    #Als er geen crossings zijn
-    if(is.null(crossing)){
-      
-      #reken voor ieder antwoord de ci uit
-      confidence_intervals <- t(sapply(unname(antwoorden), function(x){prop_ci_berekenen(data = data, 
-                                                                                         variabele = variabele,
-                                                                                         nummer = x, 
-                                                                                         survey_design = survey_design)}))
-      
-      #Confidence intervals worden gebruikt t.b.v. statistische toetsen. Deze toetsen moeten alleen uitgevoerd worden
-      #wanneer het aantal observaties op een vraag minstens de waarde heeft van min_observaties.
-      
-      #Als er minder dan min_observaties zijn bij een vraag; maak CI's NA.
-      if(sum(table(data[[variabele]])) < min_observaties_per_vraag){
-        confidence_intervals <- confidence_intervals %>% replace(values = NA)
-      }
-      
-      #Het kan voorkomen dat een variabele alleen maar missing kent voor een bepaalde subset
-      #Toch willen we  rijen hebben die alle antwoord-niveuas vastleggen.
-      #Als je direct in cbind een lege vector aanroept wordt deze kolom simpelweg niet toegevoegd, dit zorgt voor problemen bij het maken van dataframes met
-      #rbind; daarvoor moet er een gelijk aantal kolommen zijn.
-      
-      #Daarom  expliciet NA toewijzen als  ontbrekende levels op een variabele in  een subset
-      #resulteren in vectors die leeg zijn. Geld hier alleen voor ct/estimate. 
-      estimate <- ct
-      if(length(estimate) == 0){estimate <- NA}
-      
-      
-      n_weighted <- tb
-      if(length(n_weighted) == 0){n_weighted <- NA}
-      
-      kruistabel <- cbind("varcode" = variabele,
-                          "waarde" = as.numeric(antwoorden),
-                          "label" = names(antwoorden),
-                          "n_weighted" = n_weighted,
-                          "estimate" = estimate,
-                          "ci_upper" = confidence_intervals[,2],
-                          "ci_lower" = confidence_intervals[,1],
-                          "n_unweighted" = table(factor(data[[variabele]], levels = antwoorden))
-      )
-      
-    #Als er wel crossings zijn
-    }else{
-      
-      #Warning als crossing niet bestaat
-      if(is.null(data[[crossing]])){
-        stop(paste("crossing",crossing, "bestaat niet in dataset. Kijk configuratie en dataset na"))
-        return(NULL)
-      }else{
-        
-        #Als er missings zijn op de crossing. Warning verplaatst naar tabellen_naar_csv
-        if(any(is.na(data[[crossing]]))){
-          warning(paste("Missing data gevonden bij crossing",crossing))
-        }
-        
-        #CI uitrekenen
-        confidence_intervals <- lapply(unname(antwoorden), function(x){prop_ci_berekenen(data = data,
-                                                                                         variabele = variabele,
-                                                                                         nummer = x, 
-                                                                                         crossing = crossing, 
-                                                                                         survey_design = survey_design)})
-        
-        #CI van verschillende antwoordmogelijkheden samenvoegen
-        confidence_intervals <- do.call(rbind, confidence_intervals)
-        
-        
-        #Gewogen Pop count uitrekenen 
-        population_count <- lapply(unname(antwoorden), function(x){
-          
-          #Als var. in subset alleen maar NA heeft; lege tabel voor pop.count maken
-          if(all(is.na(data[[variabele]]))){
-            levels_crossing <- unname(val_labels(data[[crossing]]))
-            
-            cbind("antwoord" = x, crossing_var = levels_crossing, n_weighted = "NA") %>%
-              as.data.frame()
-            
-          }else{
-            
-            
-            tekst_formule = paste0("~I(",variabele,"==",x,")")
-            tekst_crossing = paste0("~",crossing)
-            
-            tabel <- svyby(formula = eval(parse(text = tekst_formule)), by = eval(parse(text = tekst_crossing)), survey_design, svytotal, vartype='ci', method='xlogit', na.rm=TRUE, na.rm.all = TRUE) 
-            
-            #3e index van pop.count tabel = gewogen aantal repsondenten die een antwoord gaven
-            cbind("antwoord" = x,"crossing_var" = unname(tabel[1]), "n_weighted" = unname(tabel[3]) )
-          }
-          
-        })
-        
-        #Pop-count van versch. antwoordmogelijkheden samenvoegen
-        population_count <- do.call(rbind, population_count)
-        
-        
-        
-        #Wat zijn alle crossing_levels?
-        crossing_levels <- attr(data[[crossing]],"labels")
-        
-        #Maak matrix met info kruistabel per crossing-level
-        kruistabel <- lapply(crossing_levels, function(x){
-          #Het kan voorkomen dat een level v.e. crossing niet bestaat in een subset (bv een school die geen data heeft v. een spec. leerjaar)
-          #Toch willen we  rijen hebben die de antwoorden per alle  crossing-levels vastlegt.
-          #Als je direct in cbind een lege vector aanroept wordt deze kolom simpelweg niet toegevoegd, dit zorgt voor problemen bij het maken van dataframes met
-          #rbind; rbind vereist  een gelijk aantal kolommen,
-          
-          #Daarom  expliciet NA's toewijzen als ontbrekende levels op een crossing in een subset resulteren in lege vectors
-          
-          #Als de lengte van pop.count-vector bij crossing-level 0 is; dan NA. Anders pop.count vector
-          n_weighted <- population_count[population_count$crossing_var == x ,3]
-          #NA maken als leeg is
-          if(length(n_weighted) == 0){n_weighted <- NA}
-          
-          #Ook voor estimate
-          estimate <- confidence_intervals[confidence_intervals$crossing_var == x,2]*100
-          if(length(estimate) == 0){estimate <- NA}
-          
-          
-          #Ditzelfde moet ook gebeuren voor confidence intervals
-          #Voor confidence intervals  geld ook dat ze  op NA willen zetten als het aantal obs op een vraag per level v.e. crossing
-          #lager is dan de opgegeven min_obs. (een makkelijke manier om de vraag te excluderen v.  toetsing sign.)
-          te_weinig_obs <- sum(table(factor(data[[variabele]][data[[crossing]] == x], levels = antwoorden))) < min_observaties_per_vraag
-          
-          #toevoeging pieter 31-7-24'
-          #estimates mogen ook op na bij te weinig obs
-          if(te_weinig_obs){
-            estimate <- NA
-          }
-          
-          ci_upper <- confidence_intervals[confidence_intervals$crossing_var == x,4]
-          
-          if(te_weinig_obs | length(ci_upper) == 0){
-            ci_upper <- NA
-          }
-          
-          ci_lower <- confidence_intervals[confidence_intervals$crossing_var == x,3]
-          
-          if(te_weinig_obs | length(ci_lower) == 0){
-            ci_lower <- NA
-          }
-        
-          
-          
-          #Kolommen koppelen
-          cbind("varcode" = variabele,
-                "waarde" = as.numeric(antwoorden),
-                "label" = names(antwoorden),
-                "crossing" = crossing,
-                "crossing_var" = names(crossing_levels[crossing_levels == x]),
-                "n_weighted" = n_weighted,
-                "estimate" = estimate,
-                "ci_upper" = ci_upper,
-                "ci_lower" = ci_lower,
-                #n_unweighted moet (net als alle andere vectors) de lengte hebben van alle mogelijke values in de variabele
-                #Wanneer table() een factor-variabele gevoerd krijgt worden ook alle values/levels gegeven, ook waar geen observaties voor zijn.
-                "n_unweighted" =  table(factor(data[[variabele]][data[[crossing]] == x], levels = antwoorden)))
-          
-          
-        })
-        
-        
-        kruistabel <- do.call(rbind, kruistabel)
-        
-      }
-    }
-    
-    #variabelen aanpassen voor plotfuncties
-    kruistabel <- kruistabel %>% 
-      as_tibble() %>%
-      mutate(
-        label = factor(label),
-        estimate = as.numeric(estimate) %>% round(),
-        weggestreept = ifelse(is.na(estimate),10,NA),
-        ci_upper = as.numeric(ci_upper) * 100,
-        ci_lower = as.numeric(ci_lower) * 100
-      ) %>% 
-      
-      rename(!!sym(variabele):= label, aantal_antwoord = n_unweighted, percentage = estimate) 
-    
-    if(!is.null(crossing)){
-      kruistabel <- kruistabel %>% 
-        mutate(crossing_var = factor(crossing_var)) %>% 
-        rename(!!sym(crossing):= crossing_var)
-    }
-
-    
-    return(kruistabel)
-    
-  }
-  
-}
+# bereken_kruistabel <- function(data, variabele = NULL, crossing = NULL, survey_design = NULL,
+#                              min_observaties_per_vraag = default_Nvar){
+#   
+#   #Niet-valide invoer afvangen & warning geven
+#   if(is.null(data[[variabele]])) {
+#     
+#     warning(paste("variabele",variabele, "bestaat niet in dataset. Wordt overgeslagen"))
+#     return(NULL)
+#     
+#   }else{
+#     
+#     antwoorden <-  attr(data[[variabele]], "labels") # value labels
+#     
+#     #Formule maken voor in svytable
+#     formule_tekst <- paste0("~ ", substitute(data), "[['", variabele,"']]")
+#     
+#     tb <- svytable(formula = eval(parse(text = formule_tekst)), design = survey_design) 
+#     
+#     #Als het aantal waarden in tb meer is dan het aantal antwoorden (obv value labels)
+#     #Betekend dit dat er een ongelabelde waarde is. Dat kan betekenen dat het een Missing is die niet zo is vastgelegd in spss
+#     #Of het kan betekenen dat een valide waarde ongelabeld is. vanwege deze onduidelijkheid. Harde error met melding
+#     if(length(antwoorden) < length(tb)){
+#       
+#       stop(paste("Er zijn ongelabelde waarden. Controleer variabele", variabele, "in .sav bestand"))
+#       
+#     }
+#     
+#     
+#     #svytable slaat antwoorden zonder respondenten over; aanvullen.
+#     #Als er iets in tb zit; maar het is niet even lang als het aantal antwoorden
+#     if(length(tb) > 0 & length(tb) < length(antwoorden)){
+#       
+#       #verschil lengte tb met lengte antwoorden 
+#       n_ontbrekende_antwoorden <- length(antwoorden) - length(tb) 
+#       
+#       lege_antwoorden <- rep(0,n_ontbrekende_antwoorden)
+#       names(lege_antwoorden) <- unname(antwoorden)[!unname(antwoorden)%in% names(tb)]
+#       
+#       tb <- c(tb, lege_antwoorden) 
+#       
+#       #Volgorde van NAMEN tb matchen aan antwoorden.
+#       tb <- tb[order(match(names(tb),antwoorden))]
+#       
+#     }
+#     ct <- prop.table(tb)*100 # ct bevat estimates als percentages
+#     
+#     #Als er geen crossings zijn
+#     if(is.null(crossing)){
+#       
+#       #reken voor ieder antwoord de ci uit
+#       confidence_intervals <- t(sapply(unname(antwoorden), function(x){prop_ci_berekenen(data = data, 
+#                                                                                          variabele = variabele,
+#                                                                                          nummer = x, 
+#                                                                                          survey_design = survey_design)}))
+#       
+#       #Confidence intervals worden gebruikt t.b.v. statistische toetsen. Deze toetsen moeten alleen uitgevoerd worden
+#       #wanneer het aantal observaties op een vraag minstens de waarde heeft van min_observaties.
+#       
+#       #Als er minder dan min_observaties zijn bij een vraag; maak CI's NA.
+#       if(sum(table(data[[variabele]])) < min_observaties_per_vraag){
+#         confidence_intervals <- confidence_intervals %>% replace(values = NA)
+#       }
+#       
+#       #Het kan voorkomen dat een variabele alleen maar missing kent voor een bepaalde subset
+#       #Toch willen we  rijen hebben die alle antwoord-niveuas vastleggen.
+#       #Als je direct in cbind een lege vector aanroept wordt deze kolom simpelweg niet toegevoegd, dit zorgt voor problemen bij het maken van dataframes met
+#       #rbind; daarvoor moet er een gelijk aantal kolommen zijn.
+#       
+#       #Daarom  expliciet NA toewijzen als  ontbrekende levels op een variabele in  een subset
+#       #resulteren in vectors die leeg zijn. Geld hier alleen voor ct/estimate. 
+#       estimate <- ct
+#       if(length(estimate) == 0){estimate <- NA}
+#       
+#       
+#       n_weighted <- tb
+#       if(length(n_weighted) == 0){n_weighted <- NA}
+#       
+#       kruistabel <- cbind("varcode" = variabele,
+#                           "waarde" = as.numeric(antwoorden),
+#                           "label" = names(antwoorden),
+#                           "n_weighted" = n_weighted,
+#                           "estimate" = estimate,
+#                           "ci_upper" = confidence_intervals[,2],
+#                           "ci_lower" = confidence_intervals[,1],
+#                           "n_unweighted" = table(factor(data[[variabele]], levels = antwoorden))
+#       )
+#       
+#     #Als er wel crossings zijn
+#     }else{
+#       
+#       #Warning als crossing niet bestaat
+#       if(is.null(data[[crossing]])){
+#         stop(paste("crossing",crossing, "bestaat niet in dataset. Kijk configuratie en dataset na"))
+#         return(NULL)
+#       }else{
+#         
+#         #Als er missings zijn op de crossing. Warning verplaatst naar tabellen_naar_csv
+#         if(any(is.na(data[[crossing]]))){
+#           warning(paste("Missing data gevonden bij crossing",crossing))
+#         }
+#         
+#         #CI uitrekenen
+#         confidence_intervals <- lapply(unname(antwoorden), function(x){prop_ci_berekenen(data = data,
+#                                                                                          variabele = variabele,
+#                                                                                          nummer = x, 
+#                                                                                          crossing = crossing, 
+#                                                                                          survey_design = survey_design)})
+#         
+#         #CI van verschillende antwoordmogelijkheden samenvoegen
+#         confidence_intervals <- do.call(rbind, confidence_intervals)
+#         
+#         
+#         #Gewogen Pop count uitrekenen 
+#         population_count <- lapply(unname(antwoorden), function(x){
+#           
+#           #Als var. in subset alleen maar NA heeft; lege tabel voor pop.count maken
+#           if(all(is.na(data[[variabele]]))){
+#             levels_crossing <- unname(val_labels(data[[crossing]]))
+#             
+#             cbind("antwoord" = x, crossing_var = levels_crossing, n_weighted = "NA") %>%
+#               as.data.frame()
+#             
+#           }else{
+#             
+#             
+#             tekst_formule = paste0("~I(",variabele,"==",x,")")
+#             tekst_crossing = paste0("~",crossing)
+#             
+#             tabel <- svyby(formula = eval(parse(text = tekst_formule)), by = eval(parse(text = tekst_crossing)), survey_design, svytotal, vartype='ci', method='xlogit', na.rm=TRUE, na.rm.all = TRUE) 
+#             
+#             #3e index van pop.count tabel = gewogen aantal repsondenten die een antwoord gaven
+#             cbind("antwoord" = x,"crossing_var" = unname(tabel[1]), "n_weighted" = unname(tabel[3]) )
+#           }
+#           
+#         })
+#         
+#         #Pop-count van versch. antwoordmogelijkheden samenvoegen
+#         population_count <- do.call(rbind, population_count)
+#         
+#         
+#         
+#         #Wat zijn alle crossing_levels?
+#         crossing_levels <- attr(data[[crossing]],"labels")
+#         
+#         #Maak matrix met info kruistabel per crossing-level
+#         kruistabel <- lapply(crossing_levels, function(x){
+#           #Het kan voorkomen dat een level v.e. crossing niet bestaat in een subset (bv een school die geen data heeft v. een spec. leerjaar)
+#           #Toch willen we  rijen hebben die de antwoorden per alle  crossing-levels vastlegt.
+#           #Als je direct in cbind een lege vector aanroept wordt deze kolom simpelweg niet toegevoegd, dit zorgt voor problemen bij het maken van dataframes met
+#           #rbind; rbind vereist  een gelijk aantal kolommen,
+#           
+#           #Daarom  expliciet NA's toewijzen als ontbrekende levels op een crossing in een subset resulteren in lege vectors
+#           
+#           #Als de lengte van pop.count-vector bij crossing-level 0 is; dan NA. Anders pop.count vector
+#           n_weighted <- population_count[population_count$crossing_var == x ,3]
+#           #NA maken als leeg is
+#           if(length(n_weighted) == 0){n_weighted <- NA}
+#           
+#           #Ook voor estimate
+#           estimate <- confidence_intervals[confidence_intervals$crossing_var == x,2]*100
+#           if(length(estimate) == 0){estimate <- NA}
+#           
+#           
+#           #Ditzelfde moet ook gebeuren voor confidence intervals
+#           #Voor confidence intervals  geld ook dat ze  op NA willen zetten als het aantal obs op een vraag per level v.e. crossing
+#           #lager is dan de opgegeven min_obs. (een makkelijke manier om de vraag te excluderen v.  toetsing sign.)
+#           te_weinig_obs <- sum(table(factor(data[[variabele]][data[[crossing]] == x], levels = antwoorden))) < min_observaties_per_vraag
+#           
+#           #toevoeging pieter 31-7-24'
+#           #estimates mogen ook op na bij te weinig obs
+#           if(te_weinig_obs){
+#             estimate <- NA
+#           }
+#           
+#           ci_upper <- confidence_intervals[confidence_intervals$crossing_var == x,4]
+#           
+#           if(te_weinig_obs | length(ci_upper) == 0){
+#             ci_upper <- NA
+#           }
+#           
+#           ci_lower <- confidence_intervals[confidence_intervals$crossing_var == x,3]
+#           
+#           if(te_weinig_obs | length(ci_lower) == 0){
+#             ci_lower <- NA
+#           }
+#         
+#           
+#           
+#           #Kolommen koppelen
+#           cbind("varcode" = variabele,
+#                 "waarde" = as.numeric(antwoorden),
+#                 "label" = names(antwoorden),
+#                 "crossing" = crossing,
+#                 "crossing_var" = names(crossing_levels[crossing_levels == x]),
+#                 "n_weighted" = n_weighted,
+#                 "estimate" = estimate,
+#                 "ci_upper" = ci_upper,
+#                 "ci_lower" = ci_lower,
+#                 #n_unweighted moet (net als alle andere vectors) de lengte hebben van alle mogelijke values in de variabele
+#                 #Wanneer table() een factor-variabele gevoerd krijgt worden ook alle values/levels gegeven, ook waar geen observaties voor zijn.
+#                 "n_unweighted" =  table(factor(data[[variabele]][data[[crossing]] == x], levels = antwoorden)))
+#           
+#           
+#         })
+#         
+#         
+#         kruistabel <- do.call(rbind, kruistabel)
+#         
+#       }
+#     }
+#     
+#     #variabelen aanpassen voor plotfuncties
+#     kruistabel <- kruistabel %>% 
+#       as_tibble() %>%
+#       mutate(
+#         label = factor(label),
+#         estimate = as.numeric(estimate) %>% round(),
+#         weggestreept = ifelse(is.na(estimate),10,NA),
+#         ci_upper = as.numeric(ci_upper) * 100,
+#         ci_lower = as.numeric(ci_lower) * 100
+#       ) %>% 
+#       
+#       rename(!!sym(variabele):= label, aantal_antwoord = n_unweighted, percentage = estimate) 
+#     
+#     if(!is.null(crossing)){
+#       kruistabel <- kruistabel %>% 
+#         mutate(crossing_var = factor(crossing_var)) %>% 
+#         rename(!!sym(crossing):= crossing_var)
+#     }
+# 
+#     
+#     return(kruistabel)
+#     
+#   }
+#   
+# }
 
 
 
@@ -1749,5 +1731,5 @@ render_toc <- function(
 # crossing = AGLFA401
 # design = design
 
-# kruistabel_maken(data = monitor_df, variabele = 'GZGGA402', crossing = 'AGLFA401', survey_design = design)
-# kruistabel_maken(data = monitor_df, variabele = 'GZGGA402', survey_design = design)
+# bereken_kruistabel(data = monitor_df, variabele = 'GZGGA402', crossing = 'AGLFA401', survey_design = design)
+# bereken_kruistabel(data = monitor_df, variabele = 'GZGGA402', survey_design = design)
