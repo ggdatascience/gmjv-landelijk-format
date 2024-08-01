@@ -1366,48 +1366,74 @@ bol_met_cijfer <- function(getal, kleur = "#b41257", kleur_outline = "#FFFFFF",k
 
 # Tekstfuncties -----------------------------------------------------------
 
-maak_vergelijking <- function(data, design, variabele, vergelijking) {
+maak_vergelijking <- function(data, design, variabele, vergelijking, vergelijking_type = NULL) {
   
   # Bereken gewogen cijfers
   result <- bereken_kruistabel(data = data, design = design, variabele = variabele, crossing = vergelijking) %>%
     filter(waarde == 1) #%>% # Filter de gegevens voor waarde 1 eruit
     #arrange(desc(estimate)) # Sorteer op hoogte van estimate (percentage)
   
+  # Check lengte van kruistabel
+  if (nrow(result) < 2 | nrow(result) > 3) {
+    
+    stop(paste("Er zijn te weinig of te veel vergelijkingen. Controleer vergelijkingsvariabele ", vergelijking, "."))
+    
+  }  
   ## TODO NOG ERROR FIXEN OMDAT DATA NAAM DOORGEGEVEN MOET WORDEN MAAR NU DATA OBJECT DOORGEGEVEN WORDT
   
   # TODO toevoegen variabele omschrijving, waarin je kan specificeren hoe je de tekst wil als je niet het label wil gebruiken
-  # TODO toevoegen een aantal standaard dingen, bv. leeftijd, gender en jaar.
-  # TODO als vergelijken op iets anders dan leeftijd, DAN alleen van een bepaald jaar selecteren.
-  
-  # Gewogen cijfers vergelijken en op of groep 1 afwijkt van groep 2
-  # Vergelijk 2 groepen:
-  if (nrow(result == 2) & (result$ci_lower[1] > result$ci_upper[2])) { # Als CIs niet overlappen: 
-    
-    # Als CIs niet overlappen en bovenste categorie is groter: 
-    return(paste0("Het percentage ", result$crossing_var[1], " dat " , result$label[1], " is hoger dan het percentage ", result$crossing_var[2], "."))
-    
-  } else if (nrow(result == 2) & (result$ci_lower[2] > result$ci_upper[1])) { # Als CIs niet overlappen: 
-    
-    # Als CIs niet overlappen en onderste categorie is groter: 
-    return(paste0("Het percentage ", result$crossing_var[1], " dat " , result$label[1], " is lager dan het percentage ", result$crossing_var[2], "."))
-    
-  } else if(nrow(result == 2)) {
-    
-    # Als CIs niet overlappen en onderste categorie is groter: 
-    return(paste0("Het percentage ", result$crossing_var[1], " dat " , result$label[1], " is gelijk aan het percentage ", result$crossing_var[2], "."))
-    
-  }
-  
+  # TODO als vergelijken op iets anders dan jaar, DAN alleen van een bepaald jaar selecteren.
   # TODo nog testen, wat gebeurd er met NAs? en kan ik dit robuster maken + werkend voor meer uitsplitsingen?
+  
+  if (is.null(vergelijking_type)) {
+    crossing1 <- result$crossing_var[1]
+    crossing2 <- result$crossing_var[2]
+  } else if (vergelijking_type == "gender") {
+    crossing1 <- 'mannen'
+    crossing2 <- 'vrouwen'
+  }else if (vergelijking_type == "jaar") {
+    crossing1 <- '2024'
+    crossing2 <- '2022'
+  } else if (vergelijking_type == "leeftijd") {
+    crossing1 <- '16-17 jarigen'
+    crossing2 <- '18-20 jarigen'
+    crossing3 <- '21-25 jarigen'
+  } 
+  
+  # Gewogen cijfers vergelijken 
+  
+  if (nrow(result) == 2 ) { # Vergelijk 2 groepen:
+    
+    resultaat_vergelijking <- ifelse(result$ci_lower[1] > result$ci_upper[2], " is hoger dan ",
+                                     ifelse(result$ci_lower[2] > result$ci_upper[1], " is lager dan ",
+                                            " is gelijk aan "))
+    
+    return(paste0("Het percentage ", crossing1, " dat " , result$label[1], resultaat_vergelijking, "het percentage ", crossing2, "."))
+  
+  } else if (nrow(result) == 3 ) { # Vergelijking 3 groepen:
+    
+    resultaat_vergelijking1 <- ifelse(result$ci_lower[1] > result$ci_upper[2], " is hoger dan ",
+                                     ifelse(result$ci_lower[2] > result$ci_upper[1], " is lager dan ",
+                                            " is gelijk "))
+    resultaat_vergelijking2 <- ifelse(result$ci_lower[1] > result$ci_upper[3], " is hoger dan ",
+                                      ifelse(result$ci_lower[3] > result$ci_upper[1], " is lager dan ",
+                                             " is gelijk "))
+    
+    return(paste0("Het percentage dat " , result$label[1], resultaat_vergelijking1, "onder ", crossing2, " en", resultaat_vergelijking2, "onder ", crossing3, " t.o.v. ", crossing1, "."))
+    # TODO verander result$label naar var label
+  }
 }
 
 ## Voorbeeld vergelijking in tekst
 maak_vergelijking(data = monitor_df_regio, 
                   design = design_regio,
-                  variabele = 'LVEES404',
-                  vergelijking = 'AGGSA402')
-bereken_kruistabel(data = monitor_df_regio, design = design_regio, variabele = 'GZGGA402', crossing = 'AGOJB401') -> result
-
+                  variabele = 'GZGGA402',
+                  vergelijking = 'AGLFA401',
+                  vergelijking_type = "leeftijd"
+                  )
+bereken_kruistabel(data = monitor_df_regio, design = design_regio, variabele = 'GZGGA402', crossing = 'AGOJB401')
+bereken_kruistabel(data = monitor_df_regio, design = design_regio, variabele = 'GZGGA402', crossing = 'AGLFA401') %>%
+  filter(waarde == 1) -> result
 
 # table of contents voor pdf ----------------------------------------------
 #Geleend van https://gist.github.com/gadenbuie/c83e078bf8c81b035e32c3fc0cf04ee8
