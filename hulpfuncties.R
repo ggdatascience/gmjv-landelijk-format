@@ -108,7 +108,7 @@ prop_ci_berekenen <- function(data = NULL, variabele = NULL, nummer = NULL, cros
     if(is.null(crossing)){
       
       #supressWarnings i.v.m. lege datasets die toch een csv moeten hebben. Het is niet erg als er NaN's produced zijn.
-      ci <- suppressWarnings(attr(svyciprop(eval(parse(text = tekst_formule)),survey_design, method='xlogit', na.rm=TRUE),"ci"))
+      ci <- suppressWarnings(attr(svyciprop(eval(parse(text = tekst_formule)), survey_design, method='xlogit', na.rm=TRUE),"ci"))
     }else{
       
       tekst_crossing <- paste0("~",crossing)  
@@ -159,7 +159,7 @@ prop_ci_berekenen <- function(data = NULL, variabele = NULL, nummer = NULL, cros
 #Functie die een kruistabel maaakt per variabele. Kan zonder of met crossing.
 #Maakt een kruistabel
 #Deze functie wordt niet direct gebruikt in het script, maar wordt binnen de maak-grafieken functies gebruikt
-bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing = NULL,
+bereken_kruistabel <- function(data, survey_design = NULL, variabele = NULL, crossing = NULL,
                                var_jaar = NULL, min_observaties_per_vraag = default_Nvar,
                                min_observaties_per_antwoord = default_Ncel) { 
   # TODO functie werkbaar maken voor dubbele uitsplitsing?
@@ -214,7 +214,7 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
   #Formule maken voor in svytable
   formule_tekst <- paste0("~ ", substitute(data_temp), "[['", variabele,"']]")
     
-  tb <- svytable(formula = eval(parse(text = formule_tekst)), design = design) 
+  tb <- svytable(formula = eval(parse(text = formule_tekst)), design = survey_design) 
     
   #Als het aantal waarden in tb meer is dan het aantal antwoorden (obv value labels)
   #Betekent dit dat er een ongelabelde waarde is. Dat kan betekenen dat het een Missing is die niet zo is vastgelegd in spss
@@ -266,7 +266,7 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
       confidence_intervals <- t(sapply(unname(antwoorden), function(x){prop_ci_berekenen(data = data_temp, 
                                                                                            variabele = variabele,
                                                                                            nummer = x, 
-                                                                                           survey_design = design)}))
+                                                                                           survey_design = survey_design)}))
         
       #Het kan voorkomen dat een variabele alleen maar missing kent voor een bepaalde subset
       #Toch willen we  rijen hebben die alle antwoord-niveuas vastleggen.
@@ -316,7 +316,7 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
                                                                                        variabele = variabele,
                                                                                        nummer = x, 
                                                                                        crossing = crossing, 
-                                                                                       survey_design = design)})
+                                                                                       survey_design = survey_design)})
       
       #CI van verschillende antwoordmogelijkheden samenvoegen
       confidence_intervals <- do.call(rbind, confidence_intervals)
@@ -337,7 +337,7 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
           tekst_formule = paste0("~I(",variabele,"==",x,")")
           tekst_crossing = paste0("~",crossing)
             
-          tabel <- svyby(formula = eval(parse(text = tekst_formule)), by = eval(parse(text = tekst_crossing)), design, svytotal, vartype='ci', method='xlogit', na.rm=TRUE, na.rm.all = TRUE) 
+          tabel <- svyby(formula = eval(parse(text = tekst_formule)), by = eval(parse(text = tekst_crossing)), survey_design, svytotal, vartype='ci', method='xlogit', na.rm=TRUE, na.rm.all = TRUE) 
             
           #3e index van pop.count tabel = gewogen aantal repsondenten die een antwoord gaven
           cbind("antwoord" = x,"crossing_var" = unname(tabel[1]), "n_weighted" = unname(tabel[3]) )
@@ -444,8 +444,8 @@ bereken_kruistabel <- function(data, design = NULL, variabele = NULL, crossing =
 }
 
 ## Voorbeeld:
-#bereken_kruistabel(data = monitor_df_regio, design = design_regio, variabele = 'Stedelijkheid')
-#bereken_kruistabel(data = monitor_df_regio, design = design_regio, variabele = 'GZGGA402', crossing = "AGLFA401")
+#bereken_kruistabel(data = monitor_df_regio, survey_design = design_regio, variabele = 'Stedelijkheid')
+#bereken_kruistabel(data = monitor_df_regio, survey_design = design_regio, variabele = 'GZGGA402', crossing = "AGLFA401")
 
 #TODO vervangen met algemenere functie OF verwijderen en eindgebruikers instrueren
 #hun variabele goed te coderen zodat alle missing ook user missing zijn
@@ -535,7 +535,7 @@ maak_alt_text <- function(plot, doelgroep = "jongvolwassenen", type_grafiek = "s
 
 
 # Tabelfuncties -------------------------------------------------------
-maak_responstabel <- function(df, crossings, missing_label = "Onbekend",
+maak_responstabel <- function(data, crossings, missing_label = "Onbekend",
                               kleuren = default_kleuren_responstabel){
 
   #TODO Hoe om te gaan met missing waarden? Meetellen als 'onbekend' of niet weergeven?
@@ -545,17 +545,18 @@ maak_responstabel <- function(df, crossings, missing_label = "Onbekend",
   
   aantallen_per_crossing <- lapply(crossings, function(x){
     
-    if(is.null(df[[x]])){
+    if(is.null(data[[x]])){
       
       warning(glue("De variabele {x} bestaat niet in de data. Typefout?"))
       return(NULL)
       
     }
+     
     #Variabelen naar character omzetten
-    df[[x]] <- labelled_naar_character(df, x)
+    data[[x]] <- labelled_naar_character(data, x)
     
     #Aantallen uitrekenen. Missing labelen als missing_label
-    aantallen_df = df %>% 
+    aantallen_df = data %>% 
       group_by(!!sym(x)) %>% 
       summarise(n = n()) %>%
       rename(crossing = 1) %>% 
@@ -570,18 +571,18 @@ maak_responstabel <- function(df, crossings, missing_label = "Onbekend",
         )
       
       rbind(totaal_df,aantallen_df)
-    } else{
+    } else {
     #Anders gewoon aantallen teruggeven
       aantallen_df
     }
     
-  }) %>% do.call(rbind,.) #dataframes per crossing aan elkaar plakken
+    }) %>% do.call(rbind,.) #dataframes per crossing aan elkaar plakken
   
-  if(is.null(aantallen_per_crossing)){
+    if(is.null(aantallen_per_crossing)){
     
-    warning(glue("De variabelen: {str_c(crossings, collapse = ', ')} bestaan niet. Er kan geen tabel gemaakt worden"))
-    return(NULL)
-  }
+      warning(glue("De variabelen: {str_c(crossings, collapse = ', ')} bestaan niet. Er kan geen tabel gemaakt worden"))
+      return(NULL)
+    }
   
   
   #gegeven een vector met alle crossings willen we afwisselend een andere kleur geven
@@ -591,7 +592,7 @@ maak_responstabel <- function(df, crossings, missing_label = "Onbekend",
   #We weten van te voren niet hoeveel niveaus een crossing heeft dus moet dat uitgerekend worden
   levels_crossings <- lapply(crossings, function(x){
     
-    df[[x]] %>% unique() %>% length()    
+    data[[x]] %>% unique() %>% length()    
   }) %>% unlist()
   
   #twee vectoren aanmaken die gevuld zullen worden met de rij-indexen voor kleur 1 en 2 
@@ -664,6 +665,7 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud, var_crossin
   if(!labelled::is.labelled(data[[var_inhoud]])){
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
   }
+  
   if(val_labels(data[[var_inhoud]]) %>% length() > 2){
     warning(
       glue("{var_inhoud} is geen dichotome variabele. Kies een ander grafiektype of een andere var_inhoud"))
@@ -775,7 +777,7 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
      
      var_label_crossing = var_label(data[[crossing]])
      
-     df_crossing <- bereken_kruistabel(data, variabele = var_inhoud, crossing = crossing, design = design_gem) %>% 
+     df_crossing <- bereken_kruistabel(data, variabele = var_inhoud, crossing = crossing, survey_design = design_gem) %>% 
        filter(waarde == 1) %>% 
        rename(onderdeel = !!sym(crossing)) %>%  #crossinglevel naar 'onderdeel' hernoemen
        mutate(groep = factor(var_label_crossing),  #varlabel crossing als 'groep' toevoegen
@@ -863,7 +865,7 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
    return(plot)
  }
 
-maak_staafdiagram_meerdere_staven <- function(data, var_inhoud,var_crossing = NULL, 
+maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = NULL, 
                                               titel = "",
                                               kleuren = default_kleuren_grafiek,
                                               flip = FALSE, nvar = default_Nvar, ncel = default_Ncel,
@@ -891,21 +893,22 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud,var_crossing = NU
   
   #NB als-dan conditie naar context aanpassen (%in% var_crossings, %in% c(var_crossing_kleur, var_crossing_groep)
   #verder als het goed is prima te kopieren
-  if(var_crossing != jaarvar){
-    #standaard alleen laatste jaar weergeven.
-    #subset maken van dataset.
-    design_temp <<- subset(design_gem, get(jaarvar) == huidig_jaar) #TODO checken of design_gem hardcode wel slim is.
-    #subset maken v design
-    data_temp <<- data %>% filter(!!sym(jaarvar) == huidig_jaar)
+  if(!is.null(var_crossing)){
+    if(var_crossing != jaarvar){
+      #standaard alleen laatste jaar weergeven.
+      #subset maken van dataset.
+      design_temp <<- subset(design_gem, get(jaarvar) == huidig_jaar) #TODO checken of design_gem hardcode wel slim is.
+      #subset maken v design
+      data_temp <<- data %>% filter(!!sym(jaarvar) == huidig_jaar)
+    }   
   } else {
     #jaren bewaren want het is een crossing!
     data_temp <<- data
     design_temp <<- design_gem
-  }
-
+  }  
     
   #kruistabel maken
-  df_plot <- bereken_kruistabel(data_temp, variabele = var_inhoud, crossing = var_crossing, design = design_temp) %>% 
+  df_plot <- bereken_kruistabel(data_temp, variabele = var_inhoud, crossing = var_crossing, survey_design = design_temp) %>% 
     mutate(weggestreept = as.numeric(weggestreept))
 
   
@@ -1045,7 +1048,7 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
     
     var_label_crossing = var_label(data[[crossing]])
     
-    df_crossing <- bereken_kruistabel(data, variabele = var_inhoud, crossing = crossing, design = design_gem) %>% 
+    df_crossing <- bereken_kruistabel(data, variabele = var_inhoud, crossing = crossing, survey_design = design_gem) %>% 
       filter(waarde == 1) %>% 
       rename(onderdeel = !!sym(crossing)) %>%  #crossinglevel naar 'onderdeel' hernoemen
       mutate(groep = factor(var_label_crossing),  #varlabel crossing als 'groep' toevoegen
@@ -1181,18 +1184,18 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
 }
 
 #horizontaal gestapeld staafdiagram
-maak_staafdiagram_gestapeld <- function(df, var_inhoud, var_crossing = NULL, titel = "",
+maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, titel = "",
                                         kleuren = default_kleuren_grafiek, x_label = "",
                                         nvar = default_Nvar, ncel = default_Ncel,
                                         alt_text = NULL){
   
-  if(!labelled::is.labelled(df[[var_inhoud]])){
+  if(!labelled::is.labelled(data[[var_inhoud]])){
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
   }
   
   
   #kruistabel maken
-  df_plot <- bereken_kruistabel(data, variabele = var_inhoud, crossing = var_crossing, design = design_gem) %>% 
+  df_plot <- bereken_kruistabel(data, variabele = var_inhoud, crossing = var_crossing, survey_design = design_gem) %>% 
     mutate(weggestreept = as.numeric(weggestreept))
   
   #Als crossing niet is ingevuld; dummy crossing maken zodat plot met beide kan omgaan
@@ -1266,7 +1269,7 @@ maak_staafdiagram_gestapeld <- function(df, var_inhoud, var_crossing = NULL, tit
 
 
 
-bol_met_cijfer <- function(getal, kleur = "#b41257", kleur_outline = "#FFFFFF",kleur_text = "#FFFFFF"){
+bol_met_cijfer <- function(getal, kleur = default_kleuren_grafiek[3], kleur_outline = "#FFFFFF", kleur_text = "#FFFFFF"){
   
   
   # Voeg de ingevoerde informatie op de juiste plekken in de svg code met behulp van glue
@@ -1291,12 +1294,16 @@ bol_met_cijfer <- function(getal, kleur = "#b41257", kleur_outline = "#FFFFFF",k
   #TODO Donut
 
 # Tekstfuncties -----------------------------------------------------------
-maak_vergelijking <- function(data, design, variabele, vergelijking, vergelijking_type = NULL) {
+maak_vergelijking <- function(data, survey_design, variabele, variabele_label = NULL, 
+                              vergelijking, value = 1) {
   
   # Bereken gewogen cijfers
-  result <- bereken_kruistabel(data = data, design = design, variabele = variabele, crossing = vergelijking) %>%
-    filter(waarde == 1) #%>% # Filter de gegevens voor waarde 1 eruit
+  result <- bereken_kruistabel(data = data, survey_design = survey_design, variabele = variabele, crossing = vergelijking) %>%
+    filter(waarde == value) #%>% # Filter de gegevens voor value eruit. Standaard is dit 1.
     #arrange(desc(estimate)) # Sorteer op hoogte van estimate (percentage)
+  
+  # TODO als vergelijken op iets anders dan jaar, DAN alleen van een bepaald jaar selecteren.
+  # TODO specifieke tekst voor vergelijking tussen jaren nog toevoegen.
   
   # Check lengte van kruistabel
   if (nrow(result) < 2 | nrow(result) > 3) {
@@ -1304,45 +1311,98 @@ maak_vergelijking <- function(data, design, variabele, vergelijking, vergelijkin
     stop(paste("Er zijn te weinig of te veel vergelijkingen. Controleer vergelijkingsvariabele ", vergelijking, "."))
     
   }  
-  # TODO toevoegen variabele omschrijving, waarin je kan specificeren hoe je de tekst wil als je niet het label wil gebruiken
-  # TODO als vergelijken op iets anders dan jaar, DAN alleen van een bepaald jaar selecteren.
-  # TODo nog testen, wat gebeurd er met NAs? en kan ik dit robuster maken + werkend voor meer uitsplitsingen?
   
-  if (is.null(vergelijking_type)) {
-    crossing1 <- result$crossing_var[1]
-    crossing2 <- result$crossing_var[2]
-  } else if (vergelijking_type == "gender") {
-    crossing1 <- 'mannen'
-    crossing2 <- 'vrouwen'
-  }else if (vergelijking_type == "jaar") {
-    crossing1 <- '2024'
-    crossing2 <- '2022'
-  } else if (vergelijking_type == "leeftijd") {
-    crossing1 <- '16-17 jarigen'
-    crossing2 <- '18-20 jarigen'
-    crossing3 <- '21-25 jarigen'
-  } 
-  if (nrow(result) == 2 ) { # Vergelijk 2 groepen:
-    # TODO ifelse wijzigen voor case_when()
-    resultaat_vergelijking <- ifelse(result$ci_lower[1] > result$ci_upper[2], " is hoger dan ",
-                                     ifelse(result$ci_lower[2] > result$ci_upper[1], " is lager dan ",
-                                            " is gelijk aan "))
-    
 
-    return(paste0("Het percentage ", crossing1, " dat " , result$label[1], resultaat_vergelijking, "het percentage ", crossing2, "."))
+  # TODo nog testen, wat gebeurd er met NAs? en kan ik dit robuster maken + werkend voor meer uitsplitsingen?
+
+  crossings <- case_when(result[vergelijking] == "Jongen" ~ "mannen", 
+                         result[vergelijking] == "Meisje" ~ "vrouwen",
+                         result[vergelijking] == '16-17 jaar' ~ '16-17 jarigen',
+                         result[vergelijking] == '18-20 jaar' ~ '18-20 jarigen',
+                         result[vergelijking] == '21-25 jaar' ~ '21-25 jarigen',
+                         .default = tolower(labelled_naar_character(result, vergelijking)))
+
+  if (is.null(variabele_label)) {
+    label <- tolower(get_variable_labels(data[variabele]))
+  } else {
+    label <- variabele_label
+  }
+  
+  if (vergelijking == 'AGOJB401') { # Vergelijking 2 jaren
+    
+    resultaat_vergelijking <- case_when(result$ci_lower[1] > result$ci_upper[2] ~ " is afgenomen ",
+                                        result$ci_lower[2] > result$ci_upper[1] ~ " is toegenomen ",
+                                        TRUE ~ " is gelijk gebleven ")
+    
+    if (resultaat_vergelijking == " is gelijk gebleven ") {
+      return(paste0("Het percentage dat " , label, resultaat_vergelijking, 
+                    "t.o.v. ", crossings[1], "."))
+    } else {
+      return(paste0("Het percentage dat " , label, resultaat_vergelijking, 
+                  "t.o.v. ", crossings[1], " (", result$percentage[1], "%)."))
+    }
+  } else if (nrow(result) == 2 ) { # Vergelijk 2 groepen:
+
+    resultaat_vergelijking <- case_when(result$ci_lower[1] > result$ci_upper[2] ~ " is hoger dan ",
+                                        result$ci_lower[2] > result$ci_upper[1] ~ " is lager dan ",
+                                        TRUE ~ " is gelijk aan ")
+
+    return(paste0("Het percentage ", crossings[1], " dat " , label, resultaat_vergelijking, 
+                  "het percentage ", crossings[2], "."))
   
   } else if (nrow(result) == 3 ) { # Vergelijking 3 groepen:
     
-    resultaat_vergelijking1 <- ifelse(result$ci_lower[1] > result$ci_upper[2], " is hoger dan ",
-                                     ifelse(result$ci_lower[2] > result$ci_upper[1], " is lager dan ",
-                                            " is gelijk "))
-    resultaat_vergelijking2 <- ifelse(result$ci_lower[1] > result$ci_upper[3], " is hoger dan ",
-                                      ifelse(result$ci_lower[3] > result$ci_upper[1], " is lager dan ",
-                                             " is gelijk "))
+    resultaat_vergelijking1 <- case_when(result$ci_lower[1] > result$ci_upper[2] ~ " is hoger ",
+                                         result$ci_lower[2] > result$ci_upper[1] ~ " is lager ",
+                                         TRUE ~ " is gelijk ")
     
-    return(paste0("Het percentage dat " , result$label[1], resultaat_vergelijking1, "onder ", crossing2, " en", resultaat_vergelijking2, "onder ", crossing3, " t.o.v. ", crossing1, "."))
-    # TODO verander result$label naar var label
+    resultaat_vergelijking2 <- case_when(result$ci_lower[1] > result$ci_upper[3] ~ " is hoger ",
+                                         result$ci_lower[3] > result$ci_upper[1] ~ " is lager ",
+                                         TRUE ~ " is gelijk ")
+    
+    return(paste0("Het percentage dat " , label, resultaat_vergelijking1, "onder ", 
+                  crossings[2], " en", resultaat_vergelijking2, "onder ", crossings[3], 
+                  " t.o.v. ", crossings[1], "."))
+    
   }
+}
+
+maak_top <- function(data, survey_design, variabelen, toon_label = T, value = 1, top = 1) {
+
+  # TODO toevoegen selectie van juiste niveau en juiste jaar.  
+  
+  # Bereken gewogen cijfers
+  list <- lapply(variabelen, function(x){bereken_kruistabel(data = data, 
+                                                            survey_design = survey_design, 
+                                                            variabele = x)})   
+  
+  # Selecteer relevante rijen en voeg dataframes samen
+  list <- purrr::map(list, function(x) { x %>% select(varcode, waarde, percentage) })
+  list <- do.call(rbind, list)
+  
+  # Filter en sorteer
+  list <- list %>%
+    filter(waarde == value) %>% # Filter de gegevens voor value eruit. Standaard is dit 1.
+    arrange(desc(percentage)) # Sorteer op hoogte van estimate (percentage)
+
+  # Print top
+  if (toon_label) {
+    return(paste0(tolower(get_variable_labels(data[list$varcode[top]])), " (", list$percentage[top], "%)"))    
+  } else {
+    return(paste0(list$percentage[top], "%")) 
+  }
+}
+
+maak_percentage <- function(data, survey_design, variabele, value = 1) {
+  
+  # Bereken gewogen cijfers
+  result <- bereken_kruistabel(data = data, survey_design = survey_design, variabele = variabele) %>%
+    filter(waarde == value) #%>% # Filter de gegevens voor value eruit. Standaard is dit 1.
+  
+  # TODO toevoegen selectie van juiste niveau en juiste jaar. 
+    
+  return(paste0(result$percentage, "%"))
+  
 }
 
 
