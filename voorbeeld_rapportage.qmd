@@ -363,7 +363,7 @@ Sommige jongvolwassenen voelen druk om aan verwachtingen te voldoen. Ze hebben v
 <br>
 
 Meer jongvolwassenen ervaren prestatiedruk vanuit zichzelf dan vanuit anderen. Het percentage dat prestatiedruk ervaart vanuit zichzelf is hoger/lager onder de xx-xx-jarigen dan onder de 16-17-jarigen.
-:::
+::: 
 
 ::: column
 ```{r, echo = F, fig.alt= ggplot2::get_alt_text(plot), warning = F}
