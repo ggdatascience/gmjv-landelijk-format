@@ -46,6 +46,11 @@ default_kleuren_responstabel <- c("header" = "#012C17",
 default_Nvar = 100 # Minimum aantal invullers per vraag.
 default_Ncel = 10 # Minimum aantal invullers oper antwoordoptie.
 
+# Standaard regio
+# Pas onderstaande naam en code aan naar de naam en code van je eigen regio.
+regionaam <- 'GGD Limburg-Noord'
+regiocode <- 23
+
 #SPSS data inlezen
 # Regionaal bestand
 file_path_regio = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
@@ -54,7 +59,7 @@ file_path_regio = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
 #file_path_land = "Totaalbestand_CGMJV2022_2024_GGD_versie 1 (N = xxx).sav"
 
 #Lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
-monitor_df = haven::read_spss(file_path_regio,user_na =T) %>%
+monitor_df = haven::read_spss(file_path_regio, user_na =T) %>%
   labelled::user_na_to_na()
 
 #TODO verwijderen bij echte data. tijdelijk varlabel voor jaarvariabele
@@ -96,6 +101,49 @@ design_gem <- survey_design_maken(
                           gewichten = 'Standaardisatiefactor', 
                           data = monitor_df)
 
+# ALTERNATIEVE METHODE VAN INLADEN: regionale data invoegen in landelijk
+# Landelijk bestand inladen
+# df <- haven::read_spss(file.choose(), user_na =T) %>%
+#   labelled::user_na_to_na()
+# 
+# # Regionaal bestand inladen
+# df_regio <- haven::read_spss(file.choose(), user_na =T) %>%
+#   labelled::user_na_to_na()
+# 
+# # Check of aantallen gelijk zijn.
+# # NB. Alleen deelnemers met landelijke weegfactor zitten in landelijk bestand.
+# if (sum(df_regio$Standaardisatiefactor != 0) != nrow(df %>% filter(GGDregio == regiocode))) {
+#   print("Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data.")
+# }
+# 
+# # Filter regio uit landelijk databestand
+# df <- df %>%
+#   filter(GGDregio != regiocode)
+# 
+# # Voeg regiobestand toe aan landelijk bestand
+# df <- df %>%
+#   full_join(df_regio)
+# 
+# # Opschonen
+# rm(df_regio)
+# 
+# #Er is niet goed aangegeven wat missing is in SPSS.
+# #tijdelijke functie om 9 Onbekend te verwijderen & naar NA te zetten
+# 
+# for(var in names(df)){
+#   
+#   df <- df %>% verwijder_9_onbekend(var)
+# 
+# }
+# 
+# # Regionale data filteren
+# df %>%
+#   filter(GGDregio == regiocode)
+# 
+# # Gemeentelijke data filteren
+# df %>%
+#   filter(Gemeentecode == params$gemeentecode)
+
 ```
 
 \
@@ -123,7 +171,93 @@ if(params$is_pdf){
 :::
 :::
 
-# Gezinssituatie, woon- en werksituatie en financiën
+# Over de Gezondheidsmonitor Jongvolwassenen
+
+::: {layout="[[30,30,30],[30,30,30]]"}
+::: column
+In totaal hebben \[BEREKENINGING INVOEGEN\] jongvolwassenen uit Nederland de vragenlijst ingevuld. Van deze respondenten komen `r nrow(monitor_df_regio)` jongvolwassenen uit `r labelled_naar_character(monitor_df_regio, "GGDregio") %>% unique()`.
+:::
+
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+:::
+
+# Leeswijzer en achtergrond
+
+::: {layout="[[30,30,30],[30,30,30]]"}
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+:::
+
+# Achtergrondkenmerken
+
+::: {layout="[[30,30,30],[30,30,30]]"}
+::: column
+:::
+
+::: column
+:::
+
+::: column
+```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+plot = maak_staafdiagram_gestapeld(
+  data = monitor_df, 
+  var_inhoud = 'AGLFA401', 
+  titel = "Leeftijd"
+)
+
+plot
+```
+:::
+
+::: column
+:::
+
+::: column
+:::
+
+::: column
+```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+plot = monitor_df %>% 
+  maak_staafdiagram_meerdere_staven(
+    var_inhoud = "AGOWS402",
+    titel = "Opleidingsniveau"
+  )
+
+plot
+
+```
+:::
+:::
+
+# Woon- en werksituatie en financiën
 
 ::: {layout="[[30,30,30],[30,30,30]]"}
 ::: column
@@ -147,7 +281,7 @@ Onder de niet-werkende en niet-studerende respondenten is XX% werkloos, XX% arbe
 :::
 
 ::: column
-```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot)}
+```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
 plot = monitor_df %>% 
   maak_staafdiagram_meerdere_staven(
     var_inhoud = "LVTEA403",
@@ -161,7 +295,7 @@ plot
 :::
 
 ::: column
-```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot)}
+```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
 
 plot = monitor_df %>% maak_staafdiagram_vergelijking(
   var_inhoud = "LVEES403",
@@ -176,6 +310,33 @@ plot
 
 ::: column
 Financieel gezien heeft XX% van de jongvolwassenen moeite rondkomen. XX% heeft het idee weinig controle over geldzaken te hebben. Van de jongvolwassenen heeft XX% een schuld (studieschuld en hypotheek niet meegerekend). Deze financiële moeilijkheden komen vaker voor bij oudere jongvolwassenen. Het lijkt erop dat financiële problemen toenemen naarmate jongvolwassenen ouder worden. De financiële situatie is beter/-- dan twee jaar geleden; toen had xx% moeite met rondkomen.
+
+[Het Nibud](https://www.nibud.nl/) (Nationaal Instituut voor Budgetvoorlichting) geeft advies over onder andere rondkomen, sparen en geldproblemen.
+:::
+:::
+
+# Gezondheid en geluk
+
+::: {layout="[[30,30,30],[30,30,30]]"}
+::: column
+`r maak_vergelijking(data = monitor_df, survey_design = design_gem, variabele = 'GZGGA402', variabele_label = "hun eigen gezondheid als (zeer) goed ervaart", vergelijking = 'AGGSA401') `
+`r maak_vergelijking(data = monitor_df, survey_design = design_gem, variabele = 'LVPKS403', variabele_label = "psychische klachten heeft", vergelijking = 'AGOJB401')`
+:::
+
+::: column
+`r bol_met_cijfer(maak_percentage(data = monitor_df, survey_design = design_gem, variabele = 'LVPKS403'))`
+:::
+
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+
+::: column
 :::
 :::
 
@@ -202,10 +363,10 @@ Sommige jongvolwassenen voelen druk om aan verwachtingen te voldoen. Ze hebben v
 <br>
 
 Meer jongvolwassenen ervaren prestatiedruk vanuit zichzelf dan vanuit anderen. Het percentage dat prestatiedruk ervaart vanuit zichzelf is hoger/lager onder de xx-xx-jarigen dan onder de 16-17-jarigen.
-:::
+::: 
 
 ::: column
-```{r, echo = F, fig.alt= ggplot2::get_alt_text(plot)}
+```{r, echo = F, fig.alt= ggplot2::get_alt_text(plot), warning = F}
 
 # Staafgrafiek met trend (zeer) vaak gestresst, regio vergeleken met landelijk
 
@@ -224,15 +385,15 @@ plot
 ::: column
 Top 5 bronnen van stress:
 
--   bron 1
--   bron 2
--   bron 3
--   bron 4
--   bron 5
+-   `r maak_top(data = monitor_df, survey_design = design_gem, variabelen = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 1)`
+-   `r maak_top(data = monitor_df, survey_design = design_gem, variabelen = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 2)`
+-   `r maak_top(data = monitor_df, survey_design = design_gem, variabelen = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 3)`
+-   `r maak_top(data = monitor_df, survey_design = design_gem, variabelen = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 4)`
+-   `r maak_top(data = monitor_df, survey_design = design_gem, variabelen = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 5)`
 :::
 
 ::: column
-```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot)}
+```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
 
 # Staafgrafiek prestatiedruk vanuit zichzelf, uitgesplitst naar gender
 
@@ -246,5 +407,159 @@ plot = monitor_df %>% maak_staafdiagram_vergelijking(
 plot
 
 ```
+:::
+:::
+
+# Beschermende factoren en vertrouwen in de toekomst
+
+::: {layout="[[30,30,30],[30,30,30]]"}
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+:::
+
+# Bewegen en sporten
+
+::: {layout="[[30,30,30],[30,30,30]]"}
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+:::
+
+# Middelengebruik
+
+::: {layout="[[30,30,30],[30,30,30]]"}
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+:::
+
+# Jongvolwassenen en de coronaperiode
+
+::: {layout="[[30,30,30],[30,30,30]]"}
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+:::
+
+# Digitale leefomgeving
+
+::: {layout="[[30,30,30],[30,30,30]]"}
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+:::
+
+# Seksualiteit
+
+::: {layout="[[30,30,30],[30,30,30]]"}
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+:::
+
+# TITEL
+
+::: {layout="[[30,30,30],[30,30,30]]"}
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+
+::: column
+:::
+
+::: column
 :::
 :::
