@@ -116,6 +116,8 @@ design_gem <- survey_design_maken(
 #   print("Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data.")
 # }
 # 
+#
+# TODO zorgen dat hier ook nog op jaar gefilterd wordt!
 # # Filter regio uit landelijk databestand
 # df <- df %>%
 #   filter(GGDregio != regiocode)
@@ -175,7 +177,7 @@ if(params$is_pdf){
 
 ::: {layout="[[30,30,30],[30,30,30]]"}
 ::: column
-In totaal hebben \[BEREKENINGING INVOEGEN\] jongvolwassenen uit Nederland de vragenlijst ingevuld. Van deze respondenten komen `r nrow(monitor_df_regio)` jongvolwassenen uit `r labelled_naar_character(monitor_df_regio, "GGDregio") %>% unique()`.
+In totaal hebben `r nrow(monitor_df)` jongvolwassenen uit Nederland de vragenlijst ingevuld. Van deze respondenten komen `r nrow(monitor_df_regio)` jongvolwassenen uit `r labelled_naar_character(monitor_df_regio, "GGDregio") %>% unique()`.
 :::
 
 ::: column
@@ -220,9 +222,33 @@ In totaal hebben \[BEREKENINGING INVOEGEN\] jongvolwassenen uit Nederland de vra
 
 ::: {layout="[[30,30,30],[30,30,30]]"}
 ::: column
+Van de respondenten is `r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'AGGSA401', value = 2)` vrouw en `r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'AGGSA401', value = 1)` man. Daarnaast geeft `r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'AGGSA401', value = 3)` aan zich anders dan man of vrouw te voelen. 
+
 :::
 
 ::: column
+Van de respondenten is `r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'AGLFA401', value = 1)` 16 of 17 jaar, `r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'AGLFA401', value = 2)` tussen de 18 en 20 jaar en `r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'AGLFA401', value = 3)` tussen de 21 en 25 jaar.
+
+<br>
+
+`r #monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'AGETS411', value = 1)` heeft een Nederlandse herkomst.
+:::
+
+::: column
+```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+plot = monitor_df %>% 
+  maak_staafdiagram_meerdere_staven(
+    var_inhoud = "AGOWS402",
+    titel = "Opleidingsniveau"
+  )
+
+plot
+
+```
+:::
+
+::: column
+DONUTS INVOEGEN TODO
 :::
 
 ::: column
@@ -239,22 +265,6 @@ plot
 
 ::: column
 :::
-
-::: column
-:::
-
-::: column
-```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
-plot = monitor_df %>% 
-  maak_staafdiagram_meerdere_staven(
-    var_inhoud = "AGOWS402",
-    titel = "Opleidingsniveau"
-  )
-
-plot
-
-```
-:::
 :::
 
 # Woon- en werksituatie en financiën
@@ -262,34 +272,61 @@ plot
 ::: {layout="[[30,30,30],[30,30,30]]"}
 ::: column
 De woon-, werk- en financiële situatie van jongvolwassenen kan veel invloed hebben op het welzijn en de mentale en fysieke gezondheid van jongvolwassenen. In een tijd waarin er sprake is van een woning- en financiële crisis is het van belang om inzichtelijk te hebben in welke situaties de jongvolwassenen zitten.
+
+<br> 
+
+**Woonsituatie**
+
+De meeste respondenten wonen `r #monitor_df %>% maak_top(survey_design = design_gem,             variabelen = 'AGHHA403', value = 1:8, top = 1)`. `r #monitor_df %>% maak_vergelijking(survey_design = design_gem, variabele = 'AGHHA403', variabele_label = 'in deze woonsituatie woont', vergelijking = 'AGOJB401')` TODO NOG CONDITIONEEL MAKEN OP VORIG ANWTOORD OID.
 :::
 
 ::: column
-**Gezins- en woonsituatie**
+```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+# plot = monitor_df %>% 
+#   maak_staafdiagram_vergelijking(
+#     var_inhoud = "AGOWA401",
+#     var_crossings = "AGLFA401",
+#      titel = "Volgt een opleiding")
+# plot
+# 
+# plot2 = monitor_df %>% 
+#   maak_staafdiagram_vergelijking(
+#     var_inhoud = "AGWSA401",
+#     var_crossings = "AGLFA401",
+#      titel = "Heeft betaald werk")
+# plot2
 
-De meeste respondenten wonen xx (xx%). Dit geldt met name voor jongvolwassenen van xxx leeftijd of gender. Dit is gelijk gebleven / veranderd t.o.v. 2022 . xx% wonen alleen, xx% wonen samen met anderen, xx% wonen samen met een partner, kind(eren), of partner en kind(eren), xx% hebben geen vaste woon-/verblijfplek.
+# ALTERNATIEF in één grafiek:
+# plot = monitor_df %>% 
+#   maak_staafdiagram_meerdere_staven(
+#     var_inhoud = c("AGOWA401", "AGWSA401"),
+#     var_crossing = "AGLFA401",
+#     titel = "Volgt een opleiding en heeft betaald werk"
+#   )
+# 
+# plot
+
+```
 :::
 
 ::: column
 **Werk- en financiële situatie**
 
-XX% van de jongvolwassenen volgt een opleiding en XX% heeft betaald werk. De meeste werkende jongvolwassenen werken XX uur per week (XX%). De oudere groep jongvolwassenen werkt meer uren. Dit is toegenomen/afgenomen/gelijk gebleven in vergelijking met de resultaten uit 2022.
+De meeste werkende jongvolwassenen in uw gemeente werken `r #monitor_df %>% maak_top(survey_design = design_gem, variabelen = 'AGWSA413', value = 1:5, top = 1)`. `r #monitor_df %>% maak_vergelijking(survey_design = design_gem, variabele = 'AGWSA413', variabele_label = 'zoveel uren werkt', vergelijking = 'AGOJB401')` TODO NOG CONDITIONEEL MAKEN OP VORIG ANWTOORD OID. TODO zIN ERNA INVOEGEN
 
 <br>
-
-Onder de niet-werkende en niet-studerende respondenten is XX% werkloos, XX% arbeidsongeschikt of langdurend ziek, XX% heeft een bijstandsuitkering en op XX% is niks van bovenstaande van toepassing. Dat is gelijk aan/anders dan respondenten uit 2022.
+`r #monitor_df %>% maak_vergelijking(survey_design = design_gem, variabele = '', vergelijking = 'AGOJB401')` # TODO INDICATOR NOG TOEVOEGEN WANT DEZE BESTAAT NIET.
+`r #monitor_df %>% maak_vergelijking(survey_design = design_gem, variabele = 'AGWSA412', vergelijking = 'AGOJB401')`
 :::
 
 ::: column
 ```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
-plot = monitor_df %>% 
-  maak_staafdiagram_meerdere_staven(
-    var_inhoud = "LVTEA403",
-    titel = "Test Financiële problemen",
-    flip = T
-  )
-
-plot
+# plot = monitor_df %>% 
+#   maak_staafdiagram_meerdere_staven(
+#     var_inhoud = "AGHHA403",
+#     titel = "Woonsituatie")
+# 
+# plot
 
 ```
 :::
@@ -297,20 +334,27 @@ plot
 ::: column
 ```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
 
-plot = monitor_df %>% maak_staafdiagram_vergelijking(
-  var_inhoud = "LVEES403",
-  var_crossings = "AGLFA401",
-  titel = "Woont bij ouder(s)/verzorger(s)"
-)
+# plot = monitor_df %>% 
+#   maak_staafdiagram_meerdere_staven(
+#     var_inhoud = c("AGWSA410", "AGWSA411", "AGWSA412", "AGWSA406"),
+#     titel = "Werksituatie",
+#     flip = T
+#   )
+# 
+# plot
 
-plot
+# plot = monitor_df %>% 
+#   maak_staafdiagram_meerdere_staven(
+#     var_inhoud = c("FIIKA401", "FIIKA402", "FIIKA403"),
+#     titel = "Financiële situatie"
+#   )
+# 
+# plot
 
 ```
 :::
 
 ::: column
-Financieel gezien heeft XX% van de jongvolwassenen moeite rondkomen. XX% heeft het idee weinig controle over geldzaken te hebben. Van de jongvolwassenen heeft XX% een schuld (studieschuld en hypotheek niet meegerekend). Deze financiële moeilijkheden komen vaker voor bij oudere jongvolwassenen. Het lijkt erop dat financiële problemen toenemen naarmate jongvolwassenen ouder worden. De financiële situatie is beter/-- dan twee jaar geleden; toen had xx% moeite met rondkomen.
-
 [Het Nibud](https://www.nibud.nl/) (Nationaal Instituut voor Budgetvoorlichting) geeft advies over onder andere rondkomen, sparen en geldproblemen.
 :::
 :::
@@ -319,24 +363,58 @@ Financieel gezien heeft XX% van de jongvolwassenen moeite rondkomen. XX% heeft h
 
 ::: {layout="[[30,30,30],[30,30,30]]"}
 ::: column
-`r maak_vergelijking(data = monitor_df, survey_design = design_gem, variabele = 'GZGGA402', variabele_label = "hun eigen gezondheid als (zeer) goed ervaart", vergelijking = 'AGGSA401') `
-`r maak_vergelijking(data = monitor_df, survey_design = design_gem, variabele = 'LVPKS403', variabele_label = "psychische klachten heeft", vergelijking = 'AGOJB401')`
+
+**Ervaren Gezondheid**
+
+Uit de resultaten blijkt dat `r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = "GZGGA402")` van de jongvolwassen in uw gemeente de eigen gezondheid als (zeer) goed ervaart. 
+`r #monitor_df %>% maak_vergelijking(survey_design = design_gem, variabele = 'GZGGA402', variabele_label = "hun eigen gezondheid als (zeer) goed ervaart", vergelijking = 'AGOJB401')` 
 :::
 
 ::: column
-`r bol_met_cijfer(maak_percentage(data = monitor_df, survey_design = design_gem, variabele = 'LVPKS403'))`
+**Geluk**
+
+Een andere belangrijke indicator voor het welzijn van jongvolwassenen is hoe gelukkig zij 
+zich voelen. `r #monitor_df %>% maak_percentage(survey_design = design_gem, variabele = "LVPKA407")` van de jongvolwassenen in uw gemeente voelde zich in de afgelopen vier weken vaak tot voortdurend gelukkig.  `r #monitor_df %>% maak_vergelijking(survey_design = design_gem, variabele = 'LVPKA407', variabele_label = "hun eigen gezondheid als (zeer) goed ervaart", vergelijking = 'AGOJB401')` 
 :::
 
 ::: column
+```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+
+# plot = monitor_df %>%
+#   maak_staafdiagram_meerdere_staven(
+#     var_inhoud = c("GZGGA402", "LVPKA407"),
+#     var_crossing = "AGGSA401",
+#     titel = "Ervaren gezondheid en geluk"
+#   )
+# 
+# plot
+
+```
 :::
 
 ::: column
+**Slaap**
+
+`r #monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'GZSLA401') %>% bol_met_cijfer()`
+`r #monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'GZSLA402') %>% bol_met_cijfer()`
 :::
 
 ::: column
+```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+
+# plot = monitor_df %>% 
+#   maak_staafdiagram_meerdere_staven(
+#     var_inhoud = c("LVTEA402", "LVTEA404", "LVTEA406"),
+#     titel = "Tevredenheid met jezelf, je lichaam en je leven"
+#   )
+# 
+# plot
+
+```
 :::
 
 ::: column
+`r #monitor_df %>% maak_vergelijking(survey_design = design_gem, variabele = 'LVTEA402', variabele_label = "(zeer) tevreden is met zichzelf", vergelijking = 'AGOJB401')` `r #monitor_df %>% maak_vergelijking(survey_design = design_gem, variabele = 'LVTEA402', variabele_label = "(zeer) tevreden is met zichzelf", vergelijking = 'AGGSA402')` 
 :::
 :::
 
@@ -363,7 +441,7 @@ Sommige jongvolwassenen voelen druk om aan verwachtingen te voldoen. Ze hebben v
 <br>
 
 Meer jongvolwassenen ervaren prestatiedruk vanuit zichzelf dan vanuit anderen. Het percentage dat prestatiedruk ervaart vanuit zichzelf is hoger/lager onder de xx-xx-jarigen dan onder de 16-17-jarigen.
-::: 
+:::
 
 ::: column
 ```{r, echo = F, fig.alt= ggplot2::get_alt_text(plot), warning = F}
@@ -546,6 +624,7 @@ plot
 
 ::: {layout="[[30,30,30],[30,30,30]]"}
 ::: column
+`r bol_met_cijfer(maak_percentage(data = monitor_df, survey_design = design_gem, variabele = 'LVPKS403'))`
 :::
 
 ::: column
