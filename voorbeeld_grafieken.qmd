@@ -92,7 +92,7 @@ Met pipe-operator
 monitor_df %>% maak_responstabel(crossings = "gender_2cat", ...)
 ```
 
-Alle functies in dit document hebben als eerste argument 'df', waar een dataframe wordt verwacht. Dit argument zal niet expliciet genoemd worden in de uitleg, omdat het altijd nodig is.
+Alle functies in dit document hebben als eerste argument 'data', waar een dataframe wordt verwacht. Dit argument zal niet expliciet genoemd worden in de uitleg, omdat het altijd nodig is.
 :::
 
 # Responstabel
@@ -367,4 +367,132 @@ plot = monitor_df %>%
   )
 
 plot
+```
+
+# Adaptieve tekst
+
+Hieronder volgen een aantal functies die gebruikt kunnen worden in een tekst.
+
+## Maak percentage
+
+De functie **maak_percentage()** berekent een percentage van een indicator. De functie geeft als output het percentage (getal) met een %-teken als character, bijvoorbeeld 88%.
+
+## Nodige argumenten:
+
+-   **data:**\
+    Een dataframe met alle data.
+-   **survey_design:**\
+    Een survey_design, berekent met svydesign. Dit is noodzakelijk om percentages en confidence intervallen te kunnen berekenen.
+-   **variabele:**\
+    Een character vector met de naam van de indicator waarvan je het percentage wil berekenen.
+
+## Optionele argumenten:
+
+-   **value:\
+    **Een getal dat aangeeft welk value van de de variabele vergeleken wordt. Default is 1.
+
+### Standaard percentage
+
+```{r, warning = F}
+# Standaard percentage:
+monitor_df %>%
+  maak_percentage(survey_design = design_gem, variabele = 'GZGGA402')
+```
+
+### Bereken percentage en toon in bol grafiek
+
+```{r, warning = F}
+# Percentage in bol grafiek
+monitor_df %>%
+  maak_percentage(survey_design = design_gem, variabele = 'LVPKS403') %>% # bereken percentage
+  bol_met_cijfer() # toon in bol grafiek
+```
+
+## Maak tekstuele vergelijking
+
+De functie **maak_vergelijking()** maakt een vergelijking tussen de categorieën van een uitsplitsing voor een bepaalde indicator. Bijvoorbeeld een vergelijking tussen het percentage mannen en vrouwen dat zich gelukkig voelt. Hiervoor berekent de functie het percentage en de confidence intervallen van een indicator en bepaalt vervolgens of er overlap zit tussen deze confidence intervallen. De functie geeft als output een zin waarin aangegeven of de uitsplitsingen al dan niet vergelijkbaar zijn.
+
+## Nodige argumenten:
+
+-   **data:**\
+    Een dataframe met alle data.
+-   **survey_design:**\
+    Een survey_design, berekent met svydesign. Dit is noodzakelijk om percentages en confidence intervallen te kunnen berekenen.
+-   **variabele:**\
+    Een character vector met de naam van de indicator waarvan je de percentages wil vergelijken.
+-   **vergelijking:**\
+    Een character vector met de naam van de indicator waarover je wil uitsplitsen. De indicator moet minimaal 2 categorieën en maximaal 3 categorieën bevatten.
+
+## Optionele argumenten:
+
+-   **variabele_label:**\
+    Een character variabele met een alternatief label voor de variabele. Default is NULL (automatisch label o.b.v. label van variabele in data).
+
+-   **value:\
+    **Een getal dat aangeeft welk value van de de variabele vergeleken wordt. Default is 1.
+
+### Standaard vergelijking tussen mannen en vrouwen
+
+```{r, warning = F}
+#Standaard vergelijking tussen mannen en vrouwen:
+monitor_df %>% maak_vergelijking(survey_design = design_gem, 
+                                 variabele = 'GZGGA402', 
+                                 variabele_label = "hun eigen gezondheid als (zeer) goed ervaart",
+                                 vergelijking = 'AGGSA401')
+
+# Bij een vergelijking tussen gender of tussen leeftijdscategorieën worden de labels aangepast. Bij gebruik van andere indicatoren worden de labels uit de data gebruikt.
+```
+
+### Vergelijking tussen 3 groepen
+
+```{r, warning = F}
+# Vergelijking tussen migratieachtergrond in 3 categorieën:
+monitor_df %>% maak_vergelijking(survey_design = design_gem, 
+                                 variabele = 'GZGGA402', 
+                                 variabele_label = "hun eigen gezondheid als (zeer) goed ervaart",
+                                 vergelijking = 'AGETS414')
+
+# Bij gebruik van andere indicatoren dan gender en leeftijdscategorieën worden de labels uit de data gebruikt.
+```
+
+## Maak top
+
+De functie **maak_top()** sorteert indicatoren van hoogst naar laagst percentage. De functie geeft als output een zin met het label van de indicator en het bijbehorende percentage.
+
+## Nodige argumenten:
+
+-   **data:**\
+    Een dataframe met alle data.
+-   **survey_design:**\
+    Een survey_design, berekent met svydesign. Dit is noodzakelijk om percentages en confidence intervallen te kunnen berekenen.
+-   **variabelen:**\
+    Een character vector met de namen van de indicatoren waarvan je de percentages van hoog naar laag wil sorteren.
+-   **top:**\
+    Een getal dat aangeeft welke percentages van de top je als output wil. Dit kan een getal zijn (bv. 3, dan is de output het op 2-na-hoogste percentage) of een reeks van getallen (bv. 1:5, dan is de output de top 5 van hoogste percentages). Default is 1.
+
+## Optionele argumenten:
+
+-   **toon_label:**\
+    Boolean (TRUE of FALSE) die aangeeft of het label van het percentage bij de output gegeven moet worden. TRUE geeft aan dat het label bij de output komt. Default is TRUE.
+
+-   **value:\
+    **Een getal dat aangeeft welk value van de de variabele vergeleken wordt. Default is 1.
+
+### Bereken hoogste percentage
+
+```{r, warning = F}
+# Top 1 zonder label
+monitor_df %>% maak_top(survey_design = design_gem, 
+                        variabelen = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"),
+                        toon_label = FALSE, # Wijzig FALSE naar TRUE om label te tonen.
+                        top = 1)
+```
+
+### Bereken top 3
+
+```{r, warning = F}
+# Top 3
+monitor_df %>% maak_top(survey_design = design_gem, 
+                        variabelen = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"),
+                        top = 1:3)
 ```
