@@ -1403,7 +1403,6 @@ maak_percentage <- function(data, survey_design, variabele, value = 1) {
   
 }
 
-
 # table of contents voor pdf ----------------------------------------------
 #Geleend van https://gist.github.com/gadenbuie/c83e078bf8c81b035e32c3fc0cf04ee8
 #Pieter: kleine aanpassingen in gsub om met komma's om te gaan.
