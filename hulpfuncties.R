@@ -10,7 +10,6 @@
 # TODO Pieter: Is het wel nodig om ziets te schrijven? moderne RStudio doet dat vanzelf voor je.
 # TODO code opschonen; dataverwerking voor grafiek in eigen functies stoppen om complexiteit / lengte van functies te verkleinen.
 
-
 # Hieronder worden de benodige packages geladen
 library(gt)
 library(dplyr)
@@ -20,7 +19,7 @@ library(stringr) # Voor str_replace
 library(labelled) # Package om te werken met datalabels, o.a. voor to_character()
 library(survey) # Package om te werken met gewogen gemiddelds incl. betrouwbaarheidsintervallen
 library(glue) #om strings aangenaam aan elkaar te plakken
-
+library(plotly)
 # utility ----------------------------------------------------------------
 
 ##### Survey functies gebaseerd op oud tabellenboekscript ####
@@ -1170,8 +1169,6 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
   #Alt text maken o.b.v. data als geen eigen tekst is ingegeven
   if(is.null(alt_text)){
     
-    alt_text = maak_alt_text(plot)
-    
     alt_text <- maak_alt_text(plot,
                               label_inhoud = var_label(data[[var_inhoud]]),
                               label_crossings = sapply(var_crossings, function(var) var_label(data[[var]]))
@@ -1268,6 +1265,98 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
 }
 
 
+# :(
+maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL,
+                               kleuren = default_kleuren_grafiek, x_label = "",
+                               nvar = default_Nvar, ncel = default_Ncel,
+                               alt_text = NULL) {
+  
+  if(!labelled::is.labelled(data[[var_inhoud]])){
+    warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
+  }
+  
+  #titel ophalen uit var_label als niet opgegeven
+  if(is.null(titel)){
+    
+    titel <- var_label(data[[var_inhoud]])
+  }
+  
+  #kruistabel maken
+  df_plot <- bereken_kruistabel(data, variabele = var_inhoud, survey_design = design_gem) %>% 
+    mutate(weggestreept = as.numeric(weggestreept))
+  
+  #kleuren labelen o.b.v. levels var_inhoud
+  namen_kleuren <- levels(df_plot[[var_inhoud]])
+  
+  kleuren <- kleuren[1:length(namen_kleuren)]
+  
+  #plotly
+  fig <- plot_ly(df_plot,
+                 labels = ~get(var_inhoud),
+                 textinfo = "percent",
+                 values = ~percentage, 
+                 type = "pie",
+                 hoverinfo = "text",
+                 text = "",
+                 marker = list(colors = kleuren,
+                               line = list(color = "#FFFFFF", width = 1)
+                               ),
+                 insidetextfont = list(
+                   color = "#FFFFFF",
+                   size = 30
+                 ),
+                 outsidetextfont = list(
+                   color = "#000000",
+                   size = 30
+                 )
+                 
+                 ) %>% 
+    layout(title = list(text = titel,
+                        font = list(size = 30)),
+           margin = list(t = 100),
+           
+           legend = list(orientation = "h",    # Horizontal legend layout
+                         x = 0.5,              # Center the legend horizontally
+                         y = -0.2,             # Position the legend below the plot
+                         xanchor = "center",   # Anchor the legend horizontally
+                         yanchor = "top",
+                         font = list(size = 20))     # Anchor the legend vertically
+           ) %>% 
+    config(staticPlot = T)
+  fig
+
+  
+  
+  
+  # Hacky manier met ggplot. Werkt erg irritant. Gaat slecht om met kleine slices. 
+  # Onmogelijk om labels consistent op logische plek te plaatsen
+  
+  # #reken y-posities txt & proporties secties uit
+  # df_plot <- df_plot %>%
+  #   mutate(
+  #     cumulative_percentage = cumsum(percentage) - percentage / 2,
+  #     angle = 2 * pi * cumulative_percentage / sum(percentage),
+  #     # Adjust hjust and vjust with an offset for small slices
+  #     hjust = ifelse(sin(angle) > 0, -0.5, 1.5) -.5,
+  #     vjust = ifelse(cos(angle) > 0, -0.5, 1.5) -.5
+  #   )
+  # 
+  # 
+  # # Create pie chart with labels positioned just outside the pie slices
+  # ggplot(df_plot, aes(x="", y=percentage, fill=!!sym(var_inhoud))) +
+  #   geom_bar(stat="identity", width=1) +
+  #   coord_polar("y", start=0) +
+  #   theme_void() + 
+  #   theme(legend.position="none") +
+  #   
+  #   geom_text(aes(
+  #     y = cumulative_percentage,
+  #     label = paste0(percentage, "%"),
+  #     hjust = hjust,
+  #     vjust = vjust
+  #   ), color = "white", size=10) +
+  #   scale_fill_manual(values = kleuren)
+  }
 
 bol_met_cijfer <- function(getal, kleur = default_kleuren_grafiek[3], kleur_outline = "#FFFFFF", kleur_text = "#FFFFFF"){
   
@@ -1455,3 +1544,4 @@ render_toc <- function(
   x <- x[x != ""]
   knitr::asis_output(paste(x, collapse = "\n"))
 }
+

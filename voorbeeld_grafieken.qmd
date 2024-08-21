@@ -51,22 +51,103 @@ default_kleuren_responstabel <- c("header" = "#012C17",
 default_Nvar = 100 # Minimum aantal invullers per vraag.
 default_Ncel = 10 # Minimum aantal invullers oper antwoordoptie.
 
-#SPSS data inlezen
-#bestandsnaam
-file_path = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
+# Standaard regio
+# Pas onderstaande naam en code aan naar de naam en code van je eigen regio.
+regionaam <- 'GGD Limburg-Noord'
+regiocode <- 23
 
-#lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
-monitor_df = haven::read_spss(file_path,user_na =T) %>%
+#SPSS data inlezen
+# Regionaal bestand
+file_path_regio = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
+
+# Landelijk bestand
+#file_path_land = "Totaalbestand_CGMJV2022_2024_GGD_versie 1 (N = xxx).sav"
+
+#Lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
+monitor_df = haven::read_spss(file_path_regio, user_na =T) %>%
   labelled::user_na_to_na()
 
-#Er is bij deze dataset onvolledig aangegeven wat user missing is in SPSS.
-#Tijdelijke functie om '9 Onbekend'  te verwijderen & naar NA om te zetten
+#TODO verwijderen bij echte data. tijdelijk varlabel voor jaarvariabele
+var_label(monitor_df$AGOJB401) <- "Jaar"
+#monitor_df_land = haven::read_spss(file_path_land,user_na =T) %>%
+#  labelled::user_na_to_na()
+
+#Maak survey designs
+# Regionaal 2022 en 2024
+design_regio <- survey_design_maken(
+                          strata = 'Stratum', 
+                          gewichten = 'Standaardisatiefactor', 
+                          data = monitor_df)
+
+# Landelijk 2022 en 2024
+#design_land <- survey_design_maken(
+#                          strata = 'Stratum', 
+#                          gewichten = 'Standaardisatiefactor', 
+#                          data = monitor_df_land)
+
+#Er is niet goed aangegeven wat missing is in SPSS.
+#tijdelijke functie om 9 Onbekend te verwijderen & naar NA te zetten
 
 for(var in names(monitor_df)){
   
   monitor_df <- monitor_df %>% verwijder_9_onbekend(var)
 
 }
+
+#TODO Tijdelijke filter op alleen gemeente in parameter
+monitor_df_regio <- monitor_df
+monitor_df <- monitor_df %>%
+  filter(Gemeentecode == params$gemeentecode)
+
+#Maak survey design gemeente
+# Gemeente 2022 en 2024
+design_gem <- survey_design_maken(
+                          strata = 'Stratum', 
+                          gewichten = 'Standaardisatiefactor', 
+                          data = monitor_df)
+
+# ALTERNATIEVE METHODE VAN INLADEN: regionale data invoegen in landelijk
+# Landelijk bestand inladen
+# df <- haven::read_spss(file.choose(), user_na =T) %>%
+#   labelled::user_na_to_na()
+# 
+# # Regionaal bestand inladen
+# df_regio <- haven::read_spss(file.choose(), user_na =T) %>%
+#   labelled::user_na_to_na()
+# 
+# # Check of aantallen gelijk zijn.
+# # NB. Alleen deelnemers met landelijke weegfactor zitten in landelijk bestand.
+# if (sum(df_regio$Standaardisatiefactor != 0) != nrow(df %>% filter(GGDregio == regiocode))) {
+#   print("Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data.")
+# }
+# 
+# # Filter regio uit landelijk databestand
+# df <- df %>%
+#   filter(GGDregio != regiocode)
+# 
+# # Voeg regiobestand toe aan landelijk bestand
+# df <- df %>%
+#   full_join(df_regio)
+# 
+# # Opschonen
+# rm(df_regio)
+# 
+# #Er is niet goed aangegeven wat missing is in SPSS.
+# #tijdelijke functie om 9 Onbekend te verwijderen & naar NA te zetten
+# 
+# for(var in names(df)){
+#   
+#   df <- df %>% verwijder_9_onbekend(var)
+# 
+# }
+# 
+# # Regionale data filteren
+# df %>%
+#   filter(GGDregio == regiocode)
+# 
+# # Gemeentelijke data filteren
+# df %>%
+#   filter(Gemeentecode == params$gemeentecode)
 
 ```
 
@@ -364,6 +445,19 @@ plot = monitor_df %>%
   maak_staafdiagram_gestapeld(
     var_inhoud = "LVVTA404"
     
+  )
+
+plot
+```
+
+## Cirkeldiagram
+
+```{r, fig.width = 12, fig.height = 3}
+#TODO alt-text!
+#Standaard cirkeldiagram staafdiagram
+plot = monitor_df %>% 
+  maak_cirkeldiagram(
+    var_inhoud = "LVVTA404"
   )
 
 plot
