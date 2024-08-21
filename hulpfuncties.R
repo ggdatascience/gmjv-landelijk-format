@@ -1315,8 +1315,8 @@ maak_vergelijking <- function(data, survey_design, variabele, variabele_label = 
 
   # TODo nog testen, wat gebeurd er met NAs? en kan ik dit robuster maken + werkend voor meer uitsplitsingen?
 
-  crossings <- case_when(result[vergelijking] == "Jongen" ~ "mannen", 
-                         result[vergelijking] == "Meisje" ~ "vrouwen",
+  crossings <- case_when(result[vergelijking] == "Man" ~ "mannen", 
+                         result[vergelijking] == "Vrouw" ~ "vrouwen",
                          result[vergelijking] == '16-17 jaar' ~ '16-17 jarigen',
                          result[vergelijking] == '18-20 jaar' ~ '18-20 jarigen',
                          result[vergelijking] == '21-25 jaar' ~ '21-25 jarigen',
@@ -1374,22 +1374,43 @@ maak_top <- function(data, survey_design, variabelen, toon_label = T, value = 1,
   # Bereken gewogen cijfers
   list <- lapply(variabelen, function(x){bereken_kruistabel(data = data, 
                                                             survey_design = survey_design, 
-                                                            variabele = x)})   
+                                                            variabele = x)}) 
   
   # Selecteer relevante rijen en voeg dataframes samen
-  list <- purrr::map(list, function(x) { x %>% select(varcode, waarde, percentage) })
+  if (length(variabelen) == 1) {
+    
+    list <- purrr::map(list, function(x) { x %>% select(varcode, waarde, percentage, variabelen) })
+    
+  } else {
+    
+    list <- purrr::map(list, function(x) { x %>% select(varcode, waarde, percentage) })
+  
+  }
+
   list <- do.call(rbind, list)
   
   # Filter en sorteer
   list <- list %>%
     filter(waarde == value) %>% # Filter de gegevens voor value eruit. Standaard is dit 1.
     arrange(desc(percentage)) # Sorteer op hoogte van estimate (percentage)
-
+  
   # Print top
-  if (toon_label) {
-    return(paste0(tolower(get_variable_labels(data[list$varcode[top]])), " (", list$percentage[top], "%)"))    
-  } else {
+  if (toon_label) { # Wanneer label getoond moet worden
+    
+    if (length(variabelen) > 1) { # Bij meerdere indicatoren als input
+      
+      return(paste0(tolower(var_label(data[list$varcode[top]])), " (", list$percentage[top], "%)"))
+    
+    } else { # Bij een indicator als input
+      
+      return(paste0(tolower(labelled_naar_character(list, variabelen))[top], " (", list$percentage[top], "%)")) 
+      
+    }
+       
+  } else { # Wanneer geen label getoond moet worden
+    
     return(paste0(list$percentage[top], "%")) 
+    
   }
 }
 

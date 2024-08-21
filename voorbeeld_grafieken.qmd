@@ -466,7 +466,7 @@ De functie **maak_top()** sorteert indicatoren van hoogst naar laagst percentage
 -   **survey_design:**\
     Een survey_design, berekent met svydesign. Dit is noodzakelijk om percentages en confidence intervallen te kunnen berekenen.
 -   **variabelen:**\
-    Een character vector met de namen van de indicatoren waarvan je de percentages van hoog naar laag wil sorteren.
+    Een character vector met de na(a)m(en) van de indicator(en) waarvan je de percentages van hoog naar laag wil sorteren.
 -   **top:**\
     Een getal dat aangeeft welke percentages van de top je als output wil. Dit kan een getal zijn (bv. 3, dan is de output het op 2-na-hoogste percentage) of een reeks van getallen (bv. 1:5, dan is de output de top 5 van hoogste percentages). Default is 1.
 
@@ -488,11 +488,21 @@ monitor_df %>% maak_top(survey_design = design_gem,
                         top = 1)
 ```
 
-### Bereken top 3
+### Bereken top 3 van meerdere indicatoren
 
 ```{r, warning = F}
 # Top 3
 monitor_df %>% maak_top(survey_design = design_gem, 
                         variabelen = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"),
+                        top = 1:3)
+```
+
+### Bereken top 3 binnen indicator
+
+```{r, warning = F}
+# Top 3 
+monitor_df %>% maak_top(survey_design = design_gem, 
+                        variabelen = 'AGLFA401',
+                        value = 1:3, # Vul hier alle values in die voorkomen bij indicator
                         top = 1:3)
 ```
