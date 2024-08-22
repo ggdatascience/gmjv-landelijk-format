@@ -1409,7 +1409,7 @@ maak_vergelijking <- function(data, survey_design, variabele, variabele_label = 
                          .default = tolower(labelled_naar_character(result, vergelijking)))
 
   if (is.null(variabele_label)) {
-    label <- tolower(get_variable_labels(data[variabele]))
+    label <- tolower(var_label(data[variabele]))
   } else {
     label <- variabele_label
   }
@@ -1454,26 +1454,25 @@ maak_vergelijking <- function(data, survey_design, variabele, variabele_label = 
 }
 
 maak_top <- function(data, survey_design, variabelen, toon_label = T, value = 1, top = 1) {
-
+  
   # TODO toevoegen selectie van juiste niveau en juiste jaar.  
   
-  # Bereken gewogen cijfers
-  list <- lapply(variabelen, function(x){bereken_kruistabel(data = data, 
-                                                            survey_design = survey_design, 
-                                                            variabele = x)})   
-  
-  # Selecteer relevante rijen en voeg dataframes samen
-  list <- purrr::map(list, function(x) { x %>% select(varcode, waarde, percentage) })
-  list <- do.call(rbind, list)
-  
-  # Filter en sorteer
-  list <- list %>%
+  # Bereken gewogen cijfers en voeg samen in dataframe
+  list <- lapply(variabelen, function(x){ 
+    
+    bereken_kruistabel(data = data,
+                       survey_design = survey_design, 
+                       variabele = x) %>% 
+      select(varcode, waarde, percentage) #alleen relevante variabelen overouden
+    
+  })   %>% do.call(rbind,.) %>% #samenvoegen in datafram
     filter(waarde == value) %>% # Filter de gegevens voor value eruit. Standaard is dit 1.
     arrange(desc(percentage)) # Sorteer op hoogte van estimate (percentage)
-
+  
+  
   # Print top
   if (toon_label) {
-    return(paste0(tolower(get_variable_labels(data[list$varcode[top]])), " (", list$percentage[top], "%)"))    
+    return(paste0(tolower(var_label(data[list$varcode[top]])), " (", list$percentage[top], "%)"))    
   } else {
     return(paste0(list$percentage[top], "%")) 
   }
