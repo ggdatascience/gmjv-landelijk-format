@@ -1347,10 +1347,10 @@ maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = default_
            ) %>% 
     config(staticPlot = T) %>%
     #plotly heeft zelf geen alt-text optie; met js toevoegen aan object
-    htmlwidgets::onRender("
-  function(el, x) {
-    el.setAttribute('alt', 'Scatter plot of Sepal Length versus Petal Length for the iris dataset');
-  }")
+    htmlwidgets::onRender(glue("
+  function(el, x) {{
+    el.setAttribute('alt', '{{alt_text}}');
+  }}"))
   fig
 
 }
