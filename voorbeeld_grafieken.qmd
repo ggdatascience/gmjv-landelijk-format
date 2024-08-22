@@ -309,7 +309,7 @@ De functie **maak_staafdiagram_vergelijking()** maakt een staafdiagram voor een 
 
 ### Optionele argumenten:
 
-Dezelfde optionele argumenten als in **maak_staafdiagram_dubbele_uitsplitsing()**
+Dezelfde optionele argumenten als in [**maak_staafdiagram_dubbele_uitsplitsing():**](#optionele-argumenten-1):
 
 ### Standaard staafdiagram met vergelijking
 
@@ -335,7 +335,7 @@ De functie **maak_staafdiagram_meerdere_staven()** maakt een staafdiagram voor i
 
 ### Optionele argumenten:
 
-Naast dezelfde optionele argumenten als in **maak_staafdiagram_dubbele_uitsplitsing()**:
+Naast dezelfde optionele argumenten als in [**maak_staafdiagram_dubbele_uitsplitsing():**](#optionele-argumenten-1):
 
 -   **var_crossing:** Een character met de naam van één kruisvariabele
 -   **flip:** TRUE of FALSE. Als TRUE wordt de grafiek horizontaal weergeven
@@ -378,7 +378,11 @@ De functie **maak_staafdiagram_uitsplitsing_naast_elkaar()** maakt een staafdiag
 
 ### Optionele argumenten:
 
-Naast dezelfde optionele argumenten als in **maak_staafdiagram_dubbele_uitsplitsing()**: - **kleuren_per_crossing:** TRUE of FALSE. Als TRUE krijgt iedere kruisvariabele een eigen kleur. - **fade_kleuren:** TRUE of FALSE. Als TRUE is er overloop in de kleuren per uitsplitsing - **flip:** TRUE of FALSE. Als TRUE wordt de grafiek horizontaal weergeven
+Naast dezelfde optionele argumenten als in [**maak_staafdiagram_dubbele_uitsplitsing():**](#optionele-argumenten-1):
+
+-   **kleuren_per_crossing:** TRUE of FALSE. Als TRUE krijgt iedere kruisvariabele een eigen kleur. 
+-     **fade_kleuren:** TRUE of FALSE. Als TRUE is er overloop in de kleuren per uitsplitsing 
+-     **flip:** TRUE of FALSE. Als TRUE wordt de grafiek horizontaal weergeven
 
 ### Standaard staafdiagram met uitsplitsingen naast elkaar
 
@@ -435,7 +439,8 @@ plot
 
 ### Optionele argumenten
 
-Dezelfde optionele argumenten als in **maak_staafdiagram_dubbele_uitsplitsing()**
+Naast dezelfde optionele argumenten als in [**maak_staafdiagram_dubbele_uitsplitsing():**](#optionele-argumenten-1)
+- **var_crossing:** Een character met de naam van één kruisvariabele
 
 ### Standaard gestapeld staafdiagram
 
@@ -444,6 +449,20 @@ Dezelfde optionele argumenten als in **maak_staafdiagram_dubbele_uitsplitsing()*
 plot = monitor_df %>% 
   maak_staafdiagram_gestapeld(
     var_inhoud = "LVVTA404"
+  )
+
+plot
+```
+
+
+### Aangepast gestapeld staafdiagram
+
+```{r, fig.alt = ggplot2::get_alt_text(plot), fig.width = 12, fig.height = 3}
+#Standaard gestapeld staafdiagram
+plot = monitor_df %>% 
+  maak_staafdiagram_gestapeld(
+    var_inhoud = "LVVTA404",
+    var_crossing = "AGGSA402"
     
   )
 
@@ -452,8 +471,11 @@ plot
 
 ## Cirkeldiagram
 
-```{r, fig.width = 12, fig.height = 3}
-#TODO alt-text!
+```{r}
+
+#LET OP: ITT tot andere grafiekfuncties moet je géén get_alt_text() gebruiken in de chunk-options. Cirkeldiagrammen worden met plotly gemaakt en de alt-text wordt in door de functie maak_cirkeldiagram() al correct toegevoegd.
+
+
 #Standaard cirkeldiagram staafdiagram
 plot = monitor_df %>% 
   maak_cirkeldiagram(

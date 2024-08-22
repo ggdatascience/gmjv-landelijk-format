@@ -1265,11 +1265,8 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
 }
 
 
-# :(
-maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL,
-                               kleuren = default_kleuren_grafiek, x_label = "",
-                               nvar = default_Nvar, ncel = default_Ncel,
-                               alt_text = NULL) {
+maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = default_kleuren_grafiek,
+                               nvar = default_Nvar, ncel = default_Ncel, alt_text = NULL) {
   
   if(!labelled::is.labelled(data[[var_inhoud]])){
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
@@ -1278,19 +1275,45 @@ maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL,
   #titel ophalen uit var_label als niet opgegeven
   if(is.null(titel)){
     
-    titel <- var_label(data[[var_inhoud]])
+    titel <- var_label(data[[var_inhoud]]) %>% str_wrap(50)
   }
   
   #kruistabel maken
   df_plot <- bereken_kruistabel(data, variabele = var_inhoud, survey_design = design_gem) %>% 
-    mutate(weggestreept = as.numeric(weggestreept))
+    mutate(weggestreept = as.numeric(weggestreept)) 
+    
   
   #kleuren labelen o.b.v. levels var_inhoud
-  namen_kleuren <- levels(df_plot[[var_inhoud]])
+  namen_kleuren <- df_plot[[var_inhoud]]
   
   kleuren <- kleuren[1:length(namen_kleuren)]
   
-  #plotly
+  
+  #alt text toevoegen als deze niet handmatig is toegevoegd
+  #kan niet met maak_alt_text omdat hier plotly gebruikt wordt ipv ggplot
+  if(is.null(alt_text)){
+    
+    doelgroep = "jongvolwassenen"
+    onderwerp = var_label(data[[var_inhoud]])
+    
+    waarden = paste0(
+      df_plot[[var_inhoud]], ": ",
+      df_plot$percentage, "%",
+      collapse = ", "
+    ) 
+    
+    
+    alt_text <- glue("Cirkeldiagram voor de indicator '{onderwerp}' bij {doelgroep}: {waarden}")
+    
+  }
+  
+  #regeleinden IN val-labels toevoegen zodat ze niet te lang op 1 regel lopen ze
+  df_plot <- df_plot %>% mutate(
+    !!sym(var_inhoud) := str_wrap(!!sym(var_inhoud),30) 
+  )
+
+
+  #plotly pie chart
   fig <- plot_ly(df_plot,
                  labels = ~get(var_inhoud),
                  textinfo = "percent",
@@ -1303,60 +1326,34 @@ maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL,
                                ),
                  insidetextfont = list(
                    color = "#FFFFFF",
-                   size = 30
+                   size = 15
                  ),
                  outsidetextfont = list(
                    color = "#000000",
-                   size = 30
+                   size = 15
                  )
                  
                  ) %>% 
     layout(title = list(text = titel,
-                        font = list(size = 30)),
+                        font = list(size = 15)),
            margin = list(t = 100),
            
-           legend = list(orientation = "h",    # Horizontal legend layout
-                         x = 0.5,              # Center the legend horizontally
-                         y = -0.2,             # Position the legend below the plot
-                         xanchor = "center",   # Anchor the legend horizontally
+           legend = list(orientation = "h",    
+                         x = 0.5,          
+                         y = -0.2,          
+                         xanchor = "center", 
                          yanchor = "top",
-                         font = list(size = 20))     # Anchor the legend vertically
+                         font = list(size = 12))     
            ) %>% 
-    config(staticPlot = T)
+    config(staticPlot = T) %>%
+    #plotly heeft zelf geen alt-text optie; met js toevoegen aan object
+    htmlwidgets::onRender("
+  function(el, x) {
+    el.setAttribute('alt', 'Scatter plot of Sepal Length versus Petal Length for the iris dataset');
+  }")
   fig
 
-  
-  
-  
-  # Hacky manier met ggplot. Werkt erg irritant. Gaat slecht om met kleine slices. 
-  # Onmogelijk om labels consistent op logische plek te plaatsen
-  
-  # #reken y-posities txt & proporties secties uit
-  # df_plot <- df_plot %>%
-  #   mutate(
-  #     cumulative_percentage = cumsum(percentage) - percentage / 2,
-  #     angle = 2 * pi * cumulative_percentage / sum(percentage),
-  #     # Adjust hjust and vjust with an offset for small slices
-  #     hjust = ifelse(sin(angle) > 0, -0.5, 1.5) -.5,
-  #     vjust = ifelse(cos(angle) > 0, -0.5, 1.5) -.5
-  #   )
-  # 
-  # 
-  # # Create pie chart with labels positioned just outside the pie slices
-  # ggplot(df_plot, aes(x="", y=percentage, fill=!!sym(var_inhoud))) +
-  #   geom_bar(stat="identity", width=1) +
-  #   coord_polar("y", start=0) +
-  #   theme_void() + 
-  #   theme(legend.position="none") +
-  #   
-  #   geom_text(aes(
-  #     y = cumulative_percentage,
-  #     label = paste0(percentage, "%"),
-  #     hjust = hjust,
-  #     vjust = vjust
-  #   ), color = "white", size=10) +
-  #   scale_fill_manual(values = kleuren)
-  }
+}
 
 bol_met_cijfer <- function(getal, kleur = default_kleuren_grafiek[3], kleur_outline = "#FFFFFF", kleur_text = "#FFFFFF"){
   
