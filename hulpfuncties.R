@@ -19,7 +19,7 @@ library(stringr) # Voor str_replace
 library(labelled) # Package om te werken met datalabels, o.a. voor to_character()
 library(survey) # Package om te werken met gewogen gemiddelds incl. betrouwbaarheidsintervallen
 library(glue) #om strings aangenaam aan elkaar te plakken
-
+library(plotly)
 # utility ----------------------------------------------------------------
 
 ##### Survey functies gebaseerd op oud tabellenboekscript ####
@@ -1169,8 +1169,6 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
   #Alt text maken o.b.v. data als geen eigen tekst is ingegeven
   if(is.null(alt_text)){
     
-    alt_text = maak_alt_text(plot)
-    
     alt_text <- maak_alt_text(plot,
                               label_inhoud = var_label(data[[var_inhoud]]),
                               label_crossings = sapply(var_crossings, function(var) var_label(data[[var]]))
@@ -1267,6 +1265,95 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
 }
 
 
+maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = default_kleuren_grafiek,
+                               nvar = default_Nvar, ncel = default_Ncel, alt_text = NULL) {
+  
+  if(!labelled::is.labelled(data[[var_inhoud]])){
+    warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
+  }
+  
+  #titel ophalen uit var_label als niet opgegeven
+  if(is.null(titel)){
+    
+    titel <- var_label(data[[var_inhoud]]) %>% str_wrap(50)
+  }
+  
+  #kruistabel maken
+  df_plot <- bereken_kruistabel(data, variabele = var_inhoud, survey_design = design_gem) %>% 
+    mutate(weggestreept = as.numeric(weggestreept)) 
+    
+  
+  #kleuren labelen o.b.v. levels var_inhoud
+  namen_kleuren <- df_plot[[var_inhoud]]
+  
+  kleuren <- kleuren[1:length(namen_kleuren)]
+  
+  
+  #alt text toevoegen als deze niet handmatig is toegevoegd
+  #kan niet met maak_alt_text omdat hier plotly gebruikt wordt ipv ggplot
+  if(is.null(alt_text)){
+    
+    doelgroep = "jongvolwassenen"
+    onderwerp = var_label(data[[var_inhoud]])
+    
+    waarden = paste0(
+      df_plot[[var_inhoud]], ": ",
+      df_plot$percentage, "%",
+      collapse = ", "
+    ) 
+    
+    
+    alt_text <- glue("Cirkeldiagram voor de indicator '{onderwerp}' bij {doelgroep}: {waarden}")
+    
+  }
+  
+  #regeleinden IN val-labels toevoegen zodat ze niet te lang op 1 regel lopen ze
+  df_plot <- df_plot %>% mutate(
+    !!sym(var_inhoud) := str_wrap(!!sym(var_inhoud),30) 
+  )
+
+
+  #plotly pie chart
+  fig <- plot_ly(df_plot,
+                 labels = ~get(var_inhoud),
+                 textinfo = "percent",
+                 values = ~percentage, 
+                 type = "pie",
+                 hoverinfo = "text",
+                 text = "",
+                 marker = list(colors = kleuren,
+                               line = list(color = "#FFFFFF", width = 1)
+                               ),
+                 insidetextfont = list(
+                   color = "#FFFFFF",
+                   size = 15
+                 ),
+                 outsidetextfont = list(
+                   color = "#000000",
+                   size = 15
+                 )
+                 
+                 ) %>% 
+    layout(title = list(text = titel,
+                        font = list(size = 15)),
+           margin = list(t = 100),
+           
+           legend = list(orientation = "h",    
+                         x = 0.5,          
+                         y = -0.2,          
+                         xanchor = "center", 
+                         yanchor = "top",
+                         font = list(size = 12))     
+           ) %>% 
+    config(staticPlot = T) %>%
+    #plotly heeft zelf geen alt-text optie; met js toevoegen aan object
+    htmlwidgets::onRender("
+  function(el, x) {
+    el.setAttribute('alt', 'Scatter plot of Sepal Length versus Petal Length for the iris dataset');
+  }")
+  fig
+
+}
 
 bol_met_cijfer <- function(getal, kleur = default_kleuren_grafiek[3], kleur_outline = "#FFFFFF", kleur_text = "#FFFFFF"){
   
@@ -1369,7 +1456,7 @@ maak_vergelijking <- function(data, survey_design, variabele, variabele_label = 
 maak_top <- function(data, survey_design, variabelen, toon_label = T, value = 1, top = 1) {
 
   # TODO toevoegen selectie van juiste niveau en juiste jaar.  
-  
+
   # Bereken gewogen cijfers en voeg samen in dataframe
   list <- lapply(variabelen, function(x){ 
     
@@ -1378,10 +1465,10 @@ maak_top <- function(data, survey_design, variabelen, toon_label = T, value = 1,
                        variabele = x) %>% 
       select(varcode, waarde, percentage) #alleen relevante variabelen overouden
 
+
     })   %>% do.call(rbind,.) %>% #samenvoegen in datafram
     filter(waarde == value) %>% # Filter de gegevens voor value eruit. Standaard is dit 1.
     arrange(desc(percentage)) # Sorteer op hoogte van estimate (percentage)
-  
 
   # Print top
   if (toon_label) {
@@ -1452,3 +1539,4 @@ render_toc <- function(
   x <- x[x != ""]
   knitr::asis_output(paste(x, collapse = "\n"))
 }
+
