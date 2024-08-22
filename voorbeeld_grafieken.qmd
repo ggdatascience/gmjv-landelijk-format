@@ -250,7 +250,7 @@ De functie **maak_staafdiagram_dubbele_uitsplitsing()** maakt een staafdiagram v
 
 -   **var_crossing_kleur:** Een character met de naam van een kruisvariabele
 
-### Optionele argumenten:
+### Optionele argumenten: {#optionele-argumenten-1}
 
 -   **titel:** Een character met een titel voor het plot
 
@@ -380,9 +380,11 @@ De functie **maak_staafdiagram_uitsplitsing_naast_elkaar()** maakt een staafdiag
 
 Naast dezelfde optionele argumenten als in [**maak_staafdiagram_dubbele_uitsplitsing():**](#optionele-argumenten-1):
 
--   **kleuren_per_crossing:** TRUE of FALSE. Als TRUE krijgt iedere kruisvariabele een eigen kleur. 
--     **fade_kleuren:** TRUE of FALSE. Als TRUE is er overloop in de kleuren per uitsplitsing 
--     **flip:** TRUE of FALSE. Als TRUE wordt de grafiek horizontaal weergeven
+-   **kleuren_per_crossing:** TRUE of FALSE. Als TRUE krijgt iedere kruisvariabele een eigen kleur.
+
+-   **fade_kleuren:** TRUE of FALSE. Als TRUE is er overloop in de kleuren per uitsplitsing 
+
+-   **flip:** TRUE of FALSE. Als TRUE wordt de grafiek horizontaal weergeven
 
 ### Standaard staafdiagram met uitsplitsingen naast elkaar
 
@@ -439,8 +441,7 @@ plot
 
 ### Optionele argumenten
 
-Naast dezelfde optionele argumenten als in [**maak_staafdiagram_dubbele_uitsplitsing():**](#optionele-argumenten-1)
-- **var_crossing:** Een character met de naam van één kruisvariabele
+Naast dezelfde optionele argumenten als in [**maak_staafdiagram_dubbele_uitsplitsing():**](#optionele-argumenten-1) - **var_crossing:** Een character met de naam van één kruisvariabele
 
 ### Standaard gestapeld staafdiagram
 
@@ -453,7 +454,6 @@ plot = monitor_df %>%
 
 plot
 ```
-
 
 ### Aangepast gestapeld staafdiagram
 
@@ -475,7 +475,6 @@ plot
 
 #LET OP: ITT tot andere grafiekfuncties moet je géén get_alt_text() gebruiken in de chunk-options. Cirkeldiagrammen worden met plotly gemaakt en de alt-text wordt in door de functie maak_cirkeldiagram() al correct toegevoegd.
 
-
 #Standaard cirkeldiagram staafdiagram
 plot = monitor_df %>% 
   maak_cirkeldiagram(
@@ -483,4 +482,32 @@ plot = monitor_df %>%
   )
 
 plot
+```
+
+## Populatiegrafiek CBS
+**TODO uitvissen met Sjanne hoe we dataframe(s) willen aanroepen**
+### Nodige argumenten
+
+### Optionele argumenten
+
+### Standaard Populatiegrafiek CBS
+```{r, fig.alt = ggplot2::get_alt_text(plot)}
+plot <- monitor_df_regio %>% 
+  maak_grafiek_cbs_bevolking()
+
+
+plot
+```
+### Aangepaste Populatiegrafiek CBS
+```{r}
+plot <- monitor_df_regio %>% 
+  maak_grafiek_cbs_bevolking(
+    niveaus = c("regio","gemeente"),
+    crossing_cbs = "geslacht",
+    missing_label = "niet ingevuld",
+    missing_bewaren = FALSE
+  )
+
+plot
+
 ```
