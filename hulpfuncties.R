@@ -1416,19 +1416,21 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
                                        crossing_cbs = "leeftijd",
                                        niveaus = c("nl","regio","gemeente"),
                                        missing_label = "Onbekend",
+                                       missing_bewaren = TRUE,
                                        kleuren = default_kleuren_grafiek,
                                        titel = "",
                                        x_label = "",
                                        alt_text = NULL
                                        ){
   
-  #TODO met Sjanne bespreken
-  #TODO Nu nep gemeentecode ingevoerd in CBS dataset (was groningen).
-  #Nog testen wanneer echte data aanwezig is
-  #Hier moet data van landelijk regio en gemeente in
-  #standaard regiodataset in laten voeren daar ook gemeente uit filteren
-    #moet er een check komen of mensen wel de regiodata invoeren?
-  #waar komt landelijke data vandaan?
+  #TODO met Sjanne bespreken:
+    #TODO Nu nep gemeentecode ingevoerd in CBS dataset (was groningen).
+    #Hoe noemen we gender/geslacht?
+    #Nog testen wanneer echte data aanwezig is
+    #Hier moet data van landelijk regio en gemeente in
+    #standaard regiodataset in laten voeren daar ook gemeente uit filteren
+      #moet er een check komen of mensen wel de regiodata invoeren?
+    #waar komt landelijke data vandaan?
   
   
   #leeftijd en geslacht aan varnamen uit monitor koppelen
@@ -1488,7 +1490,11 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
     mutate(crossing = str_remove(crossing," jaar") %>% #" jaar" verwijderen uit lft crossing van monitordata
              tolower()) %>% #alles tolower om verschil man Man vrouw Vrouw weg te strepen.
     select(regio, crossing, aantal, type)
-    
+  
+  #als missing_bewaren FALSE is; verwijderen
+  if(!missing_bewaren){
+    monitor_responsedata <- monitor_responsedata %>% filter(crossing != missing_label)
+  }
 
   df_plot <- rbind(cbs_populatiedata,monitor_responsedata) %>% #data samenvoegen 
     #% berekenen 
