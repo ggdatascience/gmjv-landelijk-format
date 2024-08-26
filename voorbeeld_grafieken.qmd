@@ -382,7 +382,7 @@ Naast dezelfde optionele argumenten als in [**maak_staafdiagram_dubbele_uitsplit
 
 -   **kleuren_per_crossing:** TRUE of FALSE. Als TRUE krijgt iedere kruisvariabele een eigen kleur.
 
--   **fade_kleuren:** TRUE of FALSE. Als TRUE is er overloop in de kleuren per uitsplitsing 
+-   **fade_kleuren:** TRUE of FALSE. Als TRUE is er overloop in de kleuren per uitsplitsing
 
 -   **flip:** TRUE of FALSE. Als TRUE wordt de grafiek horizontaal weergeven
 
@@ -471,6 +471,15 @@ plot
 
 ## Cirkeldiagram
 
+### Nodige argumenten
+
+-   **var_inhoud:** Een character met de naam van een variabele
+
+### Optionele argumenten
+-   Dezelfde argumenten als in [**maak_staafdiagram_dubbele_uitsplitsing():**](#optionele-argumenten-1)
+
+-   **titel**: character variabele. Als argument leeg is wordt het variabellabel van var_inhoud gebruikt.
+
 ```{r}
 
 #LET OP: ITT tot andere grafiekfuncties moet je géén get_alt_text() gebruiken in de chunk-options. Cirkeldiagrammen worden met plotly gemaakt en de alt-text wordt in door de functie maak_cirkeldiagram() al correct toegevoegd.
@@ -485,12 +494,27 @@ plot
 ```
 
 ## Populatiegrafiek CBS
-**TODO uitvissen met Sjanne hoe we dataframe(s) willen aanroepen**
-### Nodige argumenten
+Functie om een horizontaal georienteerd gestapeld staafdiagram te maken waarin populatiegegevens van het CBS worden vergeleken met de response op de  per regio en gemeente. Dit kan o.b.v. de kruisvariabelen leeftijd en geslacht gedaan worden.
+
+::: calout-warning
+
+Hieronder wordt monitor_df_regio gebruikt ITT bovenstaande waar monitor_df wordt gebruikt.
+
+TODO; landelijke demografische cijfers toevoegen aan functie
+TODO; uitzoeken wel dataframes er allemaal gebruikt zullen worden.
+
+:::
 
 ### Optionele argumenten
+-   **gem_code:** character variabele met gemeentenaam. Standaard de 'huidige' gemeente o.b.v. params$gemeentecode.
+-   **crossing_cbs:** character variabele. De naam van de kruising die getoond moet worden. Opties: "leeftijd" of "geslacht".
+-   **niveaus:** character vector met niveaus die getoond moeten worden. Standaard c("nl","regio","gemeente")
+-   **missing_bewaren:** TRUE of FALSE. Als TRUE worden percentages met missing categorieën voor *Deelnemers* bewaard en getoond in de grafiek.
+-   **missing_label:** character variabele. Het label dat gegeven moet worden aan een eventuele missing categorie. Standaard "Onbekend".
+-   **kleuren:** Een character vector met alternatieve kleuren voor de grafiek
 
 ### Standaard Populatiegrafiek CBS
+
 ```{r, fig.alt = ggplot2::get_alt_text(plot)}
 plot <- monitor_df_regio %>% 
   maak_grafiek_cbs_bevolking()
@@ -498,14 +522,17 @@ plot <- monitor_df_regio %>%
 
 plot
 ```
+
 ### Aangepaste Populatiegrafiek CBS
+
 ```{r}
 plot <- monitor_df_regio %>% 
   maak_grafiek_cbs_bevolking(
     niveaus = c("regio","gemeente"),
     crossing_cbs = "geslacht",
+    missing_bewaren = TRUE,
     missing_label = "niet ingevuld",
-    missing_bewaren = FALSE
+
   )
 
 plot
