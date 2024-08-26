@@ -51,22 +51,103 @@ default_kleuren_responstabel <- c("header" = "#012C17",
 default_Nvar = 100 # Minimum aantal invullers per vraag.
 default_Ncel = 10 # Minimum aantal invullers oper antwoordoptie.
 
-#SPSS data inlezen
-#bestandsnaam
-file_path = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
+# Standaard regio
+# Pas onderstaande naam en code aan naar de naam en code van je eigen regio.
+regionaam <- 'GGD Limburg-Noord'
+regiocode <- 23
 
-#lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
-monitor_df = haven::read_spss(file_path,user_na =T) %>%
+#SPSS data inlezen
+# Regionaal bestand
+file_path_regio = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
+
+# Landelijk bestand
+#file_path_land = "Totaalbestand_CGMJV2022_2024_GGD_versie 1 (N = xxx).sav"
+
+#Lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
+monitor_df = haven::read_spss(file_path_regio, user_na =T) %>%
   labelled::user_na_to_na()
 
-#Er is bij deze dataset onvolledig aangegeven wat user missing is in SPSS.
-#Tijdelijke functie om '9 Onbekend'  te verwijderen & naar NA om te zetten
+#TODO verwijderen bij echte data. tijdelijk varlabel voor jaarvariabele
+var_label(monitor_df$AGOJB401) <- "Jaar"
+#monitor_df_land = haven::read_spss(file_path_land,user_na =T) %>%
+#  labelled::user_na_to_na()
+
+#Maak survey designs
+# Regionaal 2022 en 2024
+design_regio <- survey_design_maken(
+                          strata = 'Stratum', 
+                          gewichten = 'Standaardisatiefactor', 
+                          data = monitor_df)
+
+# Landelijk 2022 en 2024
+#design_land <- survey_design_maken(
+#                          strata = 'Stratum', 
+#                          gewichten = 'Standaardisatiefactor', 
+#                          data = monitor_df_land)
+
+#Er is niet goed aangegeven wat missing is in SPSS.
+#tijdelijke functie om 9 Onbekend te verwijderen & naar NA te zetten
 
 for(var in names(monitor_df)){
   
   monitor_df <- monitor_df %>% verwijder_9_onbekend(var)
 
 }
+
+#TODO Tijdelijke filter op alleen gemeente in parameter
+monitor_df_regio <- monitor_df
+monitor_df <- monitor_df %>%
+  filter(Gemeentecode == params$gemeentecode)
+
+#Maak survey design gemeente
+# Gemeente 2022 en 2024
+design_gem <- survey_design_maken(
+                          strata = 'Stratum', 
+                          gewichten = 'Standaardisatiefactor', 
+                          data = monitor_df)
+
+# ALTERNATIEVE METHODE VAN INLADEN: regionale data invoegen in landelijk
+# Landelijk bestand inladen
+# df <- haven::read_spss(file.choose(), user_na =T) %>%
+#   labelled::user_na_to_na()
+# 
+# # Regionaal bestand inladen
+# df_regio <- haven::read_spss(file.choose(), user_na =T) %>%
+#   labelled::user_na_to_na()
+# 
+# # Check of aantallen gelijk zijn.
+# # NB. Alleen deelnemers met landelijke weegfactor zitten in landelijk bestand.
+# if (sum(df_regio$Standaardisatiefactor != 0) != nrow(df %>% filter(GGDregio == regiocode))) {
+#   print("Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data.")
+# }
+# 
+# # Filter regio uit landelijk databestand
+# df <- df %>%
+#   filter(GGDregio != regiocode)
+# 
+# # Voeg regiobestand toe aan landelijk bestand
+# df <- df %>%
+#   full_join(df_regio)
+# 
+# # Opschonen
+# rm(df_regio)
+# 
+# #Er is niet goed aangegeven wat missing is in SPSS.
+# #tijdelijke functie om 9 Onbekend te verwijderen & naar NA te zetten
+# 
+# for(var in names(df)){
+#   
+#   df <- df %>% verwijder_9_onbekend(var)
+# 
+# }
+# 
+# # Regionale data filteren
+# df %>%
+#   filter(GGDregio == regiocode)
+# 
+# # Gemeentelijke data filteren
+# df %>%
+#   filter(Gemeentecode == params$gemeentecode)
 
 ```
 
@@ -169,7 +250,7 @@ De functie **maak_staafdiagram_dubbele_uitsplitsing()** maakt een staafdiagram v
 
 -   **var_crossing_kleur:** Een character met de naam van een kruisvariabele
 
-### Optionele argumenten:
+### Optionele argumenten: {#optionele-argumenten-1}
 
 -   **titel:** Een character met een titel voor het plot
 
@@ -228,7 +309,7 @@ De functie **maak_staafdiagram_vergelijking()** maakt een staafdiagram voor een 
 
 ### Optionele argumenten:
 
-Dezelfde optionele argumenten als in **maak_staafdiagram_dubbele_uitsplitsing()**
+Dezelfde optionele argumenten als in [**maak_staafdiagram_dubbele_uitsplitsing():**](#optionele-argumenten-1):
 
 ### Standaard staafdiagram met vergelijking
 
@@ -254,7 +335,7 @@ De functie **maak_staafdiagram_meerdere_staven()** maakt een staafdiagram voor i
 
 ### Optionele argumenten:
 
-Naast dezelfde optionele argumenten als in **maak_staafdiagram_dubbele_uitsplitsing()**:
+Naast dezelfde optionele argumenten als in [**maak_staafdiagram_dubbele_uitsplitsing():**](#optionele-argumenten-1):
 
 -   **var_crossing:** Een character met de naam van één kruisvariabele
 -   **flip:** TRUE of FALSE. Als TRUE wordt de grafiek horizontaal weergeven
@@ -297,7 +378,13 @@ De functie **maak_staafdiagram_uitsplitsing_naast_elkaar()** maakt een staafdiag
 
 ### Optionele argumenten:
 
-Naast dezelfde optionele argumenten als in **maak_staafdiagram_dubbele_uitsplitsing()**: - **kleuren_per_crossing:** TRUE of FALSE. Als TRUE krijgt iedere kruisvariabele een eigen kleur. - **fade_kleuren:** TRUE of FALSE. Als TRUE is er overloop in de kleuren per uitsplitsing - **flip:** TRUE of FALSE. Als TRUE wordt de grafiek horizontaal weergeven
+Naast dezelfde optionele argumenten als in [**maak_staafdiagram_dubbele_uitsplitsing():**](#optionele-argumenten-1):
+
+-   **kleuren_per_crossing:** TRUE of FALSE. Als TRUE krijgt iedere kruisvariabele een eigen kleur.
+
+-   **fade_kleuren:** TRUE of FALSE. Als TRUE is er overloop in de kleuren per uitsplitsing
+
+-   **flip:** TRUE of FALSE. Als TRUE wordt de grafiek horizontaal weergeven
 
 ### Standaard staafdiagram met uitsplitsingen naast elkaar
 
@@ -354,7 +441,7 @@ plot
 
 ### Optionele argumenten
 
-Dezelfde optionele argumenten als in **maak_staafdiagram_dubbele_uitsplitsing()**
+Naast dezelfde optionele argumenten als in [**maak_staafdiagram_dubbele_uitsplitsing():**](#optionele-argumenten-1) - **var_crossing:** Een character met de naam van één kruisvariabele
 
 ### Standaard gestapeld staafdiagram
 
@@ -363,7 +450,89 @@ Dezelfde optionele argumenten als in **maak_staafdiagram_dubbele_uitsplitsing()*
 plot = monitor_df %>% 
   maak_staafdiagram_gestapeld(
     var_inhoud = "LVVTA404"
+  )
+
+plot
+```
+
+### Aangepast gestapeld staafdiagram
+
+```{r, fig.alt = ggplot2::get_alt_text(plot), fig.width = 12, fig.height = 3}
+#Standaard gestapeld staafdiagram
+plot = monitor_df %>% 
+  maak_staafdiagram_gestapeld(
+    var_inhoud = "LVVTA404",
+    var_crossing = "AGGSA402"
     
+  )
+
+plot
+```
+
+## Cirkeldiagram
+
+### Nodige argumenten
+
+-   **var_inhoud:** Een character met de naam van een variabele
+
+### Optionele argumenten
+-   Dezelfde argumenten als in [**maak_staafdiagram_dubbele_uitsplitsing():**](#optionele-argumenten-1)
+
+-   **titel**: character variabele. Als argument leeg is wordt het variabellabel van var_inhoud gebruikt.
+
+```{r}
+
+#LET OP: ITT tot andere grafiekfuncties moet je géén get_alt_text() gebruiken in de chunk-options. Cirkeldiagrammen worden met plotly gemaakt en de alt-text wordt in door de functie maak_cirkeldiagram() al correct toegevoegd.
+
+#Standaard cirkeldiagram staafdiagram
+plot = monitor_df %>% 
+  maak_cirkeldiagram(
+    var_inhoud = "LVVTA404"
+  )
+
+plot
+```
+
+## Populatiegrafiek CBS
+Functie om een horizontaal georienteerd gestapeld staafdiagram te maken waarin populatiegegevens van het CBS worden vergeleken met de response op de  per regio en gemeente. Dit kan o.b.v. de kruisvariabelen leeftijd en geslacht gedaan worden.
+
+::: calout-warning
+
+Hieronder wordt monitor_df_regio gebruikt ITT bovenstaande waar monitor_df wordt gebruikt.
+
+TODO; landelijke demografische cijfers toevoegen aan functie
+TODO; uitzoeken wel dataframes er allemaal gebruikt zullen worden.
+
+:::
+
+### Optionele argumenten
+-   **gem_code:** character variabele met gemeentenaam. Standaard de 'huidige' gemeente o.b.v. params$gemeentecode.
+-   **crossing_cbs:** character variabele. De naam van de kruising die getoond moet worden. Opties: "leeftijd" of "geslacht".
+-   **niveaus:** character vector met niveaus die getoond moeten worden. Standaard c("nl","regio","gemeente")
+-   **missing_bewaren:** TRUE of FALSE. Als TRUE worden percentages met missing categorieën voor *Deelnemers* bewaard en getoond in de grafiek.
+-   **missing_label:** character variabele. Het label dat gegeven moet worden aan een eventuele missing categorie. Standaard "Onbekend".
+-   **kleuren:** Een character vector met alternatieve kleuren voor de grafiek
+
+### Standaard Populatiegrafiek CBS
+
+```{r, fig.alt = ggplot2::get_alt_text(plot)}
+plot <- monitor_df_regio %>% 
+  maak_grafiek_cbs_bevolking()
+
+
+plot
+```
+
+### Aangepaste Populatiegrafiek CBS
+
+```{r}
+plot <- monitor_df_regio %>% 
+  maak_grafiek_cbs_bevolking(
+    niveaus = c("regio","gemeente"),
+    crossing_cbs = "geslacht",
+    missing_bewaren = TRUE,
+    missing_label = "niet ingevuld",
+
   )
 
 plot

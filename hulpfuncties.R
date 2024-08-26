@@ -10,7 +10,6 @@
 # TODO Pieter: Is het wel nodig om ziets te schrijven? moderne RStudio doet dat vanzelf voor je.
 # TODO code opschonen; dataverwerking voor grafiek in eigen functies stoppen om complexiteit / lengte van functies te verkleinen.
 
-
 # Hieronder worden de benodige packages geladen
 library(gt)
 library(dplyr)
@@ -20,7 +19,7 @@ library(stringr) # Voor str_replace
 library(labelled) # Package om te werken met datalabels, o.a. voor to_character()
 library(survey) # Package om te werken met gewogen gemiddelds incl. betrouwbaarheidsintervallen
 library(glue) #om strings aangenaam aan elkaar te plakken
-
+library(plotly)
 # utility ----------------------------------------------------------------
 
 ##### Survey functies gebaseerd op oud tabellenboekscript ####
@@ -533,7 +532,42 @@ maak_alt_text <- function(plot, doelgroep = "jongvolwassenen", type_grafiek = "s
   
 }
 
-
+cbs_populatie_opschonen <- function(file = "JongVolwassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx",
+                                    sheet = NULL){
+  
+  #niet als dataframe aangeleverd. ontbrekende kolomkoppen. meerdere rijen boven dataset.
+  cbs_df <- openxlsx::read.xlsx("JongVolwassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx",
+                                sheet = sheet)[-c(1:4),] %>% #1e 4 rijen verwijderen
+    rename( #varlabels fixen
+      "gemeentecode" = 1,
+      "regio" = 2,
+      "man_16-17" = 3,
+      "man_18-20" = 4,
+      "man_21-25" = 5,
+      "vrouw_16-17" = 6,
+      "vrouw_18-20" = 7,
+      "vrouw_21-25" = 8,
+      "totaal" = 9) 
+  
+  
+  if(sheet == "Tabel1"){
+    cbs_df <- cbs_df %>% select(-gemeentecode)
+  }
+  
+  
+  cbs_df %>% 
+    select(-totaal) %>% 
+    pivot_longer(
+      contains("_"),
+      values_to = "aantal",
+      names_to = "categorie") %>% 
+    mutate(
+      geslacht = str_extract(categorie,".*(?=_)"),
+      leeftijd = str_extract(categorie,"(?<=_).*")
+    ) %>% 
+    select(-categorie)
+  
+}  
 # Tabelfuncties -------------------------------------------------------
 maak_responstabel <- function(data, crossings, missing_label = "Onbekend",
                               kleuren = default_kleuren_responstabel){
@@ -1170,8 +1204,6 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
   #Alt text maken o.b.v. data als geen eigen tekst is ingegeven
   if(is.null(alt_text)){
     
-    alt_text = maak_alt_text(plot)
-    
     alt_text <- maak_alt_text(plot,
                               label_inhoud = var_label(data[[var_inhoud]]),
                               label_crossings = sapply(var_crossings, function(var) var_label(data[[var]]))
@@ -1268,6 +1300,95 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
 }
 
 
+maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = default_kleuren_grafiek,
+                               nvar = default_Nvar, ncel = default_Ncel, alt_text = NULL) {
+  
+  if(!labelled::is.labelled(data[[var_inhoud]])){
+    warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
+  }
+  
+  #titel ophalen uit var_label als niet opgegeven
+  if(is.null(titel)){
+    
+    titel <- var_label(data[[var_inhoud]]) %>% str_wrap(50)
+  }
+  
+  #kruistabel maken
+  df_plot <- bereken_kruistabel(data, variabele = var_inhoud, survey_design = design_gem) %>% 
+    mutate(weggestreept = as.numeric(weggestreept)) 
+    
+  
+  #kleuren labelen o.b.v. levels var_inhoud
+  namen_kleuren <- df_plot[[var_inhoud]]
+  
+  kleuren <- kleuren[1:length(namen_kleuren)]
+  
+  
+  #alt text toevoegen als deze niet handmatig is toegevoegd
+  #kan niet met maak_alt_text omdat hier plotly gebruikt wordt ipv ggplot
+  if(is.null(alt_text)){
+    
+    doelgroep = "jongvolwassenen"
+    onderwerp = var_label(data[[var_inhoud]])
+    
+    waarden = paste0(
+      df_plot[[var_inhoud]], ": ",
+      df_plot$percentage, "%",
+      collapse = ", "
+    ) 
+    
+    
+    alt_text <- glue("Cirkeldiagram voor de indicator '{onderwerp}' bij {doelgroep}: {waarden}")
+    
+  }
+  
+  #regeleinden IN val-labels toevoegen zodat ze niet te lang op 1 regel lopen ze
+  df_plot <- df_plot %>% mutate(
+    !!sym(var_inhoud) := str_wrap(!!sym(var_inhoud),30) 
+  )
+
+
+  #plotly pie chart
+  fig <- plot_ly(df_plot,
+                 labels = ~get(var_inhoud),
+                 textinfo = "percent",
+                 values = ~percentage, 
+                 type = "pie",
+                 hoverinfo = "text",
+                 text = "",
+                 marker = list(colors = kleuren,
+                               line = list(color = "#FFFFFF", width = 1)
+                               ),
+                 insidetextfont = list(
+                   color = "#FFFFFF",
+                   size = 15
+                 ),
+                 outsidetextfont = list(
+                   color = "#000000",
+                   size = 15
+                 )
+                 
+                 ) %>% 
+    layout(title = list(text = titel,
+                        font = list(size = 15)),
+           margin = list(t = 100),
+           
+           legend = list(orientation = "h",    
+                         x = 0.5,          
+                         y = -0.2,          
+                         xanchor = "center", 
+                         yanchor = "top",
+                         font = list(size = 12))     
+           ) %>% 
+    config(staticPlot = T) %>%
+    #plotly heeft zelf geen alt-text optie; met js toevoegen aan object
+    htmlwidgets::onRender(glue("
+  function(el, x) {{
+    el.setAttribute('alt', '{{alt_text}}');
+  }}"))
+  fig
+
+}
 
 bol_met_cijfer <- function(getal, kleur = default_kleuren_grafiek[3], kleur_outline = "#FFFFFF", kleur_text = "#FFFFFF"){
   
@@ -1287,6 +1408,202 @@ bol_met_cijfer <- function(getal, kleur = default_kleuren_grafiek[3], kleur_outl
   
   
   return(svg_code %>% knitr::raw_html())
+}
+
+
+
+maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
+                                       crossing_cbs = "leeftijd",
+                                       niveaus = c("nl","regio","gemeente"),
+                                       missing_label = "Onbekend",
+                                       missing_bewaren = TRUE,
+                                       kleuren = default_kleuren_grafiek,
+                                       titel = "",
+                                       x_label = "",
+                                       alt_text = NULL
+                                       ){
+  
+  #TODO met Sjanne bespreken:
+    #TODO Nu nep gemeentecode ingevoerd in CBS dataset (was groningen).
+    #Hoe noemen we gender/geslacht?
+    #Nog testen wanneer echte data aanwezig is
+    #Hier moet data van landelijk regio en gemeente in
+    #standaard regiodataset in laten voeren daar ook gemeente uit filteren
+      #moet er een check komen of mensen wel de regiodata invoeren?
+    #waar komt landelijke data vandaan?
+  
+  
+  #leeftijd en geslacht aan varnamen uit monitor koppelen
+  crossing_monitor <- c("leeftijd" = "AGLFA401","geslacht" = "AGGSA402")
+  
+  #vector monitor crossvars filteren op invoer
+  crossing_monitor <- crossing_monitor[names(crossing_monitor) %in% crossing_cbs]
+  
+  
+  #cbs populatiedata lezen voor NL / regio / gem 
+  cbs_regio <- cbs_populatie_opschonen(sheet = "Tabel1") %>%
+    mutate(regio = ifelse(is.na(regio),"Totaal Nederland",regio)) %>% 
+    filter(regio %in% c(regionaam,"Totaal Nederland"))
+  
+  cbs_gemeente <- cbs_populatie_opschonen(sheet = "Tabel2") %>%
+    mutate(gemeentecode = str_extract(gemeentecode,"[:digit:]*") %>% as.numeric()) %>% 
+    filter(gemeentecode == gem_code) %>% 
+    select(-gemeentecode)
+  
+  cbs_populatiedata <- rbind(cbs_regio, cbs_gemeente) %>% 
+    mutate(aantal = as.numeric(aantal))
+  
+  #data agregeren op crossing
+  cbs_populatiedata <- cbs_populatiedata %>% group_by(regio, !!sym(crossing_cbs)) %>% 
+      summarise(aantal = sum(aantal)) %>% 
+      rename("crossing" = 2) %>% 
+      mutate(type = "Bevolking")
+
+
+  #response monitor ophale voor crossing
+  #Variabelen naar character omzetten
+  data[[crossing_monitor]] <- labelled_naar_character(data, crossing_monitor)
+    
+  #TODO hier nog landelijk
+    
+  #Aantallen uitrekenen. Missing labelen als missing_label
+    aantallen_regio <- data %>% 
+      group_by(!!sym(crossing_monitor)) %>% 
+      summarise(aantal = n()) %>%
+      rename(crossing = 1) %>% 
+      mutate(regio = regionaam,
+             crossing = replace(crossing, is.na(crossing),missing_label),
+             type = "Deelnemers"
+             )  
+    
+    aantallen_gemeente <- data %>% 
+      filter(Gemeentecode == gem_code) %>% 
+      group_by(!!sym(crossing_monitor)) %>% 
+      summarise(aantal = n()) %>%
+      rename(crossing = 1) %>% 
+      mutate(regio = val_label(data$Gemeentecode,gem_code),
+             crossing = replace(crossing, is.na(crossing),missing_label),
+             type = "Deelnemers"
+             )
+  #regio en gemeente responsedata samenvoegen  
+  monitor_responsedata <- rbind(aantallen_regio, aantallen_gemeente) %>% 
+    mutate(crossing = str_remove(crossing," jaar") %>% #" jaar" verwijderen uit lft crossing van monitordata
+             tolower()) %>% #alles tolower om verschil man Man vrouw Vrouw weg te strepen.
+    select(regio, crossing, aantal, type)
+  
+  #als missing_bewaren FALSE is; verwijderen
+  if(!missing_bewaren){
+    monitor_responsedata <- monitor_responsedata %>% filter(crossing != missing_label)
+  }
+
+  df_plot <- rbind(cbs_populatiedata,monitor_responsedata) %>% #data samenvoegen 
+    #% berekenen 
+    mutate(label = paste(type,regio)) %>%
+    group_by(label) %>% 
+    mutate(percentage = aantal/sum(aantal)*100 %>% round(1))
+  
+  #filteren op opgevraagde niveaus
+  #named vector maken die inhoud regiovar in df_plot koppelt aan vector niveaus()
+  niveaus_plot = c("nl" = "Totaal Nederland",
+                   "regio" = regionaam,
+                   "gemeente" = aantallen_gemeente$regio %>% unique)
+  #named vector filteren op ingevoerde niveaus
+  niveaus_plot <- niveaus_plot[names(niveaus_plot) %in% niveaus]
+  #dataframe filteren
+  df_plot <- df_plot %>% filter(regio %in% niveaus_plot)
+  
+  #Aantal in te voeren kleuren baseren op aantal niveaus crossing
+  namen_kleuren <- unique(df_plot$crossing)
+  kleuren <- kleuren[1:length(namen_kleuren)]
+  
+  # gewenste volgorde van weergave in plot:
+  # type > niveau
+  #- type = Bevolking, deelnemers
+  #- niveau = Nederland, regio, gem
+  
+  #vector maken om factor levels vast te zetten
+  type = c("Bevolking","Deelnemers")
+  niveau = unname(niveaus_plot)
+  #alle combinaties type niveau maken
+  levels_factor = expand.grid(type,niveau) %>% 
+    mutate(label = paste(Var1, Var2)) %>% 
+    #filteren zodat alleen bestaande data in factor lvls komt
+    filter(label %in% df_plot$label) %>% 
+    pull(label)
+  
+  #factorvariabele maken van df_plot$label
+  df_plot$label <- factor(df_plot$label, levels = rev(levels_factor)) 
+  
+
+  plot <-  ggplot(df_plot, aes(x = percentage, y = label, fill = crossing)) + 
+    geom_bar(stat = "identity", position = "stack") +
+    geom_text(aes(
+      label = paste0(round(percentage),"%")),
+      color = "#FFFFFF",
+      position = position_stack(vjust = 0.5),
+      size = 3) +
+    
+    scale_fill_manual(values= kleuren,
+                      labels = function(x) str_wrap(x, width = 40)
+    ) +
+    scale_x_continuous(
+      limits = c(0,101),
+      breaks = seq(0,101, by = 10),
+      labels = paste(seq(0,100, by = 10),"%"),
+      expand = expansion(mult = c(0, 0.05)))+
+    ggtitle(titel) + 
+    ylab(x_label) + 
+    theme(
+      axis.title = element_blank(),
+      panel.background = element_blank(),
+      axis.ticks.x = element_blank(),
+      axis.ticks.y = element_blank(),
+      legend.title = element_blank(),
+      legend.spacing.x = unit(.1,"cm"),
+      legend.position = "bottom",
+      plot.title = element_text(hjust = .5),
+      axis.line.x.bottom = element_line(linewidth = 1),
+      axis.line.y.left = element_line(linewidth = 1,)
+    ) +
+    guides(fill = guide_legend(reverse = TRUE))
+  
+
+  if(is.null(alt_text)){
+    # maak_alt_text() niet geschikt omdat t ook andere data dan monitordata betreft
+    df_sorted <- df_plot %>% 
+      arrange(desc(label)) #plot sorteren op labelvolgorde in plot
+    
+    onderdeel_labels = df_sorted$label %>% unique() %>% as.character() #vector van alle onderdelen
+    
+    #per onderdeel; zet leeftijd bijbehored percentage naast elkaar
+    str_waarden <- lapply(onderdeel_labels, function(x){
+      
+      df_onderdeel <- df_sorted %>% filter(label == x)
+      
+      waarde_labels = paste0(df_onderdeel$crossing, ": ",
+                             round(df_onderdeel$percentage,0),"%",
+                             collapse = ", ")
+      
+      paste0(x, ": ", waarde_labels)
+      
+      
+    }) %>% unlist() %>% 
+      paste0(collapse = ", ")
+    
+    #alt text construeren v onderdelen
+    alt_text <- paste0(
+      "gestapeld staafdiagram met percentages per ",
+      crossing_cbs," in de bevolking en bij deelnemers: ",
+      str_waarden
+    )
+
+    
+  }
+  
+  plot <- plot + labs(alt = alt_text)
+  
+  return(plot)
+  
 }
 
 #TODO percentage in tekst
@@ -1323,7 +1640,7 @@ maak_vergelijking <- function(data, survey_design, variabele, variabele_label = 
                          .default = tolower(labelled_naar_character(result, vergelijking)))
 
   if (is.null(variabele_label)) {
-    label <- tolower(get_variable_labels(data[variabele]))
+    label <- tolower(var_label(data[variabele]))
   } else {
     label <- variabele_label
   }
@@ -1370,6 +1687,7 @@ maak_vergelijking <- function(data, survey_design, variabele, variabele_label = 
 maak_top <- function(data, survey_design, variabelen, toon_label = T, value = 1, top = 1) {
 
   # TODO toevoegen selectie van juiste niveau en juiste jaar.  
+
   
   # Bereken gewogen cijfers
   list <- lapply(variabelen, function(x){bereken_kruistabel(data = data, 
@@ -1408,7 +1726,7 @@ maak_top <- function(data, survey_design, variabelen, toon_label = T, value = 1,
     }
        
   } else { # Wanneer geen label getoond moet worden
-    
+
     return(paste0(list$percentage[top], "%")) 
     
   }
@@ -1425,7 +1743,6 @@ maak_percentage <- function(data, survey_design, variabele, value = 1) {
   return(paste0(result$percentage, "%"))
   
 }
-
 
 # table of contents voor pdf ----------------------------------------------
 #Geleend van https://gist.github.com/gadenbuie/c83e078bf8c81b035e32c3fc0cf04ee8
@@ -1476,3 +1793,4 @@ render_toc <- function(
   x <- x[x != ""]
   knitr::asis_output(paste(x, collapse = "\n"))
 }
+
