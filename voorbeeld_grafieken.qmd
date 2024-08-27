@@ -476,6 +476,7 @@ plot
 -   **var_inhoud:** Een character met de naam van een variabele
 
 ### Optionele argumenten
+
 -   Dezelfde argumenten als in [**maak_staafdiagram_dubbele_uitsplitsing():**](#optionele-argumenten-1)
 
 -   **titel**: character variabele. Als argument leeg is wordt het variabellabel van var_inhoud gebruikt.
@@ -494,19 +495,18 @@ plot
 ```
 
 ## Populatiegrafiek CBS
-Functie om een horizontaal georienteerd gestapeld staafdiagram te maken waarin populatiegegevens van het CBS worden vergeleken met de response op de  per regio en gemeente. Dit kan o.b.v. de kruisvariabelen leeftijd en geslacht gedaan worden.
+
+Functie om een horizontaal georienteerd gestapeld staafdiagram te maken waarin populatiegegevens van het CBS worden vergeleken met de response op de per regio en gemeente. Dit kan o.b.v. de kruisvariabelen leeftijd en geslacht gedaan worden.
 
 ::: calout-warning
-
 Hieronder wordt monitor_df_regio gebruikt ITT bovenstaande waar monitor_df wordt gebruikt.
 
-TODO; landelijke demografische cijfers toevoegen aan functie
-TODO; uitzoeken wel dataframes er allemaal gebruikt zullen worden.
-
+TODO; landelijke demografische cijfers toevoegen aan functie TODO; uitzoeken wel dataframes er allemaal gebruikt zullen worden.
 :::
 
 ### Optionele argumenten
--   **gem_code:** character variabele met gemeentenaam. Standaard de 'huidige' gemeente o.b.v. params$gemeentecode.
+
+-   **gem_code:** character variabele met gemeentenaam. Standaard de 'huidige' gemeente o.b.v. params\$gemeentecode.
 -   **crossing_cbs:** character variabele. De naam van de kruising die getoond moet worden. Opties: "leeftijd" of "geslacht".
 -   **niveaus:** character vector met niveaus die getoond moeten worden. Standaard c("nl","regio","gemeente")
 -   **missing_bewaren:** TRUE of FALSE. Als TRUE worden percentages met missing categorieën voor *Deelnemers* bewaard en getoond in de grafiek.

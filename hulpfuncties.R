@@ -536,8 +536,18 @@ cbs_populatie_opschonen <- function(file = "JongVolwassenenNaarGeslachtEnLeeftij
                                     sheet = NULL){
   
   #niet als dataframe aangeleverd. ontbrekende kolomkoppen. meerdere rijen boven dataset.
-  cbs_df <- openxlsx::read.xlsx("JongVolwassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx",
-                                sheet = sheet)[-c(1:4),] %>% #1e 4 rijen verwijderen
+  if (file %in% dir()) { # Als file bestaat, inladen
+    
+    cbs_df <- openxlsx::read.xlsx(paste(file),
+                                  sheet = sheet)[-c(1:4),] #1e 4 rijen verwijderen
+      
+  } else { # Als file niet bestaat, error
+    
+    stop(paste("Bestand", file, "is niet aanwezig in working directory. Voeg bestand toe of wijzig working directory."))                              
+  
+    }
+
+  cbs_df <- cbs_df %>%
     rename( #varlabels fixen
       "gemeentecode" = 1,
       "regio" = 2,
@@ -568,6 +578,7 @@ cbs_populatie_opschonen <- function(file = "JongVolwassenenNaarGeslachtEnLeeftij
     select(-categorie)
   
 }  
+
 # Tabelfuncties -------------------------------------------------------
 maak_responstabel <- function(data, crossings, missing_label = "Onbekend",
                               kleuren = default_kleuren_responstabel){
@@ -1425,7 +1436,6 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
   
   #TODO met Sjanne bespreken:
     #TODO Nu nep gemeentecode ingevoerd in CBS dataset (was groningen).
-    #Hoe noemen we gender/geslacht?
     #Nog testen wanneer echte data aanwezig is
     #Hier moet data van landelijk regio en gemeente in
     #standaard regiodataset in laten voeren daar ook gemeente uit filteren
@@ -1434,7 +1444,8 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
   
   
   #leeftijd en geslacht aan varnamen uit monitor koppelen
-  crossing_monitor <- c("leeftijd" = "AGLFA401","geslacht" = "AGGSA402")
+  crossing_monitor <- c("leeftijd" = "AGLFA401",
+                        "gender" = "AGGSA402")
   
   #vector monitor crossvars filteren op invoer
   crossing_monitor <- crossing_monitor[names(crossing_monitor) %in% crossing_cbs]
@@ -1606,9 +1617,6 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
   
 }
 
-#TODO percentage in tekst
-#TODO Cirkeldiagram
-  #TODO Donut
 
 # Tekstfuncties -----------------------------------------------------------
 maak_vergelijking <- function(data, survey_design, variabele, variabele_label = NULL, 
