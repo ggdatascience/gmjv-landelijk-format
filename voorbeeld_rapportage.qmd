@@ -176,55 +176,25 @@ if(params$is_pdf){
 
 # Over de Gezondheidsmonitor Jongvolwassenen
 
-::: {layout="[[30,30,30],[30,30,30]]"}
-::: column
+In de periode van april tot juli van 2024 vond de **Gezondheidsmonitor Jongvolwassenen** plaats. Dit is een groot onderzoek naar de (mentale) gezondheid, de leefstijl en het welzijn en digitale leefomgeving van jongvolwassenen tussen de 16 en 25 jaar.
+
+Voor de Gezondheidsmonitor Jongvolwassenen 2024 is geen steekproef getrokken. De vragenlijst was in te vullen via een open link en respondenten zijn geworven via een online social media campagne.
+
 In totaal hebben `r nrow(monitor_df)` jongvolwassenen uit Nederland de vragenlijst ingevuld. Van deze respondenten komen `r nrow(monitor_df_regio)` jongvolwassenen uit `r labelled_naar_character(monitor_df_regio, "GGDregio") %>% unique()`.
-:::
 
-::: column
-:::
-
-::: column
-:::
-
-::: column
-:::
-
-::: column
-:::
-
-::: column
-:::
-:::
+De resultaten kunnen helpen bij de invulling en ontwikkeling van het gezondheidsbeleid. Uit de resultaten kan bijvoorbeeld blijken dat het nodig is om meer hulp te bieden aan bepaalde groepen jongvolwassenen of extra voorzieningen op te zetten in de regio of in een gemeente.
 
 # Leeswijzer en achtergrond
 
-::: {layout="[[30,30,30],[30,30,30]]"}
-::: column
-:::
+Vanwege de betrouwbaarheid van de resultaten en de privacy van de respondenten hanteren wij bij de rapportage een minimum van 100 respondenten die de vraag ingevuld hebben en een minimum van 10 respondenten per specifiek antwoord. Indien de aantallen lager liggen, worden de cijfers niet weergegeven.
 
-::: column
-:::
-
-::: column
-:::
-
-::: column
-:::
-
-::: column
-:::
-
-::: column
-:::
-:::
+De cijfers die hier worden gepresenteerd zijn gestandaardiseerd naar GGD-regio, leeftijd (16-17 jaar, 18-20 jaar en 21-25 jaar) en gender (in twee groepen: mannen en vrouwen). Dit betekent dat er is gecorrigeerd voor een niet-representatieve verhouding van deze kenmerken in de data, zodat de cijfers een zo representatief mogelijk beeld geven van alle jongvolwassenen in Nederland en de verschillende regio's. In de Gezondheidsmonitor Jongvolwassenen 2024 is genderidentiteit uitgevraagd met de antwoordopties "man", "vrouw", "non-binair" en "anders dan bovenstaande". Ten behoeve van de standaardisatie is een nieuwe variabele 'Geslacht_standaardisatie' aangemaakt, waarin gender "non-binair"/"anders dan bovenstaande" (samen 1,4%) random geïmputeerd zijn tot man/vrouw. Deze methode is gekozen omdat de populatiereferentie-aantallen (vanuit het CBS) alleen beschikbaar zijn voor geslacht man en vrouw. De variabele "Geslacht_standaardisatie" is alleen gebruikt voor het berekenen van standaardisatiefactoren en is niet gebruikt voor de cijfers uitgesplitst naar mannen en vrouwen in deze rapportage.
 
 # Achtergrondkenmerken
 
 ::: {layout="[[30,30,30],[30,30,30]]"}
 ::: column
-Van de respondenten is `r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'AGGSA401', value = 2)` vrouw en `r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'AGGSA401', value = 1)` man. Daarnaast geeft `r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'AGGSA401', value = 3)` aan zich anders dan man of vrouw te voelen. 
-
+Van de respondenten is `r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'AGGSA401', value = 2)` vrouw en `r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'AGGSA401', value = 1)` man. Daarnaast geeft `r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'AGGSA401', value = 3)` aan zich anders dan man of vrouw te voelen.
 :::
 
 ::: column
@@ -232,7 +202,36 @@ Van de respondenten is `r monitor_df %>% maak_percentage(survey_design = design_
 
 <br>
 
-`r #monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'AGETS411', value = 1)` heeft een Nederlandse herkomst.
+`r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'AGETS411', value = 1)` heeft een Nederlandse herkomst.
+:::
+
+::: column
+:::
+
+::: column
+```{r, echo = F}
+# Cirkeldiagram gender deelnemers NL
+plot = monitor_df %>% 
+  maak_cirkeldiagram(
+    var_inhoud = "AGGSA401",
+    titel = "Gender deelnemers Nederland"
+  )
+
+plot
+```
+:::
+
+::: column
+```{r, echo = F}
+# Cirkeldiagram gender deelnemers NL
+plot = monitor_df %>% 
+  maak_cirkeldiagram(
+    var_inhoud = "AGGSA401",
+    titel = paste("Gender deelnemers", regionaam)
+  )
+
+plot
+```
 :::
 
 ::: column
@@ -247,87 +246,57 @@ plot
 
 ```
 :::
-
-::: column
-DONUTS INVOEGEN TODO
-:::
-
-::: column
-```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
-plot = maak_staafdiagram_gestapeld(
-  data = monitor_df, 
-  var_inhoud = 'AGLFA401', 
-  titel = "Leeftijd"
-)
-
-plot
-```
-:::
-
-::: column
-:::
 :::
 
 # Woon- en werksituatie en financiën
 
 ::: {layout="[[30,30,30],[30,30,30]]"}
 ::: column
-De woon-, werk- en financiële situatie van jongvolwassenen kan veel invloed hebben op het welzijn en de mentale en fysieke gezondheid van jongvolwassenen. In een tijd waarin er sprake is van een woning- en financiële crisis is het van belang om inzichtelijk te hebben in welke situaties de jongvolwassenen zitten.
+De woon-, werk- en financiële situatie kan veel invloed hebben op het welzijn en de mentale en fysieke gezondheid van jongvolwassenen. In een tijd waarin er sprake is van een woningcrisis en een onzekere financiële situatie is het van belang om deze aspecten goed te monitoren.
 
-<br> 
+<br>
 
 **Woonsituatie**
 
-De meeste respondenten wonen `r #monitor_df %>% maak_top(survey_design = design_gem,             variabelen = 'AGHHA403', value = 1:8, top = 1)`. `r #monitor_df %>% maak_vergelijking(survey_design = design_gem, variabele = 'AGHHA403', variabele_label = 'in deze woonsituatie woont', vergelijking = 'AGOJB401')` TODO NOG CONDITIONEEL MAKEN OP VORIG ANWTOORD OID.
-:::
-
-::: column
-```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
-# plot = monitor_df %>% 
-#   maak_staafdiagram_vergelijking(
-#     var_inhoud = "AGOWA401",
-#     var_crossings = "AGLFA401",
-#      titel = "Volgt een opleiding")
-# plot
-# 
-# plot2 = monitor_df %>% 
-#   maak_staafdiagram_vergelijking(
-#     var_inhoud = "AGWSA401",
-#     var_crossings = "AGLFA401",
-#      titel = "Heeft betaald werk")
-# plot2
-
-# ALTERNATIEF in één grafiek:
-# plot = monitor_df %>% 
-#   maak_staafdiagram_meerdere_staven(
-#     var_inhoud = c("AGOWA401", "AGWSA401"),
-#     var_crossing = "AGLFA401",
-#     titel = "Volgt een opleiding en heeft betaald werk"
-#   )
-# 
-# plot
-
-```
+De meeste jongvolwassenen in uw gemeente wonen `r monitor_df %>% maak_top(survey_design = design_gem,             variabelen = 'AGHHA403', value = 1:8, top = 1)`. `r monitor_df %>% maak_vergelijking(survey_design = design_gem, variabele = 'AGHHA403', value = 8, variabele_label = 'in deze woonsituatie woont', vergelijking = 'AGOJB401')`
 :::
 
 ::: column
 **Werk- en financiële situatie**
 
-De meeste werkende jongvolwassenen in uw gemeente werken `r #monitor_df %>% maak_top(survey_design = design_gem, variabelen = 'AGWSA413', value = 1:5, top = 1)`. `r #monitor_df %>% maak_vergelijking(survey_design = design_gem, variabele = 'AGWSA413', variabele_label = 'zoveel uren werkt', vergelijking = 'AGOJB401')` TODO NOG CONDITIONEEL MAKEN OP VORIG ANWTOORD OID. TODO zIN ERNA INVOEGEN
+De meeste werkende jongvolwassenen in uw gemeente werken `r #monitor_df %>% maak_top(survey_design = design_gem, variabelen = 'AGWSA413', value = 1:5, top = 1)`. `r #monitor_df %>% maak_vergelijking(survey_design = design_gem, variabele = 'AGWSA413', variabele_label = 'zoveel uren werkt', vergelijking = 'AGOJB401')`
 
 <br>
-`r #monitor_df %>% maak_vergelijking(survey_design = design_gem, variabele = '', vergelijking = 'AGOJB401')` # TODO INDICATOR NOG TOEVOEGEN WANT DEZE BESTAAT NIET.
-`r #monitor_df %>% maak_vergelijking(survey_design = design_gem, variabele = 'AGWSA412', vergelijking = 'AGOJB401')`
+
+`r #monitor_df %>% maak_vergelijking(survey_design = design_gem, variabele = '', vergelijking = 'AGOJB401')` `r #monitor_df %>% maak_vergelijking(survey_design = design_gem, variabele = 'AGWSA412', vergelijking = 'AGOJB401')`
 :::
 
 ::: column
 ```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
-# plot = monitor_df %>% 
-#   maak_staafdiagram_meerdere_staven(
-#     var_inhoud = "AGHHA403",
-#     titel = "Woonsituatie")
-# 
-# plot
+plot = monitor_df %>%
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "AGOWA401",
+    var_crossings = "AGLFA401",
+     titel = "Volgt een opleiding")
+plot
+
+plot2 = monitor_df %>%
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "AGWSA401",
+    var_crossings = "AGLFA401",
+     titel = "Heeft betaald werk")
+plot2
+```
+:::
+
+::: column
+```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+plot = monitor_df %>% 
+   maak_staafdiagram_meerdere_staven(
+     var_inhoud = "AGHHA403",
+     titel = "Woonsituatie")
+ 
+ plot
 
 ```
 :::
@@ -364,58 +333,63 @@ De meeste werkende jongvolwassenen in uw gemeente werken `r #monitor_df %>% maak
 
 ::: {layout="[[30,30,30],[30,30,30]]"}
 ::: column
-
 **Ervaren Gezondheid**
 
-Uit de resultaten blijkt dat `r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = "GZGGA402")` van de jongvolwassen in uw gemeente de eigen gezondheid als (zeer) goed ervaart. 
-`r #monitor_df %>% maak_vergelijking(survey_design = design_gem, variabele = 'GZGGA402', variabele_label = "hun eigen gezondheid als (zeer) goed ervaart", vergelijking = 'AGOJB401')` 
+Gezondheid is meer dan de afwezigheid van lichamelijke en mentale klachten. Iedereen geeft zijn eigen betekenis aan gezondheid en jongvolwassenen kunnen zelf het beste aangeven hoe zij hun eigen gezondheid ervaren, dit is een betrouwbare indicator voor de algehele gezondheidstoestand.
+
+<br>
+
+Uit de resultaten blijkt dat `r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = "GZGGA402")` van de jongvolwassen in uw gemeente de eigen gezondheid als (zeer) goed ervaart. `r monitor_df %>% maak_vergelijking(survey_design = design_gem, variabele = 'GZGGA402', variabele_label = "hun eigen gezondheid als (zeer) goed ervaart", vergelijking = 'AGOJB401')`
 :::
 
 ::: column
 **Geluk**
 
-Een andere belangrijke indicator voor het welzijn van jongvolwassenen is hoe gelukkig zij 
-zich voelen. `r #monitor_df %>% maak_percentage(survey_design = design_gem, variabele = "LVPKA407")` van de jongvolwassenen in uw gemeente voelde zich in de afgelopen vier weken vaak tot voortdurend gelukkig.  `r #monitor_df %>% maak_vergelijking(survey_design = design_gem, variabele = 'LVPKA407', variabele_label = "hun eigen gezondheid als (zeer) goed ervaart", vergelijking = 'AGOJB401')` 
-:::
-
-::: column
-```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
-
-# plot = monitor_df %>%
-#   maak_staafdiagram_meerdere_staven(
-#     var_inhoud = c("GZGGA402", "LVPKA407"),
-#     var_crossing = "AGGSA401",
-#     titel = "Ervaren gezondheid en geluk"
-#   )
-# 
-# plot
-
-```
+Een andere belangrijke indicator voor het welzijn van jongvolwassenen is hoe gelukkig zij zich voelen. `r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = "LVPKA407")` van de jongvolwassenen in uw gemeente voelde zich in de afgelopen vier weken vaak tot voortdurend gelukkig. `r monitor_df %>% maak_vergelijking(survey_design = design_gem, variabele = 'LVPKA407', variabele_label = "hun eigen gezondheid als (zeer) goed ervaart", vergelijking = 'AGOJB401')`
 :::
 
 ::: column
 **Slaap**
 
-`r #monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'GZSLA401') %>% bol_met_cijfer()`
-`r #monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'GZSLA402') %>% bol_met_cijfer()`
+Slaap is belangrijk voor het ‘schoonmaken’ van de hersenen, het onthouden van belangrijke dingen en het verwerken van emoties. Slapen is daarom net zo belangrijk als voeding en beweging om gezond te blijven.
+
+<br>
+
+`r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'GZGGA402') %>% bol_met_cijfer()`
 :::
 
 ::: column
 ```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
 
-# plot = monitor_df %>% 
-#   maak_staafdiagram_meerdere_staven(
-#     var_inhoud = c("LVTEA402", "LVTEA404", "LVTEA406"),
-#     titel = "Tevredenheid met jezelf, je lichaam en je leven"
-#   )
-# 
-# plot
+plot = monitor_df %>%
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "GZGGA402",
+    var_crossings = "AGGSA401",
+    titel = "(zeer) goed ervaren gezondheid"
+  )
+
+plot
 
 ```
 :::
 
 ::: column
-`r #monitor_df %>% maak_vergelijking(survey_design = design_gem, variabele = 'LVTEA402', variabele_label = "(zeer) tevreden is met zichzelf", vergelijking = 'AGOJB401')` `r #monitor_df %>% maak_vergelijking(survey_design = design_gem, variabele = 'LVTEA402', variabele_label = "(zeer) tevreden is met zichzelf", vergelijking = 'AGGSA402')` 
+```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+
+plot = monitor_df %>%
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "LVPKA407",
+    var_crossings = "AGGSA401",
+    titel = "Vaak tot voortdurend gelukkig"
+  )
+
+plot
+
+```
+:::
+
+::: column
+`r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'GZGGA402') %>% bol_met_cijfer()`
 :::
 :::
 
@@ -425,43 +399,14 @@ zich voelen. `r #monitor_df %>% maak_percentage(survey_design = design_gem, vari
 ::: column
 **Stress**
 
-Het hebben van stress (spanning of druk) kan zowel gezond als ongezond zijn. Gezonde stress kan ervoor zorgen dat je extra alert kunt reageren en geconcentreerd kunt werken. Deze spanning zal snel afnemen na de gebeurtenis. Wanneer stress te lang duurt (ongezonde stress), is er meer tijd nodig om te herstellen. Bij te veel stress is er te weinig tijd om tussendoor te herstellen en kan dit leiden tot spanningsklachten en een burn-out.
+Het hebben van stress (spanning of druk) kan zowel gezond als ongezond zijn. Gezonde stress kan ervoor zorgen dat je extra alert kunt reageren en geconcentreerd kunt werken. Wanneer stress te lang duurt (ongezonde stress), is er meer tijd nodig om te herstellen. Bij te veel stress is er te weinig tijd om tussendoor te herstellen en kan dit leiden tot spanningsklachten en een burn-out.
 :::
 
 ::: column
-Het percentage mannen dat zich (heel) vaak gestrest voelt is hoger dan/lager dan/gelijk onder vrouwen. Vrouwen ervaren de meeste stress van studie of school, de combinatie van alles wat zij moeten doen en de eisen die zij aan zichzelf stellen.
-
-Het percentage dat zich (heel) vaak gestrest voelt is hoger onder de 21-25-jarigen dan onder de 16-17-jarigen. Jongvolwassenen in de leeftijd van 21 -- 25 jaar ervaren de meeste stress op het gebied van de combinatie van alles wat zij moeten doen, de eisen die zij aan zichzelf stellen, en studie of school.
-:::
-
-::: column
-**Prestatiedruk**
-
-Sommige jongvolwassenen voelen druk om aan verwachtingen te voldoen. Ze hebben vaak het gevoel dat ze iets goed of beter moeten doen. Bijvoorbeeld hoge cijfers halen, een goede baan hebben of voldoen aan het perfecte plaatje.
+`r monitor_df %>% maak_vergelijking(survey_design = design_gem, variabele = 'LVSTA415', variabele_label = 'zich (heel) vaak gestrest voelt in de regio', vergelijking = 'AGOJB401')` `r monitor_df %>% maak_vergelijking(survey_design = design_gem, variabele = 'LVSTA415', variabele_label = 'zich (heel) vaak gestrest voelt', vergelijking = 'AGGSA402')`
 
 <br>
 
-Meer jongvolwassenen ervaren prestatiedruk vanuit zichzelf dan vanuit anderen. Het percentage dat prestatiedruk ervaart vanuit zichzelf is hoger/lager onder de xx-xx-jarigen dan onder de 16-17-jarigen.
-:::
-
-::: column
-```{r, echo = F, fig.alt= ggplot2::get_alt_text(plot), warning = F}
-
-# Staafgrafiek met trend (zeer) vaak gestresst, regio vergeleken met landelijk
-
-plot = monitor_df %>% 
-   maak_staafdiagram_dubbele_uitsplitsing(
-     var_inhoud = "LVSTA415", 
-     var_crossing_groep = "AGOJB401",
-     var_crossing_kleur = "AGGSA402", # gender nog wijzigen naar vergelijking met landelijk
-     titel = "Voelt zich (heel) vaak gestrest")
-
-plot
-
-```
-:::
-
-::: column
 Top 5 bronnen van stress:
 
 -   `r maak_top(data = monitor_df, survey_design = design_gem, variabelen = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 1)`
@@ -472,20 +417,138 @@ Top 5 bronnen van stress:
 :::
 
 ::: column
+**Prestatiedruk**
+
+Sommige jongvolwassenen voelen druk om aan verwachtingen te voldoen. Ze hebben vaak het gevoel dat ze iets goed of beter moeten doen. Ze willen hoge cijfers halen, een goede baan hebben of voldoen aan het perfecte plaatje.
+
+<br>
+
+`r monitor_df %>% maak_vergelijking(survey_design = design_gem, variabele = 'GZGGA402', variabele_label = 'prestatiedruk ervaart vanuit zichzelf en vanuit anderen in de regio', vergelijking = 'AGGSA402')`
+
+<br>
+
+Top 3 van anderen die druk opleggen:
+
+-   `r maak_top(data = monitor_df, survey_design = design_gem, variabelen = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 1)`
+-   `r maak_top(data = monitor_df, survey_design = design_gem, variabelen = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 2)`
+-   `r maak_top(data = monitor_df, survey_design = design_gem, variabelen = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 3)`
+:::
+
+::: column
 ```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
 
-# Staafgrafiek prestatiedruk vanuit zichzelf, uitgesplitst naar gender
-
-plot = monitor_df %>% maak_staafdiagram_vergelijking(
-  var_inhoud = "LVEES404",
-  var_crossings = "AGGSA402",
-  titel = "Ervaart regelmatig tot vaak prestatiedruk vanuit zichzelf",
-  #kleuren_grafiek = default_kleuren_grafiek,
-)
+plot = monitor_df %>%
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "LVSTA415",
+    var_crossings = "AGGSA402",
+    titel = "Voelt zich (heel) vaak gestrest"
+  )
 
 plot
 
 ```
+:::
+
+::: column
+```{r, echo = F, fig.alt= ggplot2::get_alt_text(plot), warning = F}
+
+# Staafgrafiek (zeer) vaak gestresst naar leeftijd, regio vergeleken met landelijk
+
+plot = monitor_df %>% 
+   maak_staafdiagram_dubbele_uitsplitsing(
+     var_inhoud = "LVSTA415", 
+     var_crossing_groep = "AGOJB401",  # TODO jaar nog wijzigen naar vergelijking met landelijk
+     var_crossing_kleur = "AGLFA401",
+     titel = "Voelt zich (heel) vaak gestrest")
+
+plot
+
+```
+:::
+
+::: column
+```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+
+plot = monitor_df %>%
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "GZGGA402",
+    var_crossings = "AGLFA401",
+    titel = "Ervaart regelmatig tot vaak prestatiedruk vanuit zichzelf"
+  )
+
+plot
+
+plot2 = monitor_df %>%
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "GZGGA402",
+    var_crossings = "AGLFA401",
+    titel = "Ervaart regelmatig tot vaak prestatiedruk vanuit anderen"
+  )
+
+plot2
+
+```
+:::
+:::
+
+# Mentaal welbevinden
+
+::: {layout="[[30,30,30],[30,30,30]]"}
+::: column
+**Psychische klachten**
+
+Psychische klachten vinden vaak hun oorsprong op jonge leeftijd. Uit [internationaal onderzoek](https://www.trimbos.nl/kennis/geluk-onder-druk-onderzoek-naar-mentaal-welzijn-jongeren/kennisagenda/) blijkt dat driekwart van de psychische klachten begint voor de leeftijd van 24 jaar en de helft van de psychische klachten voor de leeftijd van 14 jaar. Psychische problemen op jonge leeftijd hebben vaak lichamelijke en psychische problemen op latere leeftijd tot gevolg, waaronder middelengebruik, slaapproblemen, depressieve stoornissen en het vaker ondernemen van zelfmoordpogingen.
+
+<br>
+
+Psychische klachten worden gemeten met de ‘Mental Health Inventory 5’ (MHI-5). Het geeft een indicatie van de psychische gezondheid, waaronder zich somber voelen en zenuwachtig zijn. 
+:::
+
+::: column
+`r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'LVPKS403') %>% bol_met_cijfer()`
+`r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'LVPKS403') %>% bol_met_cijfer()`
+:::
+
+::: column
+**Suicidegedachten**
+
+Als gevoelens zoals angst, paniek, somberheid, leegte, zelfverwijt, boosheid, schaamte, vernedering of schuld bezit van iemand nemen en gedachten gaan beheersen, kan de dood een oplossing lijken om van deze gedachten af te zijn. Het denken aan het beëindigen van het leven kan een manier van zelfbescherming zijn om de pijn en uitzichtloosheid iets te verzachten.
+
+<br>
+
+`r monitor_df %>% maak_vergelijking(survey_design = design_gem, variabele = 'NGSGA401', variabele_label = 'wel eens serieus heeft nagedacht over suïcide in de regio', vergelijking = 'AGGSA402')`
+:::
+
+::: column
+`r monitor_df %>% maak_vergelijking(survey_design = design_gem, variabele = 'LVPKS403', variabele_label = 'psychische klachten heeft in de regio', vergelijking = 'AGOJB401')` `r monitor_df %>% maak_vergelijking(survey_design = design_gem, variabele = 'LVPKS403', variabele_label = 'psychische klachten heeft', vergelijking = 'AGGSA402')`
+
+<br>
+
+[Happyles](https://www.trimbos.nl/aanbod/programmas/happyles-depressiepreventie-bij-jongeren/) is een klassikale interventie ter bevordering van welbevinden en geluk en ter preventie van depressiekrachten bij jongvolwassenen. 
+:::
+
+::: column
+```{r, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+
+plot = monitor_df %>%
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "LVPKS403",
+    var_crossings = "AGLFA401",
+    titel = "Heeft psychische klachten"
+  )
+
+plot
+
+```
+:::
+
+::: column
+`r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'LVPKS403')` van de jongvolwassenen heeft met iemand gepraat over de gedachte om een eind te maken aan het leven. 
+`r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'LVPKS403')` van de jongvolwassenen heeft in de laatste 12 maanden een poging ondernomen om een eind te maken aan het leven. 
+
+<br>
+
+[113 Zelfmoordpreventie](https://www.113.nl/) is er voor inwoners en professionals. Ze geven informatie en trainingen over het herkennen van suïcidaliteit en het bieden van hulp.
 :::
 :::
 
@@ -621,7 +684,7 @@ plot
 :::
 :::
 
-# TITEL
+# VOORBEELDPAGINA TITEL
 
 ::: {layout="[[30,30,30],[30,30,30]]"}
 ::: column
