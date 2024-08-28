@@ -723,7 +723,7 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud, var_crossin
                         crossing = var_crossing_kleur,
                         subsetvar = var_crossing_groep,
                         #TODO aangeven dat de crossing op groepsniveau een subset is
-                        survey_design = design_gem
+                        survey_design = design_land
                         ) %>% 
     filter(waarde == 1)
   
@@ -822,7 +822,7 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
      
      var_label_crossing = var_label(data[[crossing]])
      
-     df_crossing <- bereken_kruistabel(data, variabele = var_inhoud, crossing = crossing, survey_design = design_gem) %>% 
+     df_crossing <- bereken_kruistabel(data, variabele = var_inhoud, crossing = crossing, survey_design = design_land) %>% 
        filter(waarde == 1) %>% 
        rename(onderdeel = !!sym(crossing)) %>%  #crossinglevel naar 'onderdeel' hernoemen
        mutate(groep = factor(var_label_crossing),  #varlabel crossing als 'groep' toevoegen
@@ -942,14 +942,14 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
     if(var_crossing != jaarvar){
       #standaard alleen laatste jaar weergeven.
       #subset maken van dataset.
-      design_temp <<- subset(design_gem, get(jaarvar) == huidig_jaar) #TODO checken of design_gem hardcode wel slim is.
+      design_temp <<- subset(design_land, get(jaarvar) == huidig_jaar) #TODO checken of design_land hardcode wel slim is.
       #subset maken v design
       data_temp <<- data %>% filter(!!sym(jaarvar) == huidig_jaar)
     }   
   } else {
     #jaren bewaren want het is een crossing!
     data_temp <<- data
-    design_temp <<- design_gem
+    design_temp <<- design_land
   }  
     
   #kruistabel maken
@@ -1093,7 +1093,7 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
     
     var_label_crossing = var_label(data[[crossing]])
     
-    df_crossing <- bereken_kruistabel(data, variabele = var_inhoud, crossing = crossing, survey_design = design_gem) %>% 
+    df_crossing <- bereken_kruistabel(data, variabele = var_inhoud, crossing = crossing, survey_design = design_land) %>% 
       filter(waarde == 1) %>% 
       rename(onderdeel = !!sym(crossing)) %>%  #crossinglevel naar 'onderdeel' hernoemen
       mutate(groep = factor(var_label_crossing),  #varlabel crossing als 'groep' toevoegen
@@ -1238,7 +1238,7 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
   
   
   #kruistabel maken
-  df_plot <- bereken_kruistabel(data, variabele = var_inhoud, crossing = var_crossing, survey_design = design_gem) %>% 
+  df_plot <- bereken_kruistabel(data, variabele = var_inhoud, crossing = var_crossing, survey_design = design_land) %>% 
     mutate(weggestreept = as.numeric(weggestreept))
   
   #Als crossing niet is ingevuld; dummy crossing maken zodat plot met beide kan omgaan
@@ -1325,7 +1325,7 @@ maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = default_
   }
   
   #kruistabel maken
-  df_plot <- bereken_kruistabel(data, variabele = var_inhoud, survey_design = design_gem) %>% 
+  df_plot <- bereken_kruistabel(data, variabele = var_inhoud, survey_design = design_land) %>% 
     mutate(weggestreept = as.numeric(weggestreept)) 
     
   
@@ -1454,7 +1454,7 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
   #cbs populatiedata lezen voor NL / regio / gem 
   cbs_regio <- cbs_populatie_opschonen(sheet = "Tabel1") %>%
     mutate(regio = ifelse(is.na(regio),"Totaal Nederland",regio)) %>% 
-    filter(regio %in% c(regionaam,"Totaal Nederland"))
+    filter(regio %in% c(params$regionaam,"Totaal Nederland"))
   
   cbs_gemeente <- cbs_populatie_opschonen(sheet = "Tabel2") %>%
     mutate(gemeentecode = str_extract(gemeentecode,"[:digit:]*") %>% as.numeric()) %>% 
@@ -1482,7 +1482,7 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
       group_by(!!sym(crossing_monitor)) %>% 
       summarise(aantal = n()) %>%
       rename(crossing = 1) %>% 
-      mutate(regio = regionaam,
+      mutate(regio = params$regionaam,
              crossing = replace(crossing, is.na(crossing),missing_label),
              type = "Deelnemers"
              )  
@@ -1516,7 +1516,7 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
   #filteren op opgevraagde niveaus
   #named vector maken die inhoud regiovar in df_plot koppelt aan vector niveaus()
   niveaus_plot = c("nl" = "Totaal Nederland",
-                   "regio" = regionaam,
+                   "regio" = params$regionaam,
                    "gemeente" = aantallen_gemeente$regio %>% unique)
   #named vector filteren op ingevoerde niveaus
   niveaus_plot <- niveaus_plot[names(niveaus_plot) %in% niveaus]
@@ -1619,7 +1619,7 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
 
 
 # Tekstfuncties -----------------------------------------------------------
-maak_vergelijking <- function(data, survey_design, variabele, variabele_label = NULL, 
+maak_vergelijking <- function(data, survey_design = design_land, variabele, variabele_label = NULL, 
                               vergelijking, value = 1) {
   
   # Bereken gewogen cijfers
@@ -1692,7 +1692,7 @@ maak_vergelijking <- function(data, survey_design, variabele, variabele_label = 
   }
 }
 
-maak_top <- function(data, survey_design, variabelen, toon_label = T, value = 1, top = 1) {
+maak_top <- function(data, survey_design = design_land, variabelen, toon_label = T, value = 1, top = 1) {
 
   # TODO toevoegen selectie van juiste niveau en juiste jaar.  
 
@@ -1740,7 +1740,7 @@ maak_top <- function(data, survey_design, variabelen, toon_label = T, value = 1,
   }
 }
 
-maak_percentage <- function(data, survey_design, variabele, value = 1) {
+maak_percentage <- function(data, survey_design = design_land, variabele, value = 1) {
   
   # Bereken gewogen cijfers
   result <- bereken_kruistabel(data = data, survey_design = survey_design, variabele = variabele) %>%

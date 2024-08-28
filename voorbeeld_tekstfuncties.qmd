@@ -1,0 +1,310 @@
+---
+title: ""
+author: ""
+format:
+  html:
+    page-layout: full
+    css: custom.css
+    toc: TRUE
+    toc-location: left
+    embed-resources: true
+  pdf: 
+    classoption: landscape
+    toc: TRUE
+    tol: TRUE
+params:
+  gemeentecode: 1 
+editor: visual
+format-links: false
+crossref:
+  fig-title: Tekstfuncties
+  fig-prefix: Tekstfuncties
+---
+
+```{r Instellingen, echo=F, message=F, warning=F}
+# Het script maakt gebruik van een aantal packages
+# Deze moeten bij de eerste keer lokaal worden geinstalleerd
+# Hieronder worden de benodige packages geladen
+library(gt)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(haven)
+library(stringr) # Voor str_replace
+library(labelled) # Package om te werken met datalabels, o.a. voor to_character()
+library(survey) # Package om te werken met gewogen gemiddelds incl. betrouwbaarheidsintervallen
+library(glue) #om strings aangenaam aan elkaar te plakken
+
+options(dplyr.summarise.inform = FALSE)
+source("hulpfuncties.R")
+
+#Standaardwaarden in te stellen door gebruiker:
+# Standaard kleuren
+default_kleuren_grafiek <- c("#012C17","#76B82A","#007E48")
+default_kleuren_responstabel <- c("header" = "#012C17",
+                                  "kleur_1" = "#007E48",
+                                  "kleur_2" = "#76B82A",
+                                  "kleur_tekst" = "#FFFFFF"
+                                  )
+
+# Standaard minima voor groep & cel
+default_Nvar = 100 # Minimum aantal invullers per vraag.
+default_Ncel = 10 # Minimum aantal invullers oper antwoordoptie.
+
+# Standaard regio
+# Pas onderstaande naam en code aan naar de naam en code van je eigen regio.
+regionaam <- 'GGD Limburg-Noord'
+regiocode <- 23
+
+#SPSS data inlezen
+# Regionaal bestand
+file_path_regio = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
+
+# Landelijk bestand
+#file_path_land = "Totaalbestand_CGMJV2022_2024_GGD_versie 1 (N = xxx).sav"
+
+#Lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
+monitor_df = haven::read_spss(file_path_regio, user_na =T) %>%
+  labelled::user_na_to_na()
+
+#TODO verwijderen bij echte data. tijdelijk varlabel voor jaarvariabele
+var_label(monitor_df$AGOJB401) <- "Jaar"
+#monitor_df_land = haven::read_spss(file_path_land,user_na =T) %>%
+#  labelled::user_na_to_na()
+
+#Maak survey designs
+# Regionaal 2022 en 2024
+design_regio <- survey_design_maken(
+                          strata = 'Stratum', 
+                          gewichten = 'Standaardisatiefactor', 
+                          data = monitor_df)
+
+# Landelijk 2022 en 2024
+#design_land <- survey_design_maken(
+#                          strata = 'Stratum', 
+#                          gewichten = 'Standaardisatiefactor', 
+#                          data = monitor_df_land)
+
+#Er is niet goed aangegeven wat missing is in SPSS.
+#tijdelijke functie om 9 Onbekend te verwijderen & naar NA te zetten
+
+for(var in names(monitor_df)){
+  
+  monitor_df <- monitor_df %>% verwijder_9_onbekend(var)
+
+}
+
+#TODO Tijdelijke filter op alleen gemeente in parameter
+monitor_df_regio <- monitor_df
+monitor_df <- monitor_df %>%
+  filter(Gemeentecode == params$gemeentecode)
+
+#Maak survey design gemeente
+# Gemeente 2022 en 2024
+design_gem <- survey_design_maken(
+                          strata = 'Stratum', 
+                          gewichten = 'Standaardisatiefactor', 
+                          data = monitor_df)
+
+# ALTERNATIEVE METHODE VAN INLADEN: regionale data invoegen in landelijk
+# Landelijk bestand inladen
+# df <- haven::read_spss(file.choose(), user_na =T) %>%
+#   labelled::user_na_to_na()
+# 
+# # Regionaal bestand inladen
+# df_regio <- haven::read_spss(file.choose(), user_na =T) %>%
+#   labelled::user_na_to_na()
+# 
+# # Check of aantallen gelijk zijn.
+# # NB. Alleen deelnemers met landelijke weegfactor zitten in landelijk bestand.
+# if (sum(df_regio$Standaardisatiefactor != 0) != nrow(df %>% filter(GGDregio == regiocode))) {
+#   print("Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data.")
+# }
+# 
+# # Filter regio uit landelijk databestand
+# df <- df %>%
+#   filter(GGDregio != regiocode)
+# 
+# # Voeg regiobestand toe aan landelijk bestand
+# df <- df %>%
+#   full_join(df_regio)
+# 
+# # Opschonen
+# rm(df_regio)
+# 
+# #Er is niet goed aangegeven wat missing is in SPSS.
+# #tijdelijke functie om 9 Onbekend te verwijderen & naar NA te zetten
+# 
+# for(var in names(df)){
+#   
+#   df <- df %>% verwijder_9_onbekend(var)
+# 
+# }
+# 
+# # Regionale data filteren
+# df %>%
+#   filter(GGDregio == regiocode)
+# 
+# # Gemeentelijke data filteren
+# df %>%
+#   filter(Gemeentecode == params$gemeentecode)
+
+```
+
+# Algemeen
+
+In dit document worden de verschillende tekstfuncties uitgelegd en hoe hier aanpassingen in gedaan kunnen worden.
+
+Alle functies in dit document hebben als eerste argument 'data', waar een dataframe wordt verwacht. Dit argument zal niet expliciet genoemd worden in de uitleg, omdat het altijd nodig is.\
+
+::: callout-tip
+In dit document wordt gebruikt gemaakt van de 'pipe-operator' *%\>%*.
+
+De pipe-operator stuurt een resultaat door naar de volgende functie. Op deze manier kunnen meerdere bewerkingen in R overzichtelijk aan elkaar gekoppeld worden. Lees [hier](#0) een uitleg van de magrittr pipe (en de voordelen).
+
+Zonder de pipe-operator zou het aanroepen van maak_responstabel er zo uit zien:
+
+``` r
+maak_responstabel(df = monitor_df, crossings = "gender_2cat", ...)
+```
+
+Met pipe-operator ziet dit er zo uit:
+
+``` r
+monitor_df %>% maak_responstabel(crossings = "gender_2cat", ...)
+```
+:::
+
+# Uitleg tekstfuncties
+
+Hieronder volgen een aantal functies die gebruikt kunnen worden in een tekst.
+
+## Maak percentage
+
+De functie **maak_percentage()** berekent een percentage van een indicator. De functie geeft als output het percentage (getal) met een %-teken als character, bijvoorbeeld 88%.
+
+### Nodige argumenten:
+
+-   **survey_design:**\
+    Een survey_design, berekent met svydesign. Dit is noodzakelijk om percentages en confidence intervallen te kunnen berekenen.
+-   **variabele:**\
+    Een character vector met de naam van de indicator waarvan je het percentage wil berekenen.
+
+### Optionele argumenten:
+
+-   **value:\
+    **Een getal dat aangeeft welk value van de de variabele vergeleken wordt. Default is 1.
+
+### Standaard percentage
+
+```{r Maak percentage 1, warning = F}
+# Standaard percentage:
+monitor_df %>%
+  maak_percentage(survey_design = design_gem, variabele = 'GZGGA402')
+```
+
+### Bereken standaard percentage en toon in bol grafiek
+
+```{r Maak percentage 2, warning = F}
+# Percentage in bol grafiek
+monitor_df %>%
+  maak_percentage(survey_design = design_gem, variabele = 'LVPKS403') %>% # bereken percentage
+  bol_met_cijfer() # toon in bol grafiek
+```
+
+## Maak tekstuele vergelijking
+
+De functie **maak_vergelijking()** maakt een vergelijking tussen de categorieën van een uitsplitsing voor een bepaalde indicator. Bijvoorbeeld een vergelijking tussen het percentage mannen en vrouwen dat zich gelukkig voelt. Hiervoor berekent de functie het percentage en de confidence intervallen van een indicator en bepaalt vervolgens of er overlap zit tussen deze confidence intervallen. De functie geeft als output een zin waarin aangegeven of de uitsplitsingen al dan niet vergelijkbaar zijn.
+
+### Nodige argumenten:
+
+-   **survey_design:**\
+    Een survey_design, berekent met svydesign. Dit is noodzakelijk om percentages en confidence intervallen te kunnen berekenen.
+-   **variabele:**\
+    Een character vector met de naam van de indicator waarvan je de percentages wil vergelijken.
+-   **vergelijking:**\
+    Een character vector met de naam van de indicator waarover je wil uitsplitsen. De indicator moet minimaal 2 categorieën en maximaal 3 categorieën bevatten.
+
+### Optionele argumenten:
+
+-   **variabele_label:**\
+    Een character variabele met een alternatief label voor de variabele. Default is NULL (automatisch label o.b.v. label van variabele in data).
+
+-   **value:\
+    **Een getal dat aangeeft welk value van de de variabele vergeleken wordt. Default is 1.
+
+### Standaard vergelijking tussen mannen en vrouwen
+
+```{r Maak vergelijking 1, warning = F}
+# Bij een vergelijking tussen gender of tussen leeftijdscategorieën worden de labels aangepast. 
+# Bij gebruik van andere indicatoren worden de labels uit de data gebruikt
+
+# Standaard vergelijking tussen mannen en vrouwen:
+monitor_df %>% maak_vergelijking(survey_design = design_gem, 
+                                 variabele = 'GZGGA402', 
+                                 variabele_label = "hun eigen gezondheid als (zeer) goed ervaart",
+                                 vergelijking = 'AGGSA401')
+```
+
+### Vergelijking tussen 3 groepen
+
+```{r Maak vergelijking 2, warning = F}
+# Bij gebruik van andere indicatoren dan gender en leeftijdscategorieën worden de labels uit de data gebruikt.
+
+# Vergelijking tussen migratieachtergrond in 3 categorieën:
+monitor_df %>% maak_vergelijking(survey_design = design_gem, 
+                                 variabele = 'GZGGA402', 
+                                 variabele_label = "hun eigen gezondheid als (zeer) goed ervaart",
+                                 vergelijking = 'AGETS414')
+
+```
+
+## Maak top
+
+De functie **maak_top()** sorteert indicatoren van hoogst naar laagst percentage. De functie geeft als output een zin met het label van de indicator en het bijbehorende percentage.
+
+### Nodige argumenten:
+
+-   **survey_design:**\
+    Een survey_design, berekent met svydesign. Dit is noodzakelijk om percentages en confidence intervallen te kunnen berekenen.
+-   **variabelen:**\
+    Een character vector met de na(a)m(en) van de indicator(en) waarvan je de percentages van hoog naar laag wil sorteren.
+-   **top:**\
+    Een getal dat aangeeft welke percentages van de top je als output wil. Dit kan een getal zijn (bv. 3, dan is de output het op 2-na-hoogste percentage) of een reeks van getallen (bv. 1:5, dan is de output de top 5 van hoogste percentages). Default is 1.
+
+### Optionele argumenten:
+
+-   **toon_label:**\
+    Boolean (TRUE of FALSE) die aangeeft of het label van het percentage bij de output gegeven moet worden. TRUE geeft aan dat het label bij de output komt. Default is TRUE.
+
+-   **value:\
+    **Een getal dat aangeeft welk value van de de variabele vergeleken wordt. Default is 1.
+
+### Bereken hoogste percentage
+
+```{r Maak top 1, warning = F}
+# Top 1 zonder label
+monitor_df %>% maak_top(survey_design = design_gem, 
+                        variabelen = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"),
+                        toon_label = FALSE, # Wijzig FALSE naar TRUE om label te tonen.
+                        top = 1)
+```
+
+### Bereken top 3 van meerdere indicatoren
+
+```{r Maak top 2, warning = F}
+# Top 3
+monitor_df %>% maak_top(survey_design = design_gem, 
+                        variabelen = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"),
+                        top = 1:3)
+```
+
+### Bereken top 3 binnen indicator
+
+```{r Maak top 3, warning = F}
+# Top 3 
+monitor_df %>% maak_top(survey_design = design_gem, 
+                        variabelen = 'AGLFA401',
+                        value = 1:3, # Vul hier alle values in die voorkomen bij indicator
+                        top = 1:3)
+```
