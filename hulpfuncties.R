@@ -927,6 +927,14 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
   }
   
+  #TODO Bepalen of we 1 df gebruiken of een voor land + regio
+    #Proberen met 1 df landelijk; is nog niet binnen. testdataset maken waarbij dwe doen alsof 1 gem. andere regio is.
+  #TODO argument voor niveaus
+    #Per grafiek keus maken voor: vergelijking 2/3, of keuze enkele regio
+  #TODO bij vergelijking gem - regio
+    # Prioriteit: regio (met alles) vs gemeente
+    #### Optioneel: regio-gemeente vs gemeente. 
+  #TODO weegfactoren?
   
   remove_legend = F
 
