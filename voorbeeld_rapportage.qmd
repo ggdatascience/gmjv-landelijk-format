@@ -552,19 +552,137 @@ plot
 :::
 :::
 
+# Mentaal welbevinden
+
+::: {layout="[[30,30,30],[30,30,30]]"}
+::: column
+**Sociale steun**
+
+Langdurige eenzaamheid kan gevolgen hebben voor de ontwikkeling van jongvolwassenen. Eenzaamheid is één van de belangrijkste risicofactoren voor het ontwikkelen van mentale klachten. Daarnaast kan eenzaamheid zorgen voor gedragsproblemen (middelengebruik), lichamelijke problemen (stress) of maatschappelijke problemen (vroegtijdig schoolverlaten). 
+
+:::
+
+::: column
+```{r, echo = F, fig.alt = ggplot2::get_alt_text(plot), warning = F}
+
+plot = monitor_df %>% 
+  maak_staafdiagram_gestapeld(
+    var_inhoud = "LVEES407",
+    var_crossing = "AGGSA402",
+    titel = "Sociale eenzaamheid"
+  )
+
+plot
+```
+:::
+
+::: column
+[Aanpakeenzaamheid.nl](https://aanpakeenzaamheid.nl/jongeren/) bundelt hulpmiddelen die door gemeenten en organisaties in te zetten zijn tegen eenzaamheid.
+:::
+
+::: column
+Van de jongvolwassenen in uw gemeente voelt `r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'LVEES402')` zich enigszins eenzaam en `r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'LVEES402', value = 2)` voelt zich sterk eenzaam. `r monitor_df %>% maak_vergelijking(survey_design = design_gem, variabele = 'LVEES402', value = 2, variabele_label = 'zich sterk eenzaam voelt in de regio', vergelijking = 'AGOJB401')`
+
+Met name vrouwen voelen zich vaker emotioneel eenzaam (iemand die een intieme, hechte band mist) dan mannen.
+:::
+
+::: column
+```{r, echo = F, fig.alt = ggplot2::get_alt_text(plot), warning = F}
+
+plot = monitor_df %>% 
+  maak_staafdiagram_gestapeld(
+    var_inhoud = "LVEES410",
+    var_crossing = "AGGSA402",
+    titel = "Emotionele eenzaamheid"
+  )
+
+plot
+```
+:::
+
+::: column
+:::
+:::
+
 # Beschermende factoren en vertrouwen in de toekomst
 
 ::: {layout="[[30,30,30],[30,30,30]]"}
 ::: column
+**Veerkracht**
+
+Hoe jongvolwassenen omgaan met de uitdagingen van het leven wordt mede bepaald door hun veerkracht en weerbaarheid. 
+
+<br>
+
+`r monitor_df_regio %>% maak_vergelijking(survey_design = design_regio, variabele = 'LVEES410', variabele_label = 'het niet moeilijk vindt om stressvolle gebeurtenissen te doorstaan in de regio', vergelijking = 'AGGSA402')` 
+`r monitor_df_regio %>% maak_vergelijking(survey_design = design_regio, variabele = 'LVEES410', variabele_label = 'stel herstelt na een moeilijke periode in de regio', vergelijking = 'AGGSA402')`
 :::
 
 ::: column
+[Institute for positive health](https://www.iph.nl/) zet in op positieve gezondheid. Door in gesprek te gaan met jongvolwassenen wordt duidelijk waar hun kracht zit en wat hen helpt om sterker uit een stressvolle of moeilijke periode te komen. Het concept van positieve gezondheid biedt daarvoor aanknopingspunten.
 :::
 
 ::: column
+**Opkomen voor jezelf**
+
+Weerbaarheid is de basis voor een goede psychische gezondheid. Weerbare jongvolwassenen hebben zelfvertrouwen en kunnen goed voor zichzelf opkomen, met respect voor anderen. Zij kunnen ook, al dan niet na een periode van experimenteren, gezonde keuzes maken ten aanzien van de eigen leefstijl. 
 :::
 
 ::: column
+`r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'LVEES410') %>% bol_met_cijfer()`
+:::
+
+::: column
+`r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'LVEES410') %>% bol_met_cijfer()`
+:::
+
+::: column
+`r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'OJWHS402')` van de jongvolwassenen in uw gemeente is voldoende weerbaar (kan goed voor zichzelf opkomen).
+`r monitor_df_regio %>% maak_vergelijking(survey_design = design_regio, variabele = 'OJWHS402', variabele_label = 'voldoende weerbaar is,', vergelijking = 'AGOJB401')` 
+:::
+:::
+
+# Beschermende factoren en vertrouwen in de toekomst ALTERNATIEVE LAYOUT
+
+::: {layout="[[100],[50,50]]"}
+::: column
+**Veerkracht**
+
+Hoe jongvolwassenen omgaan met de uitdagingen van het leven wordt mede bepaald door hun veerkracht en weerbaarheid. 
+
+<br>
+
+`r monitor_df_regio %>% maak_vergelijking(survey_design = design_regio, variabele = 'LVEES410', variabele_label = 'het niet moeilijk vindt om stressvolle gebeurtenissen te doorstaan in de regio', vergelijking = 'AGGSA402')` 
+`r monitor_df_regio %>% maak_vergelijking(survey_design = design_regio, variabele = 'LVEES410', variabele_label = 'stel herstelt na een moeilijke periode in de regio', vergelijking = 'AGGSA402')`
+
+<br>
+
+[Institute for positive health](https://www.iph.nl/) zet in op positieve gezondheid. Door in gesprek te gaan met jongvolwassenen wordt duidelijk waar hun kracht zit en wat hen helpt om sterker uit een stressvolle of moeilijke periode te komen. Het concept van positieve gezondheid biedt daarvoor aanknopingspunten.
+:::
+
+::: column
+`r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'LVEES410') %>% bol_met_cijfer()`
+:::
+
+::: column
+`r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'LVEES410') %>% bol_met_cijfer()`
+:::
+:::
+
+::: {layout="[[100],[50,50]]"}
+::: column
+**Opkomen voor jezelf**
+
+Weerbaarheid is de basis voor een goede psychische gezondheid. Weerbare jongvolwassenen hebben zelfvertrouwen en kunnen goed voor zichzelf opkomen, met respect voor anderen. Zij kunnen ook, al dan niet na een periode van experimenteren, gezonde keuzes maken ten aanzien van de eigen leefstijl. 
+
+<br>
+
+`r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'OJWHS402')` van de jongvolwassenen in uw gemeente is voldoende weerbaar (kan goed voor zichzelf opkomen).
+`r monitor_df_regio %>% maak_vergelijking(survey_design = design_regio, variabele = 'OJWHS402', variabele_label = 'voldoende weerbaar is,', vergelijking = 'AGOJB401')` 
+
+<br>
+
+[Movisie](https://www.movisie.nl/publicatie/wat-werkt-versterken-weerbaarheid-jongeren) legt uit wat werkt voor het versterken van weerbaarheid bij jongvolwassenen. 
 :::
 
 ::: column
@@ -688,7 +806,7 @@ plot
 
 ::: {layout="[[30,30,30],[30,30,30]]"}
 ::: column
-`r bol_met_cijfer(maak_percentage(data = monitor_df, survey_design = design_gem, variabele = 'LVPKS403'))`
+`r monitor_df %>% maak_percentage(survey_design = design_gem, variabele = 'LVPKS403') %>% bol_met_cijfer()`
 :::
 
 ::: column
