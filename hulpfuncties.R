@@ -1148,7 +1148,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
     } else{
       
       stop(glue("niveau bestaat niet
-                niveau: {niveau}"))
+                niveau: {niveaus}"))
     }
   
     #niet filteren als jaar als crossing is geselecteerd
