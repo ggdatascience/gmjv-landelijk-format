@@ -491,8 +491,6 @@ kruistabel_met_subset <- function(data, variabele = NULL, crossing = NULL, subse
   #alle lvls van subsetvar
   alle_subsets <- unique(data[[subsetvar]])
 
-  #nb; lapply crasht hier waar een for loop het prima doet. helaas for loop dan maar
-  
   meerdere_kruistabellen <- lapply(alle_subsets, function(lvl_subset){
     
     #subset maken v design
