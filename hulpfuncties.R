@@ -10,6 +10,8 @@
 # TODO Pieter: Is het wel nodig om ziets te schrijven? moderne RStudio doet dat vanzelf voor je.
 # TODO code opschonen; dataverwerking voor grafiek in eigen functies stoppen om complexiteit / lengte van functies te verkleinen.
 
+#TODO overal bereken_kruistabel() argumenten grafiekfunctie doorgeven nvar / ncel aan min_obs
+
 # Hieronder worden de benodige packages geladen
 library(gt)
 library(dplyr)
@@ -916,58 +918,123 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
                                               flip = FALSE, nvar = default_Nvar, ncel = default_Ncel,
                                               alt_text = NULL,
                                               huidig_jaar = 2024,
-                                              jaarvar = "AGOJB401"
+                                              jaarvar = "AGOJB401",
+                                              niveaus = c("nl","regio","gemeente")
                                               #,
                                               # confidence_intervals = FALSE, #TODO nadenken of dit de moeite is
                                               # kleur_ci = "red" #TODO kleur ci nog laten instellen aan de voorkant
                                               ){
+  
+  #Keuzes die we gebruikers willen bieden mbt niveau:
+  # - filteren op niveau OF
+  # - uitsplitsen op niveau
+  # Implementatie:
+    #als length(niveaus) = 1; filteren op niveau
+    #als length(niveaus) > 1; uitsplitsen op niveau & var_crossing negeren
+  
+  if(length(niveaus) > 1 & !is.null(var_crossing)){
+    stop(glue("
+    Grafiek kan niet met meerdere niveaus & een crossing werken.
+    Selecteer 1 niveau of verwijder var_crossing
+    niveaus: {paste(niveaus, collapse = ',')}
+    var_crossing: {var_crossing}
+              
+              "))
+  }
   
   
   if(!labelled::is.labelled(data[[var_inhoud]])){
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
   }
   
+  #TODO Bepalen of we 1 df gebruiken of een voor land + regio
+    #Proberen met 1 df landelijk; is nog niet binnen. testdataset maken waarbij dwe doen alsof 1 gem. andere regio is.
+  #TODO argument voor niveaus
+    #Per grafiek keus maken voor: vergelijking 2/3, of keuze enkele regio
+  #TODO bij vergelijking gem - regio
+    # Prioriteit: regio (met alles) vs gemeente
+    #### Optioneel: regio-gemeente vs gemeente. 
+  #TODO weegfactoren?
   
   remove_legend = F
 
   v_just_text = ifelse(flip,0.5,-1)
   h_just_text = ifelse(flip,-1,0.5)
  
-  #TODO HIERONDER is een werkende procedure voor wegfilteren van vorige jaren; Toepassen op andere
-  #grafieken die geen jaren hoeven te vergelijken
+  #TODO HIERONDER is een procedure voor wegfilteren van vorige jaren en selecteren op niveau;
+  #Toepassen op andere grafiekfuncties
   
-  #NB als-dan conditie naar context aanpassen (%in% var_crossings, %in% c(var_crossing_kleur, var_crossing_groep)
-  #verder als het goed is prima te kopieren
-  if(!is.null(var_crossing)){
-    if(var_crossing != jaarvar){
-      #standaard alleen laatste jaar weergeven.
-      #subset maken van dataset.
-      design_temp <<- subset(design_gem, get(jaarvar) == huidig_jaar) #TODO checken of design_gem hardcode wel slim is.
-      #subset maken v design
-      data_temp <<- data %>% filter(!!sym(jaarvar) == huidig_jaar)
-    }   
-  } else {
-    #jaren bewaren want het is een crossing!
-    data_temp <<- data
-    design_temp <<- design_gem
-  }  
-    
-  #kruistabel maken
-  df_plot <- bereken_kruistabel(data_temp, variabele = var_inhoud, crossing = var_crossing, survey_design = design_temp) %>% 
-    mutate(weggestreept = as.numeric(weggestreept))
+  #Te testen: Wil je wel dat alles te selecteren valt in iedere grafiek? wrs niet. 
+  
+  
+  #Checken of crossvar is ingevoerd en in dat geval jaarvar is
+  crossing_is_jaar <- ifelse(is.null(var_crossing), FALSE,
+                             ifelse(var_crossing != jaarvar, FALSE, TRUE))
 
+  #Loop over alle niveaus & bereken kruistabel per niveau en evt. jaaruitsplitsing. sla op in df.
+  df_plot <- lapply(niveaus, function(x){
+    
+    #design en dataset bepalen o.b.v. regio
+    if(x == "nl"){
+      design_x <- design_land
+      subset_x <- data
+    } else if(x == "regio"){
+      design_x <- design_regio
+      subset_x <- data %>% filter(GGDregio == regiocode)
+    } else{
+      design_x <- design_gem
+      subset_x <- data %>% filter(Gemeentecode == params$gemeentecode)
+    }
+  
+    #niet filteren als jaar als crossing is geselecteerd
+    if(crossing_is_jaar){
+      
+      #niet filteren 
+      data_temp <<- subset_x
+      design_temp <<- design_x 
+    } else{
+      #standaard alleen laatste jaar overhouden
+      #subset data
+      design_temp <<- subset(design_x, get(jaarvar) == huidig_jaar)
+      #subset maken v design
+      data_temp <<- subset_x %>% filter(!!sym(jaarvar) == huidig_jaar)
+    }
+
+    #kruistabel maken
+    df_plot <- bereken_kruistabel(data_temp, variabele = var_inhoud,
+                                  crossing = var_crossing, survey_design = design_temp,
+                                  min_observaties_per_vraag = nvar,
+                                  min_observaties_per_antwoord = ncel
+                                  ) %>% 
+      mutate(weggestreept = as.numeric(weggestreept),
+             niveau = x) #TODO nu wordt er letterlijk regio/gem in de niveuavar gezet. We willen daar de naam vd gem/regio
+  
+  })  %>% do.call(rbind,.)
+
+
+  #TODO uitzoeken waarom data_temp niet in globalEnv komt en dit een warning veroorzaakt
+  #eindoeel warning weg; liever gewoon snappen
   
   #temp dataframe & design verwijdere uit globalEnv.
   rm(design_temp, data_temp, envir = .GlobalEnv)
   
-    #Als crossing niet is ingevuld; dummy crossing maken zodat plot met beide kan omgaan
-    if(is.null(var_crossing)){
-      df_plot$leeg = ""
-      var_crossing = "leeg"
-      remove_legend = T
-    }
+  #Als crossing niet is ingevuld; dummy crossing maken zodat plot met beide kan omgaan
   
-  namen_kleuren <- levels(df_plot[[var_crossing]])
+    if(length(niveaus) > 1){
+      
+      var_crossing = "niveau"
+      
+    } else{
+
+      if(is.null(var_crossing)){
+        df_plot$leeg = ""
+        var_crossing = "leeg"
+        remove_legend = T
+      }
+    }
+
+  
+  namen_kleuren <- unique(df_plot[[var_crossing]])
   
   kleuren <- kleuren[1:length(namen_kleuren)]
   
