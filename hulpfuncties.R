@@ -919,7 +919,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
                                               alt_text = NULL,
                                               huidig_jaar = 2024,
                                               jaarvar = "AGOJB401",
-                                              niveaus = c("nl","regio","gemeente")
+                                              niveaus = "regio"
                                               #,
                                               # confidence_intervals = FALSE, #TODO nadenken of dit de moeite is
                                               # kleur_ci = "red" #TODO kleur ci nog laten instellen aan de voorkant
