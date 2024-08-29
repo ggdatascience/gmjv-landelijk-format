@@ -190,15 +190,15 @@ De cijfers die hier worden gepresenteerd zijn gestandaardiseerd naar GGD-regio, 
 
 ::: {layout="[[30,30,30],[30,30,30]]"}
 ::: column
-Van de respondenten is `r monitor_df %>% maak_percentage(variabele = 'AGGSA401', value = 2)` vrouw en `r monitor_df %>% maak_percentage(variabele = 'AGGSA401', value = 1)` man. Daarnaast geeft `r monitor_df %>% maak_percentage(variabele = 'AGGSA401', value = 3)` aan zich anders dan man of vrouw te voelen.
+Van de respondenten is `r monitor_df %>% maak_percentage(var_inhoud = 'AGGSA401', value = 2)` vrouw en `r monitor_df %>% maak_percentage(var_inhoud = 'AGGSA401', value = 1)` man. Daarnaast geeft `r monitor_df %>% maak_percentage(var_inhoud = 'AGGSA401', value = 3)` aan zich anders dan man of vrouw te voelen.
 :::
 
 ::: column
-Van de respondenten is `r monitor_df %>% maak_percentage(variabele = 'AGLFA401', value = 1)` 16 of 17 jaar, `r monitor_df %>% maak_percentage(variabele = 'AGLFA401', value = 2)` tussen de 18 en 20 jaar en `r monitor_df %>% maak_percentage(variabele = 'AGLFA401', value = 3)` tussen de 21 en 25 jaar.
+Van de respondenten is `r monitor_df %>% maak_percentage(var_inhoud = 'AGLFA401', value = 1)` 16 of 17 jaar, `r monitor_df %>% maak_percentage(var_inhoud = 'AGLFA401', value = 2)` tussen de 18 en 20 jaar en `r monitor_df %>% maak_percentage(var_inhoud = 'AGLFA401', value = 3)` tussen de 21 en 25 jaar.
 
 <br>
 
-`r monitor_df %>% maak_percentage(variabele = 'AGETS411', value = 1)` heeft een Nederlandse herkomst.
+`r monitor_df %>% maak_percentage(var_inhoud = 'AGETS411', value = 1)` heeft een Nederlandse herkomst.
 :::
 
 ::: column
@@ -346,13 +346,13 @@ Gezondheid is meer dan de afwezigheid van lichamelijke en mentale klachten. Iede
 
 <br>
 
-Uit de resultaten blijkt dat `r monitor_df %>% maak_percentage(variabele = "GZGGA402")` van de jongvolwassen in uw gemeente de eigen gezondheid als (zeer) goed ervaart. `r monitor_df %>% maak_vergelijking(variabele = 'GZGGA402', variabele_label = "hun eigen gezondheid als (zeer) goed ervaart", vergelijking = 'AGOJB401')`
+Uit de resultaten blijkt dat `r monitor_df %>% maak_percentage(var_inhoud = "GZGGA402")` van de jongvolwassen in uw gemeente de eigen gezondheid als (zeer) goed ervaart. `r monitor_df %>% maak_vergelijking(variabele = 'GZGGA402', variabele_label = "hun eigen gezondheid als (zeer) goed ervaart", vergelijking = 'AGOJB401')`
 :::
 
 ::: column
 **Geluk**
 
-Een andere belangrijke indicator voor het welzijn van jongvolwassenen is hoe gelukkig zij zich voelen. `r monitor_df %>% maak_percentage(variabele = "LVPKA407")` van de jongvolwassenen in uw gemeente voelde zich in de afgelopen vier weken vaak tot voortdurend gelukkig. `r monitor_df %>% maak_vergelijking(variabele = 'LVPKA407', variabele_label = "hun eigen gezondheid als (zeer) goed ervaart", vergelijking = 'AGOJB401')`
+Een andere belangrijke indicator voor het welzijn van jongvolwassenen is hoe gelukkig zij zich voelen. `r monitor_df %>% maak_percentage(var_inhoud = "LVPKA407")` van de jongvolwassenen in uw gemeente voelde zich in de afgelopen vier weken vaak tot voortdurend gelukkig. `r monitor_df %>% maak_vergelijking(variabele = 'LVPKA407', variabele_label = "hun eigen gezondheid als (zeer) goed ervaart", vergelijking = 'AGOJB401')`
 :::
 
 ::: column
@@ -362,7 +362,7 @@ Slaap is belangrijk voor het ‘schoonmaken’ van de hersenen, het onthouden va
 
 <br>
 
-`r monitor_df %>% maak_percentage(variabele = 'GZGGA402') %>% bol_met_cijfer()`
+`r monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402') %>% bol_met_cijfer()`
 :::
 
 ::: column
@@ -396,7 +396,7 @@ plot
 :::
 
 ::: column
-`r monitor_df %>% maak_percentage(variabele = 'GZGGA402') %>% bol_met_cijfer()`
+`r monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402') %>% bol_met_cijfer()`
 :::
 :::
 
@@ -514,7 +514,7 @@ Psychische klachten worden gemeten met de ‘Mental Health Inventory 5’ (MHI-5
 :::
 
 ::: column
-`r monitor_df %>% maak_percentage(variabele = 'LVPKS403') %>% bol_met_cijfer()` `r monitor_df %>% maak_percentage(variabele = 'LVPKS403') %>% bol_met_cijfer()`
+`r monitor_df %>% maak_percentage(var_inhoud = 'LVPKS403') %>% bol_met_cijfer()` `r monitor_df %>% maak_percentage(var_inhoud = 'LVPKS403') %>% bol_met_cijfer()`
 :::
 
 ::: column
@@ -551,7 +551,7 @@ plot
 :::
 
 ::: column
-`r monitor_df %>% maak_percentage(variabele = 'LVPKS403')` van de jongvolwassenen heeft met iemand gepraat over de gedachte om een eind te maken aan het leven. `r monitor_df %>% maak_percentage(variabele = 'LVPKS403')` van de jongvolwassenen heeft in de laatste 12 maanden een poging ondernomen om een eind te maken aan het leven.
+`r monitor_df %>% maak_percentage(var_inhoud = 'LVPKS403')` van de jongvolwassenen heeft met iemand gepraat over de gedachte om een eind te maken aan het leven. `r monitor_df %>% maak_percentage(var_inhoud = 'LVPKS403')` van de jongvolwassenen heeft in de laatste 12 maanden een poging ondernomen om een eind te maken aan het leven.
 
 <br>
 
@@ -587,7 +587,7 @@ plot
 :::
 
 ::: column
-Van de jongvolwassenen in uw gemeente voelt `r monitor_df %>% maak_percentage(variabele = 'LVEES402')` zich enigszins eenzaam en `r monitor_df %>% maak_percentage(variabele = 'LVEES402', value = 2)` voelt zich sterk eenzaam. `r monitor_df %>% maak_vergelijking(variabele = 'LVEES402', value = 2, variabele_label = 'zich sterk eenzaam voelt in de regio', vergelijking = 'AGOJB401')`
+Van de jongvolwassenen in uw gemeente voelt `r monitor_df %>% maak_percentage(var_inhoud = 'LVEES402')` zich enigszins eenzaam en `r monitor_df %>% maak_percentage(var_inhoud = 'LVEES402', value = 2)` voelt zich sterk eenzaam. `r monitor_df %>% maak_vergelijking(variabele = 'LVEES402', value = 2, variabele_label = 'zich sterk eenzaam voelt in de regio', vergelijking = 'AGOJB401')`
 
 Met name vrouwen voelen zich vaker emotioneel eenzaam (iemand die een intieme, hechte band mist) dan mannen.
 :::
@@ -634,15 +634,15 @@ Weerbaarheid is de basis voor een goede psychische gezondheid. Weerbare jongvolw
 :::
 
 ::: column
-`r monitor_df %>% maak_percentage(variabele = 'LVEES410') %>% bol_met_cijfer()`
+`r monitor_df %>% maak_percentage(var_inhoud = 'LVEES410') %>% bol_met_cijfer()`
 :::
 
 ::: column
-`r monitor_df %>% maak_percentage(variabele = 'LVEES410') %>% bol_met_cijfer()`
+`r monitor_df %>% maak_percentage(var_inhoud = 'LVEES410') %>% bol_met_cijfer()`
 :::
 
 ::: column
-`r monitor_df %>% maak_percentage(variabele = 'OJWHS402')` van de jongvolwassenen in uw gemeente is voldoende weerbaar (kan goed voor zichzelf opkomen). `r monitor_df %>% maak_vergelijking(variabele = 'OJWHS402', variabele_label = 'voldoende weerbaar is,', vergelijking = 'AGOJB401')`
+`r monitor_df %>% maak_percentage(var_inhoud = 'OJWHS402')` van de jongvolwassenen in uw gemeente is voldoende weerbaar (kan goed voor zichzelf opkomen). `r monitor_df %>% maak_vergelijking(variabele = 'OJWHS402', variabele_label = 'voldoende weerbaar is,', vergelijking = 'AGOJB401')`
 :::
 :::
 
@@ -664,11 +664,11 @@ Hoe jongvolwassenen omgaan met de uitdagingen van het leven wordt mede bepaald d
 :::
 
 ::: column
-`r monitor_df %>% maak_percentage(variabele = 'LVEES410') %>% bol_met_cijfer()`
+`r monitor_df %>% maak_percentage(var_inhoud = 'LVEES410') %>% bol_met_cijfer()`
 :::
 
 ::: column
-`r monitor_df %>% maak_percentage(variabele = 'LVEES410') %>% bol_met_cijfer()`
+`r monitor_df %>% maak_percentage(var_inhoud = 'LVEES410') %>% bol_met_cijfer()`
 :::
 :::
 
@@ -680,7 +680,7 @@ Weerbaarheid is de basis voor een goede psychische gezondheid. Weerbare jongvolw
 
 <br>
 
-`r monitor_df %>% maak_percentage(variabele = 'OJWHS402')` van de jongvolwassenen in uw gemeente is voldoende weerbaar (kan goed voor zichzelf opkomen). `r monitor_df %>% maak_vergelijking(variabele = 'OJWHS402', variabele_label = 'voldoende weerbaar is,', vergelijking = 'AGOJB401')`
+`r monitor_df %>% maak_percentage(var_inhoud = 'OJWHS402')` van de jongvolwassenen in uw gemeente is voldoende weerbaar (kan goed voor zichzelf opkomen). `r monitor_df %>% maak_vergelijking(variabele = 'OJWHS402', variabele_label = 'voldoende weerbaar is,', vergelijking = 'AGOJB401')`
 
 <br>
 
@@ -786,7 +786,7 @@ Roken is een belangrijke oorzaak van ziekte en sterfte in Nederland. Hoe jonger 
 
 ::: {layout="[[30,30,30],[30,30,30]]"}
 ::: column
-`r monitor_df %>% maak_percentage(variabele = 'LFRKA403') %>% bol_met_cijfer()`
+`r monitor_df %>% maak_percentage(var_inhoud = 'LFRKA403') %>% bol_met_cijfer()`
 :::
 
 ::: column
@@ -796,11 +796,11 @@ Vapen is een vorm van roken, waarbij vloeistof opgewarmd wordt en niet verbrand.
 :::
 
 ::: column
-`r monitor_df %>% maak_percentage(variabele = 'LFRKA403') %>% bol_met_cijfer()`
+`r monitor_df %>% maak_percentage(var_inhoud = 'LFRKA403') %>% bol_met_cijfer()`
 :::
 
 ::: column
-`r monitor_df %>% maak_percentage(variabele = 'LFRKA403') %>% bol_met_cijfer()`
+`r monitor_df %>% maak_percentage(var_inhoud = 'LFRKA403') %>% bol_met_cijfer()`
 :::
 
 ::: column
@@ -822,7 +822,7 @@ Het gebruik van drugs leidt bij langdurig en regelmatig gebruik tot (geestelijke
 
 ::: {layout="[[30,30,30],[30,30,30]]"}
 ::: column
-`r monitor_df %>% maak_percentage(variabele = 'LFDGA427') %>% bol_met_cijfer()`
+`r monitor_df %>% maak_percentage(var_inhoud = 'LFDGA427') %>% bol_met_cijfer()`
 :::
 
 ::: column
@@ -846,7 +846,7 @@ plot
 :::
 
 ::: column
-`r monitor_df %>% maak_percentage(variabele = 'LFDGS404') %>% bol_met_cijfer()`
+`r monitor_df %>% maak_percentage(var_inhoud = 'LFDGS404') %>% bol_met_cijfer()`
 :::
 
 ::: column
@@ -873,11 +873,11 @@ Jongvolwassen ervaren zowel positieve als negatieve gevolgen van de coronaperiod
 :::
 
 ::: column
-`r monitor_df %>% maak_percentage(variabele = 'LFDGA427') %>% bol_met_cijfer()`
+`r monitor_df %>% maak_percentage(var_inhoud = 'LFDGA427') %>% bol_met_cijfer()`
 :::
 
 ::: column
-`r #monitor_df %>% maak_percentage(variabele = 'CPLCA405')` van de jongvolwassenen in uw gemeente heeft 3 maanden of langer klachten van het coronavirus. Bij `r #monitor_df %>% maak_percentage(variabele = 'CPLCA410')` is post-covid vastgesteld door een arts.  
+`r #monitor_df %>% maak_percentage(var_inhoud = 'CPLCA405')` van de jongvolwassenen in uw gemeente heeft 3 maanden of langer klachten van het coronavirus. Bij `r #monitor_df %>% maak_percentage(var_inhoud = 'CPLCA410')` is post-covid vastgesteld door een arts.  
 
 <br>
 
@@ -889,12 +889,12 @@ Top 3 invoegen?
 :::
 
 ::: column
-`r monitor_df %>% maak_percentage(variabele = 'LFDGA427') %>% bol_met_cijfer()`
+`r monitor_df %>% maak_percentage(var_inhoud = 'LFDGA427') %>% bol_met_cijfer()`
 :::
 
 ::: column
-`r monitor_df %>% maak_percentage(variabele = 'LFDGA427') %>% bol_met_cijfer()`
-`r monitor_df %>% maak_percentage(variabele = 'LFDGA427') %>% bol_met_cijfer()`
+`r monitor_df %>% maak_percentage(var_inhoud = 'LFDGA427') %>% bol_met_cijfer()`
+`r monitor_df %>% maak_percentage(var_inhoud = 'LFDGA427') %>% bol_met_cijfer()`
 :::
 :::
 

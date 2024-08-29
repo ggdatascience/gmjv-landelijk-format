@@ -1740,14 +1740,58 @@ maak_top <- function(data, survey_design = design_land, variabelen, toon_label =
   }
 }
 
-maak_percentage <- function(data, survey_design = design_land, variabele, value = 1) {
+maak_percentage <- function(data, var_inhoud, value = 1, niveau = "regio",
+                            huidig_jaar = 2024, var_jaar = "AGOJB401") {
+  
+  # Input is één dichotome variabele met één niveau 
+  if(length(niveau) > 1 | length(var_inhoud) > 1){
+
+    stop(glue("
+    Percentage kan niet berekend worden over meerdere niveaus en/of meerdere variabelen.
+    Selecteer 1 niveau en 1 variabele.
+    niveaus: {paste(niveau, collapse = ',')}
+    var_inhoud: {paste(var_inhoud, collapse = ',')}"))
+
+  }
+
+  # Design en dataset bepalen o.b.v. niveau
+  if(niveau == "nl"){
+    
+    design_x <- design_land
+    subset_x <- data
+    
+  } else if(niveau == "regio"){
+    
+    design_x <- design_regio
+    subset_x <<- data %>% filter(GGDregio == params$regiocode)
+    
+  } else if (niveau == "gemeente"){
+    
+    design_x <- design_gem
+    subset_x <<- data %>% filter(Gemeentecode == params$gemeentecode)
+    
+  } else{
+    
+    stop(glue("niveau bestaat niet
+              niveau: {niveau}"))
+    
+  }
+  
+  # Standaard alleen laatste jaar overhouden
+  # Subset maken van design
+  design_temp <<- subset(design_x, get(var_jaar) == huidig_jaar)
+  
+  # Subset maken van data
+  data_temp <<- subset_x %>% filter(!!sym(var_jaar) == huidig_jaar)
   
   # Bereken gewogen cijfers
-  result <- bereken_kruistabel(data = data, survey_design = survey_design, variabele = variabele) %>%
+  result <- bereken_kruistabel(data = data_temp, survey_design = design_temp, variabele = var_inhoud) %>%
     filter(waarde == value) #%>% # Filter de gegevens voor value eruit. Standaard is dit 1.
   
-  # TODO toevoegen selectie van juiste niveau en juiste jaar. 
-    
+  #temp dataframe & design verwijdere uit globalEnv.
+  rm(design_temp, envir = .GlobalEnv)
+  
+  # Output van functie maken
   return(paste0(result$percentage, "%"))
   
 }
