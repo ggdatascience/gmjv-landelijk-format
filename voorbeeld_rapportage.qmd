@@ -16,8 +16,6 @@ editor: visual
 format-links: false
 ---
 
-\
-
 ```{r Instellingen, echo=F, message=F, warning=F}
 # Het script maakt gebruik van een aantal packages
 # Deze moeten bij de eerste keer lokaal worden geinstalleerd
@@ -266,17 +264,17 @@ De woon-, werk- en financiële situatie kan veel invloed hebben op het welzijn e
 
 **Woonsituatie**
 
-De meeste jongvolwassenen in uw gemeente wonen `r monitor_df %>% maak_top(var_inhoud = 'AGHHA403', value = 1:8, top = 1)`. `r monitor_df %>% maak_vergelijking(variabele = 'AGHHA403', value = 8, variabele_label = 'in deze woonsituatie woont', vergelijking = 'AGOJB401')`
+De meeste jongvolwassenen in uw gemeente wonen `r monitor_df %>% maak_top(var_inhoud = 'AGHHA403', value = 1:8, top = 1)`. `r monitor_df %>% maak_vergelijking(var_inhoud = 'AGHHA403', value = 8, variabele_label = 'in deze woonsituatie woont', var_crossing = 'AGOJB401')`
 :::
 
 ::: column
 **Werk- en financiële situatie**
 
-De meeste werkende jongvolwassenen in uw gemeente werken `r #monitor_df %>% maak_top(var_inhoud = 'AGWSA413', value = 1:5, top = 1)`. `r #monitor_df %>% maak_vergelijking(variabele = 'AGWSA413', variabele_label = 'zoveel uren werkt', vergelijking = 'AGOJB401')`
+De meeste werkende jongvolwassenen in uw gemeente werken `r #monitor_df %>% maak_top(var_inhoud = 'AGWSA413', value = 1:5, top = 1)`. `r #monitor_df %>% maak_vergelijking(var_inhoud = 'AGWSA413', variabele_label = 'zoveel uren werkt', var_crossing = 'AGOJB401')`
 
 <br>
 
-`r #monitor_df %>% maak_vergelijking(variabele = '', vergelijking = 'AGOJB401')` `r #monitor_df %>% maak_vergelijking(variabele = 'AGWSA412', vergelijking = 'AGOJB401')`
+`r #monitor_df %>% maak_vergelijking(var_inhoud = '', var_crossing = 'AGOJB401')` `r #monitor_df %>% maak_vergelijking(var_inhoud = 'AGWSA412', var_crossing = 'AGOJB401')`
 :::
 
 ::: column
@@ -351,13 +349,13 @@ Gezondheid is meer dan de afwezigheid van lichamelijke en mentale klachten. Iede
 
 <br>
 
-Uit de resultaten blijkt dat `r monitor_df %>% maak_percentage(var_inhoud = "GZGGA402")` van de jongvolwassen in uw gemeente de eigen gezondheid als (zeer) goed ervaart. `r monitor_df %>% maak_vergelijking(variabele = 'GZGGA402', variabele_label = "hun eigen gezondheid als (zeer) goed ervaart", vergelijking = 'AGOJB401')`
+Uit de resultaten blijkt dat `r monitor_df %>% maak_percentage(var_inhoud = "GZGGA402")` van de jongvolwassen in uw gemeente de eigen gezondheid als (zeer) goed ervaart. `r monitor_df %>% maak_vergelijking(var_inhoud = 'GZGGA402', variabele_label = "hun eigen gezondheid als (zeer) goed ervaart", var_crossing = 'AGOJB401')`
 :::
 
 ::: column
 **Geluk**
 
-Een andere belangrijke indicator voor het welzijn van jongvolwassenen is hoe gelukkig zij zich voelen. `r monitor_df %>% maak_percentage(var_inhoud = "LVPKA407")` van de jongvolwassenen in uw gemeente voelde zich in de afgelopen vier weken vaak tot voortdurend gelukkig. `r monitor_df %>% maak_vergelijking(variabele = 'LVPKA407', variabele_label = "hun eigen gezondheid als (zeer) goed ervaart", vergelijking = 'AGOJB401')`
+Een andere belangrijke indicator voor het welzijn van jongvolwassenen is hoe gelukkig zij zich voelen. `r monitor_df %>% maak_percentage(var_inhoud = "LVPKA407")` van de jongvolwassenen in uw gemeente voelde zich in de afgelopen vier weken vaak tot voortdurend gelukkig. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVPKA407', variabele_label = "hun eigen gezondheid als (zeer) goed ervaart", var_crossing = 'AGOJB401')`
 :::
 
 ::: column
@@ -415,7 +413,7 @@ Het hebben van stress (spanning of druk) kan zowel gezond als ongezond zijn. Gez
 :::
 
 ::: column
-`r monitor_df %>% maak_vergelijking(variabele = 'LVSTA415', variabele_label = 'zich (heel) vaak gestrest voelt in de regio', vergelijking = 'AGOJB401')` `r monitor_df %>% maak_vergelijking(variabele = 'LVSTA415', variabele_label = 'zich (heel) vaak gestrest voelt', vergelijking = 'AGGSA402')`
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'LVSTA415', variabele_label = 'zich (heel) vaak gestrest voelt in de regio', var_crossing = 'AGOJB401')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVSTA415', variabele_label = 'zich (heel) vaak gestrest voelt', var_crossing = 'AGGSA402')`
 
 <br>
 
@@ -435,7 +433,7 @@ Sommige jongvolwassenen voelen druk om aan verwachtingen te voldoen. Ze hebben v
 
 <br>
 
-`r monitor_df %>% maak_vergelijking(variabele = 'GZGGA402', variabele_label = 'prestatiedruk ervaart vanuit zichzelf en vanuit anderen in de regio', vergelijking = 'AGGSA402')`
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'GZGGA402', variabele_label = 'prestatiedruk ervaart vanuit zichzelf en vanuit anderen in de regio', var_crossing = 'AGGSA402')`
 
 <br>
 
@@ -530,11 +528,11 @@ Als gevoelens zoals angst, paniek, somberheid, leegte, zelfverwijt, boosheid, sc
 
 <br>
 
-`r monitor_df %>% maak_vergelijking(variabele = 'NGSGA401', variabele_label = 'wel eens serieus heeft nagedacht over suïcide in de regio', vergelijking = 'AGGSA402')`
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'NGSGA401', variabele_label = 'wel eens serieus heeft nagedacht over suïcide in de regio', var_crossing = 'AGGSA402')`
 :::
 
 ::: column
-`r monitor_df %>% maak_vergelijking(variabele = 'LVPKS403', variabele_label = 'psychische klachten heeft in de regio', vergelijking = 'AGOJB401')` `r monitor_df %>% maak_vergelijking(variabele = 'LVPKS403', variabele_label = 'psychische klachten heeft', vergelijking = 'AGGSA402')`
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'LVPKS403', variabele_label = 'psychische klachten heeft in de regio', var_crossing = 'AGOJB401')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVPKS403', variabele_label = 'psychische klachten heeft', var_crossing = 'AGGSA402')`
 
 <br>
 
@@ -594,7 +592,7 @@ plot
 :::
 
 ::: column
-Van de jongvolwassenen in uw gemeente voelt `r monitor_df %>% maak_percentage(var_inhoud = 'LVEES402')` zich enigszins eenzaam en `r monitor_df %>% maak_percentage(var_inhoud = 'LVEES402', value = 2)` voelt zich sterk eenzaam. `r monitor_df %>% maak_vergelijking(variabele = 'LVEES402', value = 2, variabele_label = 'zich sterk eenzaam voelt in de regio', vergelijking = 'AGOJB401')`
+Van de jongvolwassenen in uw gemeente voelt `r monitor_df %>% maak_percentage(var_inhoud = 'LVEES402')` zich enigszins eenzaam en `r monitor_df %>% maak_percentage(var_inhoud = 'LVEES402', value = 2)` voelt zich sterk eenzaam. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVEES402', value = 2, variabele_label = 'zich sterk eenzaam voelt in de regio', var_crossing = 'AGOJB401')`
 
 Met name vrouwen voelen zich vaker emotioneel eenzaam (iemand die een intieme, hechte band mist) dan mannen.
 :::
@@ -627,7 +625,7 @@ Hoe jongvolwassenen omgaan met de uitdagingen van het leven wordt mede bepaald d
 
 <br>
 
-`r monitor_df %>% maak_vergelijking(variabele = 'LVEES410', variabele_label = 'het niet moeilijk vindt om stressvolle gebeurtenissen te doorstaan in de regio', vergelijking = 'AGGSA402')` `r monitor_df %>% maak_vergelijking(variabele = 'LVEES410', variabele_label = 'stel herstelt na een moeilijke periode in de regio', vergelijking = 'AGGSA402')`
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'LVEES410', variabele_label = 'het niet moeilijk vindt om stressvolle gebeurtenissen te doorstaan in de regio', var_crossing = 'AGGSA402')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVEES410', variabele_label = 'stel herstelt na een moeilijke periode in de regio', var_crossing = 'AGGSA402')`
 :::
 
 ::: column
@@ -649,7 +647,7 @@ Weerbaarheid is de basis voor een goede psychische gezondheid. Weerbare jongvolw
 :::
 
 ::: column
-`r monitor_df %>% maak_percentage(var_inhoud = 'OJWHS402')` van de jongvolwassenen in uw gemeente is voldoende weerbaar (kan goed voor zichzelf opkomen). `r monitor_df %>% maak_vergelijking(variabele = 'OJWHS402', variabele_label = 'voldoende weerbaar is,', vergelijking = 'AGOJB401')`
+`r monitor_df %>% maak_percentage(var_inhoud = 'OJWHS402')` van de jongvolwassenen in uw gemeente is voldoende weerbaar (kan goed voor zichzelf opkomen). `r monitor_df %>% maak_vergelijking(var_inhoud = 'OJWHS402', variabele_label = 'voldoende weerbaar is,', var_crossing = 'AGOJB401')`
 :::
 :::
 
@@ -663,7 +661,7 @@ Hoe jongvolwassenen omgaan met de uitdagingen van het leven wordt mede bepaald d
 
 <br>
 
-`r monitor_df %>% maak_vergelijking(variabele = 'LVEES410', variabele_label = 'het niet moeilijk vindt om stressvolle gebeurtenissen te doorstaan in de regio', vergelijking = 'AGGSA402')` `r monitor_df %>% maak_vergelijking(variabele = 'LVEES410', variabele_label = 'stel herstelt na een moeilijke periode in de regio', vergelijking = 'AGGSA402')`
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'LVEES410', variabele_label = 'het niet moeilijk vindt om stressvolle gebeurtenissen te doorstaan in de regio', var_crossing = 'AGGSA402')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVEES410', variabele_label = 'stel herstelt na een moeilijke periode in de regio', var_crossing = 'AGGSA402')`
 
 <br>
 
@@ -687,7 +685,7 @@ Weerbaarheid is de basis voor een goede psychische gezondheid. Weerbare jongvolw
 
 <br>
 
-`r monitor_df %>% maak_percentage(var_inhoud = 'OJWHS402')` van de jongvolwassenen in uw gemeente is voldoende weerbaar (kan goed voor zichzelf opkomen). `r monitor_df %>% maak_vergelijking(variabele = 'OJWHS402', variabele_label = 'voldoende weerbaar is,', vergelijking = 'AGOJB401')`
+`r monitor_df %>% maak_percentage(var_inhoud = 'OJWHS402')` van de jongvolwassenen in uw gemeente is voldoende weerbaar (kan goed voor zichzelf opkomen). `r monitor_df %>% maak_vergelijking(var_inhoud = 'OJWHS402', variabele_label = 'voldoende weerbaar is,', var_crossing = 'AGOJB401')`
 
 <br>
 
@@ -783,9 +781,9 @@ Grafiek alcohol drinken LFALA414
 ::: column
 **Roken, vapen en snus**
 
-Roken is een belangrijke oorzaak van ziekte en sterfte in Nederland. Hoe jonger iemand start met roken, hoe groter de kans is op een rookverslaving. 
+Roken is een belangrijke oorzaak van ziekte en sterfte in Nederland. Hoe jonger iemand start met roken, hoe groter de kans is op een rookverslaving.
 
-`r monitor_df %>% maak_vergelijking(variabele = 'LFRKA403', variabele_label = 'wel eens rookt', vergelijking = 'AGOJB401')`
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'LFRKA403', variabele_label = 'wel eens rookt', var_crossing = 'AGOJB401')`
 :::
 :::
 
@@ -797,9 +795,9 @@ Roken is een belangrijke oorzaak van ziekte en sterfte in Nederland. Hoe jonger 
 :::
 
 ::: column
-Vapen is een vorm van roken, waarbij vloeistof opgewarmd wordt en niet verbrand. Net als bij roken, zitten in vapes veel stoffen die slecht zijn voor de gezondheid. De nicotinezouten die in sommige vapes zitten, zijn vele malen sterker dan nicotine in een sigaret.  
+Vapen is een vorm van roken, waarbij vloeistof opgewarmd wordt en niet verbrand. Net als bij roken, zitten in vapes veel stoffen die slecht zijn voor de gezondheid. De nicotinezouten die in sommige vapes zitten, zijn vele malen sterker dan nicotine in een sigaret.
 
-`r monitor_df %>% maak_vergelijking(variabele = 'LFRKA403', variabele_label = 'vapet', vergelijking = 'AGLFA401')`
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'LFRKA403', variabele_label = 'vapet', var_crossing = 'AGLFA401')`
 :::
 
 ::: column
@@ -811,17 +809,17 @@ Vapen is een vorm van roken, waarbij vloeistof opgewarmd wordt en niet verbrand.
 :::
 
 ::: column
-Snus zijn nicotinezakjes die in de mond worden gestopt. Nicotinezakjes verhogen het risico op bepaalde vormen van kanker, zoals kanker in de mondholte. 
+Snus zijn nicotinezakjes die in de mond worden gestopt. Nicotinezakjes verhogen het risico op bepaalde vormen van kanker, zoals kanker in de mondholte.
 
-`r monitor_df %>% maak_vergelijking(variabele = 'LFRKA403', variabele_label = 'snus gebruikt', vergelijking = 'AGLFA401')`
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'LFRKA403', variabele_label = 'snus gebruikt', var_crossing = 'AGLFA401')`
 :::
 
 ::: column
 **Drugs**
 
-Het gebruik van drugs leidt bij langdurig en regelmatig gebruik tot (geestelijke) afhankelijkheid, psychische stoornissen en andere gezondheidsrisico’s. 
+Het gebruik van drugs leidt bij langdurig en regelmatig gebruik tot (geestelijke) afhankelijkheid, psychische stoornissen en andere gezondheidsrisico’s.
 
-`r monitor_df %>% maak_vergelijking(variabele = 'LFDGA427', variabele_label = 'cannabis gebruikt heeft in de afgelopen vier weken', vergelijking = 'AGOJB401')`
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'LFDGA427', variabele_label = 'cannabis gebruikt heeft in de afgelopen vier weken', var_crossing = 'AGOJB401')`
 :::
 :::
 
@@ -872,11 +870,11 @@ Drugs anders dan cannabis die ooit het vaakst door jongvolwassenen zijn gebruikt
 
 ::: {layout="[[30,30,30],[30,30,30]]"}
 ::: column
-De coronaperiode ligt inmiddels achter ons, maar de gevolgen kunnen nog wel merkbaar zijn. 
+De coronaperiode ligt inmiddels achter ons, maar de gevolgen kunnen nog wel merkbaar zijn.
 
 <br>
 
-Jongvolwassen ervaren zowel positieve als negatieve gevolgen van de coronaperiode. 
+Jongvolwassen ervaren zowel positieve als negatieve gevolgen van de coronaperiode.
 :::
 
 ::: column
@@ -884,7 +882,7 @@ Jongvolwassen ervaren zowel positieve als negatieve gevolgen van de coronaperiod
 :::
 
 ::: column
-`r #monitor_df %>% maak_percentage(var_inhoud = 'CPLCA405')` van de jongvolwassenen in uw gemeente heeft 3 maanden of langer klachten van het coronavirus. Bij `r #monitor_df %>% maak_percentage(var_inhoud = 'CPLCA410')` is post-covid vastgesteld door een arts.  
+`r #monitor_df %>% maak_percentage(var_inhoud = 'CPLCA405')` van de jongvolwassenen in uw gemeente heeft 3 maanden of langer klachten van het coronavirus. Bij `r #monitor_df %>% maak_percentage(var_inhoud = 'CPLCA410')` is post-covid vastgesteld door een arts.
 
 <br>
 
@@ -900,8 +898,7 @@ Top 3 invoegen?
 :::
 
 ::: column
-`r monitor_df %>% maak_percentage(var_inhoud = 'LFDGA427') %>% bol_met_cijfer()`
-`r monitor_df %>% maak_percentage(var_inhoud = 'LFDGA427') %>% bol_met_cijfer()`
+`r monitor_df %>% maak_percentage(var_inhoud = 'LFDGA427') %>% bol_met_cijfer()` `r monitor_df %>% maak_percentage(var_inhoud = 'LFDGA427') %>% bol_met_cijfer()`
 :::
 :::
 
@@ -919,9 +916,7 @@ Bolletjes problematisch social meida gebruik
 :::
 
 ::: column
-**Online gokken en beleggen**
 
-Online gokken gaat over het spelen van online gokspellen (bijvoorbeeld fruitautomaat/slots, sportweddenschappen zoals Toto of casinogames zoals roulette, kaartspellen of Rad van Fortuin).
 :::
 
 ::: column
@@ -937,11 +932,36 @@ Bolletjes met DIGOA401
 :::
 :::
 
+::: {layout="[[100],[50,50]]"}
+::: column
+**Online gokken en beleggen**
+
+Online gokken gaat over het spelen van online gokspellen (bijvoorbeeld fruitautomaat/slots, sportweddenschappen zoals Toto of casinogames zoals roulette, kaartspellen of Rad van Fortuin).
+
+<br>
+
+`r monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente")` van de jongvolwassenen in uw gemeente heeft in de afgelopen 12 maanden online gegokt voor geld. 
+`r monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente")` van de jongvolwassenen in uw gemeente geeft aan geld te beleggen. 
+:::
+
+::: column
+:::
+
+::: column
+:::
+:::
+
 # Seksualiteit
 
-::: {layout="[[30,30,30],[30,30,30]]"}
+::: {layout="[[100],[50,50]]"}
 ::: column
 Seksualiteit is een onderdeel van gezondheid, net zoals gezond eten, bewegen, slapen en hoe je je mentaal voelt. Onder seksualiteit verstaan we diversiteit in gender, sekse en seksuele oriëntatie, maar ook veilige seks en seksueel risicogedrag.
+
+<br>
+
+**LHBTQIA+**
+
+LHBTQIA+ staat voor lesbisch, homoseksueel, biseksueel, transgender, queer, intersekse en aseksueel. De + staat voor alle andere vormen die niet heteroseksueel en cisgender zijn. Uit de [rapportage van Corona Gezondheidsmonitor Jongvolwassenen 2022 “(On)gezonde start van volwassen leven: inzicht in gezondheidsverschillen van jongvolwassenen in de nasleep van de coronapandemie”](https://ggdghor.nl/wp-content/uploads/2024/07/Verdiepend-rapport-CGM-Jongvolwassenen-2022-GGD-GHOR-Nederland.pdf) bleek dat jongvolwassenen die zichzelf identificeren als LHBTQIA+ vaker een slechtere gezondheid ervaren.
 :::
 
 ::: column
@@ -949,9 +969,15 @@ Bolletjes LHBTQIA+ SERIA404
 :::
 
 ::: column
+Bolletjes LHBTQIA+ SERIA411
+:::
+:::
+
+::: {layout="[[100],[50,50]]"}
+::: column
 **Seksualiteit en risicogedrag**
 
-In uw gemeente heeft SESEA401% wel eens seks gehad. In uw gemeente heeft SESEA416% seks gehad met verschillende personen in het laatste halfjaar.
+In uw gemeente heeft `r monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente")` wel eens seks gehad. In uw gemeente heeft `r monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente")` seks gehad met verschillende personen in het laatste halfjaar.
 
 <br>
 
@@ -960,25 +986,33 @@ De meest gebruikte anticonceptiemethodes bij de laatste keer seks zijn:
 -   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 1)`
 -   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 2)`
 -   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 3)`
-:::
 
-::: column
-**LHBTQIA+**
+<br>
 
-LHBTQIA+ staat voor lesbisch, homoseksueel, biseksueel, transgender, queer, intersekse en aseksueel. De + staat voor alle andere vormen die niet heteroseksueel en cisgender zijn. Uit de [rapportage van Corona Gezondheidsmonitor Jongvolwassenen 2022 “(On)gezonde start van volwassen leven: inzicht in gezondheidsverschillen van jongvolwassenen in de nasleep van de coronapandemie”](https://ggdghor.nl/wp-content/uploads/2024/07/Verdiepend-rapport-CGM-Jongvolwassenen-2022-GGD-GHOR-Nederland.pdf) bleek dat jongvolwassenen die zichzelf identificeren als LHBTQIA+ vaker een slechtere gezondheid ervaren.
-:::
-
-::: column
-Bolletjes LHBTQIA+ SERIA411
-:::
-
-::: column
 [Sense](https://sense.info/nl) is een voorlichtingswebsite met betrouwbare informatie over relaties en seksualiteit voor jongvolwassenen. Sense maakt gebruik van video’s, podcasts, games en andere technieken om betrouwbare informatie te delen over onder andere seksueel plezier, veilige seks en wensen en grenzen. Jongvolwassenen kunnen via chat, Whatsapp, telefoon, etc. contact leggen met een hulpverlener of een afspraak maken voor een jongvolwassenenspreekuur. Ook kunnen jongvolwassenen contact zoeken met de regionale Sense afdeling via: [link]()
 :::
+
+::: column
+Bolletjes SESEA419 en SESEA417
 :::
 
-# EINDPAGINA? Contact
+::: column
+[grafiek: geen anticonceptie  SESEA419 naar leeftijd, regioniveau]
+:::
+:::
+
+# Kernboodschappen
+ 
+Op deze pagina kunnen GGD’en hun kernboodschappen toevoegen.
+
+# Contact
 
 Advies of hulp nodig bij de duiding van de cijfers of hoe de cijfers gebruikt kunnen worden in beleid of uitvoeringsplannen? Of heeft u nog vragen over het onderzoek?
 
-Neem dan contact op met Team Onderzoek via MAILADRES.
+Neem dan contact op met Team Onderzoek via [mail\@organisatie.nl](mailto:mail@organisatie.nl).
+
+**Meer weten?**
+
+In ons digitale dashboard vindt u meer cijfers over de gezondheid van inwoners in de regio. Hier vindt u ook de tabellenboeken van dit onderzoek.
+
+Deze en meer informatie vindt u op: [www.websitevanggd.nl](www.websitevanggd.nl)
