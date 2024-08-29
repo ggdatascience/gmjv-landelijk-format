@@ -1692,20 +1692,58 @@ maak_vergelijking <- function(data, survey_design = design_land, variabele, vari
   }
 }
 
-maak_top <- function(data, survey_design = design_land, variabelen, toon_label = T, value = 1, top = 1) {
+maak_top <- function(data, var_inhoud, toon_label = T, value = 1, niveau = "regio", top = 1,
+                     huidig_jaar = 2024, var_jaar = "AGOJB401") {
 
-  # TODO toevoegen selectie van juiste niveau en juiste jaar.  
-
-  
-  # Bereken gewogen cijfers
-  list <- lapply(variabelen, function(x){bereken_kruistabel(data = data, 
-                                                            survey_design = survey_design, 
-                                                            variabele = x)}) 
-  
-  # Selecteer relevante rijen en voeg dataframes samen
-  if (length(variabelen) == 1) {
+  # Maximaal één niveau als input
+  if(length(niveau) > 1){
     
-    list <- purrr::map(list, function(x) { x %>% select(varcode, waarde, percentage, variabelen) })
+    stop(glue("
+    Top kan niet gemaakt worden over meerdere niveaus.
+    Selecteer 1 niveau.
+    niveaus: {paste(niveau, collapse = ',')}"))
+    
+  }
+  
+  # Design en dataset bepalen o.b.v. niveau
+  if(niveau == "nl"){
+    
+    design_x <- design_land
+    subset_x <- data
+    
+  } else if(niveau == "regio"){
+    
+    design_x <- design_regio
+    subset_x <- data %>% filter(GGDregio == params$regiocode)
+    
+  } else if (niveau == "gemeente"){
+    
+    design_x <- design_gem
+    subset_x <- data %>% filter(Gemeentecode == params$gemeentecode)
+    
+  } else{
+    
+    stop(glue("niveau bestaat niet
+              niveau: {niveau}"))
+    
+  }
+  
+  # Standaard alleen laatste jaar overhouden
+  # Subset maken van design
+  design_temp <<- subset(design_x, get(var_jaar) == huidig_jaar)
+  
+  # Subset maken van data
+  data_x <<- subset_x %>% filter(!!sym(var_jaar) == huidig_jaar)
+
+  # Bereken gewogen cijfers
+  list <- lapply(var_inhoud, function(x){bereken_kruistabel(data = data_x, 
+                                                            survey_design = design_temp, 
+                                                            variabele = x)}) 
+
+  # Selecteer relevante rijen en voeg dataframes samen
+  if (length(var_inhoud) == 1) {
+    
+    list <- purrr::map(list, function(x) { x %>% select(varcode, waarde, percentage, var_inhoud) })
     
   } else {
     
@@ -1715,6 +1753,9 @@ maak_top <- function(data, survey_design = design_land, variabelen, toon_label =
 
   list <- do.call(rbind, list)
   
+  #temp design en dataset verwijderen uit globalEnv.
+  rm(data_x, design_temp, envir = .GlobalEnv)
+  
   # Filter en sorteer
   list <- list %>%
     filter(waarde == value) %>% # Filter de gegevens voor value eruit. Standaard is dit 1.
@@ -1723,13 +1764,13 @@ maak_top <- function(data, survey_design = design_land, variabelen, toon_label =
   # Print top
   if (toon_label) { # Wanneer label getoond moet worden
     
-    if (length(variabelen) > 1) { # Bij meerdere indicatoren als input
+    if (length(var_inhoud) > 1) { # Bij meerdere indicatoren als input
       
       return(paste0(tolower(var_label(data[list$varcode[top]])), " (", list$percentage[top], "%)"))
     
     } else { # Bij een indicator als input
       
-      return(paste0(tolower(labelled_naar_character(list, variabelen))[top], " (", list$percentage[top], "%)")) 
+      return(paste0(tolower(labelled_naar_character(list, var_inhoud))[top], " (", list$percentage[top], "%)")) 
       
     }
        
@@ -1763,12 +1804,12 @@ maak_percentage <- function(data, var_inhoud, value = 1, niveau = "regio",
   } else if(niveau == "regio"){
     
     design_x <- design_regio
-    subset_x <<- data %>% filter(GGDregio == params$regiocode)
+    subset_x <- data %>% filter(GGDregio == params$regiocode)
     
   } else if (niveau == "gemeente"){
     
     design_x <- design_gem
-    subset_x <<- data %>% filter(Gemeentecode == params$gemeentecode)
+    subset_x <- data %>% filter(Gemeentecode == params$gemeentecode)
     
   } else{
     
@@ -1788,7 +1829,7 @@ maak_percentage <- function(data, var_inhoud, value = 1, niveau = "regio",
   result <- bereken_kruistabel(data = data_temp, survey_design = design_temp, variabele = var_inhoud) %>%
     filter(waarde == value) #%>% # Filter de gegevens voor value eruit. Standaard is dit 1.
   
-  #temp dataframe & design verwijdere uit globalEnv.
+  #temp design verwijderen uit globalEnv.
   rm(design_temp, envir = .GlobalEnv)
   
   # Output van functie maken

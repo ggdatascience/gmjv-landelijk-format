@@ -262,13 +262,13 @@ De woon-, werk- en financiële situatie kan veel invloed hebben op het welzijn e
 
 **Woonsituatie**
 
-De meeste jongvolwassenen in uw gemeente wonen `r monitor_df %>% maak_top(variabelen = 'AGHHA403', value = 1:8, top = 1)`. `r monitor_df %>% maak_vergelijking(variabele = 'AGHHA403', value = 8, variabele_label = 'in deze woonsituatie woont', vergelijking = 'AGOJB401')`
+De meeste jongvolwassenen in uw gemeente wonen `r monitor_df %>% maak_top(var_inhoud = 'AGHHA403', value = 1:8, top = 1)`. `r monitor_df %>% maak_vergelijking(variabele = 'AGHHA403', value = 8, variabele_label = 'in deze woonsituatie woont', vergelijking = 'AGOJB401')`
 :::
 
 ::: column
 **Werk- en financiële situatie**
 
-De meeste werkende jongvolwassenen in uw gemeente werken `r #monitor_df %>% maak_top(variabelen = 'AGWSA413', value = 1:5, top = 1)`. `r #monitor_df %>% maak_vergelijking(variabele = 'AGWSA413', variabele_label = 'zoveel uren werkt', vergelijking = 'AGOJB401')`
+De meeste werkende jongvolwassenen in uw gemeente werken `r #monitor_df %>% maak_top(var_inhoud = 'AGWSA413', value = 1:5, top = 1)`. `r #monitor_df %>% maak_vergelijking(variabele = 'AGWSA413', variabele_label = 'zoveel uren werkt', vergelijking = 'AGOJB401')`
 
 <br>
 
@@ -416,11 +416,11 @@ Het hebben van stress (spanning of druk) kan zowel gezond als ongezond zijn. Gez
 
 Top 5 bronnen van stress:
 
--   `r maak_top(data = monitor_df, variabelen = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 1)`
--   `r maak_top(data = monitor_df, variabelen = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 2)`
--   `r maak_top(data = monitor_df, variabelen = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 3)`
--   `r maak_top(data = monitor_df, variabelen = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 4)`
--   `r maak_top(data = monitor_df, variabelen = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 5)`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 1)`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 2)`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 3)`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 4)`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 5)`
 :::
 
 ::: column
@@ -436,9 +436,9 @@ Sommige jongvolwassenen voelen druk om aan verwachtingen te voldoen. Ze hebben v
 
 Top 3 van anderen die druk opleggen:
 
--   `r maak_top(data = monitor_df, variabelen = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 1)`
--   `r maak_top(data = monitor_df, variabelen = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 2)`
--   `r maak_top(data = monitor_df, variabelen = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 3)`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 1)`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 2)`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 3)`
 :::
 
 ::: column
@@ -706,9 +706,9 @@ Ondanks de uitdagingen die zij in hun leven tegenkomen, heeft een groot deel van
 
 Jongvolwassenen in uw gemeente maken zich het meest zorgen om:
 
--   `r maak_top(data = monitor_df, variabelen = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 1)`
--   `r maak_top(data = monitor_df, variabelen = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 2)`
--   `r maak_top(data = monitor_df, variabelen = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 3)`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 1)`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 2)`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 3)`
 
 <br>
 
@@ -852,9 +852,9 @@ plot
 ::: column
 Drugs anders dan cannabis die ooit het vaakst door jongvolwassenen zijn gebruikt:
 
--   `r maak_top(data = monitor_df, variabelen = c("LFDGB403", "LFDGB404", "LFDGB405", "LFDGB406", "LFDGB407", "LFDGB408", "LFDGB409", "LFDGB410", "LFDGB411"), top = 1)`
--   `r maak_top(data = monitor_df, variabelen = c("LFDGB403", "LFDGB404", "LFDGB405", "LFDGB406", "LFDGB407", "LFDGB408", "LFDGB409", "LFDGB410", "LFDGB411"), top = 2)`
--   `r maak_top(data = monitor_df, variabelen = c("LFDGB403", "LFDGB404", "LFDGB405", "LFDGB406", "LFDGB407", "LFDGB408", "LFDGB409", "LFDGB410", "LFDGB411"), top = 3)`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LFDGB403", "LFDGB404", "LFDGB405", "LFDGB406", "LFDGB407", "LFDGB408", "LFDGB409", "LFDGB410", "LFDGB411"), top = 1)`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LFDGB403", "LFDGB404", "LFDGB405", "LFDGB406", "LFDGB407", "LFDGB408", "LFDGB409", "LFDGB410", "LFDGB411"), top = 2)`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LFDGB403", "LFDGB404", "LFDGB405", "LFDGB406", "LFDGB407", "LFDGB408", "LFDGB409", "LFDGB410", "LFDGB411"), top = 3)`
 :::
 
 ::: column
@@ -950,9 +950,9 @@ In uw gemeente heeft SESEA401% wel eens seks gehad. In uw gemeente heeft SESEA41
 
 De meest gebruikte anticonceptiemethodes bij de laatste keer seks zijn:
 
--   `r maak_top(data = monitor_df, variabelen = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 1)`
--   `r maak_top(data = monitor_df, variabelen = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 2)`
--   `r maak_top(data = monitor_df, variabelen = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 3)`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 1)`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 2)`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 3)`
 :::
 
 ::: column
