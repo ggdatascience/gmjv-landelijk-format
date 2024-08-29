@@ -13,7 +13,7 @@ format:
     toc: TRUE
     tol: TRUE
 params:
-  gemeentecode: 1 
+  gemeentecode: 2 
 editor: visual
 format-links: false
 crossref:
@@ -34,9 +34,12 @@ library(stringr) # Voor str_replace
 library(labelled) # Package om te werken met datalabels, o.a. voor to_character()
 library(survey) # Package om te werken met gewogen gemiddelds incl. betrouwbaarheidsintervallen
 library(glue) #om strings aangenaam aan elkaar te plakken
+library(plotly)
 
 options(dplyr.summarise.inform = FALSE)
 source("hulpfuncties.R")
+
+#TODO instelbare variabelen overzichtelijk maken
 
 #Standaardwaarden in te stellen door gebruiker:
 # Standaard kleuren
@@ -53,37 +56,56 @@ default_Ncel = 10 # Minimum aantal invullers oper antwoordoptie.
 
 # Standaard regio
 # Pas onderstaande naam en code aan naar de naam en code van je eigen regio.
+
+#TODO regio naar params
 regionaam <- 'GGD Limburg-Noord'
 regiocode <- 23
 
 #SPSS data inlezen
 # Regionaal bestand
-file_path_regio = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
-
+#file_path_regio = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
 # Landelijk bestand
-#file_path_land = "Totaalbestand_CGMJV2022_2024_GGD_versie 1 (N = xxx).sav"
+file_path_land = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
 
 #Lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
-monitor_df = haven::read_spss(file_path_regio, user_na =T) %>%
+#monitor_df = haven::read_spss(file_path_regio, user_na =T) %>%
+ # labelled::user_na_to_na()
+
+#1 landelijk bestand inlezen
+monitor_df = haven::read_spss(file_path_land,user_na =T) %>%
   labelled::user_na_to_na()
 
 #TODO verwijderen bij echte data. tijdelijk varlabel voor jaarvariabele
 var_label(monitor_df$AGOJB401) <- "Jaar"
-#monitor_df_land = haven::read_spss(file_path_land,user_na =T) %>%
-#  labelled::user_na_to_na()
 
 #Maak survey designs
 # Regionaal 2022 en 2024
-design_regio <- survey_design_maken(
-                          strata = 'Stratum', 
-                          gewichten = 'Standaardisatiefactor', 
-                          data = monitor_df)
+#TODO bij echte data standaardisatiefactor en stratum aanpassen per niveau
 
+# Het landelijk en regionaal design hebben dezelfde weegfactoren. Daarom maken we een Een landelijk design obv landelijke dataset en een regionaal design obv een subset van het landelijk design.
 # Landelijk 2022 en 2024
-#design_land <- survey_design_maken(
-#                          strata = 'Stratum', 
-#                          gewichten = 'Standaardisatiefactor', 
-#                          data = monitor_df_land)
+design_land <- survey_design_maken(
+                         strata = 'Stratum',
+                         gewichten = 'Standaardisatiefactor',
+                         data = monitor_df)
+
+
+#design regio is een subset van design land met ggdregio overgehouden.
+#subset data
+design_regio <- subset(design_land, GGDregio == regiocode)
+
+
+#Het gemeentelijk design heeft andere weegfactoren. De gehele dataset waar het gem. design over geld is de GGDregio. Daarom maken we eerst een regionaal design o.b.v. de hele ggdregio en subsetten we daarna het gemeentedesign.
+design_gem_regio <- survey_design_maken(
+                          strata = 'Stratum', #hier komen andere parameters
+                          gewichten = 'Standaardisatiefactor',  #hier ook
+                          data = monitor_df %>% 
+                            filter(GGDregio == regiocode))
+
+design_gem <- subset(design_gem_regio, Gemeentecode == params$gemeentecode)
+
+rm(design_gem_regio) #temp regiodesign voor gemdesign verwijderen niet meer nodig
+
 
 #Er is niet goed aangegeven wat missing is in SPSS.
 #tijdelijke functie om 9 Onbekend te verwijderen & naar NA te zetten
@@ -95,16 +117,16 @@ for(var in names(monitor_df)){
 }
 
 #TODO Tijdelijke filter op alleen gemeente in parameter
-monitor_df_regio <- monitor_df
-monitor_df <- monitor_df %>%
-  filter(Gemeentecode == params$gemeentecode)
+# monitor_df_regio <- monitor_df
+# monitor_df <- monitor_df %>%
+#   filter(Gemeentecode == params$gemeentecode)
 
 #Maak survey design gemeente
 # Gemeente 2022 en 2024
-design_gem <- survey_design_maken(
-                          strata = 'Stratum', 
-                          gewichten = 'Standaardisatiefactor', 
-                          data = monitor_df)
+# design_gem <- survey_design_maken(
+#                           strata = 'Stratum', 
+#                           gewichten = 'Standaardisatiefactor', 
+#                           data = monitor_df)
 
 # ALTERNATIEVE METHODE VAN INLADEN: regionale data invoegen in landelijk
 # Landelijk bestand inladen
@@ -121,6 +143,8 @@ design_gem <- survey_design_maken(
 #   print("Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data.")
 # }
 # 
+#
+# TODO zorgen dat hier ook nog op jaar gefilterd wordt!
 # # Filter regio uit landelijk databestand
 # df <- df %>%
 #   filter(GGDregio != regiocode)
@@ -409,7 +433,8 @@ plot = monitor_df %>%
     var_crossings = c("AGGSA402","AGLFA401","AGOWS404"),
     kleuren_per_crossing = TRUE,
     fade_kleuren = TRUE,
-    flip = TRUE
+    flip = TRUE,
+    niveaus = "gemeente"
   )
 
 plot

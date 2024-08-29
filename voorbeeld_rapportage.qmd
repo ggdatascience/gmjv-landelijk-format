@@ -36,6 +36,8 @@ library(plotly)
 options(dplyr.summarise.inform = FALSE)
 source("hulpfuncties.R")
 
+#TODO instelbare variabelen overzichtelijk maken
+
 #Standaardwaarden in te stellen door gebruiker:
 # Standaard kleuren
 default_kleuren_grafiek <- c("#012C17","#76B82A","#007E48")
@@ -48,6 +50,7 @@ default_kleuren_responstabel <- c("header" = "#012C17",
 # Standaard minima voor groep & cel
 default_Nvar = 100 # Minimum aantal invullers per vraag.
 default_Ncel = 10 # Minimum aantal invullers oper antwoordoptie.
+
 
 #SPSS data inlezen
 # Regionaal bestand
@@ -64,6 +67,7 @@ monitor_df = haven::read_spss(file_path, user_na =T) %>%
 var_label(monitor_df$AGOJB401) <- "Jaar"
 
 #Maak survey designs
+
 #TODO bij echte data standaardisatiefactor en stratum aanpassen per niveau
 
 # Het landelijk en regionaal design hebben dezelfde weegfactoren. Daarom maken we een landelijk design obv landelijke dataset en een regionaal design obv een subset van het landelijk design.
@@ -73,15 +77,18 @@ design_land <- survey_design_maken(
                          gewichten = 'Standaardisatiefactor',
                          data = monitor_df)
 
+
 #design regio is een subset van design land met ggdregio overgehouden.
 # Regionaal 2022 en 2024
 design_regio <- subset(design_land, GGDregio == params$regiocode)
+
 
 #Het gemeentelijk design heeft andere weegfactoren. De gehele dataset waar het gem. design over geld is de GGDregio. Daarom maken we eerst een regionaal design o.b.v. de hele ggdregio en subsetten we daarna het gemeentedesign.
 design_gem_regio <- survey_design_maken(
                           strata = 'Stratum', #hier komen andere parameters
                           gewichten = 'Standaardisatiefactor',  #hier ook
                           data = monitor_df %>% 
+
                             filter(GGDregio == params$regiocode))
 
 # Gemeentelijk 2022 en 2024
@@ -245,9 +252,6 @@ plot = monitor_df %>%
     var_inhoud = "AGOWS402",
     titel = "Opleidingsniveau"
   )
-
-plot
-
 ```
 :::
 :::
@@ -301,7 +305,8 @@ plot
 plot = monitor_df %>% 
    maak_staafdiagram_meerdere_staven(
      var_inhoud = "AGHHA403",
-     titel = "Woonsituatie")
+     titel = "Woonsituatie",
+     flip = T)
  
  plot
 
@@ -514,6 +519,7 @@ Psychische klachten worden gemeten met de ‘Mental Health Inventory 5’ (MHI-5
 :::
 
 ::: column
+
 `r monitor_df %>% maak_percentage(var_inhoud = 'LVPKS403') %>% bol_met_cijfer()` `r monitor_df %>% maak_percentage(var_inhoud = 'LVPKS403') %>% bol_met_cijfer()`
 :::
 
@@ -551,6 +557,7 @@ plot
 :::
 
 ::: column
+
 `r monitor_df %>% maak_percentage(var_inhoud = 'LVPKS403')` van de jongvolwassenen heeft met iemand gepraat over de gedachte om een eind te maken aan het leven. `r monitor_df %>% maak_percentage(var_inhoud = 'LVPKS403')` van de jongvolwassenen heeft in de laatste 12 maanden een poging ondernomen om een eind te maken aan het leven.
 
 <br>
