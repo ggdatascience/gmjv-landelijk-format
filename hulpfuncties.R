@@ -1619,73 +1619,191 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
 
 
 # Tekstfuncties -----------------------------------------------------------
-maak_vergelijking <- function(data, survey_design = design_land, variabele, variabele_label = NULL, 
-                              vergelijking, value = 1) {
+maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL, 
+                              var_crossing = NULL, value = 1, niveaus = "regio",
+                              huidig_jaar = 2024, var_jaar = "AGOJB401") {
   
-  # Bereken gewogen cijfers
-  result <- bereken_kruistabel(data = data, survey_design = survey_design, variabele = variabele, crossing = vergelijking) %>%
-    filter(waarde == value) #%>% # Filter de gegevens voor value eruit. Standaard is dit 1.
-    #arrange(desc(estimate)) # Sorteer op hoogte van estimate (percentage)
+  # Check input: Als var_crossing is ingevuld, dan mag maar één niveau ingevuld zijn
+  if(!is.null(var_crossing) & length(niveaus) > 1){
+    stop(glue("
+    Tekstfunctie kan niet met meerdere niveaus & een crossing werken.
+    Selecteer 1 niveau of verwijder var_crossing.
+    niveaus: {paste(niveaus, collapse = ',')}
+    crossing: {var_crossing}"))
+  }
   
-  # TODO als vergelijken op iets anders dan jaar, DAN alleen van een bepaald jaar selecteren.
-  # TODO specifieke tekst voor vergelijking tussen jaren nog toevoegen.
+  # Check input: Als var_crossing niet is ingevuld, dan moeten meerdere niveaus ingevuld zijn
+  if(is.null(var_crossing) & length(niveaus) == 1){
+    stop(glue("
+    Er is geen vergelijking ingevuld. Vul een crossing of meerdere niveaus in voor de vergelijking.
+    Selecteer 1 niveau of verwijder var_crossing.
+    niveaus: {paste(niveaus, collapse = ',')}
+    crossing: NULL"))
+  }
+  
+  # Checken of var_crossing is ingevoerd en in dat geval var_jaar is
+  crossing_is_jaar <- ifelse(is.null(var_crossing), FALSE,
+                             ifelse(var_crossing != var_jaar, FALSE, TRUE))
+  
+  #Loop over alle niveaus & bereken kruistabel per niveau en evt. jaaruitsplitsing. sla op in df.
+  result <- lapply(niveaus, function(x){
+    
+    # Design en dataset bepalen o.b.v. niveau
+    if(x == "nl"){
+      
+      design_x <- design_land
+      subset_x <- data
+      
+    } else if(x == "regio"){
+      
+      design_x <- design_regio
+      subset_x <- data %>% filter(GGDregio == params$regiocode)
+      
+    } else if (x == "gemeente"){
+      
+      design_x <- design_gem
+      subset_x <- data %>% filter(Gemeentecode == params$gemeentecode)
+      
+    } else{
+      
+      stop(glue("niveau bestaat niet
+              niveau: {x}"))
+      
+    }
+    
+    # Niet filteren als jaar als crossing is geselecteerd
+    if(crossing_is_jaar){
+      
+      data_x <<- subset_x
+      design_temp <<- design_x 
+      
+    } else{
+      
+      # Standaard alleen laatste jaar overhouden
+      # Subset maken van design
+      design_temp <<- subset(design_x, get(var_jaar) == huidig_jaar)
+      
+      # Subset maken van data
+      data_x <<- subset_x %>% filter(!!sym(var_jaar) == huidig_jaar)
+      
+    }
+    
+    #Als er 1 niveau is, is er ook een crossing: bereken_kruistabel met crossing
+    if(length(niveaus) == 1){
+      
+      # Bereken gewogen cijfers
+      bereken_kruistabel(data = data_x, 
+                         survey_design = design_temp, 
+                         variabele = var_inhoud, 
+                         crossing = var_crossing) %>%
+        mutate(niveau = x) %>% 
+        filter(waarde == value) # Filter de gegevens voor value eruit. Standaard is dit 1.
+      
+    #Anders moet voor elk niveau in de lapply een kruistabel zonder crossing uitgerekend worden
+    } else {
+      
+      # Bereken gewogen cijfers
+      bereken_kruistabel(data = data_x, 
+                         survey_design = design_temp, 
+                         variabele = var_inhoud) %>%
+        mutate(niveau = x) %>% 
+        filter(waarde == value) # Filter de gegevens voor value eruit. Standaard is dit 1.
+      
+    }
+  })  %>% do.call(rbind,.)
+  
+  #temp design verwijderen uit globalEnv.
+  rm(design_temp, data_x, envir = .GlobalEnv)
   
   # Check lengte van kruistabel
   if (nrow(result) < 2 | nrow(result) > 3) {
     
-    stop(paste("Er zijn te weinig of te veel vergelijkingen. Controleer vergelijkingsvariabele ", vergelijking, "."))
+    stop(paste("Er zijn te weinig of te veel vergelijkingen. Controleer vergelijkingsvariabele ", var_crossing, "."))
     
   }  
   
+  # Maak label voor vergelijking
+  if (length(niveaus) > 1) {
+    
+    warning("Je maakt een vergelijking tussen niveaus. 
+      Houdt er rekening mee dat deelnemers op een lager niveau (bv. gemeente)
+      ook aanwezig zijn op een hoger niveau (bv. regio) en deze vergelijking 
+      dus statistisch niet correct is.")
+    
+    crossings <- niveaus
+    
+    var_crossing <- "niveau"
+    
+  } else {
 
-  # TODo nog testen, wat gebeurd er met NAs? en kan ik dit robuster maken + werkend voor meer uitsplitsingen?
-
-  crossings <- case_when(result[vergelijking] == "Man" ~ "mannen", 
-                         result[vergelijking] == "Vrouw" ~ "vrouwen",
-                         result[vergelijking] == '16-17 jaar' ~ '16-17 jarigen',
-                         result[vergelijking] == '18-20 jaar' ~ '18-20 jarigen',
-                         result[vergelijking] == '21-25 jaar' ~ '21-25 jarigen',
-                         .default = tolower(labelled_naar_character(result, vergelijking)))
-
+    crossings <- case_when(result[var_crossing] == "Man" ~ "mannen", 
+                         result[var_crossing] == "Vrouw" ~ "vrouwen",
+                         result[var_crossing] == '16-17 jaar' ~ '16-17 jarigen',
+                         result[var_crossing] == '18-20 jaar' ~ '18-20 jarigen',
+                         result[var_crossing] == '21-25 jaar' ~ '21-25 jarigen',
+                         .default = tolower(labelled_naar_character(result, var_crossing)))
+    
+    # Maak label voor niveau
+    label_niveau <- case_when(niveaus == "gemeente" ~ "in de gemeente",
+                              niveaus == "regio" ~ "regionaal",
+                              niveaus == "nl" ~ "landelijk",
+                              .default = "")
+  }
+  
+  # Maak label voor variabele 
   if (is.null(variabele_label)) {
-    label <- tolower(var_label(data[variabele]))
+    label <- tolower(var_label(data[var_inhoud]))
   } else {
     label <- variabele_label
   }
   
-  if (vergelijking == 'AGOJB401') { # Vergelijking 2 jaren
+  if (var_crossing == "niveau") { # Vergelijk 2 niveaust
     
-    resultaat_vergelijking <- case_when(result$ci_lower[1] > result$ci_upper[2] ~ " is afgenomen ",
-                                        result$ci_lower[2] > result$ci_upper[1] ~ " is toegenomen ",
-                                        TRUE ~ " is gelijk gebleven ")
+    crossings <- case_when(niveaus == "gemeente" ~ "in de gemeente",
+                           niveaus == "regio" ~ "regionaal",
+                           niveaus == "nl" ~ "landelijk",
+                           .default = "")
+    
+    resultaat_vergelijking <- case_when(result$ci_lower[1] > result$ci_upper[2] ~ " hoger dan ",
+                                        result$ci_lower[2] > result$ci_upper[1] ~ " lager dan ",
+                                        TRUE ~ " gelijk aan ")
+    
+    return(paste0("Het percentage dat ", label, " is ", crossings[1], resultaat_vergelijking, 
+                  crossings[2], "."))
+    
+  } else if (var_crossing == 'AGOJB401') { # Vergelijking 2 jaren
+    
+    resultaat_vergelijking <- case_when(result$ci_lower[1] > result$ci_upper[2] ~ " afgenomen ",
+                                        result$ci_lower[2] > result$ci_upper[1] ~ " toegenomen ",
+                                        TRUE ~ " gelijk gebleven ")
     
     if (resultaat_vergelijking == " is gelijk gebleven ") {
-      return(paste0("Het percentage dat " , label, resultaat_vergelijking, 
+      return(paste0("Het percentage dat " , label, " is ", label_niveau, resultaat_vergelijking, 
                     "t.o.v. ", crossings[1], "."))
     } else {
-      return(paste0("Het percentage dat " , label, resultaat_vergelijking, 
+      return(paste0("Het percentage dat " , label, " is ", label_niveau, resultaat_vergelijking, 
                   "t.o.v. ", crossings[1], " (", result$percentage[1], "%)."))
     }
   } else if (nrow(result) == 2 ) { # Vergelijk 2 groepen:
 
-    resultaat_vergelijking <- case_when(result$ci_lower[1] > result$ci_upper[2] ~ " is hoger dan ",
-                                        result$ci_lower[2] > result$ci_upper[1] ~ " is lager dan ",
-                                        TRUE ~ " is gelijk aan ")
+    resultaat_vergelijking <- case_when(result$ci_lower[1] > result$ci_upper[2] ~ " hoger dan ",
+                                        result$ci_lower[2] > result$ci_upper[1] ~ " lager dan ",
+                                        TRUE ~ " gelijk aan ")
 
-    return(paste0("Het percentage ", crossings[1], " dat " , label, resultaat_vergelijking, 
+    return(paste0("Het percentage ", crossings[1], " dat " , label, " is ", label_niveau, resultaat_vergelijking, 
                   "het percentage ", crossings[2], "."))
   
   } else if (nrow(result) == 3 ) { # Vergelijking 3 groepen:
     
-    resultaat_vergelijking1 <- case_when(result$ci_lower[1] > result$ci_upper[2] ~ " is hoger ",
-                                         result$ci_lower[2] > result$ci_upper[1] ~ " is lager ",
-                                         TRUE ~ " is gelijk ")
+    resultaat_vergelijking1 <- case_when(result$ci_lower[1] > result$ci_upper[2] ~ " hoger ",
+                                         result$ci_lower[2] > result$ci_upper[1] ~ " lager ",
+                                         TRUE ~ " gelijk ")
     
-    resultaat_vergelijking2 <- case_when(result$ci_lower[1] > result$ci_upper[3] ~ " is hoger ",
-                                         result$ci_lower[3] > result$ci_upper[1] ~ " is lager ",
-                                         TRUE ~ " is gelijk ")
+    resultaat_vergelijking2 <- case_when(result$ci_lower[1] > result$ci_upper[3] ~ " hoger ",
+                                         result$ci_lower[3] > result$ci_upper[1] ~ " lager ",
+                                         TRUE ~ " gelijk ")
     
-    return(paste0("Het percentage dat " , label, resultaat_vergelijking1, "onder ", 
+    return(paste0("Het percentage dat " , label, " is ", label_niveau, resultaat_vergelijking1, "onder ", 
                   crossings[2], " en", resultaat_vergelijking2, "onder ", crossings[3], 
                   " t.o.v. ", crossings[1], "."))
     
@@ -1768,7 +1886,7 @@ maak_top <- function(data, var_inhoud, toon_label = T, value = 1, niveau = "regi
       
       return(paste0(tolower(var_label(data[list$varcode[top]])), " (", list$percentage[top], "%)"))
     
-    } else { # Bij een indicator als input
+    } else { # Bij één indicator als input
       
       return(paste0(tolower(labelled_naar_character(list, var_inhoud))[top], " (", list$percentage[top], "%)")) 
       
