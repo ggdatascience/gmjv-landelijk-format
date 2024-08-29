@@ -260,6 +260,9 @@ data$AGOJB401 %>%
 #ook var_label toegevoegd voor alt-text
 var_label(data$AGOJB401) <- "Jaar"
 
+#Een gemeente andere GGD-regio geven
+data$GGDregio[which(data$Gemeentecode == 1)] <- 24
+
 # Data opslaan ------------------------------------------------------------
 
 #setwd("C:/Users/sjannes/OneDrive - VRLN/PSchijf/Gezondheidsmonitor/2024 Gezondheidsmonitor jongvolwassenen/4. Analyse/Rapportage maken")
