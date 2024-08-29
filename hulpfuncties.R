@@ -1,16 +1,6 @@
 # Script met helpfuncties voor GMJV 2024.
 # Packages ----------------------------------------------------------------
 
-#TODO in alle functies werkelijk ncel en nvar doorgeven
-
-#TODO niveau parameters
-#1 responstabel filteren op regio
-#staafdiagrammen
-  #vergelijking: als filter: done
-  #uitsplitsing naast elkaar: als crossing & filter: done
-  #gestapeld : als crossing & filter
-#cirkeldiagram: filter
-
 #nieuwe grafiek maken die uitsplitsing naast elkaar kan zetten
 
 #maak_grafiek_cbs_bevolking: Aanpassen zodat landelijke cijfers ook uit monitordata zichtbaar zijn
@@ -23,12 +13,8 @@
 # Deze moeten bij de eerste keer lokaal worden geinstalleerd. 
 # Dat doe je met behulp van de functie: install.packages() 
 # (Verwijder de # aan het begin van onderstaande regel om de code te runnen en de benodigde packages te installeren.)
-# TODO hier nog iets van maken met een fucntie die checkt of deze package al is geinstalleerd, en anders installeren?
-#install.packages(c('tidyverse', 'haven', 'labelled', 'survey'))
-# TODO Pieter: Is het wel nodig om ziets te schrijven? moderne RStudio doet dat vanzelf voor je.
 # TODO code opschonen; dataverwerking voor grafiek in eigen functies stoppen om complexiteit / lengte van functies te verkleinen.
 
-#TODO overal bereken_kruistabel() argumenten grafiekfunctie doorgeven nvar / ncel aan min_obs
 
 # Hieronder worden de benodige packages geladen
 library(gt)
@@ -181,31 +167,11 @@ prop_ci_berekenen <- function(data = NULL, variabele = NULL, nummer = NULL, cros
 bereken_kruistabel <- function(data, survey_design = NULL, variabele = NULL, crossing = NULL,
                                var_jaar = NULL, min_observaties_per_vraag = default_Nvar,
                                min_observaties_per_antwoord = default_Ncel) { 
-  # TODO functie werkbaar maken voor dubbele uitsplitsing?
-  
+
   #survey pikt het niet als delen v formules niet in .globalEnv staan. Daarom <<- en later
   #opruimen.
   data_temp <<- data
-  
-  # Foute invoer afvangen
-  #TODO omgaan met vergelijk_landelijk terwijl er geen landelijk df is > deze error verplaatsen
-  #if("land" %in% niveau & data != 'monitor_df_land'){
-  #  stop("ERROR")
-  #}
-  
-  #TODO omgaan met foutieve invoer crossing/inhoud > deze error verplaatsen
-  #if(var_crossing %in% c("placeholder_jaar","placeholder_regio") |
-  #   variabele %in% c("placeholder_jaar","placeholder_regio") |
-  #   variabele == var_crossing ){
-  #  stop("Let eens op; dat is een jaarvariabele of regiovairabele")
-  #}
-  
-  
-  #TODO Op dit moment wordt ervoor gekozen geen trendbestand op gemeenteniveua
-  #op te leveren
-  #als mensen dus vergelijk_jaar & gemeente ingeven kan dat niet
-  #warning of error geven > deze error verplaatsen
-  
+
   #Niet-valide invoer afvangen & warning geven
   if(is.null(data_temp[[variabele]])) {
     
@@ -490,7 +456,9 @@ labelled_naar_character <- function(data,var){
 
 
 kruistabel_met_subset <- function(data, variabele = NULL, crossing = NULL, subsetvar,
-                                  survey_design = NULL){
+                                  survey_design = NULL,
+                                  nvar = default_Nvar,
+                                  ncel = default_Ncel){
 
   #alle lvls van subsetvar
   alle_subsets <- unique(data[[subsetvar]])
@@ -503,7 +471,10 @@ kruistabel_met_subset <- function(data, variabele = NULL, crossing = NULL, subse
     subset_data <<- data %>% filter(!!sym(subsetvar) == lvl_subset)
     
     bereken_kruistabel(data = subset_data, variabele = variabele,
-                       crossing = crossing, survey_design = subset_design) %>%
+                       crossing = crossing, survey_design = subset_design,
+                       min_observaties_per_vraag = nvar,
+                       min_observaties_per_antwoord = ncel
+                       ) %>%
       mutate(!!sym(subsetvar) := factor(lvl_subset))
     
   }) %>% do.call(rbind,.)
@@ -604,7 +575,7 @@ maak_responstabel <- function(data, crossings, missing_label = "Onbekend",
   #TODO Hoe om te gaan met missing waarden? Meetellen als 'onbekend' of niet weergeven?
   #In laatste geval kloppen de totalen van crossings onderling niet. Kan prima zijn
   #Voorlopige keuze: Missings weergeven als "onebekend"
-  
+
   
   aantallen_per_crossing <- lapply(crossings, function(x){
     
@@ -782,16 +753,22 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
   #Loop over alle niveaus & bereken kruistabel per niveau en evt. jaaruitsplitsing. sla op in df.
   df_plot <- lapply(niveaus, function(x){
     
-    #design en dataset bepalen o.b.v. regio
+    #design en dataset bepalen o.b.v. niveau
     if(x == "nl"){
       design_x <- design_land
       subset_x <- data
+      niveau_label <- "Nederland"
+      
     } else if(x == "regio"){
       design_x <- design_regio
       subset_x <- data %>% filter(GGDregio == regiocode)
+      niveau_label <- val_label(data$GGDregio, regiocode)
+      
     } else if (x == "gemeente"){
       design_x <- design_gem
       subset_x <- data %>% filter(Gemeentecode == params$gemeentecode)
+      niveau_label <- val_label(data$Gemeentecode, params$gemeentecode)
+    
     } else{
       
       stop(glue("niveau bestaat niet
@@ -818,9 +795,11 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
       kruistabel_met_subset(data_temp, variabele = var_inhoud,
                             crossing = var_crossing_kleur,
                             subsetvar = var_crossing_groep,
+                            nvar = nvar,
+                            ncel = ncel,
                             #TODO aangeven dat de crossing op groepsniveau een subset is
                             survey_design = design_temp) %>%
-        mutate(niveau = x) %>% 
+        mutate(niveau = niveau_label) %>% 
         filter(waarde == 1)
       
     #Anders moet voor elk niveau in de lapply een kruistabel zonder subset uitgerekend worden
@@ -834,7 +813,7 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
                          survey_design = design_temp,
                          min_observaties_per_vraag = nvar,
                          min_observaties_per_antwoord = ncel) %>%
-        mutate(niveau = x) %>% 
+        mutate(niveau = niveau_label) %>% 
         filter(waarde == 1)
       
     }
@@ -952,7 +931,7 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
   if(length(niveaus) > 1){
     stop(glue("Dit grafiektype kan op 1 niveau filteren er zijn meer niveaus ingevoerd.
               Voer maximaal 1 niveau in of kies een ander grafiektype.
-              niveaus: {paste0(niveaus,',')}"))
+              niveaus: {paste(niveaus, collapse = ',')}"))
   }
   #design en dataset bepalen o.b.v. regio
   if(niveaus == "nl"){
@@ -988,7 +967,9 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
      var_label_crossing = var_label(data[[crossing]])
      
      df_crossing <- bereken_kruistabel(data_temp, variabele = var_inhoud, crossing = crossing,
-                                       survey_design = design_temp) %>% 
+                                       survey_design = design_temp,
+                                       min_observaties_per_vraag = nvar,
+                                       min_observaties_per_antwoord = ncel) %>% 
        filter(waarde == 1) %>% 
        rename(onderdeel = !!sym(crossing)) %>%  #crossinglevel naar 'onderdeel' hernoemen
        mutate(groep = factor(var_label_crossing)#,  #varlabel crossing als 'groep' toevoegen
@@ -1134,21 +1115,28 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
 
   #Loop over alle niveaus & bereken kruistabel per niveau en evt. jaaruitsplitsing. sla op in df.
   df_plot <- lapply(niveaus, function(x){
-    
-    #design en dataset bepalen o.b.v. regio
+  
+
+    #design en dataset bepalen o.b.v. niveau
     if(x == "nl"){
       design_x <- design_land
       subset_x <- data
+      niveau_label <- "Nederland"
+      
     } else if(x == "regio"){
       design_x <- design_regio
       subset_x <- data %>% filter(GGDregio == regiocode)
+      niveau_label <- val_label(data$GGDregio, regiocode)
+      
     } else if (x == "gemeente"){
       design_x <- design_gem
       subset_x <- data %>% filter(Gemeentecode == params$gemeentecode)
+      niveau_label <- val_label(data$Gemeentecode, params$gemeentecode)
+      
     } else{
       
       stop(glue("niveau bestaat niet
-                niveau: {niveaus}"))
+                niveau: {paste(niveaus,collapse = ',')}"))
     }
   
     #niet filteren als jaar als crossing is geselecteerd
@@ -1172,7 +1160,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
                                   min_observaties_per_antwoord = ncel
                                   ) %>% 
       mutate(weggestreept = as.numeric(weggestreept),
-             niveau = x) #TODO nu wordt er letterlijk regio/gem in de niveuavar gezet. We willen daar de naam vd gem/regio
+             niveau = niveau_label) #TODO nu wordt er letterlijk regio/gem in de niveuavar gezet. We willen daar de naam vd gem/regio
   
   })  %>% do.call(rbind,.)
 
@@ -1180,17 +1168,17 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
   #TODO uitzoeken waarom data_temp niet in globalEnv komt en dit een warning veroorzaakt
   #eindoeel warning weg; liever gewoon snappen
   
-  #temp dataframe & design verwijdere uit globalEnv.
+  #temp dataframe & design verwijderen uit globalEnv.
   rm(design_temp, data_temp, envir = .GlobalEnv)
   
-  #Als crossing niet is ingevuld; dummy crossing maken zodat plot met beide kan omgaan
-  
+
+    #als meerde niveaus zijn var_crossing = niveau
     if(length(niveaus) > 1){
       
       var_crossing = "niveau"
       
     } else{
-
+      #Als crossing niet is ingevuld; dummy crossing maken zodat plot met beide kan omgaan
       if(is.null(var_crossing)){
         df_plot$leeg = ""
         var_crossing = "leeg"
@@ -1326,7 +1314,7 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
   if(length(niveaus) > 1){
     stop(glue("Dit grafiektype kan op 1 niveau filteren er zijn meer niveaus ingevoerd.
               Voer maximaal 1 niveau in of kies een ander grafiektype.
-              niveaus: {paste0(niveaus,',')}"))
+              niveaus: {paste(niveaus,collapse = ',')}"))
   }
   #o.b.v. de orientatie van de grafiek (flip = horizontaal)
   #De correctie van de geom_text aanpassen  zodat deze netjes in het midden v.e. balk komt 
@@ -1368,7 +1356,11 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
     var_label_crossing = var_label(data_jaar[[crossing]])
     
     df_crossing <- bereken_kruistabel(data_jaar, variabele = var_inhoud, crossing = crossing,
-                                      survey_design = design_jaar) %>% 
+                                      survey_design = design_jaar,
+                                      min_observaties_per_vraag = nvar,
+                                      min_observaties_per_antwoord = ncel
+                                      
+                                      ) %>% 
       filter(waarde == 1) %>% 
       rename(onderdeel = !!sym(crossing)) %>%  #crossinglevel naar 'onderdeel' hernoemen
       mutate(groep = factor(var_label_crossing),  #varlabel crossing als 'groep' toevoegen
@@ -1505,32 +1497,114 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
 maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, titel = "",
                                         kleuren = default_kleuren_grafiek, x_label = "",
                                         nvar = default_Nvar, ncel = default_Ncel,
-                                        alt_text = NULL){
+                                        alt_text = NULL,
+                                        huidig_jaar = 2024,
+                                        jaarvar = "AGOJB401",
+                                        niveaus = "regio"
+                                        
+                                        ){
   
   if(!labelled::is.labelled(data[[var_inhoud]])){
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
   }
   
   
-  #kruistabel maken
-  df_plot <- bereken_kruistabel(data, variabele = var_inhoud, crossing = var_crossing, survey_design = design_gem) %>% 
-    mutate(weggestreept = as.numeric(weggestreept))
+  #Als een crossing is opgegeven kunnen er niet meerdere niveaus opgegeven worden
+  if(!is.null(var_crossing) & length(niveaus) > 1){
+    stop(glue("
+    Foute invoer:
+    var_crossing is ingevuld en er zijn meerdere niveaus opgegeven.
+    Die combinatie is niet mogelijk voor dit grafiektype.
+    valide invoer is:
+    - lege var_crossing en meerdere niveaus
+    - var_crossing ingevuld en 1 niveau
+    
+    Pas de invoer aan of kies een ander grafiektype
+    var_crossing: {var_crossing}
+    niveaus: {paste(niveaus,collapse = ', ')}
+              "))
+    }
+
+  #Checken of crossvar is ingevoerd en in dat geval jaarvar is
+  crossing_is_jaar <- ifelse(is.null(var_crossing), FALSE,
+                             ifelse(var_crossing != jaarvar, FALSE, TRUE))
   
-  #Als crossing niet is ingevuld; dummy crossing maken zodat plot met beide kan omgaan
-  if(is.null(var_crossing)){
-    df_plot$leeg = ""
-    var_crossing = "leeg"
-    remove_legend = T
+  #Loop over alle niveaus & bereken kruistabel per niveau en evt. jaaruitsplitsing. sla op in df.
+  df_plot <- lapply(niveaus, function(x){
+    
+    #design en dataset bepalen o.b.v. niveau
+    if(x == "nl"){
+      design_x <- design_land
+      subset_x <- data
+      niveau_label <- "Nederland"
+      
+    } else if(x == "regio"){
+      design_x <- design_regio
+      subset_x <- data %>% filter(GGDregio == regiocode)
+      niveau_label <- val_label(data$GGDregio, regiocode)
+      
+    } else if (x == "gemeente"){
+      design_x <- design_gem
+      subset_x <- data %>% filter(Gemeentecode == params$gemeentecode)
+      niveau_label <- val_label(data$Gemeentecode, params$gemeentecode)
+      
+    } else{
+      
+      stop(glue("niveau bestaat niet
+                niveau: {paste(niveaus,collapse = ',')}"))
+    }
+    
+    #niet filteren als jaar als crossing is geselecteerd
+    if(crossing_is_jaar){
+      
+      #niet filteren 
+      data_temp <<- subset_x
+      design_temp <<- design_x 
+    } else{
+      #standaard alleen laatste jaar overhouden
+      #subset data
+      design_temp <<- subset(design_x, get(jaarvar) == huidig_jaar)
+      #subset maken v design
+      data_temp <<- subset_x %>% filter(!!sym(jaarvar) == huidig_jaar)
+    }
+    
+    #kruistabel maken (gaat automatisch zonder crossing als meerdere niveaus zijn opgegeven)
+    #crossing is dan namelijk nog steeds default: null
+    df_plot <- bereken_kruistabel(data_temp, variabele = var_inhoud,
+                                  crossing = var_crossing, survey_design = design_temp,
+                                  min_observaties_per_vraag = nvar,
+                                  min_observaties_per_antwoord = ncel
+    ) %>% 
+      mutate(niveau = niveau_label)
+    
+  })  %>% do.call(rbind,.)
+  
+  
+  #temp dataframe & design verwijderen uit globalEnv.
+  rm(design_temp, data_temp, envir = .GlobalEnv)
+  
+  
+  #als meerde niveaus zijn var_crossing = niveau
+  if(length(niveaus) > 1){
+    
+    var_crossing = "niveau"
+    
+  } else{
+    #Als crossing niet is ingevuld; dummy crossing maken zodat plot met beide kan omgaan
+    if(is.null(var_crossing)){
+      df_plot$leeg = ""
+      var_crossing = "leeg"
+      remove_legend = T
+    }
   }
-  
-  
-  #Als er een te lage N is: plot kan niet gemaakt worden.
+ 
+  #Als er een te lage N is: plot kan niet gemaakt worden. 
+  #TODO checken of een leeg plot de standaardrapportage niet verpest
   if(any(is.na(df_plot$percentage))){
     warning(glue("Plot kan niet gemaakt worden! Te weinig observaties voor {var_inhoud}. De instellingen zijn: nvar = {nvar} en ncel = {ncel}"))
     return(NULL)
     
   }
-  
 
   namen_kleuren <- levels(df_plot[[var_inhoud]])
   
@@ -1585,24 +1659,64 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
   return(plot)
 }
 
+#TODO titel tekst kan wegvallen bij Cirkeldiagram
 
 maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = default_kleuren_grafiek,
-                               nvar = default_Nvar, ncel = default_Ncel, alt_text = NULL) {
+                               nvar = default_Nvar, ncel = default_Ncel, alt_text = NULL,
+                               niveaus = "regio") {
   
   if(!labelled::is.labelled(data[[var_inhoud]])){
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
   }
   
+  
+  #niveaus kan hier max length 1 hebben
+  if(length(niveaus) > 1){
+    stop(glue("Dit grafiektype kan op 1 niveau filteren. Er zijn meer niveaus ingevoerd.
+              Voer maximaal 1 niveau in of kies een ander grafiektype.
+              niveaus: {paste(niveaus,collapse = ',')}"))
+  }
+  #design en dataset bepalen o.b.v. regio
+  if(niveaus == "nl"){
+    
+    design_x <- design_land
+    subset_x <- data
+    
+  } else if(niveaus == "regio"){
+    
+    design_x <- design_regio
+    subset_x <- data %>% filter(GGDregio == regiocode)
+    
+  } else if (niveaus == "gemeente"){
+    
+    design_x <<- design_gem
+    subset_x <<- data %>% filter(Gemeentecode == params$gemeentecode)
+    
+  } else{
+    
+    stop(glue("niveau bestaat niet
+                niveau: {niveaus}"))
+  }
+  
+  #design altijd filteren op jaar in maak_staafdiagram_vergelijking
+  design_temp <<- subset(design_x, get(jaarvar) == huidig_jaar)
+  #subset maken v design
+  data_temp <<- subset_x %>% filter(!!sym(jaarvar) == huidig_jaar)
+  
+  #kruistabel maken
+  df_plot <- bereken_kruistabel(data_temp,
+                                variabele = var_inhoud,
+                                survey_design = design_temp,
+                                min_observaties_per_vraag = nvar,
+                                min_observaties_per_antwoord = ncel
+                                ) %>% 
+    mutate(weggestreept = as.numeric(weggestreept)) 
+    
   #titel ophalen uit var_label als niet opgegeven
   if(is.null(titel)){
     
     titel <- var_label(data[[var_inhoud]]) %>% str_wrap(50)
   }
-  
-  #kruistabel maken
-  df_plot <- bereken_kruistabel(data, variabele = var_inhoud, survey_design = design_gem) %>% 
-    mutate(weggestreept = as.numeric(weggestreept)) 
-    
   
   #kleuren labelen o.b.v. levels var_inhoud
   namen_kleuren <- df_plot[[var_inhoud]]
@@ -1708,19 +1822,10 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
                                        x_label = "",
                                        alt_text = NULL
                                        ){
-  
-  #TODO met Sjanne bespreken:
-    #TODO Nu nep gemeentecode ingevoerd in CBS dataset (was groningen).
-    #Nog testen wanneer echte data aanwezig is
-    #Hier moet data van landelijk regio en gemeente in
-    #standaard regiodataset in laten voeren daar ook gemeente uit filteren
-      #moet er een check komen of mensen wel de regiodata invoeren?
-    #waar komt landelijke data vandaan?
-  
-  
+
   #leeftijd en geslacht aan varnamen uit monitor koppelen
   crossing_monitor <- c("leeftijd" = "AGLFA401",
-                        "gender" = "AGGSA402")
+                        "geslacht" = "AGGSA402")
   
   #vector monitor crossvars filteren op invoer
   crossing_monitor <- crossing_monitor[names(crossing_monitor) %in% crossing_cbs]
@@ -1749,11 +1854,10 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
   #response monitor ophale voor crossing
   #Variabelen naar character omzetten
   data[[crossing_monitor]] <- labelled_naar_character(data, crossing_monitor)
-    
-  #TODO hier nog landelijk
-    
+
   #Aantallen uitrekenen. Missing labelen als missing_label
     aantallen_regio <- data %>% 
+      filter(GGDregio == regiocode) %>% 
       group_by(!!sym(crossing_monitor)) %>% 
       summarise(aantal = n()) %>%
       rename(crossing = 1) %>% 
@@ -1771,8 +1875,18 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
              crossing = replace(crossing, is.na(crossing),missing_label),
              type = "Deelnemers"
              )
+    
+    aantallen_landelijk <-  data %>% 
+      group_by(!!sym(crossing_monitor)) %>% 
+      summarise(aantal = n()) %>%
+      rename(crossing = 1) %>% 
+      mutate(regio = "Totaal Nederland",
+             crossing = replace(crossing, is.na(crossing),missing_label),
+             type = "Deelnemers"
+      )  
+    
   #regio en gemeente responsedata samenvoegen  
-  monitor_responsedata <- rbind(aantallen_regio, aantallen_gemeente) %>% 
+  monitor_responsedata <- rbind(aantallen_regio, aantallen_gemeente, aantallen_landelijk) %>% 
     mutate(crossing = str_remove(crossing," jaar") %>% #" jaar" verwijderen uit lft crossing van monitordata
              tolower()) %>% #alles tolower om verschil man Man vrouw Vrouw weg te strepen.
     select(regio, crossing, aantal, type)
@@ -1898,7 +2012,10 @@ maak_vergelijking <- function(data, survey_design, variabele, variabele_label = 
                               vergelijking, value = 1) {
   
   # Bereken gewogen cijfers
-  result <- bereken_kruistabel(data = data, survey_design = survey_design, variabele = variabele, crossing = vergelijking) %>%
+  result <- bereken_kruistabel(data = data, survey_design = survey_design,
+                               variabele = variabele, crossing = vergelijking,
+                               min_observaties_per_vraag = nvar,
+                               min_observaties_per_antwoord = ncel) %>%
     filter(waarde == value) #%>% # Filter de gegevens voor value eruit. Standaard is dit 1.
     #arrange(desc(estimate)) # Sorteer op hoogte van estimate (percentage)
   
@@ -1975,7 +2092,10 @@ maak_top <- function(data, survey_design, variabelen, toon_label = T, value = 1,
   # Bereken gewogen cijfers
   list <- lapply(variabelen, function(x){bereken_kruistabel(data = data, 
                                                             survey_design = survey_design, 
-                                                            variabele = x)}) 
+                                                            variabele = x,
+                                                            min_observaties_per_vraag = nvar,
+                                                            min_observaties_per_antwoord = ncel
+                                                            )}) 
   
   # Selecteer relevante rijen en voeg dataframes samen
   if (length(variabelen) == 1) {
@@ -2018,7 +2138,10 @@ maak_top <- function(data, survey_design, variabelen, toon_label = T, value = 1,
 maak_percentage <- function(data, survey_design, variabele, value = 1) {
   
   # Bereken gewogen cijfers
-  result <- bereken_kruistabel(data = data, survey_design = survey_design, variabele = variabele) %>%
+  result <- bereken_kruistabel(data = data,
+                               survey_design = survey_design, variabele = variabele,
+                               min_observaties_per_vraag = nvar,
+                               min_observaties_per_antwoord = ncel) %>%
     filter(waarde == value) #%>% # Filter de gegevens voor value eruit. Standaard is dit 1.
   
   # TODO toevoegen selectie van juiste niveau en juiste jaar. 
