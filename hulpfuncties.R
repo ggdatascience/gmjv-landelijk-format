@@ -5,10 +5,6 @@
 
 #maak_grafiek_cbs_bevolking: Aanpassen zodat landelijke cijfers ook uit monitordata zichtbaar zijn
 
-#maak_vergelijking: crossing & filter
-#maak_top: filter
-#maak_percentage: filter
-
 # Het script maakt gebruik van een aantal packages
 # Deze moeten bij de eerste keer lokaal worden geinstalleerd. 
 # Dat doe je met behulp van de functie: install.packages() 
@@ -761,8 +757,8 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
       
     } else if(x == "regio"){
       design_x <- design_regio
-      subset_x <- data %>% filter(GGDregio == regiocode)
-      niveau_label <- val_label(data$GGDregio, regiocode)
+      subset_x <- data %>% filter(GGDregio == params$regiocode)
+      niveau_label <- val_label(data$GGDregio, params$regiocode)
       
     } else if (x == "gemeente"){
       design_x <- design_gem
@@ -941,7 +937,7 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
   } else if(niveaus == "regio"){
     
     design_x <- design_regio
-    subset_x <- data %>% filter(GGDregio == regiocode)
+    subset_x <- data %>% filter(GGDregio == params$regiocode)
     
   } else if (niveaus == "gemeente"){
     
@@ -1126,8 +1122,8 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
       
     } else if(x == "regio"){
       design_x <- design_regio
-      subset_x <- data %>% filter(GGDregio == regiocode)
-      niveau_label <- val_label(data$GGDregio, regiocode)
+      subset_x <- data %>% filter(GGDregio == params$regiocode)
+      niveau_label <- val_label(data$GGDregio, params$regiocode)
       
     } else if (x == "gemeente"){
       design_x <- design_gem
@@ -1333,7 +1329,7 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
   } else if(niveaus == "regio"){
     
     design_x <- design_regio
-    subset_x <- data %>% filter(GGDregio == regiocode)
+    subset_x <- data %>% filter(GGDregio == params$regiocode)
     
   } else if (niveaus == "gemeente"){
     
@@ -1542,8 +1538,8 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
       
     } else if(x == "regio"){
       design_x <- design_regio
-      subset_x <- data %>% filter(GGDregio == regiocode)
-      niveau_label <- val_label(data$GGDregio, regiocode)
+      subset_x <- data %>% filter(GGDregio == params$regiocode)
+      niveau_label <- val_label(data$GGDregio, params$regiocode)
       
     } else if (x == "gemeente"){
       design_x <- design_gem
@@ -1665,7 +1661,7 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
 
 maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = default_kleuren_grafiek,
                                nvar = default_Nvar, ncel = default_Ncel, alt_text = NULL,
-                               niveaus = "regio") {
+                               niveaus = "regio", huidig_jaar = 2024, jaarvar = "AGOJB401") {
   
   if(!labelled::is.labelled(data[[var_inhoud]])){
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
@@ -1687,7 +1683,7 @@ maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = default_
   } else if(niveaus == "regio"){
     
     design_x <- design_regio
-    subset_x <- data %>% filter(GGDregio == regiocode)
+    subset_x <- data %>% filter(GGDregio == params$regiocode)
     
   } else if (niveaus == "gemeente"){
     
@@ -1859,7 +1855,7 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
 
   #Aantallen uitrekenen. Missing labelen als missing_label
     aantallen_regio <- data %>% 
-      filter(GGDregio == regiocode) %>% 
+      filter(GGDregio == params$regiocode) %>% 
       group_by(!!sym(crossing_monitor)) %>% 
       summarise(aantal = n()) %>%
       rename(crossing = 1) %>% 
@@ -2246,11 +2242,9 @@ maak_top <- function(data, var_inhoud, toon_label = T, value = 1, niveau = "regi
   data_x <<- subset_x %>% filter(!!sym(var_jaar) == huidig_jaar)
 
   # Bereken gewogen cijfers
-  list <- lapply(variabelen, function(x){bereken_kruistabel(data = data, 
-                                                            survey_design = survey_design, 
-                                                            variabele = x,
-                                                            min_observaties_per_vraag = nvar,
-                                                            min_observaties_per_antwoord = ncel
+  list <- lapply(var_inhoud, function(x){bereken_kruistabel(data = data_x, 
+                                                            survey_design = design_temp, 
+                                                            variabele = x
                                                             )}) 
   
   # Selecteer relevante rijen en voeg dataframes samen
@@ -2339,11 +2333,9 @@ maak_percentage <- function(data, var_inhoud, value = 1, niveau = "regio",
   data_temp <<- subset_x %>% filter(!!sym(var_jaar) == huidig_jaar)
   
   # Bereken gewogen cijfers
-  result <- bereken_kruistabel(data = data,
-                               survey_design = survey_design, variabele = variabele,
-                               min_observaties_per_vraag = nvar,
-                               min_observaties_per_antwoord = ncel) %>%
-
+  result <- bereken_kruistabel(data = data_temp,
+                               survey_design = design_temp, 
+                               variabele = var_inhoud) %>%
     filter(waarde == value) #%>% # Filter de gegevens voor value eruit. Standaard is dit 1.
   
   #temp design verwijderen uit globalEnv.
