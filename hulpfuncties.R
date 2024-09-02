@@ -1065,7 +1065,8 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
                                               alt_text = NULL,
                                               huidig_jaar = 2024,
                                               jaarvar = "AGOJB401",
-                                              niveaus = "regio"
+                                              niveaus = "regio",
+                                              var_inhoud_waarde = NULL
                                               ){
   
   #Keuzes die we gebruikers willen bieden mbt niveau:
@@ -1198,7 +1199,19 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
   #temp dataframe & design verwijderen uit globalEnv.
   rm(data_temp, design_temp, envir = .GlobalEnv)
   
+  #TODO dit gaat fout ICM meerdere var_inhouds!
+  #Afhandelen van var_inhoud_waarde
+  if(!is.null(var_inhoud_waarde)){
+    
+    #Filteren op ingegeven waarde
+    df_plot <- df_plot %>% filter(waarde == var_inhoud_waarde)
+    #vallabels vervangen met varlabels
+    df_plot[[var_inhoud]] <- var_label(data[[var_inhoud]])
+    
+  }
+  
   #Afhandelen van meerdere var_inhouds: var_inhoud wordt var_label
+  #TODO error handling voor meerdere var_inhouds
   if(length(var_inhoud) > 1){
     var_inhoud_plot <- "var_label"
   } else{
