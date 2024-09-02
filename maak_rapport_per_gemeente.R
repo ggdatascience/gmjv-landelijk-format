@@ -22,6 +22,10 @@ alle_gemeentecodes
 
 # HTML uitdraai -----------------------------------------------------------
 
+#Voor testdata; gemcode 2
+alle_gemeentecodes = 2
+
+
 for(gemeentecode in alle_gemeentecodes){
 
 
@@ -43,11 +47,13 @@ for(gemeentecode in alle_gemeentecodes){
 
 for(gemeentecode in alle_gemeentecodes){
   
+  html_file =  glue::glue("gemeenterapport_{gemeentecode}.html")
+  
   #eerst een html maken waarbij expliciet een TOC wordt gegenereerd met render_toc() 
   quarto::quarto_render(
     input = "voorbeeld_rapportage.qmd",
     output_format = "html",
-    output_file = glue::glue("gemeenterapport_{gemeentecode}.html"),
+    output_file = html_file,
     execute_params = list(
       gemeentecode = gemeentecode,
       is_pdf = TRUE
@@ -60,10 +66,22 @@ for(gemeentecode in alle_gemeentecodes){
                       `toc-float` = "false")
     )
   #Daarna met chrome_print omzetten naar pdf. Deze methode zorgt ervoor dat we
-  #CSS niet genegeerd bij renderen naar pdf 
+  #CSS niet genegeerd bij renderen naar pdf
+  
+  #Resulteert standaard in favicon error; fixen door html te injecteren.
+  #zie: https://appwrk.com/resolving-favicon-ico-404-errors
+  #zie: https://stackoverflow.com/questions/1321878/how-to-prevent-favicon-ico-requests/13416784#13416784
+  
+  #fix voor favicon error in html bestand toevoegen
+  html_lines <- readLines(html_file, warn = F)
+  html_lines <- sub('</head>',
+                    '<link rel="icon" href="data:,"> \n</head>',
+                    html_lines)
+  writeLines(html_lines, html_file)
+  
+  #html omzetten naar pdf
   pagedown::chrome_print(
-    input = glue::glue("gemeenterapport_{gemeentecode}.html"),
-    
+    input = html_file,
     options = list(preferCSSPageSize = FALSE,
                    printBackground = TRUE,
                    scale = .9,
