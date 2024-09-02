@@ -166,10 +166,10 @@ bereken_kruistabel <- function(data, survey_design = NULL, variabele = NULL, cro
 
   #survey pikt het niet als delen v formules niet in .globalEnv staan. Daarom <<- en later
   #opruimen.
-  data_temp <<- data
+  data_global <<- data
 
   #Niet-valide invoer afvangen & warning geven
-  if(is.null(data_temp[[variabele]])) {
+  if(is.null(data_global[[variabele]])) {
     
     warning(paste("Variabele", variabele, "bestaat niet in dataset. Kruistabel wordt niet berekend."))
     return(NULL)
@@ -190,10 +190,10 @@ bereken_kruistabel <- function(data, survey_design = NULL, variabele = NULL, cro
 
   #Bereken kruistabel  
 
-  antwoorden <-  attr(data_temp[[variabele]], "labels") # value labels
+  antwoorden <-  attr(data_global[[variabele]], "labels") # value labels
     
   #Formule maken voor in svytable
-  formule_tekst <- paste0("~ ", substitute(data_temp), "[['", variabele,"']]")
+  formule_tekst <- paste0("~ ", substitute(data_global), "[['", variabele,"']]")
     
   tb <- svytable(formula = eval(parse(text = formule_tekst)), design = survey_design) 
     
@@ -233,7 +233,7 @@ bereken_kruistabel <- function(data, survey_design = NULL, variabele = NULL, cro
     #minder dan min_observaties zijn bij een vraag; maak CI's en estimates NA.
     if (any(table(monitor_df[['GZGGA402']]) < min_observaties_per_antwoord) |
         exists('lege_antwoorden') & min_observaties_per_antwoord != 0 |
-        sum(table(data_temp[[variabele]])) < min_observaties_per_vraag) {
+        sum(table(data_global[[variabele]])) < min_observaties_per_vraag) {
       
       confidence_intervals <- matrix(data = NA, 
                                      nrow = length(ct), 
@@ -244,7 +244,7 @@ bereken_kruistabel <- function(data, survey_design = NULL, variabele = NULL, cro
 
     } else {
       #reken voor ieder antwoord de ci uit
-      confidence_intervals <- t(sapply(unname(antwoorden), function(x){prop_ci_berekenen(data = data_temp, 
+      confidence_intervals <- t(sapply(unname(antwoorden), function(x){prop_ci_berekenen(data = data_global, 
                                                                                            variabele = variabele,
                                                                                            nummer = x, 
                                                                                            survey_design = survey_design)}))
@@ -271,14 +271,14 @@ bereken_kruistabel <- function(data, survey_design = NULL, variabele = NULL, cro
                         "estimate" = estimate,
                         "ci_upper" = confidence_intervals[,2],
                         "ci_lower" = confidence_intervals[,1],
-                        "n_unweighted" = table(factor(data_temp[[variabele]], levels = antwoorden))
+                        "n_unweighted" = table(factor(data_global[[variabele]], levels = antwoorden))
     )
       
   #Als er wel crossings zijn
   }else{
       
     #Warning als crossing niet bestaat
-    if(is.null(data_temp[[crossing]])){
+    if(is.null(data_global[[crossing]])){
       
       stop(paste("Crossing",crossing, "bestaat niet in dataset. Kijk configuratie en dataset na."))
       return(NULL)
@@ -286,14 +286,14 @@ bereken_kruistabel <- function(data, survey_design = NULL, variabele = NULL, cro
     }else{
         
       #Als er missings zijn op de crossing. 
-      if(any(is.na(data_temp[[crossing]]))){
+      if(any(is.na(data_global[[crossing]]))){
         
         warning(paste("Missing data gevonden bij crossing ",crossing))
       
       }
       
       #CI uitrekenen
-      confidence_intervals <- lapply(unname(antwoorden), function(x){prop_ci_berekenen(data = data_temp,
+      confidence_intervals <- lapply(unname(antwoorden), function(x){prop_ci_berekenen(data = data_global,
                                                                                        variabele = variabele,
                                                                                        nummer = x, 
                                                                                        crossing = crossing, 
@@ -307,8 +307,8 @@ bereken_kruistabel <- function(data, survey_design = NULL, variabele = NULL, cro
       population_count <- lapply(unname(antwoorden), function(x){
         
         #Als var. in subset alleen maar NA heeft; lege tabel voor pop.count maken
-        if(all(is.na(data_temp[[variabele]]))){
-          levels_crossing <- unname(val_labels(data_temp[[crossing]]))
+        if(all(is.na(data_global[[variabele]]))){
+          levels_crossing <- unname(val_labels(data_global[[crossing]]))
           
           cbind("antwoord" = x, crossing_var = levels_crossing, n_weighted = "NA") %>%
             as.data.frame()
@@ -330,7 +330,7 @@ bereken_kruistabel <- function(data, survey_design = NULL, variabele = NULL, cro
       population_count <- do.call(rbind, population_count)
       
       #Wat zijn alle crossing_levels?
-      crossing_levels <- attr(data_temp[[crossing]],"labels")
+      crossing_levels <- attr(data_global[[crossing]],"labels")
         
       #Maak matrix met info kruistabel per crossing-level
       kruistabel <- lapply(crossing_levels, function(x){
@@ -358,8 +358,8 @@ bereken_kruistabel <- function(data, survey_design = NULL, variabele = NULL, cro
         # OF als er te weinig observaties per antwoordoptie zijn.
         # LET OP: gebruik dit altijd op data zonder lege missing categorieën, bv. door eerst functie verwijder_9_onbekend() over data te runnen.
 
-        te_weinig_obs <- sum(table(factor(data_temp[[variabele]][data_temp[[crossing]] == x], levels = antwoorden))) < min_observaties_per_vraag |
-          any(table(factor(data_temp[[variabele]][data_temp[[crossing]] == x], levels = antwoorden)) < min_observaties_per_antwoord)
+        te_weinig_obs <- sum(table(factor(data_global[[variabele]][data_global[[crossing]] == x], levels = antwoorden))) < min_observaties_per_vraag |
+          any(table(factor(data_global[[variabele]][data_global[[crossing]] == x], levels = antwoorden)) < min_observaties_per_antwoord)
 
         ci_upper <- confidence_intervals[confidence_intervals$crossing_var == x,4]
           
@@ -387,7 +387,7 @@ bereken_kruistabel <- function(data, survey_design = NULL, variabele = NULL, cro
               "ci_lower" = ci_lower,
               #n_unweighted moet (net als alle andere vectors) de lengte hebben van alle mogelijke values in de variabele
               #Wanneer table() een factor-variabele gevoerd krijgt worden ook alle values/levels gegeven, ook waar geen observaties voor zijn.
-              "n_unweighted" =  table(factor(data_temp[[variabele]][data_temp[[crossing]] == x], levels = antwoorden)))
+              "n_unweighted" =  table(factor(data_global[[variabele]][data_global[[crossing]] == x], levels = antwoorden)))
       
       })
         
@@ -416,8 +416,8 @@ bereken_kruistabel <- function(data, survey_design = NULL, variabele = NULL, cro
       rename(!!sym(crossing):= crossing_var)
   }
   
-  #data_temp uit globalEnvironment verwijderen
-  rm(data_temp, envir = .GlobalEnv)
+  #data_global uit globalEnvironment verwijderen
+  rm(data_global, envir = .GlobalEnv)
   
   return(kruistabel)
 
@@ -818,6 +818,9 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
     })  %>% do.call(rbind,.)
   
 
+  #data & design temp verwijderen uit global Env
+  rm(data_temp, design_temp, envir = .GlobalEnv)
+  
   #als er meerdere niveaus zijn geselecteerd moet "niveau" ingevuld worden bij de lege crossing
   var_crossing_groep = ifelse(is.null(var_crossing_groep), "niveau", var_crossing_groep)
   var_crossing_kleur = ifelse(is.null(var_crossing_kleur), "niveau", var_crossing_kleur)
@@ -1080,9 +1083,10 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
     var_crossing: {var_crossing}"))
   }
   
-  
-  if(!labelled::is.labelled(data[[var_inhoud]])){
-    warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
+  for(var in var_inhoud){
+  if(!labelled::is.labelled(data[[var]])){
+    stop(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
+  }
   }
   
   #TODO Bepalen of we 1 df gebruiken of een voor land + regio
@@ -1150,33 +1154,65 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
       data_temp <<- subset_x %>% filter(!!sym(jaarvar) == huidig_jaar)
     }
 
+    #Er kunnen meerdere var_inhouds ingevoerd worden als dat zo is: interne loop over die var inhouds
+    #In dat geval worden de variabelen
+    #Als dichotoom behandeld: de waarde "1" wordt voor die set var_inhoud getoond met het var-label
+    
+    if(length(var_inhoud) > 1){
+    #Als er 1 var_inhoud wordt ingevoerd wordt de vraag als meerkeuzevraag behandeld:
+    #Alle waarden worden getoond voor die var_inhoud met het val-label
+    
+    lapply(var_inhoud, function(y){
+      
+      #kruistabel maken voor 1 variabele; alle waarden tonen
+      bereken_kruistabel(data_temp,
+                         variabele = y,
+                         crossing = var_crossing,
+                         survey_design = design_temp,
+                         min_observaties_per_vraag = nvar,
+                         min_observaties_per_antwoord = ncel
+      ) %>% 
+        filter(waarde == 1) %>% 
+        mutate(niveau = niveau_label,
+               var_label = var_label(data[[y]]) %>% as.factor()  #Nieuwe variabele met varlabel var_inhoud; y
+               ) %>% 
+        select(-all_of(y)) 
+    }) %>% do.call(rbind,.)
 
-    #kruistabel maken
-    df_plot <- bereken_kruistabel(data_temp, variabele = var_inhoud,
-                                  crossing = var_crossing, survey_design = design_temp,
-                                  min_observaties_per_vraag = nvar,
-                                  min_observaties_per_antwoord = ncel
-                                  ) %>% 
-      mutate(weggestreept = as.numeric(weggestreept),
-             niveau = niveau_label) #TODO nu wordt er letterlijk regio/gem in de niveuavar gezet. We willen daar de naam vd gem/regio
+      
+      
+    } else {
+    #kruistabel maken voor 1 variabele; alle waarden tonen
+    bereken_kruistabel(data_temp,
+                       variabele = var_inhoud,
+                       crossing = var_crossing,
+                       survey_design = design_temp,
+                       min_observaties_per_vraag = nvar,
+                       min_observaties_per_antwoord = ncel
+                       ) %>% 
+      mutate(niveau = niveau_label)
+    }
   
   })  %>% do.call(rbind,.)
-
-
-  #TODO uitzoeken waarom data_temp niet in globalEnv komt en dit een warning veroorzaakt
-  #eindoeel warning weg; liever gewoon snappen
   
   #temp dataframe & design verwijderen uit globalEnv.
-  rm(design_temp, data_temp, envir = .GlobalEnv)
+  rm(data_temp, design_temp, envir = .GlobalEnv)
   
-
-    #als meerde niveaus zijn var_crossing = niveau
+  #Afhandelen van meerdere var_inhouds: var_inhoud wordt var_label
+  if(length(var_inhoud) > 1){
+    var_inhoud_plot <- "var_label"
+  } else{
+    var_inhoud_plot <- var_inhoud
+  }
+  
+  #Afhandelen van niveaus & invoer crossing
+  #Als er meerdere niveaus zijn ingegeven nemen niveaus de plek in van een crossing
     if(length(niveaus) > 1){
       
       var_crossing = "niveau"
       
     } else{
-      #Als crossing niet is ingevuld; dummy crossing maken zodat plot met beide kan omgaan
+      #Als er geen crossing is ingevoerd: dummy crossing maken zodat plot met beide kan omgaan
       if(is.null(var_crossing)){
         df_plot$leeg = ""
         var_crossing = "leeg"
@@ -1189,13 +1225,15 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
   
   kleuren <- kleuren[1:length(namen_kleuren)]
   
-  plot = ggplot(df_plot) +
-    geom_col(aes(x = !!sym(var_inhoud), y = percentage, fill = !!sym(var_crossing)),
+  plot =
+    ggplot(df_plot) +
+    geom_col(aes(x = !!sym(var_inhoud_plot), y = percentage, fill = !!sym(var_crossing)),
              position = position_dodge(width = 0.8), width = 0.8,
              na.rm = T) +
-    geom_text(aes(x = !!sym(var_inhoud),
+    geom_text(aes(x = !!sym(var_inhoud_plot),
                   y = percentage,
-                  label = paste(percentage,"%"),
+                  group = !!sym(var_crossing),
+                  label =  paste(percentage,"%"),
                   vjust = v_just_text,
                   hjust = h_just_text),
               position = position_dodge2(width = 0.8),
@@ -1203,7 +1241,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
               na.rm = T) +
     
     #sterretje invoegen bij weggestreepte data omdat nvar of ncel niet gehaald wordt
-    geom_point(aes(x = !!sym(var_inhoud), y = weggestreept, color = !!sym(var_crossing)),
+    geom_point(aes(x = !!sym(var_inhoud_plot), y = weggestreept, color = !!sym(var_crossing)),
                position = position_dodge(width = .8),
                shape = 8,
                size = 5,
@@ -1245,12 +1283,32 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
   
   if(is.null(alt_text)){
     
-    alt_text <- maak_alt_text(plot,
-                              label_inhoud = var_label(data[[var_inhoud]]),
-                              label_crossings = var_label(data[[var_crossing]]),
-                              vars_crossing = c(var_crossing,var_inhoud)
-                              )
+    if(length(var_inhoud) > 1){
+      
+      
+      maak_alt_text(plot,
+                    label_inhoud = "",
+                    label_crossings = var_label(data[[var_crossing]]),
+                    vars_crossing = c("var_label",var_crossing)
+      ) %>% 
+        str_replace("voor de indicator ''","voor verschillende indicatoren")
+        
+        
+      
+      alt_text <- maak_alt_text(plot,
+                                label_inhoud = "",
+                                label_crossings = "",
+                                vars_crossing = plot$data$var_label)
+        
+      
+    } else{
     
+      alt_text <- maak_alt_text(plot,
+                                label_inhoud = var_label(data[[var_inhoud]]),
+                                label_crossings = var_label(data[[var_crossing]]),
+                                vars_crossing = c(var_crossing,var_inhoud)
+        )
+    }
   }
   plot <- plot +  labs(alt = alt_text)
   

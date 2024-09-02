@@ -250,6 +250,8 @@ plot = monitor_df %>%
     var_inhoud = "AGOWS402",
     titel = "Opleidingsniveau"
   )
+
+plot
 ```
 :::
 :::
