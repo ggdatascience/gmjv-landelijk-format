@@ -9,8 +9,8 @@
 # Deze moeten bij de eerste keer lokaal worden geinstalleerd. 
 # Dat doe je met behulp van de functie: install.packages() 
 # (Verwijder de # aan het begin van onderstaande regel om de code te runnen en de benodigde packages te installeren.)
+# TODO alle alt-texten nakijken. Door recente aanpassingen mogelijk niet meer waterdicht
 # TODO code opschonen; dataverwerking voor grafiek in eigen functies stoppen om complexiteit / lengte van functies te verkleinen.
-
 
 # Hieronder worden de benodige packages geladen
 library(gt)
@@ -461,6 +461,13 @@ kruistabel_met_subset <- function(data, variabele = NULL, crossing = NULL, subse
 
   meerdere_kruistabellen <- lapply(alle_subsets, function(lvl_subset){
     
+    label_val = val_label(data[[subsetvar]], lvl_subset)
+    
+    #Als label_val NULL is gaat het om een missing. Overslaan.
+    if(is.null(label_val)){
+      return(NULL)
+    }
+    
     #subset maken v design
     subset_design <<- subset(survey_design, get(subsetvar) == lvl_subset)
     #subset maken van dataset
@@ -471,7 +478,7 @@ kruistabel_met_subset <- function(data, variabele = NULL, crossing = NULL, subse
                        min_observaties_per_vraag = nvar,
                        min_observaties_per_antwoord = ncel
                        ) %>%
-      mutate(!!sym(subsetvar) := factor(lvl_subset))
+      mutate(!!sym(subsetvar) := label_val)
     
   }) %>% do.call(rbind,.)
   
@@ -715,13 +722,16 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
   #Als beide crossing typpen zijn ingevuld mag er maar 1 niveau zijn en wordt op dat niveau gefilterd.
   #anders error
   
-  #TODO LEESBAAR MAKEN
 
-  if(! #Als 1 van onderstaande niet waar is dan mag het niet
+
+  if(
+    !( #Als 1 van onderstaande niet waar is dan mag het niet
+     
     #1 van de twee crossings ontbreekt en er zijn meer niveaus DAT MAG
     (xor(is.null(var_crossing_groep), is.null(var_crossing_kleur)) & length(niveaus) > 1) | #OF
     #Beide crossings zijn ingevuld en er is 1 niveau DAT MAG OOK
     ((!is.null(var_crossing_groep) & !is.null(var_crossing_kleur)) & length(niveaus) == 1)
+    )
   ){
     
     invoer_kleur = ifelse(is.null(var_crossing_groep),"Leeg",var_crossing_groep)
