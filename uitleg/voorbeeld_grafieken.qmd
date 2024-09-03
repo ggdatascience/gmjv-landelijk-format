@@ -554,7 +554,7 @@ plot
 
 ### Aangepaste Populatiegrafiek CBS
 
-```{r}
+```{r, fig.alt = ggplot2::get_alt_text(plot)}
 plot <- monitor_df_regio %>% 
   maak_grafiek_cbs_bevolking(
     niveaus = c("regio","gemeente"),
