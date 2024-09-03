@@ -25,6 +25,11 @@ crossref:
 # Het script maakt gebruik van een aantal packages
 # Deze moeten bij de eerste keer lokaal worden geinstalleerd
 # Hieronder worden de benodige packages geladen
+
+#TODO uitleg jaarvariabelen
+#TODO uitleg regiovariabelen
+#TODO uitleg meerdere vars in meerdere staven
+
 library(gt)
 library(dplyr)
 library(ggplot2)
