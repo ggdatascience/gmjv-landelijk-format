@@ -1155,6 +1155,8 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
       data_temp <<- subset_x %>% filter(!!sym(jaarvar) == huidig_jaar)
     }
 
+    
+
     #Er kunnen meerdere var_inhouds ingevoerd worden als dat zo is: interne loop over die var inhouds
     #In dat geval worden de variabelen
     #Als dichotoom behandeld: de waarde "1" wordt voor die set var_inhoud getoond met het var-label
@@ -1195,20 +1197,11 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
     }
   
   })  %>% do.call(rbind,.)
-  
+
   #temp dataframe & design verwijderen uit globalEnv.
   rm(data_temp, design_temp, envir = .GlobalEnv)
   
-  #TODO dit gaat fout ICM meerdere var_inhouds!
-  #Afhandelen van var_inhoud_waarde
-  if(!is.null(var_inhoud_waarde)){
-    
-    #Filteren op ingegeven waarde
-    df_plot <- df_plot %>% filter(waarde == var_inhoud_waarde)
-    #vallabels vervangen met varlabels
-    df_plot[[var_inhoud]] <- var_label(data[[var_inhoud]])
-    
-  }
+
   
   #Afhandelen van meerdere var_inhouds: var_inhoud wordt var_label
   #TODO error handling voor meerdere var_inhouds
@@ -1216,6 +1209,17 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
     var_inhoud_plot <- "var_label"
   } else{
     var_inhoud_plot <- var_inhoud
+  }
+  
+  #Afhandelen van var_inhoud_waarde
+  if(!is.null(var_inhoud_waarde)){
+    
+    #Filteren op ingegeven waarde
+    df_plot <- df_plot %>% filter(waarde == var_inhoud_waarde)
+    
+    if(length(var_inhoud) == 1){
+    df_plot[[var_inhoud]] <- var_label(data[[var_inhoud]])
+    }
   }
   
   #Afhandelen van niveaus & invoer crossing
@@ -1233,7 +1237,6 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
       }
     }
 
-  
   namen_kleuren <- unique(df_plot[[var_crossing]])
   
   kleuren <- kleuren[1:length(namen_kleuren)]
@@ -1299,19 +1302,12 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
     if(length(var_inhoud) > 1){
       
       
-      maak_alt_text(plot,
+      alt_text <- maak_alt_text(plot,
                     label_inhoud = "",
                     label_crossings = var_label(data[[var_crossing]]),
                     vars_crossing = c("var_label",var_crossing)
       ) %>% 
         str_replace("voor de indicator ''","voor verschillende indicatoren")
-        
-        
-      
-      alt_text <- maak_alt_text(plot,
-                                label_inhoud = "",
-                                label_crossings = "",
-                                vars_crossing = plot$data$var_label)
         
       
     } else{
