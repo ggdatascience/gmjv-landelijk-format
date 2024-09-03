@@ -20,7 +20,7 @@ old.packages() #om te zien welke libraries verouderd zijn.
 
 ```
 
-## Voor PDF-outdraai: Google Chrome {#sec-voor-pdf-uitdraai}
+## Voor PDF-outdraai: Google Chrome
 Als je het rapport als PDF wilt uitdraaien is een geupdate versie Google Chrome nodig. Als je versie van Google Chrome verouderd is zal er wel een uitvoer gemaakt worden, maar zullen de knoppen in de inhoudsgave niet goed werken.
 
 Om achter je Chrome versie te komen klik je in google chrome rechtsboven op de drie punten. Vervolgens: Instellingen -> Over Chrome.

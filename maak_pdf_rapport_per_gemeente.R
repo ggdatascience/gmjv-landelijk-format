@@ -1,51 +1,25 @@
 #maak_rapport_gemeenten
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-
 library(dplyr)
 
-#SPSS data inlezen
-#bestandsnaam
+# Hier bestandsnaam invullen ----------------------------------------------
 file_path = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
+# Hier code regio invullen ------------------------------------------------
+regiocode = 23
+# Hier naam variabele gemeente invullen -----------------------------------
+var_gemeente = "Gemeentecode"
+
+#SPSS data inlezen
 #lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
 monitor_df = haven::read_spss(file_path,user_na =T) %>%
   labelled::user_na_to_na()
 
 
-# Hier code regio invullen ------------------------------------------------
-regiocode = 23
 
-# Hier naam variabele gemeente invullen -----------------------------------
-#names(monitor_df)
-
-var_gemeente = "Gemeentecode"
-
-alle_gemeentecodes = monitor_df[[var_gemeente]] %>% unique() %>% as.numeric() %>% sort()
-
-alle_gemeentecodes
-
-# HTML uitdraai -----------------------------------------------------------
-
-#Voor testdata; gemcode 2
-alle_gemeentecodes = 2
-
-
-for(gemeentecode in alle_gemeentecodes){
-
-
-  
-  quarto::quarto_render(
-    input = "voorbeeld_rapportage.qmd",
-    output_format = "html",
-    output_file = glue::glue("gemeenterapport_{gemeentecode}.html"),
-    execute_params = list(
-      gemeentecode = gemeentecode,
-      regiocode = regiocode
-      )
-    )
-  
-}
-
-
+gemeentecodes_in_regio = monitor_df[[var_gemeente]][monitor_df$GGDregio == regiocode] %>% 
+  unique() %>% 
+  as.numeric() %>% 
+  sort()
 
 # PDF uitdraai ------------------------------------------------------------
 
@@ -60,15 +34,16 @@ for(gemeentecode in alle_gemeentecodes){
     output_file = html_file,
     execute_params = list(
       gemeentecode = gemeentecode,
+      regiocode = regiocode,
       is_pdf = TRUE
-      ),
+    ),
     #Metadata aanpassen zodat inhoudsopgave naar body verplaatst wordt
     #Verdwijnt bij chrome_print() maar nodig omdat er anders een vlak leeg wordt gehouden
     #aan de zijkant van de rapportage
-      metadata = list(`toc-location` = "body",
-                      `toc-title` = "Inhoudsopgave",
-                      `toc-float` = "false")
-    )
+    metadata = list(`toc-location` = "body",
+                    `toc-title` = "Inhoudsopgave",
+                    `toc-float` = "false")
+  )
   #Daarna met chrome_print omzetten naar pdf. Deze methode zorgt ervoor dat we
   #CSS niet genegeerd bij renderen naar pdf
   
@@ -101,8 +76,9 @@ for(gemeentecode in alle_gemeentecodes){
   
 }
 
-#Issue hoeven we zelf niet aan te werken. wordt gefixt in update v. chrome :)
+#Issue met foute verwijzing links hoeven we zelf niet aan te werken. wordt gefixt in update julie v. google chrome :)
 #https://stackoverflow.com/questions/78750596/pagedownchrome-print-links-go-to-wrong-page
 
+#Is inmiddels opgelost bij chrome versie 128 + 
 
-  
+

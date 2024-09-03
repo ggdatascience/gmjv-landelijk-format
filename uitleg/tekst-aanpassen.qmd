@@ -22,7 +22,7 @@ Linksboven in een quarto document kan je kiezen tussen twee manieren van bewerke
 
     -   Een regel die met een hashtag begint wordt een kop. De hoeveelheid hashtags geeft het niveau van de kop aan. Dus: "\# Kop 1" "\## Kop 2" etc.
 
-    -   /\*/\*woord /\*/\* maakt 'woord' **vetgedrukt**, /\*woord/\* maakt 'woord' *schuingedrukt.*
+    -   \*\*woord\*\* maakt 'woord' **vetgedrukt**, \*woord\* maakt 'woord' *schuingedrukt.*
 
     -   [Lees hier meer over Markdown Basics](https://quarto.org/docs/authoring/markdown-basics.html)
 
@@ -38,6 +38,12 @@ In een browser bestaan pagina's niet echt. De standaard html-uitvoer van het rap
 
 Let daarom goed op dat je alleen een kop van niveau 1 maakt als je een nieuwe pagina wilt beginnen.
 
+::: callout-warning
+Controleer altijd de pdf-uitvoer op het mooi overlopen van pagina's
+
+Er zijn grenzen aan hoe veel er op één pagina past. Als je te veel grafieken of tekst onder een header van niveau 1 plaatst, zal alles wat niet past naar de volgende pagina gaan. Te veel inhoud onder één header kan dus alsnog voor een arbitraire overgang van paginas zorgen.
+:::
+
 ::: {.callout-tip title="Aangepaste eigenschappen Header 1" collapse="true"}
 Headers van niveau 1 krijgen voor de GMJV rapportage standaard een gekleurde achtergrond en beginnen (bij conversie naar pdf) altijd op een nieuwe pagina.
 
@@ -46,4 +52,9 @@ Dit zijn aangepaste eigenschappen die worden bepaald in het CSS-bestand "custom.
 
 ### PDF uitdraaien
 
-Als de pagina-einden goed ingesteld staan kan je de rapportage als PDF bestand uitdraaien. Let hierbij op dat je ten minste Chrome 128 hebt zie ook: [@sec-voor-pdf-uitdraai]
+Als de pagina-einden goed ingesteld staan kan je de rapportage als PDF bestand uitdraaien. Let hierbij op dat je ten minste Google Chrome 128 hebt. Zie daarvoor ['PDF-uitdraai' in het hoofdstuk 'Beginnen'](beginnen.qmd#voor-pdf-uitdraai)
+
+-   Open het bestand **maak_pdf_rapport.R**
+-   Controleer of de variabelen **file_path**, **regiocode** en **var_gemeente** goed staan ingesteld.
+-   Draai het hele script.
+-   Controleer de uitvoer.

@@ -1,0 +1,20 @@
+project:
+  type: book
+
+book:
+  title: "Uitleg GMJV rapportage in Quarto"
+  author: 
+    - name: "Pieter Seinen"
+    - affiliation: "GGD Hart voor Brabant"
+    
+  chapters:
+    - index.qmd
+    - beginnen.qmd
+    - tekst-aanpassen.qmd
+    - layout.qmd
+    - voorbeeld_grafieken.qmd
+    - issues.qmd
+    - alt-text.qmd
+    
+
+
