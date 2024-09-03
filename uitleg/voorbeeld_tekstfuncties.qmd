@@ -49,11 +49,6 @@ default_kleuren_responstabel <- c("header" = "#012C17",
 default_Nvar = 100 # Minimum aantal invullers per vraag.
 default_Ncel = 10 # Minimum aantal invullers oper antwoordoptie.
 
-# Standaard regio
-# Pas onderstaande naam en code aan naar de naam en code van je eigen regio.
-regionaam <- 'GGD Limburg-Noord'
-regiocode <- 23
-
 #SPSS data inlezen
 #Lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
 monitor_df = haven::read_spss(params$path_monitor_data, user_na =T) %>%
@@ -98,48 +93,6 @@ design_gem <- survey_design_maken(
                           gewichten = 'Standaardisatiefactor', 
                           data = monitor_df)
 
-# ALTERNATIEVE METHODE VAN INLADEN: regionale data invoegen in landelijk
-# Landelijk bestand inladen
-# df <- haven::read_spss(file.choose(), user_na =T) %>%
-#   labelled::user_na_to_na()
-# 
-# # Regionaal bestand inladen
-# df_regio <- haven::read_spss(file.choose(), user_na =T) %>%
-#   labelled::user_na_to_na()
-# 
-# # Check of aantallen gelijk zijn.
-# # NB. Alleen deelnemers met landelijke weegfactor zitten in landelijk bestand.
-# if (sum(df_regio$Standaardisatiefactor != 0) != nrow(df %>% filter(GGDregio == regiocode))) {
-#   print("Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data.")
-# }
-# 
-# # Filter regio uit landelijk databestand
-# df <- df %>%
-#   filter(GGDregio != regiocode)
-# 
-# # Voeg regiobestand toe aan landelijk bestand
-# df <- df %>%
-#   full_join(df_regio)
-# 
-# # Opschonen
-# rm(df_regio)
-# 
-# #Er is niet goed aangegeven wat missing is in SPSS.
-# #tijdelijke functie om 9 Onbekend te verwijderen & naar NA te zetten
-# 
-# for(var in names(df)){
-#   
-#   df <- df %>% verwijder_9_onbekend(var)
-# 
-# }
-# 
-# # Regionale data filteren
-# df %>%
-#   filter(GGDregio == regiocode)
-# 
-# # Gemeentelijke data filteren
-# df %>%
-#   filter(Gemeentecode == params$gemeentecode)
 
 ```
 
