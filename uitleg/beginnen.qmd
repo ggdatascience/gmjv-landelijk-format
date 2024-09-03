@@ -35,10 +35,18 @@ De versie moet ten minste **Chrome 128 zijn** (update van Augustus 2024).
 
 -   Klik op de groene knop **Code** en selecteer in het drop-down menu. "Download Zip".
 
--   Open het Zip-bestand en kies "Alles Uitpakken". Selecteer een geschikt werkmap.
+-   Open het Zip-bestand en kies "Alles Uitpakken". Selecteer een geschikte werkmap.
 
 
 
 # R project openen en voorbeeldrapport uitdraaien
--   Open "gmjv-landelijk-format.Rproj.
+-   Open het bestand "gmjv-landelijk-format.Rproj" in Rstudio. Door het project te openen, in plaats van een goed bestand is de werkmap automatisch goed ingesteld.
+
+-   Zoek rechtsonder in Rstudio bij "files" het bestand "voorbeeld_rapportage.qmd" op.
+
+-   Als je dit bestand hebt geopend zal Rstudio het aangeven als er nog 'libraries' zijn die je moet installeren. Er verschijnt dan een gele balk bovenaan het scherm. Klik in dat geval op "install" en wacht tot de pakketjes zijn geinstalleerd.
+
+-   Klik nu bovenaan het scherm op "Render". R gaat nu de rapportage genereren en zal het opslaan als een html bestand "voorbeeld_rapportage.html" in de werkmap.
+
+
 
