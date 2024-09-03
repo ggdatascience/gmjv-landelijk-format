@@ -8,9 +8,12 @@ format:
     toc: TRUE
     embed-resources: true
 params:
-  gemeentecode: 2
+  gemeentecode: 2 
   regiocode: 23
   regionaam: 'GGD Limburg-Noord'
+  path_monitor_data: "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
+  path_hulpfuncties: "hulpfuncties.R"
+  path_cbs_data: "JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx"
   is_pdf: false
 editor: visual
 format-links: false
@@ -32,7 +35,7 @@ library(glue) #om strings aangenaam aan elkaar te plakken
 library(plotly)
 
 options(dplyr.summarise.inform = FALSE)
-source("hulpfuncties.R")
+source(params$path_hulpfuncties)
 
 #TODO instelbare variabelen overzichtelijk maken
 
@@ -50,14 +53,8 @@ default_Nvar = 100 # Minimum aantal invullers per vraag.
 default_Ncel = 10 # Minimum aantal invullers oper antwoordoptie.
 
 #SPSS data inlezen
-# Regionaal bestand
-#file_path_regio = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
-
-# Landelijk bestand
-file_path = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
-
 #Lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
-monitor_df = haven::read_spss(file_path, user_na =T) %>%
+monitor_df = haven::read_spss(params$path_monitor_data, user_na =T) %>%
   labelled::user_na_to_na()
 
 #TODO verwijderen bij echte data. tijdelijk varlabel voor jaarvariabele

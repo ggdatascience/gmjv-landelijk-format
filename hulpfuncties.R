@@ -524,7 +524,7 @@ maak_alt_text <- function(plot, doelgroep = "jongvolwassenen", type_grafiek = "s
   
 }
 
-cbs_populatie_opschonen <- function(file = "JongVolwassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx",
+cbs_populatie_opschonen <- function(file = params$path_cbs_data,
                                     sheet = NULL){
   
   #niet als dataframe aangeleverd. ontbrekende kolomkoppen. meerdere rijen boven dataset.

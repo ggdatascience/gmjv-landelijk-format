@@ -8,14 +8,13 @@ format:
     toc: TRUE
     toc-location: left
     embed-resources: true
-  pdf: 
-    classoption: landscape
-    toc: TRUE
-    tol: TRUE
 params:
   gemeentecode: 2 
   regiocode: 23
   regionaam: 'GGD Limburg-Noord'
+  path_monitor_data: "../nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
+  path_hulpfuncties: "../hulpfuncties.R"
+  path_cbs_data: "../JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx"
 editor: visual
 format-links: false
 ---
@@ -41,7 +40,7 @@ library(glue) #om strings aangenaam aan elkaar te plakken
 library(plotly)
 
 options(dplyr.summarise.inform = FALSE)
-source("../hulpfuncties.R")
+source(params$path_hulpfuncties)
 
 #TODO instelbare variabelen overzichtelijk maken
 
@@ -60,23 +59,12 @@ default_Ncel = 10 # Minimum aantal invullers oper antwoordoptie.
 
 # Standaard regio
 # Pas onderstaande naam en code aan naar de naam en code van je eigen regio.
-
-#TODO regio naar params
-regionaam <- 'GGD Limburg-Noord'
-regiocode <- 23
-
-#SPSS data inlezen
-# Regionaal bestand
-#file_path_regio = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
-# Landelijk bestand
-file_path_land = "../nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
-
 #Lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
 #monitor_df = haven::read_spss(file_path_regio, user_na =T) %>%
  # labelled::user_na_to_na()
 
 #1 landelijk bestand inlezen
-monitor_df = haven::read_spss(file_path_land,user_na =T) %>%
+monitor_df = haven::read_spss(params$path_monitor_data,user_na =T) %>%
   labelled::user_na_to_na()
 
 #TODO verwijderen bij echte data. tijdelijk varlabel voor jaarvariabele
@@ -96,7 +84,7 @@ design_land <- survey_design_maken(
 
 #design regio is een subset van design land met ggdregio overgehouden.
 #subset data
-design_regio <- subset(design_land, GGDregio == regiocode)
+design_regio <- subset(design_land, GGDregio == params$regiocode)
 
 
 #Het gemeentelijk design heeft andere weegfactoren. De gehele dataset waar het gem. design over geld is de GGDregio. Daarom maken we eerst een regionaal design o.b.v. de hele ggdregio en subsetten we daarna het gemeentedesign.
@@ -104,7 +92,7 @@ design_gem_regio <- survey_design_maken(
                           strata = 'Stratum', #hier komen andere parameters
                           gewichten = 'Standaardisatiefactor',  #hier ook
                           data = monitor_df %>% 
-                            filter(GGDregio == regiocode))
+                            filter(GGDregio == params$regiocode))
 
 design_gem <- subset(design_gem_regio, Gemeentecode == params$gemeentecode)
 
