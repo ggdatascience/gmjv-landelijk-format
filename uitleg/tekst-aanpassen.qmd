@@ -59,3 +59,47 @@ Deze syntax kan je overal gebruiken in de lopende tekst bijvoorbeeld:
 -   Inline berekeningen: 
 
 > Er waren \` r totaal_deelnemers \` deelnemers. Daarvan was \` r deelnemers_geslaagd \/ totaal_deelnemers * 100\` % geslaagd.
+
+## Kolomlayout
+Je kan onderdelen van je rapportage naast elkaar presenteren in Quarto. Hier wordt een van de manieren om dit te doen uitgelegd. Hierbij wordt steeds gebruik gemaakt van twee setjes van drie dubbele punten naast elkaar. Voor mensen die thuis zijn in html is het handig te weten dat dit de markdown syntax is voor een 'div'.
+
+Zie ook het Quarto boek over [Custom layouts](https://quarto.org/docs/authoring/figures.html#complex-layouts)
+
+### Syntax voor twee kolommen van gelijke grote:
+
+> \:\:\: \{layout="[50,50]"\}
+>
+> \:\:\: column
+>
+> Dit is tekst in de linkerkolom
+>
+> \:\:\:
+>
+> Dit is tekst in de rechterkolom
+>
+> \:\:\: column
+>
+> \:\:\:
+
+### Het resultaat:
+
+::: {layout="[5,5]"}
+::: column
+Dit is tekst in de linkerkolom
+:::
+::: column
+Dit is tekst in de rechterkolom
+:::
+:::
+
+### Toelichting
+
+-   Het buitenste setje van ':::' bepaald de layout.
+    -   Achter de eerste ':::' komt '{layout="\[50,50\]"}' te staan
+    -   Het maakt alleen uit hoe de getallen zich tot elkaar verhouden.
+        -   \[5,5\] geeft hetzelfde resultaat als \[50,50\].
+        -   \[3,7\] maakt twee kolommen waarvan de linker kolom 30% van de ruimte opneemt en de rechterkolom 70%.
+        -   Het mogelijk meer dan twee kolommen te definieren.
+-   Tussen het buitenste setje ':::' worden setjes geplaatst voor de alle kolommen.
+    -   Achter de eerste ':::' van de kolom komt het woordt 'column' te staan
+    -   Tussen de eerte en laatste ':::' van de kolom kan je ieder soort inhoud plaatsen. Een afbeelding, tekst of een code-blok waar een grafiek uitkomt.
