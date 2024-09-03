@@ -573,12 +573,45 @@ cbs_populatie_opschonen <- function(file = "JongVolwassenenNaarGeslachtEnLeeftij
 
 # Tabelfuncties -------------------------------------------------------
 maak_responstabel <- function(data, crossings, missing_label = "Onbekend",
-                              kleuren = default_kleuren_responstabel){
+                              kleuren = default_kleuren_responstabel,
+                              huidig_jaar = 2024,
+                              jaarvar = "AGOJB401",
+                              niveaus = "regio"
+                              
+                              ){
 
   #TODO Hoe om te gaan met missing waarden? Meetellen als 'onbekend' of niet weergeven?
   #In laatste geval kloppen de totalen van crossings onderling niet. Kan prima zijn
-  #Voorlopige keuze: Missings weergeven als "onebekend"
+  #Voorlopige keuze: Missings weergeven als "onbekend"
 
+  #filteren op jaar; of jaar als crossing
+  if(jaarvar %in% crossings){
+    #niks doen
+  } else{
+    data <- data %>% filter(!!sym(jaarvar) == huidig_jaar)
+  }
+  
+  #filteren op niveau 
+  #mag max 1 niveau invoeren
+  if(length(niveaus) > 1 ){
+    stop(glue(
+    "Kies maximaal 1 niveau.
+    niveaus: {paste(niveaus,collapse = ',')}
+    "))
+  } else{
+    if(niveaus == "regio"){
+      data <- data %>% filter(GGDregio == params$regiocode)
+    } else if (niveaus == "gemeente") {
+      data <- data %>% filter(Gemeentecode == params$gemeentecode)
+    } else if (niveaus == "nl"){
+      #niks doen
+    } else{
+     stop(glue("
+     foute waarde bij niveaus ingevoerd. Kies 'nl', 'regio' of 'gemeente'
+          niveaus: {niveaus}"))
+    }
+    #filteren op niveau
+  }
   
   aantallen_per_crossing <- lapply(crossings, function(x){
     
