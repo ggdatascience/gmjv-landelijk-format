@@ -5,3 +5,32 @@ number-depth: 0
 
 # Introductie {.unnumbered}
 
+In dit Quarto boek wordt uitgelegd hoe je de standaardrapportage voor GMJV 2024 kan uitdraaien en aanpassen. Het is de bedoeling dat je hier alle informatie vindt die hiervoor nodig is. 
+
+Naast het Quarto boek zijn er ook filmpjes met uitleg gemaakt. Die vind je hier [Uitlegvideo's standaardrapportage GMJV](https://youtu.be/o-holF6ntbU?si=CKG8NVE2Uo-zD7eB)
+
+
+Als je merkt dat hier informatie ontbreekt, een idee voor verbetering hebt of vastloopt op een foutmelding kan je dat doorgeven. Lees hieronder hoe dat werkt.
+at)
+
+
+# Iets melden
+
+::: {.callout-important title="Updates volgen en problemen melden"}
+
+Ideeën verzoeken en foutmeldingen worden afgehandeld via GitHub en **niet via e-mail**. Dit is noodzakelijk om te zorgen dat issues op tijd worden opgepakt en er geen onnodig werk wordt verricht. Volg de volgende stappen:
+
+-   Zorg bij een foutmelding eerst dat je de in elk geval de voorbeeldrapportage kan uitdraaien. Als dit niet lukt controleer je eerst de stappen bij [Up-to-date software](beginnen.qmd#up-to-date-software)
+
+-   Ga naar [gmjv-landelijk-format](https://github.com/ggdatascience/gmjv-landelijk-format) en klik op 'Issues'.
+
+-   Lees de bestaande issues en kijk of je verzoek of foutmelding al door iemand anders is gemeld.
+
+-   Als je verzoek of foutmelding nog niet bestaat maak je een nieuw issue aan. Je kan een  bestaand issue eventueel aanvullen door er commentaar aan toe te voegen.
+
+:::
+
+
+# Op de hoogte blijven van updates
+
+Volg **gmjv-landelijk-format** door in github het oogje met "watch" te  klikken.Je kan dan instellen kiezen berichten te ontvangen wanneer er updates zijn Op die manier wordt je van wijzigingen op de hoogte gehouden.
