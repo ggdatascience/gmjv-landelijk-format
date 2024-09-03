@@ -528,14 +528,16 @@ cbs_populatie_opschonen <- function(file = params$path_cbs_data,
                                     sheet = NULL){
   
   #niet als dataframe aangeleverd. ontbrekende kolomkoppen. meerdere rijen boven dataset.
-  if (file %in% dir()) { # Als file bestaat, inladen
+  if (file.exists(file)) { # Als file bestaat, inladen
     
     cbs_df <- openxlsx::read.xlsx(paste(file),
                                   sheet = sheet)[-c(1:4),] #1e 4 rijen verwijderen
       
   } else { # Als file niet bestaat, error
     
-    stop(paste("Bestand", file, "is niet aanwezig in working directory. Voeg bestand toe of wijzig working directory."))                              
+    stop(glue("Bestand: {file} is niet aanwezig in working directory op locatie
+               '{params$path_cbs_data}' voeg bestand toe of pas het bestandspad in
+              de parameter 'path_cbs_data' aan "))                              
   
     }
 
