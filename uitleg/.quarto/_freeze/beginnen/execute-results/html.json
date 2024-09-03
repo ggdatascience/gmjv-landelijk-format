@@ -1,0 +1,15 @@
+{
+  "hash": "0b2e07b71ec2eb0cae94084a31471d8f",
+  "result": {
+    "engine": "knitr",
+    "markdown": "# Benodigdheden \n\n# Up-to-date software\n\nHet is belangrijk om ervoor te zorgen dat software up-to-date is. Dit is het eerste om na te kijken wanneer je tegen een foutmelding aanloopt. \n\n## R en RStudio\nAls je met verouderde versies van Rstudio en R is het mogelijk dat het script niet of anders dan bedoeld werkt. Dit geld ook voor de libraries waar het script gebruik van maakt.\n\n::: {.cell}\n\n```{.r .cell-code}\n# Rstudio: Ten minste 2024.04 (Chocolate Cosmos) \nrstudioapi::getVersion()$version\nrstudioapi::getVersion()$release_name\n\n#R: Ten minste versie 4.30\nsessionInfo()\n\n#Libraries: zo up to date mogelijk. \nold.packages() #om te zien welke libraries verouderd zijn. \n#Kijk in dit overzicht vooral na of de \"Built\" versie klopt met je R versie.\n```\n:::\n\n\n## Voor PDF-outdraai: Google Chrome \nAls je het rapport als PDF wilt uitdraaien is een geupdate versie Google Chrome nodig. Als je versie van Google Chrome verouderd is zal er wel een uitvoer gemaakt worden, maar zullen de knoppen in de inhoudsgave niet goed werken.\n\nOm achter je Chrome versie te komen klik je in google chrome rechtsboven op de drie punten. Vervolgens: Instellingen -> Over Chrome.\nDe versie moet ten minste **Chrome 128 zijn** (update van Augustus 2024).\n\n\n\n\n# Bestanden rapportagescript downloaden van Github\n\n-   Ga naar de 'repository' [gmjv-landelijk-format](https://github.com/ggdatascience/gmjv-landelijk-format) op de githubpagina van GGDAta\n\n-   Klik op de groene knop **Code** en selecteer in het drop-down menu. \"Download Zip\".\n\n-   Open het Zip-bestand en kies \"Alles Uitpakken\". Selecteer een geschikt werkmap.\n\n\n\n# R project openen en voorbeeldrapport uitdraaien\n-   Open \"gmjv-landelijk-format.Rproj.\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
