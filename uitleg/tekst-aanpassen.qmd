@@ -1,4 +1,4 @@
-# Zelf aanpassingen maken
+# Tekst en layout aanpassen
 
 De standaardrapportage GMJV is (net als dit boek) gemaakt met Quarto. Met Quarto kunnen opgemaakte tekst en afbeeldingen gecombineerd worden met code. In dit hoofdstuk worden de enkele technieken behandeld waarmee je een quarto document kan bewerken.
 
@@ -26,35 +26,36 @@ Linksboven in een quarto document kan je kiezen tussen twee manieren van bewerke
 
     -   [Lees hier meer over Markdown Basics](https://quarto.org/docs/authoring/markdown-basics.html)
 
-## Layout
+## R code in code-blokken
 
-## PDF uitdraai en Printbaarheid
+Om te zorgen dat tabellen en grafieken met een dynamische inhoud in de rapportage geplaatst kunnen worden maken we gebruik van code-blokken met R code. Een code-blok kan je tijdens het bewerken van je rapport draaien door rechtsbovenin het code-blok op de groene pijl te klikken. De uitvoer van de code zal dan onder het blok verschijnen.
 
-Op verzoek is het mogelijk gemaakt de rapportage als PDF op te slaan en te zorgen dat deze printbaar is. De eerste stap hiervoor is bedenken of het wel nodig is om het rapport te printen. Meestal is dat niet zo. Als het toch nodig blijkt volg je de onderstaande stappen
+Een nieuw code-blok kan je als volgt aanmaken:
 
-### Pagina-einden bepalen d.m.v. "Header 1"
+-   In de visual editor: **Insert \> Executable Cell \> R**
 
-In een browser bestaan pagina's niet echt. De standaard html-uitvoer van het rapport heeft dan ook geen pagina's. Wanneer je een rapport gaat printen zijn pagina-einden wel belangrijk. Daarom is voor deze rapportage ingesteld dat pagina-einden altijd vóór een kop van niveau 1 vallen.
+-   In de source editor: Zoals hieronder. Type drie backticks '```' gevolgd door '{r}' Sluit het blok af met drie backticks. 
+```{r naam-blokje, echo=FALSE}
+#| echo: fenced
 
-Let daarom goed op dat je alleen een kop van niveau 1 maakt als je een nieuwe pagina wilt beginnen.
+#Hier R code
 
-::: callout-warning
-Controleer altijd de pdf-uitvoer op het mooi overlopen van pagina's
+```
 
-Er zijn grenzen aan hoe veel er op één pagina past. Als je te veel grafieken of tekst onder een header van niveau 1 plaatst, zal alles wat niet past naar de volgende pagina gaan. Te veel inhoud onder één header kan dus alsnog voor een arbitraire overgang van paginas zorgen.
-:::
+Standaard worden codeblokjes ook in de rapportage getoond. Dat is meestal niet de bedoeling. Daarom is hierboven de *chunk-option* **'echo=FALSE'** opgegeven. Optioneel kan je het code-blok een naam geven zoals **naam-blokje** hierboven. Een naam kan helpen met overzicht en het opsporen van fouten.
 
-::: {.callout-tip title="Aangepaste eigenschappen Header 1" collapse="true"}
-Headers van niveau 1 krijgen voor de GMJV rapportage standaard een gekleurde achtergrond en beginnen (bij conversie naar pdf) altijd op een nieuwe pagina.
 
-Dit zijn aangepaste eigenschappen die worden bepaald in het CSS-bestand "custom.css". Je kan deze eigenschappen in dat bestand uitzetten of wijzigen.
-:::
+## R code in lopende tekst
+Het is ook mogelijk om R code in lopende tekst te plaatsen. Op de plek waar je de code aanroept toont de rapportage dan het resultaat van de code. Bijvoorbeeld een percentage, of een gemeentenaam. De syntax is als volgt:
 
-### PDF uitdraaien
+> \` r \#hier code \`
 
-Als de pagina-einden goed ingesteld staan kan je de rapportage als PDF bestand uitdraaien. Let hierbij op dat je ten minste Google Chrome 128 hebt. Zie daarvoor ['PDF-uitdraai' in het hoofdstuk 'Beginnen'](beginnen.qmd#voor-pdf-uitdraai)
+Deze syntax kan je overal gebruiken in de lopende tekst bijvoorbeeld:
 
--   Open het bestand **maak_pdf_rapport.R**
--   Controleer of de variabelen **file_path**, **regiocode** en **var_gemeente** goed staan ingesteld.
--   Draai het hele script.
--   Controleer de uitvoer.
+-   Een Header 1 met een dynamische gemeentenaam: 
+
+> \# \` r params$gemeentenaam\` 
+
+-   Inline berekeningen: 
+
+> Er waren \` r totaal_deelnemers \` deelnemers. Daarvan was \` r deelnemers_geslaagd \/ totaal_deelnemers * 100\` % geslaagd.
