@@ -1,0 +1,49 @@
+# Zelf aanpassingen maken
+
+De standaardrapportage GMJV is (net als dit boek) gemaakt met Quarto. Met Quarto kunnen opgemaakte tekst en afbeeldingen gecombineerd worden met code. In dit hoofdstuk worden de enkele technieken behandeld waarmee je een quarto document kan bewerken.
+
+## 'Source' en 'Visual' editor
+
+Linksboven in een quarto document kan je kiezen tussen twee manieren van bewerken: **Source** en **Visual**. Als je niet zo thuis bent in programmeren of markdown zal je waarschijnlijk gebruik willen maken van de *visual-editor*. Dit lijkt het meest op andere tekstverwerkers. Desalnietttemin is het goed om bewust te zijn van beide mogelijkheden, al is het slechts om terug te wisselen wanneer je perongeluk op source hebt geklikt.
+
+-   In de visual-editor worden opgemaakte tekst en afbeeldingen getoond. Ook krijg je bovenaan een werkbalk te zien zoals in Word & andere tekstverwerkers. Met deze werkbalk kan je o.a.
+
+    -   Tekst opmaken.
+
+    -   Een type Kop / Header selecteren.
+
+    -   Lijsten maken
+
+    -   Links, plaatjes , codeblokken of tabellen invoegen.
+
+    -   [Lees hier meer over de Visual Editor](https://quarto.org/docs/visual-editor/)
+
+-   In de source-editor wordt de 'markdown-syntax' van je document weergeven. Dit is de onderliggende logica van je document. In de source-editor ontbreekt de werkbalk. Toch kan je alle dingen doen die ook in de *visual editor kunnen.* Hiervoor kan je gebruik maken van markdown-syntax. Bijvoorbeeld:
+
+    -   Een regel die met een hashtag begint wordt een kop. De hoeveelheid hashtags geeft het niveau van de kop aan. Dus: "\# Kop 1" "\## Kop 2" etc.
+
+    -   /\*/\*woord /\*/\* maakt 'woord' **vetgedrukt**, /\*woord/\* maakt 'woord' *schuingedrukt.*
+
+    -   [Lees hier meer over Markdown Basics](https://quarto.org/docs/authoring/markdown-basics.html)
+
+## Layout
+
+## PDF uitdraai en Printbaarheid
+
+Op verzoek is het mogelijk gemaakt de rapportage als PDF op te slaan en te zorgen dat deze printbaar is. De eerste stap hiervoor is bedenken of het wel nodig is om het rapport te printen. Meestal is dat niet zo. Als het toch nodig blijkt volg je de onderstaande stappen
+
+### Pagina-einden bepalen d.m.v. "Header 1"
+
+In een browser bestaan pagina's niet echt. De standaard html-uitvoer van het rapport heeft dan ook geen pagina's. Wanneer je een rapport gaat printen zijn pagina-einden wel belangrijk. Daarom is voor deze rapportage ingesteld dat pagina-einden altijd vóór een kop van niveau 1 vallen.
+
+Let daarom goed op dat je alleen een kop van niveau 1 maakt als je een nieuwe pagina wilt beginnen.
+
+::: {.callout-tip title="Aangepaste eigenschappen Header 1" collapse="true"}
+Headers van niveau 1 krijgen voor de GMJV rapportage standaard een gekleurde achtergrond en beginnen (bij conversie naar pdf) altijd op een nieuwe pagina.
+
+Dit zijn aangepaste eigenschappen die worden bepaald in het CSS-bestand "custom.css". Je kan deze eigenschappen in dat bestand uitzetten of wijzigen.
+:::
+
+### PDF uitdraaien
+
+Als de pagina-einden goed ingesteld staan kan je de rapportage als PDF bestand uitdraaien. Let hierbij op dat je ten minste Chrome 128 hebt zie ook: [@sec-voor-pdf-uitdraai]
