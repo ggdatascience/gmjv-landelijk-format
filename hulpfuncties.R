@@ -1090,27 +1090,14 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
   }
   }
   
-  #TODO Bepalen of we 1 df gebruiken of een voor land + regio
-    #Proberen met 1 df landelijk; is nog niet binnen. testdataset maken waarbij dwe doen alsof 1 gem. andere regio is.
-  #TODO argument voor niveaus
-    #Per grafiek keus maken voor: vergelijking 2/3, of keuze enkele regio
-  #TODO bij vergelijking gem - regio
-    # Prioriteit: regio (met alles) vs gemeente
-    #### Optioneel: regio-gemeente vs gemeente. 
-  #TODO weegfactoren?
+
+  #TODO bij vergelijking### Optioneel: regio-gemeente vs gemeente. 
   
   remove_legend = F
 
   v_just_text = ifelse(flip,0.5,-1)
   h_just_text = ifelse(flip,-1,0.5)
  
-
-  #TODO HIERONDER is een procedure voor wegfilteren van vorige jaren en selecteren op niveau;
-  #Toepassen op andere grafiekfuncties
-  
-  #Te testen: Wil je wel dat alles te selecteren valt in iedere grafiek? wrs niet. 
-  
-  
   #Checken of crossvar is ingevoerd en in dat geval jaarvar is
   crossing_is_jaar <- ifelse(is.null(var_crossing), FALSE,
                              ifelse(var_crossing != jaarvar, FALSE, TRUE))
@@ -1155,6 +1142,8 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
       data_temp <<- subset_x %>% filter(!!sym(jaarvar) == huidig_jaar)
     }
 
+    
+
     #Er kunnen meerdere var_inhouds ingevoerd worden als dat zo is: interne loop over die var inhouds
     #In dat geval worden de variabelen
     #Als dichotoom behandeld: de waarde "1" wordt voor die set var_inhoud getoond met het var-label
@@ -1195,20 +1184,11 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
     }
   
   })  %>% do.call(rbind,.)
-  
+
   #temp dataframe & design verwijderen uit globalEnv.
   rm(data_temp, design_temp, envir = .GlobalEnv)
   
-  #TODO dit gaat fout ICM meerdere var_inhouds!
-  #Afhandelen van var_inhoud_waarde
-  if(!is.null(var_inhoud_waarde)){
-    
-    #Filteren op ingegeven waarde
-    df_plot <- df_plot %>% filter(waarde == var_inhoud_waarde)
-    #vallabels vervangen met varlabels
-    df_plot[[var_inhoud]] <- var_label(data[[var_inhoud]])
-    
-  }
+
   
   #Afhandelen van meerdere var_inhouds: var_inhoud wordt var_label
   #TODO error handling voor meerdere var_inhouds
@@ -1216,6 +1196,17 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
     var_inhoud_plot <- "var_label"
   } else{
     var_inhoud_plot <- var_inhoud
+  }
+  
+  #Afhandelen van var_inhoud_waarde
+  if(!is.null(var_inhoud_waarde)){
+    
+    #Filteren op ingegeven waarde
+    df_plot <- df_plot %>% filter(waarde == var_inhoud_waarde)
+    
+    if(length(var_inhoud) == 1){
+    df_plot[[var_inhoud]] <- var_label(data[[var_inhoud]])
+    }
   }
   
   #Afhandelen van niveaus & invoer crossing
@@ -1233,7 +1224,6 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
       }
     }
 
-  
   namen_kleuren <- unique(df_plot[[var_crossing]])
   
   kleuren <- kleuren[1:length(namen_kleuren)]
@@ -1299,19 +1289,12 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
     if(length(var_inhoud) > 1){
       
       
-      maak_alt_text(plot,
+      alt_text <- maak_alt_text(plot,
                     label_inhoud = "",
                     label_crossings = var_label(data[[var_crossing]]),
                     vars_crossing = c("var_label",var_crossing)
       ) %>% 
         str_replace("voor de indicator ''","voor verschillende indicatoren")
-        
-        
-      
-      alt_text <- maak_alt_text(plot,
-                                label_inhoud = "",
-                                label_crossings = "",
-                                vars_crossing = plot$data$var_label)
         
       
     } else{
@@ -1341,14 +1324,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
 }
 
 
-
-
-#TODO lijntjes tussen uitsplitsingen
-#TODO namen uitsplitsingen onder x-as labels
-#TODO stoppen met uitsplitsing en crossing door elkaar gebruiken
 #TODO Overal chekc inbouwen of een var wel een lbl+dbl is. Of niet afh. van maak_kruistabel() output.
-#TODO dezelfde dfbewerkingen uit plotfuncties halen & naar eigen functies halen
-
 maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_crossings, titel = "",
                                                         kleuren = default_kleuren_grafiek,
                                                         kleuren_per_crossing = F, fade_kleuren = F,
@@ -1359,7 +1335,6 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
                                                         niveaus = "regio"
                                                         ){
   
-  #TODO hier gebleven
   if(!labelled::is.labelled(data[[var_inhoud]])){
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
   }
@@ -1367,8 +1342,7 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
     warning(
       glue("{var_inhoud} is geen dichotome variabele. Kies een ander grafiektype of een andere var_inhoud"))
     return(NULL)
-    
-    #TODO met Sjanne / Willeke overleggen hoe we foute invoer willen afhandelen.
+
     #TODO crossings ook valideren op aanwezigheid labels
   }
   
