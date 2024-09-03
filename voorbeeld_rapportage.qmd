@@ -49,7 +49,6 @@ default_kleuren_responstabel <- c("header" = "#012C17",
 default_Nvar = 100 # Minimum aantal invullers per vraag.
 default_Ncel = 10 # Minimum aantal invullers oper antwoordoptie.
 
-
 #SPSS data inlezen
 # Regionaal bestand
 #file_path_regio = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
@@ -74,7 +73,6 @@ design_land <- survey_design_maken(
                          strata = 'Stratum',
                          gewichten = 'Standaardisatiefactor',
                          data = monitor_df)
-
 
 #design regio is een subset van design land met ggdregio overgehouden.
 # Regionaal 2022 en 2024
@@ -519,7 +517,6 @@ Psychische klachten worden gemeten met de ‘Mental Health Inventory 5’ (MHI-5
 :::
 
 ::: column
-
 `r monitor_df %>% maak_percentage(var_inhoud = 'LVPKS403') %>% bol_met_cijfer()` `r monitor_df %>% maak_percentage(var_inhoud = 'LVPKS403') %>% bol_met_cijfer()`
 :::
 
@@ -557,7 +554,6 @@ plot
 :::
 
 ::: column
-
 `r monitor_df %>% maak_percentage(var_inhoud = 'LVPKS403')` van de jongvolwassenen heeft met iemand gepraat over de gedachte om een eind te maken aan het leven. `r monitor_df %>% maak_percentage(var_inhoud = 'LVPKS403')` van de jongvolwassenen heeft in de laatste 12 maanden een poging ondernomen om een eind te maken aan het leven.
 
 <br>
@@ -918,7 +914,6 @@ Bolletjes problematisch social meida gebruik
 :::
 
 ::: column
-
 :::
 
 ::: column
@@ -942,8 +937,7 @@ Online gokken gaat over het spelen van online gokspellen (bijvoorbeeld fruitauto
 
 <br>
 
-`r monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente")` van de jongvolwassenen in uw gemeente heeft in de afgelopen 12 maanden online gegokt voor geld. 
-`r monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente")` van de jongvolwassenen in uw gemeente geeft aan geld te beleggen. 
+`r monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente")` van de jongvolwassenen in uw gemeente heeft in de afgelopen 12 maanden online gegokt voor geld. `r monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente")` van de jongvolwassenen in uw gemeente geeft aan geld te beleggen.
 :::
 
 ::: column
@@ -999,12 +993,12 @@ Bolletjes SESEA419 en SESEA417
 :::
 
 ::: column
-[grafiek: geen anticonceptie  SESEA419 naar leeftijd, regioniveau]
+\[grafiek: geen anticonceptie SESEA419 naar leeftijd, regioniveau\]
 :::
 :::
 
 # Kernboodschappen
- 
+
 Op deze pagina kunnen GGD’en hun kernboodschappen toevoegen.
 
 # Contact

@@ -1,0 +1,27 @@
+# Foutmeldingen rapporteren
+
+::: {.callout-important title="Updates volgen en problemen melden"}
+
+Verzoeken of foutmeldingen worden afgehandeld via GitHub en niet via mail. Dit is noodzakelijk om te zorgen dat issues op tijd worden opgepakt en er geen onnodig werk wordt verricht. 
+
+-   Zorg bij een foutmelding eerst dat je de in elk geval de voorbeeldrapportage kan uitdraaien. Als dit niet lukt controleer je eerst de stappen bij [Up-to-date software](#up-to-date-software)
+
+-   Ga naar [gmjv-landelijk-format](https://github.com/ggdatascience/gmjv-landelijk-format) en klik op issues.
+
+-   Lees de bestaande issues en kijk of je verzoek of foutmelding al door iemand anders is gemeld.
+
+-   Als je verzoek of foutmelding nog niet bestaat maak je een nieuw issue aan. Alternatief vul je een bestaand issue aan door er commentaar aan toe te voegen.
+
+
+:::
+
+# Nieuwe functionaliteiten verzoeken
+
+
+
+# Op de hoogte blijven
+
+Volg **gmjv-landelijk-format** door in github het oogje met "watch" te  klikken.Je kan dan instellen kiezen berichten te ontvangen wanneer er updates zijn Op die manier wordt je van.
+
+
+Als je op de hoogte wilt blijven van alle updates aan het script

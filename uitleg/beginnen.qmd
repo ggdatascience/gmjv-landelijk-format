@@ -1,0 +1,44 @@
+# Benodigdheden 
+
+# Up-to-date software
+
+Het is belangrijk om ervoor te zorgen dat software up-to-date is. Dit is het eerste om na te kijken wanneer je tegen een foutmelding aanloopt. 
+
+## R en RStudio
+Als je met verouderde versies van Rstudio en R is het mogelijk dat het script niet of anders dan bedoeld werkt. Dit geld ook voor de libraries waar het script gebruik van maakt.
+```{r, eval = F}
+# Rstudio: Ten minste 2024.04 (Chocolate Cosmos) 
+rstudioapi::getVersion()$version
+rstudioapi::getVersion()$release_name
+
+#R: Ten minste versie 4.30
+sessionInfo()
+
+#Libraries: zo up to date mogelijk. 
+old.packages() #om te zien welke libraries verouderd zijn. 
+#Kijk in dit overzicht vooral na of de "Built" versie klopt met je R versie.
+
+```
+
+## Voor PDF-outdraai: Google Chrome 
+Als je het rapport als PDF wilt uitdraaien is een geupdate versie Google Chrome nodig. Als je versie van Google Chrome verouderd is zal er wel een uitvoer gemaakt worden, maar zullen de knoppen in de inhoudsgave niet goed werken.
+
+Om achter je Chrome versie te komen klik je in google chrome rechtsboven op de drie punten. Vervolgens: Instellingen -> Over Chrome.
+De versie moet ten minste **Chrome 128 zijn** (update van Augustus 2024).
+
+
+
+
+# Bestanden rapportagescript downloaden van Github
+
+-   Ga naar de 'repository' [gmjv-landelijk-format](https://github.com/ggdatascience/gmjv-landelijk-format) op de githubpagina van GGDAta
+
+-   Klik op de groene knop **Code** en selecteer in het drop-down menu. "Download Zip".
+
+-   Open het Zip-bestand en kies "Alles Uitpakken". Selecteer een geschikt werkmap.
+
+
+
+# R project openen en voorbeeldrapport uitdraaien
+-   Open "gmjv-landelijk-format.Rproj.
+
