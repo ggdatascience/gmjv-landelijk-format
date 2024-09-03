@@ -14,11 +14,10 @@ format:
     tol: TRUE
 params:
   gemeentecode: 2 
+  regiocode: 23
+  regionaam: 'GGD Limburg-Noord'
 editor: visual
 format-links: false
-crossref:
-  fig-title: Grafiek
-  fig-prefix: Grafiek
 ---
 
 ```{r, echo=F, message=F, warning=F}
@@ -42,7 +41,7 @@ library(glue) #om strings aangenaam aan elkaar te plakken
 library(plotly)
 
 options(dplyr.summarise.inform = FALSE)
-source("hulpfuncties.R")
+source("../hulpfuncties.R")
 
 #TODO instelbare variabelen overzichtelijk maken
 
@@ -70,7 +69,7 @@ regiocode <- 23
 # Regionaal bestand
 #file_path_regio = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
 # Landelijk bestand
-file_path_land = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
+file_path_land = "../nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
 
 #Lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
 #monitor_df = haven::read_spss(file_path_regio, user_na =T) %>%
