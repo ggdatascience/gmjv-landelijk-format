@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.353">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Uitleg GMJV rapportage in Quarto - 6&nbsp; GMJV Grafiekfuncties</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./voorbeeld_tekstfuncties.html" rel="next">
+<link href="./gmjv-functies-gebruiken.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.10.4/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<script src="site_libs/jquery-3.5.1/jquery.min.js"></script>
+<link href="site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+<script src="site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./voorbeeld_grafieken.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">GMJV Grafiekfuncties</span></a></li></ol></nav>
+      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+      </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Uitleg GMJV rapportage in Quarto</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introductie</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./beginnen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Beginnen</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./rapport-uitdraaien.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Standaard rapportage uitdraaien</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tekst-en-layout.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Tekst en layout aanpassen</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./gmjv-functies-gebruiken.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">GMJV Functies Gebruiken</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./voorbeeld_grafieken.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">GMJV Grafiekfuncties</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./voorbeeld_tekstfuncties.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Tekstfuncties</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./voorbeeld_overige_functies.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Overige functies</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./uploaden-swing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">uploaden-swing.html</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./handige-bronnen.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">handige-bronnen.html</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#alt-text-in-code-blokken" id="toc-alt-text-in-code-blokken" class="nav-link active" data-scroll-target="#alt-text-in-code-blokken"><span class="header-section-number">6.1</span> Alt-text in code-blokken</a></li>
+  <li><a href="#staafdiagram-dubbele-uitsplitsing" id="toc-staafdiagram-dubbele-uitsplitsing" class="nav-link" data-scroll-target="#staafdiagram-dubbele-uitsplitsing"><span class="header-section-number">6.2</span> Staafdiagram: Dubbele uitsplitsing</a>
+  <ul class="collapse">
+  <li><a href="#nodige-argumenten" id="toc-nodige-argumenten" class="nav-link" data-scroll-target="#nodige-argumenten"><span class="header-section-number">6.2.1</span> Nodige argumenten:</a></li>
+  <li><a href="#optionele-argumenten-1" id="toc-optionele-argumenten-1" class="nav-link" data-scroll-target="#optionele-argumenten-1"><span class="header-section-number">6.2.2</span> Optionele argumenten:</a></li>
+  <li><a href="#standaard-staafdiagram-met-dubbele-uitsplitsing" id="toc-standaard-staafdiagram-met-dubbele-uitsplitsing" class="nav-link" data-scroll-target="#standaard-staafdiagram-met-dubbele-uitsplitsing"><span class="header-section-number">6.2.3</span> Standaard staafdiagram met dubbele uitsplitsing</a></li>
+  <li><a href="#aangepast-staafdiagram-met-dubbele-uitsplitsing" id="toc-aangepast-staafdiagram-met-dubbele-uitsplitsing" class="nav-link" data-scroll-target="#aangepast-staafdiagram-met-dubbele-uitsplitsing"><span class="header-section-number">6.2.4</span> Aangepast staafdiagram met dubbele uitsplitsing</a></li>
+  </ul></li>
+  <li><a href="#staafdiagram-vergelijking" id="toc-staafdiagram-vergelijking" class="nav-link" data-scroll-target="#staafdiagram-vergelijking"><span class="header-section-number">6.3</span> Staafdiagram vergelijking</a>
+  <ul class="collapse">
+  <li><a href="#nodige-argumenten-1" id="toc-nodige-argumenten-1" class="nav-link" data-scroll-target="#nodige-argumenten-1"><span class="header-section-number">6.3.1</span> Nodige argumenten:</a></li>
+  <li><a href="#optionele-argumenten" id="toc-optionele-argumenten" class="nav-link" data-scroll-target="#optionele-argumenten"><span class="header-section-number">6.3.2</span> Optionele argumenten:</a></li>
+  <li><a href="#standaard-staafdiagram-met-vergelijking" id="toc-standaard-staafdiagram-met-vergelijking" class="nav-link" data-scroll-target="#standaard-staafdiagram-met-vergelijking"><span class="header-section-number">6.3.3</span> Standaard staafdiagram met vergelijking</a></li>
+  </ul></li>
+  <li><a href="#staafdiagram-met-meerdere-staven" id="toc-staafdiagram-met-meerdere-staven" class="nav-link" data-scroll-target="#staafdiagram-met-meerdere-staven"><span class="header-section-number">6.4</span> Staafdiagram met meerdere staven</a>
+  <ul class="collapse">
+  <li><a href="#nodige-argumenten-2" id="toc-nodige-argumenten-2" class="nav-link" data-scroll-target="#nodige-argumenten-2"><span class="header-section-number">6.4.1</span> Nodige argumenten:</a></li>
+  <li><a href="#optionele-argumenten-2" id="toc-optionele-argumenten-2" class="nav-link" data-scroll-target="#optionele-argumenten-2"><span class="header-section-number">6.4.2</span> Optionele argumenten:</a></li>
+  <li><a href="#standaard-staafdiagram-met-meerdere-staven" id="toc-standaard-staafdiagram-met-meerdere-staven" class="nav-link" data-scroll-target="#standaard-staafdiagram-met-meerdere-staven"><span class="header-section-number">6.4.3</span> Standaard staafdiagram met meerdere staven</a></li>
+  <li><a href="#aangepast-staafdiagram-met-meerdere-staven" id="toc-aangepast-staafdiagram-met-meerdere-staven" class="nav-link" data-scroll-target="#aangepast-staafdiagram-met-meerdere-staven"><span class="header-section-number">6.4.4</span> Aangepast staafdiagram met meerdere staven</a></li>
+  <li><a href="#aangepast-staafdiagram-met-meerdere-staven-verschillende-indicatoren" id="toc-aangepast-staafdiagram-met-meerdere-staven-verschillende-indicatoren" class="nav-link" data-scroll-target="#aangepast-staafdiagram-met-meerdere-staven-verschillende-indicatoren"><span class="header-section-number">6.4.5</span> Aangepast staafdiagram met meerdere staven: Verschillende indicatoren</a></li>
+  <li><a href="#aangepast-staafdiagram-met-meerdere-staven-filteren-op-1-antwoord" id="toc-aangepast-staafdiagram-met-meerdere-staven-filteren-op-1-antwoord" class="nav-link" data-scroll-target="#aangepast-staafdiagram-met-meerdere-staven-filteren-op-1-antwoord"><span class="header-section-number">6.4.6</span> Aangepast staafdiagram met meerdere staven: Filteren op 1 antwoord</a></li>
+  </ul></li>
+  <li><a href="#staafdiagram-uitsplitsing-naast-elkaar" id="toc-staafdiagram-uitsplitsing-naast-elkaar" class="nav-link" data-scroll-target="#staafdiagram-uitsplitsing-naast-elkaar"><span class="header-section-number">6.5</span> Staafdiagram uitsplitsing naast elkaar</a>
+  <ul class="collapse">
+  <li><a href="#nodige-argumenten-3" id="toc-nodige-argumenten-3" class="nav-link" data-scroll-target="#nodige-argumenten-3"><span class="header-section-number">6.5.1</span> Nodige argumenten:</a></li>
+  <li><a href="#optionele-argumenten-3" id="toc-optionele-argumenten-3" class="nav-link" data-scroll-target="#optionele-argumenten-3"><span class="header-section-number">6.5.2</span> Optionele argumenten:</a></li>
+  <li><a href="#standaard-staafdiagram-met-uitsplitsingen-naast-elkaar" id="toc-standaard-staafdiagram-met-uitsplitsingen-naast-elkaar" class="nav-link" data-scroll-target="#standaard-staafdiagram-met-uitsplitsingen-naast-elkaar"><span class="header-section-number">6.5.3</span> Standaard staafdiagram met uitsplitsingen naast elkaar</a></li>
+  <li><a href="#aangepast-staafdiagram-met-uitsplitsingen-naast-elkaar" id="toc-aangepast-staafdiagram-met-uitsplitsingen-naast-elkaar" class="nav-link" data-scroll-target="#aangepast-staafdiagram-met-uitsplitsingen-naast-elkaar"><span class="header-section-number">6.5.4</span> Aangepast staafdiagram met uitsplitsingen naast elkaar</a></li>
+  </ul></li>
+  <li><a href="#staafdiagram-gestapeld" id="toc-staafdiagram-gestapeld" class="nav-link" data-scroll-target="#staafdiagram-gestapeld"><span class="header-section-number">6.6</span> Staafdiagram gestapeld</a>
+  <ul class="collapse">
+  <li><a href="#nodige-argumenten-4" id="toc-nodige-argumenten-4" class="nav-link" data-scroll-target="#nodige-argumenten-4"><span class="header-section-number">6.6.1</span> Nodige argumenten</a></li>
+  <li><a href="#optionele-argumenten-4" id="toc-optionele-argumenten-4" class="nav-link" data-scroll-target="#optionele-argumenten-4"><span class="header-section-number">6.6.2</span> Optionele argumenten</a></li>
+  <li><a href="#standaard-gestapeld-staafdiagram" id="toc-standaard-gestapeld-staafdiagram" class="nav-link" data-scroll-target="#standaard-gestapeld-staafdiagram"><span class="header-section-number">6.6.3</span> Standaard gestapeld staafdiagram</a></li>
+  <li><a href="#aangepast-gestapeld-staafdiagram" id="toc-aangepast-gestapeld-staafdiagram" class="nav-link" data-scroll-target="#aangepast-gestapeld-staafdiagram"><span class="header-section-number">6.6.4</span> Aangepast gestapeld staafdiagram</a></li>
+  </ul></li>
+  <li><a href="#cirkeldiagram" id="toc-cirkeldiagram" class="nav-link" data-scroll-target="#cirkeldiagram"><span class="header-section-number">6.7</span> Cirkeldiagram</a>
+  <ul class="collapse">
+  <li><a href="#nodige-argumenten-5" id="toc-nodige-argumenten-5" class="nav-link" data-scroll-target="#nodige-argumenten-5"><span class="header-section-number">6.7.1</span> Nodige argumenten</a></li>
+  <li><a href="#optionele-argumenten-5" id="toc-optionele-argumenten-5" class="nav-link" data-scroll-target="#optionele-argumenten-5"><span class="header-section-number">6.7.2</span> Optionele argumenten</a></li>
+  </ul></li>
+  <li><a href="#populatiegrafiek-cbs" id="toc-populatiegrafiek-cbs" class="nav-link" data-scroll-target="#populatiegrafiek-cbs"><span class="header-section-number">6.8</span> Populatiegrafiek CBS</a>
+  <ul class="collapse">
+  <li><a href="#optionele-argumenten-6" id="toc-optionele-argumenten-6" class="nav-link" data-scroll-target="#optionele-argumenten-6"><span class="header-section-number">6.8.1</span> Optionele argumenten</a></li>
+  <li><a href="#standaard-populatiegrafiek-cbs" id="toc-standaard-populatiegrafiek-cbs" class="nav-link" data-scroll-target="#standaard-populatiegrafiek-cbs"><span class="header-section-number">6.8.2</span> Standaard Populatiegrafiek CBS</a></li>
+  <li><a href="#aangepaste-populatiegrafiek-cbs" id="toc-aangepaste-populatiegrafiek-cbs" class="nav-link" data-scroll-target="#aangepaste-populatiegrafiek-cbs"><span class="header-section-number">6.8.3</span> Aangepaste Populatiegrafiek CBS</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">GMJV Grafiekfuncties</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p>Hieronder volgt uitleg voor de grafiekfuncties. De functies genereren automatisch alt-text, maar deze kan ook handmatig ingevoerd worden.</p>
+<section id="alt-text-in-code-blokken" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="alt-text-in-code-blokken"><span class="header-section-number">6.1</span> Alt-text in code-blokken</h2>
+<div class="callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Caution
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Als je in Quarto zelf nieuwe blokjes code maakt met grafieken is het belangrijk dat alt-text goed wordt meegenomen bij het renderen van het document. Alt-text is tekst die bij een afbeelding hoort en door screenreader voorgelezen wordt. Om de alt-text van een ggplot2 grafiek goed mee te geven aan een codeblok in quarto is het volgende nodig:</p>
+<ul>
+<li><p>De grafiek moet opgeslagen worden in een object (hieronder ‘plot’)</p></li>
+<li><p>De alt-text moet opgehaald worden uit het object d.m.v. get_alt_text() en ingevuld worden het argument fig.alt in de ‘chunk-options’ van het codeblock.</p></li>
+</ul>
+<p>Dit is bij de standaardrapportage uiteraard al geregeld en ziet er dan zo uit:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>{r, fig.alt <span class="ot">=</span> ggplot2<span class="sc">::</span><span class="fu">get_alt_text</span>(plot)}</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">=</span> <span class="fu">maak_staafdiagram</span>(...)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="staafdiagram-dubbele-uitsplitsing" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="staafdiagram-dubbele-uitsplitsing"><span class="header-section-number">6.2</span> Staafdiagram: Dubbele uitsplitsing</h2>
+<p>De functie <strong>maak_staafdiagram_dubbele_uitsplitsing()</strong> maakt een staafdiagram voor een <strong>dichotome variabele</strong> waarbij de percentages ‘ja’ (1) worden weergeven. Er kunnen twee kruisvariabelen ingevoerd worden. De eerste kruisvariabele splitst de data op de X-as en de tweede kruisvariabele op kleur.</p>
+<section id="nodige-argumenten" class="level3" data-number="6.2.1">
+<h3 data-number="6.2.1" class="anchored" data-anchor-id="nodige-argumenten"><span class="header-section-number">6.2.1</span> Nodige argumenten:</h3>
+<ul>
+<li><p><strong>var_inhoud:</strong> Een character met de naam van een dichotome variabele</p></li>
+<li><p><strong>var_crossing_groep:</strong> Een character met de naam van een kruisvariabele. Mag leeg zijn als er meerdere niveaus zijn en de andere var_crossing gevuld is.</p></li>
+<li><p><strong>var_crossing_kleur:</strong> Een character met de naam van een kruisvariabele. Mag leeg zijn als er meerdere niveaus zijn en de andere var_crossing gevuld is.</p></li>
+</ul>
+</section>
+<section id="optionele-argumenten-1" class="level3" data-number="6.2.2">
+<h3 data-number="6.2.2" class="anchored" data-anchor-id="optionele-argumenten-1"><span class="header-section-number">6.2.2</span> Optionele argumenten:</h3>
+<ul>
+<li><p><strong>titel:</strong> Een character met een titel voor het plot</p></li>
+<li><p><strong>kleuren:</strong> Een character vector met alternatieve kleuren voor de grafiek</p></li>
+<li><p><strong>alt_text:</strong> Een character met de ‘alt-text’ voor de grafiek. Als deze waarde leeg is, wordt er automatisch gegenereerde alt-text meegegeven die alle waarden in de grafiek bevat. Let op; De verteerbaarheid van automatisch gegenereerde tekst neemt af wanneer de grafieken erg complex zijn, of variabellabels erg lang zijn.</p></li>
+<li><p><strong>nvar:</strong> Een numeric met het minimum aantal observaties per vraag. Als deze waarde leeg is, wordt de standaardwaarde voor nvar aangehouden.</p></li>
+<li><p><strong>ncel:</strong> Een numeric met het minimum aantal observaties per antwoord. Als deze waarde leeg is, wordt de standaardwaarde voor ncel aangehouden.</p></li>
+<li><p><strong>niveaus:</strong> Een character vector met de niveaus c(“nl”,“regio”,“gemeente”). Standaard op GGD-regio “regio” ingesteld. Kan meerdere niveaus hebben voor niveauvergelijking. Dit kan alleen als var_crossing_kleur OF var_crossing_groep leeg is. De regio-vergelijking neemt de lege plek dan over.</p></li>
+</ul>
+</section>
+<section id="standaard-staafdiagram-met-dubbele-uitsplitsing" class="level3" data-number="6.2.3">
+<h3 data-number="6.2.3" class="anchored" data-anchor-id="standaard-staafdiagram-met-dubbele-uitsplitsing"><span class="header-section-number">6.2.3</span> Standaard staafdiagram met dubbele uitsplitsing</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Standaard staafdiagram met dubbele uitsplitsing</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">=</span> monitor_df <span class="sc">%&gt;%</span> </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">maak_staafdiagram_dubbele_uitsplitsing</span>(</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_inhoud =</span> <span class="st">"LVEES404"</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_crossing_groep =</span> <span class="st">"AGGSA402"</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_crossing_kleur =</span> <span class="st">"AGLFA401"</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" alt="staafdiagram met percentages voor de indicator 'Is sterk eenzaam' bij jongvolwassenen per Gender in twee categorieën en Leeftijd in 3 categorieën (16-17 jaar; 18-20 jaar; 21-25 jaar) in GGD Limburg-Noord: Vrouw 16-17 jaar: 25%, Vrouw 18-20 jaar: 30%, Vrouw 21-25 jaar: 25%, Man 16-17 jaar: Onbekend, Man 18-20 jaar: 28%, Man 21-25 jaar: 33%" width="672"></p>
+</div>
+</div>
+</section>
+<section id="aangepast-staafdiagram-met-dubbele-uitsplitsing" class="level3" data-number="6.2.4">
+<h3 data-number="6.2.4" class="anchored" data-anchor-id="aangepast-staafdiagram-met-dubbele-uitsplitsing"><span class="header-section-number">6.2.4</span> Aangepast staafdiagram met dubbele uitsplitsing</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Staafdiagram met dubbele uitsplitsing,</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#aangepaste titel, kleuren, alt-text, nvar en ncel</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">=</span> monitor_df <span class="sc">%&gt;%</span> </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">maak_staafdiagram_dubbele_uitsplitsing</span>(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_inhoud =</span> <span class="st">"LVEES404"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_crossing_groep =</span> <span class="st">"AGGSA402"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_crossing_kleur =</span> <span class="st">"AGLFA401"</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">titel =</span> <span class="st">"Titel staafdiagram"</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">kleuren =</span> <span class="fu">c</span>(<span class="st">"#FEC805"</span>,<span class="st">"#1A2C54"</span>,<span class="st">"#009BD9"</span>),</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">alt_text =</span> <span class="st">"Tekst die de grafiek toelicht t.b.v. digitoegankelijkheid"</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">nvar =</span> <span class="dv">100</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">ncel =</span> <span class="dv">75</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" alt="Tekst die de grafiek toelicht t.b.v. digitoegankelijkheid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="staafdiagram-vergelijking" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="staafdiagram-vergelijking"><span class="header-section-number">6.3</span> Staafdiagram vergelijking</h2>
+<p>De functie <strong>maak_staafdiagram_vergelijking()</strong> maakt een staafdiagram voor een <strong>dichotome variabele</strong> waarbij er meerdere kruisvariabelen ingevoerd kunnen worden. De percentages ‘ja’ (1) worden voor iedere individuele kruisvariabele naast elkaar weergeven.</p>
+<section id="nodige-argumenten-1" class="level3" data-number="6.3.1">
+<h3 data-number="6.3.1" class="anchored" data-anchor-id="nodige-argumenten-1"><span class="header-section-number">6.3.1</span> Nodige argumenten:</h3>
+<ul>
+<li><p><strong>var_inhoud:</strong> Een character met de naam van een dichotome variabele</p></li>
+<li><p><strong>var_crossings:</strong> Een character vector met de naam van één of meer kruisvariabelen</p></li>
+</ul>
+</section>
+<section id="optionele-argumenten" class="level3" data-number="6.3.2">
+<h3 data-number="6.3.2" class="anchored" data-anchor-id="optionele-argumenten"><span class="header-section-number">6.3.2</span> Optionele argumenten:</h3>
+<ul>
+<li><strong>niveaus:</strong> Een character met één niveau uit “nl”,“regio” of “gemeente”. Standaard op GGD-regio “regio” ingesteld. Filtert data op ingegeven niveau.</li>
+</ul>
+<p>Verder dezelfde optionele argumenten als in <a href="#optionele-argumenten-1"><strong>maak_staafdiagram_dubbele_uitsplitsing():</strong></a></p>
+</section>
+<section id="standaard-staafdiagram-met-vergelijking" class="level3" data-number="6.3.3">
+<h3 data-number="6.3.3" class="anchored" data-anchor-id="standaard-staafdiagram-met-vergelijking"><span class="header-section-number">6.3.3</span> Standaard staafdiagram met vergelijking</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Standaard staafdiagram met vergelijking</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">=</span> monitor_df <span class="sc">%&gt;%</span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">maak_staafdiagram_vergelijking</span>(</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_inhoud =</span> <span class="st">"LVEES404"</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_crossings =</span> <span class="fu">c</span>(<span class="st">"AGGSA402"</span>,<span class="st">"AGLFA401"</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" alt="staafdiagram met percentages voor de indicator 'Is sterk eenzaam' bij jongvolwassenen per Gender in twee categorieën en Leeftijd in 3 categorieën (16-17 jaar; 18-20 jaar; 21-25 jaar) in GGD Limburg-Noord: Man: 31%, Vrouw: 26%, 16-17 jaar: 27%, 18-20 jaar: 30%, 21-25 jaar: 27%" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="staafdiagram-met-meerdere-staven" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="staafdiagram-met-meerdere-staven"><span class="header-section-number">6.4</span> Staafdiagram met meerdere staven</h2>
+<p>De functie <strong>maak_staafdiagram_meerdere_staven()</strong> maakt een staafdiagram voor ieder soort variabele waarbij de percentages per antwoord worden weergeven. Optioneel kan een kruisvariabele ingevoerd worden, de grafiek zal de percentages dan opsplitsen op kleur. De grafiek kan ook horizontaal weergeven worden.</p>
+<p>Alternatief kan de functie gebruikt worden om meerdere indicatoren naast elkaar te tonen of om slechts de percentages van 1 antwoord te tonen (ipv alle antwoorden).</p>
+<section id="nodige-argumenten-2" class="level3" data-number="6.4.1">
+<h3 data-number="6.4.1" class="anchored" data-anchor-id="nodige-argumenten-2"><span class="header-section-number">6.4.1</span> Nodige argumenten:</h3>
+<ul>
+<li><strong>var_inhoud:</strong> Een character met de naam van een dichotome variabele</li>
+</ul>
+</section>
+<section id="optionele-argumenten-2" class="level3" data-number="6.4.2">
+<h3 data-number="6.4.2" class="anchored" data-anchor-id="optionele-argumenten-2"><span class="header-section-number">6.4.2</span> Optionele argumenten:</h3>
+<ul>
+<li><strong>var_crossing:</strong> Een character met de naam van één kruisvariabele</li>
+<li><strong>niveaus:</strong> Een character vector met de niveaus c(“nl”,“regio”,“gemeente”). Standaard op GGD-regio “regio” ingesteld. Kan meerdere niveaus hebben voor niveauvergelijking. Dit kan alleen als var_crossing leeg is.</li>
+<li><strong>var_inhoud_waarde:</strong> Een numeric waar de numerieke waarde voor een antwoord ingevuld kan worden. Als deze waarde leeg is worden alle antwoorden getoond. Anders alleen het antwoorden dat is. Let op: als je een waarde invult die niet bestaat gebeurd er niks.</li>
+<li><strong>flip:</strong> TRUE of FALSE. Als TRUE wordt de grafiek horizontaal weergeven</li>
+</ul>
+<p>Naast dezelfde optionele argumenten als in <a href="#optionele-argumenten-1"><strong>maak_staafdiagram_dubbele_uitsplitsing():</strong></a>:</p>
+</section>
+<section id="standaard-staafdiagram-met-meerdere-staven" class="level3" data-number="6.4.3">
+<h3 data-number="6.4.3" class="anchored" data-anchor-id="standaard-staafdiagram-met-meerdere-staven"><span class="header-section-number">6.4.3</span> Standaard staafdiagram met meerdere staven</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Standaard staafdiagram met meerdere staven</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">=</span> monitor_df <span class="sc">%&gt;%</span> </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">maak_staafdiagram_meerdere_staven</span>(</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_inhoud =</span> <span class="st">"LVVTA404"</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">niveaus =</span> <span class="fu">c</span>(<span class="st">"nl"</span>,<span class="st">"gemeente"</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" alt="staafdiagram met percentages voor de indicator 'Vertrouwen in zijn/haar eigen toekomst in 3 categorieën' bij jongvolwassenen in Nederland en NepgemeenteB:  Nederland Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 15%, Nederland Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 40%, Nederland (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 44%, NepgemeenteB Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 16%, NepgemeenteB Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 40%, NepgemeenteB (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 45%" width="672"></p>
+</div>
+</div>
+</section>
+<section id="aangepast-staafdiagram-met-meerdere-staven" class="level3" data-number="6.4.4">
+<h3 data-number="6.4.4" class="anchored" data-anchor-id="aangepast-staafdiagram-met-meerdere-staven"><span class="header-section-number">6.4.4</span> Aangepast staafdiagram met meerdere staven</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Staafdiagram met meerdere staven, kruisvariabele en flip = TRUE</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">=</span> monitor_df <span class="sc">%&gt;%</span> </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">maak_staafdiagram_meerdere_staven</span>(</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_inhoud =</span> <span class="st">"LVVTA404"</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_crossing =</span> <span class="st">"AGGSA402"</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">flip =</span> <span class="cn">TRUE</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" alt="staafdiagram met percentages voor de indicator 'Vertrouwen in zijn/haar eigen toekomst in 3 categorieën' bij jongvolwassenen per Gender in twee categorieën in GGD Limburg-Noord: Man Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 16%, Man Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 39%, Man (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 45%, Vrouw Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 16%, Vrouw Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 40%, Vrouw (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 44%" width="672"></p>
+</div>
+</div>
+</section>
+<section id="aangepast-staafdiagram-met-meerdere-staven-verschillende-indicatoren" class="level3" data-number="6.4.5">
+<h3 data-number="6.4.5" class="anchored" data-anchor-id="aangepast-staafdiagram-met-meerdere-staven-verschillende-indicatoren"><span class="header-section-number">6.4.5</span> Aangepast staafdiagram met meerdere staven: Verschillende indicatoren</h3>
+<p>Om de percentages van meerdere indicatoren te tonen kan bij var_inhoud een vector ingevoerd worden met die indicatoren. Per indiactor wordt dan het percentage gegeven voor het antwoord met de waarde 1.</p>
+<p>Deze mogelijkheid is daarom alleen geschikt voor dichotome vragen waarbij het bevestigende antwoord de waarde 1 heeft.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Staafdiagram met meerdere staven, kruisvariabele en flip = TRUE</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">=</span> monitor_df <span class="sc">%&gt;%</span> </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">maak_staafdiagram_meerdere_staven</span>(</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_inhoud =</span> <span class="fu">c</span>(<span class="st">"LVVTA405"</span>,<span class="st">"LVVTA406"</span>,<span class="st">"LVVTA407"</span>),</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_crossing =</span> <span class="st">"AGGSA402"</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">flip =</span> <span class="cn">TRUE</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" alt="staafdiagram met percentages voor verschillende indicatoren bij jongvolwassenen per Gender in twee categorieën in GGD Limburg-Noord: Heeft (heel) veel zorgen over de werkgelegenheid Man: 11%, Heeft (heel) veel zorgen over de werkgelegenheid Vrouw: 11%, Heeft (heel) veel zorgen over de woningmarkt Man: 63%, Heeft (heel) veel zorgen over de woningmarkt Vrouw: 66%, Heeft (heel) veel zorgen over het klimaat Man: 41%, Heeft (heel) veel zorgen over het klimaat Vrouw: 42%" width="672"></p>
+</div>
+</div>
+</section>
+<section id="aangepast-staafdiagram-met-meerdere-staven-filteren-op-1-antwoord" class="level3" data-number="6.4.6">
+<h3 data-number="6.4.6" class="anchored" data-anchor-id="aangepast-staafdiagram-met-meerdere-staven-filteren-op-1-antwoord"><span class="header-section-number">6.4.6</span> Aangepast staafdiagram met meerdere staven: Filteren op 1 antwoord</h3>
+<p>Het is ook mogelijk om antwoorden weg te filteren uit maak_staafdiagram_meerdere_staven(). Dit kan met de parameter <strong>var_inhoud_waarde</strong>.</p>
+<p>Wanneer var_inhoud waarde is ingevuld worden het label van de staven aangepast naar het variabel-label i.p.v. het val_label.</p>
+<p>Deze optie is geschikt voor dichitome / binaire variabelen.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Staafdiagram met meerdere staven, kruisvariabele en flip = TRUE</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">=</span> monitor_df <span class="sc">%&gt;%</span> </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">maak_staafdiagram_meerdere_staven</span>(</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_inhoud =</span> <span class="st">"LVSTA415"</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">niveaus =</span> <span class="fu">c</span>(<span class="st">"nl"</span>,<span class="st">"regio"</span>, <span class="st">"gemeente"</span>),</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_inhoud_waarde =</span> <span class="dv">1</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">flip =</span> <span class="cn">TRUE</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" alt="staafdiagram met percentages voor de indicator 'Voelt zich (heel) vaak gestrest' bij jongvolwassenen in Nederland, GGD Limburg-Noord en NepgemeenteB:  Nederland Voelt zich (heel) vaak gestrest: 47%, GGD Limburg-Noord Voelt zich (heel) vaak gestrest: 46%, NepgemeenteB Voelt zich (heel) vaak gestrest: 46%" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="staafdiagram-uitsplitsing-naast-elkaar" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="staafdiagram-uitsplitsing-naast-elkaar"><span class="header-section-number">6.5</span> Staafdiagram uitsplitsing naast elkaar</h2>
+<p>De functie <strong>maak_staafdiagram_uitsplitsing_naast_elkaar()</strong> maakt een staafdiagram voor <strong>dichotome variabelen</strong> waarbij de percentages ‘ja’ (1) voor meerdere kruisvariabelen per uitsplitsing worden weergeven. Optioneel worden de onderscheiden op kleur. De grafiek kan ook horizontaal weergeven worden.</p>
+<section id="nodige-argumenten-3" class="level3" data-number="6.5.1">
+<h3 data-number="6.5.1" class="anchored" data-anchor-id="nodige-argumenten-3"><span class="header-section-number">6.5.1</span> Nodige argumenten:</h3>
+<ul>
+<li><strong>var_inhoud:</strong> Een character met de naam van een dichotome variabele</li>
+<li><strong>var_crossings:</strong> Een character vector met de naam van één of meer kruisvariabelen</li>
+</ul>
+</section>
+<section id="optionele-argumenten-3" class="level3" data-number="6.5.2">
+<h3 data-number="6.5.2" class="anchored" data-anchor-id="optionele-argumenten-3"><span class="header-section-number">6.5.2</span> Optionele argumenten:</h3>
+<p>Naast dezelfde optionele argumenten als in <a href="#optionele-argumenten-1"><strong>maak_staafdiagram_dubbele_uitsplitsing():</strong></a>:</p>
+<ul>
+<li><p><strong>kleuren_per_crossing:</strong> TRUE of FALSE. Als TRUE krijgt iedere kruisvariabele een eigen kleur.</p></li>
+<li><p><strong>fade_kleuren:</strong> TRUE of FALSE. Als TRUE is er overloop in de kleuren per uitsplitsing</p></li>
+<li><p><strong>flip:</strong> TRUE of FALSE. Als TRUE wordt de grafiek horizontaal weergeven</p></li>
+<li><p><strong>niveaus:</strong> Een character met één niveau uit “nl”,“regio” of “gemeente”. Standaard op GGD-regio “regio” ingesteld. Filtert data op ingegeven niveau.</p></li>
+</ul>
+</section>
+<section id="standaard-staafdiagram-met-uitsplitsingen-naast-elkaar" class="level3" data-number="6.5.3">
+<h3 data-number="6.5.3" class="anchored" data-anchor-id="standaard-staafdiagram-met-uitsplitsingen-naast-elkaar"><span class="header-section-number">6.5.3</span> Standaard staafdiagram met uitsplitsingen naast elkaar</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Standaard staafdiagram met uitsplitsingen naast elkaar</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">=</span> monitor_df <span class="sc">%&gt;%</span> </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">maak_staafdiagram_uitsplitsing_naast_elkaar</span>(</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_inhoud =</span> <span class="st">"LVEES404"</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_crossings =</span> <span class="fu">c</span>(<span class="st">"AGGSA402"</span>,<span class="st">"AGLFA401"</span>,<span class="st">"AGOWS404"</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" alt="staafdiagram met percentages voor de indicator 'Is sterk eenzaam' bij jongvolwassenen per Gender in twee categorieën en Leeftijd in 3 categorieën (16-17 jaar; 18-20 jaar; 21-25 jaar) en Hoogste opleiding (huidig of afgerond, in 2 categorieën) in GGD Limburg-Noord: Man: 31%, Vrouw: 26%, 16-17 jaar: 27%, 18-20 jaar: 30%, 21-25 jaar: 27%, Laag/midden (Geen opleiding, vso, praktijkonderwijs, vmbo, havo, vwo, mbo): 29%, Hoog (hbo, wo): 27%" width="672"></p>
+</div>
+</div>
+</section>
+<section id="aangepast-staafdiagram-met-uitsplitsingen-naast-elkaar" class="level3" data-number="6.5.4">
+<h3 data-number="6.5.4" class="anchored" data-anchor-id="aangepast-staafdiagram-met-uitsplitsingen-naast-elkaar"><span class="header-section-number">6.5.4</span> Aangepast staafdiagram met uitsplitsingen naast elkaar</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Staafdiagram met uitsplitsingen naast elkaar, met overlopende kleuren &amp; horizontaal</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">=</span> monitor_df <span class="sc">%&gt;%</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">maak_staafdiagram_uitsplitsing_naast_elkaar</span>(</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_inhoud =</span> <span class="st">"LVEES404"</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_crossings =</span> <span class="fu">c</span>(<span class="st">"AGGSA402"</span>,<span class="st">"AGLFA401"</span>,<span class="st">"AGOWS404"</span>),</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">kleuren_per_crossing =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">fade_kleuren =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">flip =</span> <span class="cn">TRUE</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" alt="staafdiagram met percentages voor de indicator 'Is sterk eenzaam' bij jongvolwassenen per Gender in twee categorieën en Leeftijd in 3 categorieën (16-17 jaar; 18-20 jaar; 21-25 jaar) en Hoogste opleiding (huidig of afgerond, in 2 categorieën) in GGD Limburg-Noord: Man: 31%, Vrouw: 26%, 16-17 jaar: 27%, 18-20 jaar: 30%, 21-25 jaar: 27%, Laag/midden (Geen opleiding, vso, praktijkonderwijs, vmbo, havo, vwo, mbo): 29%, Hoog (hbo, wo): 27%" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="staafdiagram-gestapeld" class="level2" data-number="6.6">
+<h2 data-number="6.6" class="anchored" data-anchor-id="staafdiagram-gestapeld"><span class="header-section-number">6.6</span> Staafdiagram gestapeld</h2>
+<p>De functie <strong>maak_staafdiagram_gestapeld()</strong> maakt een horizontaal gestapeld staafdiagram voor ieder soort variabele.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>figuren die met R worden gemaakt schalen automatisch naar de ruimte die ze hebben. Dit betekend dat het gestapeld staafdiagram standaard ‘hoger’ is dan gewenst.</p>
+<p>De dimensies van een figuur in Quarto kunnen aangepast worden in de chunk-options met de argumenten ‘fig.width’ en ‘fig.height’ zoals hier:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>{r, fig.alt <span class="ot">=</span> ggplot2<span class="sc">::</span><span class="fu">get_alt_text</span>(plot), fig.width <span class="ot">=</span> <span class="dv">12</span>, fig.height <span class="ot">=</span> <span class="dv">3</span>}</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">=</span> <span class="fu">maak_staafdiagram</span>(…)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><br>
+</p>
+</div>
+</div>
+<section id="nodige-argumenten-4" class="level3" data-number="6.6.1">
+<h3 data-number="6.6.1" class="anchored" data-anchor-id="nodige-argumenten-4"><span class="header-section-number">6.6.1</span> Nodige argumenten</h3>
+<ul>
+<li><strong>var_inhoud:</strong> Een character met de naam van een variabele</li>
+</ul>
+</section>
+<section id="optionele-argumenten-4" class="level3" data-number="6.6.2">
+<h3 data-number="6.6.2" class="anchored" data-anchor-id="optionele-argumenten-4"><span class="header-section-number">6.6.2</span> Optionele argumenten</h3>
+<p>Naast dezelfde optionele argumenten als in <a href="#optionele-argumenten-1"><strong>maak_staafdiagram_dubbele_uitsplitsing():</strong></a> - <strong>var_crossing:</strong> Een character met de naam van één kruisvariabele</p>
+</section>
+<section id="standaard-gestapeld-staafdiagram" class="level3" data-number="6.6.3">
+<h3 data-number="6.6.3" class="anchored" data-anchor-id="standaard-gestapeld-staafdiagram"><span class="header-section-number">6.6.3</span> Standaard gestapeld staafdiagram</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Standaard gestapeld staafdiagram</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">=</span> monitor_df <span class="sc">%&gt;%</span> </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">maak_staafdiagram_gestapeld</span>(</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_inhoud =</span> <span class="st">"LVVTA404"</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" alt="gestapeld staafdiagram met percentages voor de indicator 'Vertrouwen in zijn/haar eigen toekomst in 3 categorieën' bij jongvolwassenen in GGD Limburg-Noord:   Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 16%,  Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 40%,  (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 44%" width="1152"></p>
+</div>
+</div>
+</section>
+<section id="aangepast-gestapeld-staafdiagram" class="level3" data-number="6.6.4">
+<h3 data-number="6.6.4" class="anchored" data-anchor-id="aangepast-gestapeld-staafdiagram"><span class="header-section-number">6.6.4</span> Aangepast gestapeld staafdiagram</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Standaard gestapeld staafdiagram</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">=</span> monitor_df <span class="sc">%&gt;%</span> </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">maak_staafdiagram_gestapeld</span>(</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_inhoud =</span> <span class="st">"LVVTA404"</span>,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_crossing =</span> <span class="st">"AGGSA402"</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" alt="gestapeld staafdiagram met percentages voor de indicator 'Vertrouwen in zijn/haar eigen toekomst in 3 categorieën' bij jongvolwassenen per Gender in twee categorieën in GGD Limburg-Noord: Man Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 16%, Man Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 39%, Man (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 45%, Vrouw Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 16%, Vrouw Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 40%, Vrouw (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 44%" width="1152"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="cirkeldiagram" class="level2" data-number="6.7">
+<h2 data-number="6.7" class="anchored" data-anchor-id="cirkeldiagram"><span class="header-section-number">6.7</span> Cirkeldiagram</h2>
+<section id="nodige-argumenten-5" class="level3" data-number="6.7.1">
+<h3 data-number="6.7.1" class="anchored" data-anchor-id="nodige-argumenten-5"><span class="header-section-number">6.7.1</span> Nodige argumenten</h3>
+<ul>
+<li><strong>var_inhoud:</strong> Een character met de naam van een variabele</li>
+</ul>
+</section>
+<section id="optionele-argumenten-5" class="level3" data-number="6.7.2">
+<h3 data-number="6.7.2" class="anchored" data-anchor-id="optionele-argumenten-5"><span class="header-section-number">6.7.2</span> Optionele argumenten</h3>
+<ul>
+<li><p>Dezelfde argumenten als in <a href="#optionele-argumenten-1"><strong>maak_staafdiagram_dubbele_uitsplitsing():</strong></a></p></li>
+<li><p><strong>titel</strong>: character variabele. Als argument leeg is wordt het variabellabel van var_inhoud gebruikt.</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#LET OP: ITT tot andere grafiekfuncties moet je géén get_alt_text() gebruiken in de chunk-options. Cirkeldiagrammen worden met plotly gemaakt en de alt-text wordt in door de functie maak_cirkeldiagram() al correct toegevoegd.</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Standaard cirkeldiagram staafdiagram</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">=</span> monitor_df <span class="sc">%&gt;%</span> </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">maak_cirkeldiagram</span>(</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_inhoud =</span> <span class="st">"LVVTA404"</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item" id="htmlwidget-ff136e353229b18c5cc5" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-ff136e353229b18c5cc5">{"x":{"visdat":{"3fec717c1d54":["function () ","plotlyVisDat"]},"cur_data":"3fec717c1d54","attrs":{"3fec717c1d54":{"labels":{},"textinfo":"percent","values":{},"hoverinfo":"text","text":"","marker":{"colors":["#012C17","#76B82A","#007E48"],"line":{"color":"#FFFFFF","width":1}},"insidetextfont":{"color":"#FFFFFF","size":15},"outsidetextfont":{"color":"#000000","size":15},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"pie"}},"layout":{"margin":{"b":40,"l":60,"t":100,"r":10},"title":{"text":"Vertrouwen in zijn/haar eigen toekomst in 3<br />categorieën","font":{"size":15}},"legend":{"orientation":"h","x":0.5,"y":-0.20000000000000001,"xanchor":"center","yanchor":"top","font":{"size":12}},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false,"staticPlot":true},"data":[{"labels":["Weinig tot geen vertrouwen<br />in zijn/haar eigen toekomst<br />(cijfer 5 of lager)","Matig tot redelijk vertrouwen<br />in zijn/haar eigen toekomst<br />(cijfer 6 of 7)","(Heel) veel vertrouwen in<br />zijn/haar eigen toekomst<br />(cijfer 8 of hoger)"],"textinfo":"percent","values":[16,40,44],"hoverinfo":["text","text","text"],"text":["","",""],"marker":{"color":"rgba(31,119,180,1)","colors":["#012C17","#76B82A","#007E48"],"line":{"color":"#FFFFFF","width":1}},"insidetextfont":{"color":"#FFFFFF","size":15},"outsidetextfont":{"color":"#000000","size":15},"type":"pie","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":{"render":[{"code":"function(el, x) {\n  el.setAttribute('alt', 'Cirkeldiagram voor de indicator 'Vertrouwen in zijn/haar eigen toekomst in 3 categorieën' bij jongvolwassenen: Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 16%, Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 40%, (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 44%');\n}","data":null}]}}</script>
+</div>
+</div>
+</section>
+</section>
+<section id="populatiegrafiek-cbs" class="level2" data-number="6.8">
+<h2 data-number="6.8" class="anchored" data-anchor-id="populatiegrafiek-cbs"><span class="header-section-number">6.8</span> Populatiegrafiek CBS</h2>
+<p>Functie om een horizontaal georienteerd gestapeld staafdiagram te maken waarin populatiegegevens van het CBS worden vergeleken met de response op de per regio en gemeente. Dit kan o.b.v. de kruisvariabelen ‘leeftijd’ en ‘geslacht’ gedaan worden.</p>
+<section id="optionele-argumenten-6" class="level3" data-number="6.8.1">
+<h3 data-number="6.8.1" class="anchored" data-anchor-id="optionele-argumenten-6"><span class="header-section-number">6.8.1</span> Optionele argumenten</h3>
+<ul>
+<li><strong>gem_code:</strong> character variabele met gemeentenaam. Standaard de ‘huidige’ gemeente o.b.v. params$gemeentecode.</li>
+<li><strong>crossing_cbs:</strong> character variabele. De naam van de kruising die getoond moet worden. Opties: “leeftijd” of “geslacht”.</li>
+<li><strong>niveaus:</strong> character vector met niveaus die getoond moeten worden. Standaard c(“nl”,“regio”,“gemeente”)</li>
+<li><strong>missing_bewaren:</strong> TRUE of FALSE. Als TRUE worden percentages met missing categorieën voor <em>Deelnemers</em> bewaard en getoond in de grafiek.</li>
+<li><strong>missing_label:</strong> character variabele. Het label dat gegeven moet worden aan een eventuele missing categorie. Standaard “Onbekend”.</li>
+<li><strong>kleuren:</strong> Een character vector met alternatieve kleuren voor de grafiek</li>
+</ul>
+</section>
+<section id="standaard-populatiegrafiek-cbs" class="level3" data-number="6.8.2">
+<h3 data-number="6.8.2" class="anchored" data-anchor-id="standaard-populatiegrafiek-cbs"><span class="header-section-number">6.8.2</span> Standaard Populatiegrafiek CBS</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">&lt;-</span> monitor_df <span class="sc">%&gt;%</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">maak_grafiek_cbs_bevolking</span>()</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" alt="gestapeld staafdiagram met percentages per leeftijd in de bevolking en bij deelnemers: Bevolking Totaal Nederland: 16-17: 17%, 18-20: 30%, 21-25: 53%, Deelnemers Totaal Nederland: 16-17: 22%, 18-20: 31%, 21-25: 47%, Bevolking GGD Limburg-Noord: 16-17: 19%, 18-20: 29%, 21-25: 52%, Deelnemers GGD Limburg-Noord: 16-17: 22%, 18-20: 32%, 21-25: 46%, Bevolking NepgemeenteB: 16-17: 7%, 18-20: 30%, 21-25: 63%, Deelnemers NepgemeenteB: 16-17: 23%, 18-20: 29%, 21-25: 48%" width="672"></p>
+</div>
+</div>
+</section>
+<section id="aangepaste-populatiegrafiek-cbs" class="level3" data-number="6.8.3">
+<h3 data-number="6.8.3" class="anchored" data-anchor-id="aangepaste-populatiegrafiek-cbs"><span class="header-section-number">6.8.3</span> Aangepaste Populatiegrafiek CBS</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">&lt;-</span> monitor_df <span class="sc">%&gt;%</span> </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">maak_grafiek_cbs_bevolking</span>(</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">niveaus =</span> <span class="fu">c</span>(<span class="st">"regio"</span>,<span class="st">"gemeente"</span>),</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">crossing_cbs =</span> <span class="st">"geslacht"</span>,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">missing_bewaren =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">missing_label =</span> <span class="st">"niet ingevuld"</span>,</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" alt="gestapeld staafdiagram met percentages per geslacht in de bevolking en bij deelnemers: Bevolking GGD Limburg-Noord: man: 52%, vrouw: 48%, Deelnemers GGD Limburg-Noord: man: 30%, vrouw: 69%, niet ingevuld: 1%, Bevolking NepgemeenteB: man: 46%, vrouw: 54%, Deelnemers NepgemeenteB: man: 29%, vrouw: 70%, niet ingevuld: 1%" width="672"></p>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./gmjv-functies-gebruiken.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">GMJV Functies Gebruiken</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./voorbeeld_tekstfuncties.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Tekstfuncties</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+</body></html>
