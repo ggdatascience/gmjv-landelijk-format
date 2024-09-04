@@ -1,0 +1,62 @@
+---
+title: ""
+author: ""
+format:
+  html:
+    page-layout: full
+    toc: TRUE
+    embed-resources: true
+params:
+  gemeentecode: 2 
+  regiocode: 23
+  regionaam: 'GGD Limburg-Noord'
+  path_monitor_data: "../nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
+  path_hulpfuncties: "../hulpfuncties.R"
+  path_cbs_data: "../JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx"
+  default_nvar: 100
+  default_ncel: 10
+  default_kleuren_grafiek: !expr c("#012C17","#76B82A","#007E48")
+  default_kleuren_responstabel: !expr c("header" = "#012C17", "kleur_1" = "#007E48", "kleur_2" = "#76B82A","kleur_tekst" = "#FFFFFF")
+format-links: false
+---
+
+# GMJV Functies Gebruiken
+Voor de rapportage hebben we een aantal R-functies geschreven waarmee de resultaten van de monitor enigzins gebruiksvriendelijk in de lopende tekst, grafieken of tabellen gezet kunnen worden.
+
+In de volgende hoofdstukken worden verschillende grafiekfuncties uitgelegd en hoe je deze zelf kunt aanpassen.
+
+
+::: callout-tip
+In dit document wordt gebruikt gemaakt van de 'pipe-operator' *%\>%*.
+
+De pipe-operator stuurt een resultaat door naar de volgende functie. Op deze manier kunnen meerdere bewerkingen in R overzichtelijk aan elkaar gekoppeld worden. Lees [hier](#0) een uitleg van de magrittr pipe (en de voordelen).
+
+Zonder de pipe-operator zou het aanroepen van maak_responstabel er zo uit zien:
+
+``` r
+maak_responstabel(data = monitor_df, crossings = "gender_2cat", ...)
+```
+
+Met pipe-operator
+
+``` r
+monitor_df %>% maak_responstabel(crossings = "gender_2cat", ...)
+```
+
+Alle functies in dit document hebben als eerste argument 'data', waar een dataframe wordt verwacht. Dit argument zal niet per functie uitgelegd worden omdat het altijd nodig is.
+:::
+
+## Filtering of vergelijking per jaar
+Standaard zullen alle functies data op jaar filteren zodat alleen de gegevens van 2024 worden getoond. 
+
+Als het de bedoeling is om de data van 2022 met die van 2024 te vergelijken kan dit gedaan worden door de **jaarvariabele** in te voeren bij een **var_crossing**. De variabelcode voor de jaarvariabele is: "AGOJB401". 
+Let op, dit is niet voor alle functies mogelijk.
+
+
+## Filtering of vergelijking per regio
+Standaard zullen alle functies data op GGD-regio filteren en groeperen. Dit kan gewijzigd worden met het argument niveaus.
+
+-   **niveaus:** character vector met drie mogelijke waarden c("nl","regio","gemeente")
+
+Als er één niveau wordt doorgegeven wordt de data gefilterd en gegroepeerd op dat niveau. Als er meerdere niveaus worden doorgegeven worden die niveaus vergeleken als dat mogelijk is. 
+
