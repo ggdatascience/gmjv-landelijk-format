@@ -881,10 +881,10 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
     
     geom_text(aes(x = !!sym(var_crossing_groep),
                   y = percentage,
-                  label = paste(percentage,"%"),
+                  label = paste0(percentage,"%"),
                   vjust = -1),
               position = position_dodge2(width = 0.8),
-              size = 5,
+              size = 7, # Hier grootte van percentages aanpassen
               na.rm = T
     ) +
     #sterretje invoegen bij weggestreepte data omdat nvar of ncel niet gehaald wordt
@@ -909,7 +909,7 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
     
     scale_y_continuous(limits = c(0,100),
                        breaks = seq(0,100, by = 10),
-                       labels = paste(seq(0,100, by = 10),"%"),
+                       labels = paste0(seq(0,100, by = 10),"%"),
                        expand = expansion(mult = c(0, 0.05))
                        ) +
     theme(axis.title = element_blank(),
@@ -919,7 +919,8 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
           legend.title = element_blank(),
           legend.spacing.x = unit(.1,"cm"),
           legend.position = "bottom",
-          plot.title = element_text(hjust = .5),
+          plot.title = element_text(hjust = .5, size = 20), # Hier grootte van titel aanpassen
+          text = element_text(size = 17), # Hier grootte labels etc aanpassen
           axis.line.x.bottom = element_line(linewidth = 1),
           axis.line.y.left = element_line(linewidth = 1,)
     )
@@ -1043,10 +1044,10 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
               na.rm = T) +
      geom_text(aes(x = groep,
                    y = percentage,
-                   label = paste(percentage,"%"),
+                   label = paste0(percentage,"%"),
                    vjust = -1),
                position = position_dodge2(width = 0.8),
-               size = 5,
+               size = 7, # Hier grootte van percentages aanpassen
                na.rm = T
      ) +
      #sterretje invoegen bij weggestreepte data omdat nvar of ncel niet gehaald wordt
@@ -1068,7 +1069,7 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
      
      scale_y_continuous(limits = c(0,100),
                         breaks = seq(0,100, by = 10),
-                        labels = paste(seq(0,100, by = 10),"%"),
+                        labels = paste0(seq(0,100, by = 10),"%"),
                         expand = expansion(mult = c(0, 0.05))
      ) +
      coord_cartesian(ylim = c(0,100))+
@@ -1079,7 +1080,8 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
            legend.title = element_blank(),
            legend.spacing.x = unit(.1, 'cm'),
            legend.position = "bottom",
-           plot.title = element_text(hjust = .5),
+           plot.title = element_text(hjust = .5, size = 20), # Hier grootte van titel aanpassen
+           text = element_text(size = 17), # Hier grootte labels etc aanpassen
            axis.line.x.bottom = element_line(linewidth = 1, colour = "black"),
            axis.line.y.left = element_line(linewidth = 1)
      )
@@ -1281,11 +1283,11 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
     geom_text(aes(x = !!sym(var_inhoud_plot),
                   y = percentage,
                   group = !!sym(var_crossing),
-                  label =  paste(percentage,"%"),
+                  label =  paste0(percentage,"%"),
                   vjust = v_just_text,
                   hjust = h_just_text),
               position = position_dodge2(width = 0.8),
-              size = 5,
+              size = 7, # Hier grootte van percentages aanpassen
               na.rm = T) +
     
     #sterretje invoegen bij weggestreepte data omdat nvar of ncel niet gehaald wordt
@@ -1310,7 +1312,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
     
     scale_y_continuous(limits = c(0,100),
                        breaks = seq(0,100, by = 10),
-                       labels = paste(seq(0,100, by = 10),"%"),
+                       labels = paste0(seq(0,100, by = 10),"%"),
                        expand = expansion(mult = c(0, 0.05))
     ) +
     #lange labels opsplitsen
@@ -1323,7 +1325,8 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
           legend.title = element_blank(),
           legend.spacing.x = unit(.1,"cm"),
           legend.position = "bottom",
-          plot.title = element_text(hjust = .5),
+          plot.title = element_text(hjust = .5, size = 20), # Hier grootte van titel aanpassen
+          text = element_text(size = 17), # Hier grootte labels etc aanpassen
           axis.line.x.bottom = element_line(linewidth = 1),
           axis.line.y.left = element_line(linewidth = 1,)
     )
@@ -1509,12 +1512,12 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
              ) +
     geom_text(aes(x = onderdeel,
                   y = percentage,
-                  label = paste(percentage,"%"),
+                  label = paste0(percentage,"%"),
                   vjust = v_just_text,
                   hjust = h_just_text),
               color = "white",
               position = position_dodge2(width = 0.8),
-              size = 5,
+              size = 7, # Hier grootte van percentages aanpassen
               na.rm = T
               ) +
     #sterretje invoegen bij weggestreepte data omdat nvar of ncel niet gehaald wordt
@@ -1535,7 +1538,8 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
     ggtitle(titel) +
     theme(panel.background = element_blank(),
           legend.position = "none",
-          plot.title = element_text(hjust = .5),
+          plot.title = element_text(hjust = .5, size = 20), # Hier grootte van titel aanpassen
+          text = element_text(size = 17), # Hier grootte labels etc aanpassen
           axis.line.y.left = element_line(linewidth = 1)
     ) +
     labs(
@@ -1705,7 +1709,7 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
       label = paste0(round(percentage),"%")),
       color = "#FFFFFF",
       position = position_stack(vjust = 0.5),
-      size = 3) +
+      size = 7) + # Hier grootte van percentages aanpassen
     
     scale_fill_manual(values= kleuren,
                       labels = function(x) str_wrap(x, width = 40)
@@ -1713,7 +1717,7 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
     scale_x_continuous(
       limits = c(0,101),
       breaks = seq(0,101, by = 10),
-      labels = paste(seq(0,100, by = 10),"%"),
+      labels = paste0(seq(0,100, by = 10),"%"),
       expand = expansion(mult = c(0, 0.05)))+
     ggtitle(titel) + 
     ylab(x_label) + 
@@ -1725,7 +1729,8 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
           legend.title = element_blank(),
           legend.spacing.x = unit(.1,"cm"),
           legend.position = "bottom",
-          plot.title = element_text(hjust = .5),
+          plot.title = element_text(hjust = .5, size = 20), # Hier grootte van titel aanpassen
+          text = element_text(size = 17), # Hier grootte labels etc aanpassen
           axis.line.x.bottom = element_line(linewidth = 1),
           axis.line.y.left = element_line(linewidth = 1,)
         ) +
@@ -2096,7 +2101,7 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
       label = paste0(round(percentage),"%")),
       color = "#FFFFFF",
       position = position_stack(vjust = 0.5),
-      size = 3) +
+      size = 3) + #Hier grootte percentages aanpassen
     
     scale_fill_manual(values= kleuren,
                       labels = function(x) str_wrap(x, width = 40)
@@ -2104,7 +2109,7 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
     scale_x_continuous(
       limits = c(0,101),
       breaks = seq(0,101, by = 10),
-      labels = paste(seq(0,100, by = 10),"%"),
+      labels = paste0(seq(0,100, by = 10),"%"),
       expand = expansion(mult = c(0, 0.05)))+
     ggtitle(titel) + 
     ylab(x_label) + 
@@ -2116,7 +2121,8 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
       legend.title = element_blank(),
       legend.spacing.x = unit(.1,"cm"),
       legend.position = "bottom",
-      plot.title = element_text(hjust = .5),
+      plot.title = element_text(hjust = .5, size = 20), # Hier grootte van titel aanpassen
+      text = element_text(size = 17), # Hier grootte labels etc aanpassen
       axis.line.x.bottom = element_line(linewidth = 1),
       axis.line.y.left = element_line(linewidth = 1,)
     ) +
@@ -2260,6 +2266,15 @@ maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL,
   #temp design verwijderen uit globalEnv.
   rm(design_temp, data_x, envir = .GlobalEnv)
   
+  # Check NAs in result$percentage. Stop als deze er zijn.
+  if (any(is.na(result$percentage))) {
+    
+    warning("Indicator heeft geen waarde voor een of meerdere crossings. Daarom kan niet vergeleken worden.")
+    
+    return(paste("NIKS TONEN IVM NAs")) # TODO dit nog aanpassen, hoe willen we dit tonen?
+    
+  }
+    
   # Check lengte van kruistabel
   if (nrow(result) < 2 | nrow(result) > 3) {
     
@@ -2302,20 +2317,49 @@ maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL,
     label <- variabele_label
   }
   
-  if (var_crossing == "niveau") { # Vergelijk 2 niveaust
-    
-    crossings <- case_when(niveaus == "gemeente" ~ "in de gemeente",
-                           niveaus == "regio" ~ "regionaal",
-                           niveaus == "nl" ~ "landelijk",
-                           .default = "")
-    
-    resultaat_vergelijking <- case_when(result$ci_lower[1] > result$ci_upper[2] ~ " hoger dan ",
-                                        result$ci_lower[2] > result$ci_upper[1] ~ " lager dan ",
-                                        TRUE ~ " gelijk aan ")
-    
-    return(paste0("Het percentage dat ", label, " is ", crossings[1], resultaat_vergelijking, 
-                  crossings[2], "."))
-    
+  if (var_crossing == "niveau") { 
+
+    if (length(niveaus) == 2) {
+      # Vergelijk 2 niveaus      
+      
+      crossings <- case_when(niveaus == "gemeente" ~ "in de gemeente",
+                             niveaus == "regio" ~ "regionaal",
+                             niveaus == "nl" ~ "landelijk",
+                             .default = "")
+      
+      resultaat_vergelijking <- case_when(result$ci_lower[1] > result$ci_upper[2] ~ " hoger dan ",
+                                          result$ci_lower[2] > result$ci_upper[1] ~ " lager dan ",
+                                          TRUE ~ " gelijk aan ")
+      
+      return(paste0("Het percentage dat ", label, " is ", crossings[1], resultaat_vergelijking, 
+                    crossings[2], "."))
+      
+    } else if (length(niveaus) == 3) {
+      # Vergelijk 3 niveaus
+      
+      crossings <- case_when(niveaus == "gemeente" ~ "de gemeente",
+                             niveaus == "regio" ~ "regionaal",
+                             niveaus == "nl" ~ "landelijk",
+                             .default = "")
+      
+      resultaat_vergelijking1 <- case_when(result$ci_lower[1] > result$ci_upper[2] ~ " hoger dan ",
+                                           result$ci_lower[2] > result$ci_upper[1] ~ " lager dan ",
+                                           TRUE ~ " gelijk aan ")
+      
+      resultaat_vergelijking2 <- case_when(result$ci_lower[1] > result$ci_upper[3] ~ " hoger dan ",
+                                           result$ci_lower[3] > result$ci_upper[1] ~ " lager dan ",
+                                           TRUE ~ " gelijk aan ")
+      
+      return(paste0("Het percentage dat ", label, " is ", crossings[2], resultaat_vergelijking1, 
+                    "en ", crossings[3], resultaat_vergelijking2, 
+                    crossings[1], "."))
+      
+    } else {
+      
+      stop("Er zijn meer dan 3 niveaus opgegeven. Dit kan niet. Vul minder niveaus in. ")
+      
+    }
+
   } else if (var_crossing == 'AGOJB401') { # Vergelijking 2 jaren
     
     resultaat_vergelijking <- case_when(result$ci_lower[1] > result$ci_upper[2] ~ " afgenomen ",
@@ -2328,7 +2372,7 @@ maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL,
     } else {
       return(paste0("Het percentage dat " , label, " is ", label_niveau, resultaat_vergelijking, 
                   "t.o.v. ", crossings[1], " (", result$percentage[1], "%)."))
-    }
+    } 
   } else if (nrow(result) == 2 ) { # Vergelijk 2 groepen:
 
     resultaat_vergelijking <- case_when(result$ci_lower[1] > result$ci_upper[2] ~ " hoger dan ",
@@ -2424,23 +2468,29 @@ maak_top <- function(data, var_inhoud, toon_label = T, value = 1, niveau = "regi
   list <- list %>%
     filter(waarde == value) %>% # Filter de gegevens voor value eruit. Standaard is dit 1.
     arrange(desc(percentage)) # Sorteer op hoogte van estimate (percentage)
-  
+
   # Print top
   if (toon_label) { # Wanneer label getoond moet worden
     
     if (length(var_inhoud) > 1) { # Bij meerdere indicatoren als input
       
-      return(paste0(tolower(var_label(data[list$varcode[top]])), " (", list$percentage[top], "%)"))
+      return(paste0(tolower(var_label(data[list$varcode[top]])), 
+                    " (", 
+                    ifelse(is.na(list$percentage[top]), "-", list$percentage[top]),
+                    "%)"))
     
     } else { # Bij één indicator als input
       
-      return(paste0(tolower(labelled_naar_character(list, var_inhoud))[top], " (", list$percentage[top], "%)")) 
+      return(paste0(tolower(labelled_naar_character(list, var_inhoud))[top], 
+                    " (", 
+                    ifelse(is.na(list$percentage[top]), "-", list$percentage[top]),
+                    "%)")) 
       
     }
        
   } else { # Wanneer geen label getoond moet worden
 
-    return(paste0(list$percentage[top], "%")) 
+    return(paste0(ifelse(is.na(list$percentage[top]), "-", list$percentage[top]), "%")) 
     
   }
 }
@@ -2499,7 +2549,7 @@ maak_percentage <- function(data, var_inhoud, value = 1, niveau = "regio",
   rm(design_temp, envir = .GlobalEnv)
   
   # Output van functie maken
-  return(paste0(result$percentage, "%"))
+  return(paste0(ifelse(is.na(result$percentage), "-", result$percentage), "%"))
   
 }
 

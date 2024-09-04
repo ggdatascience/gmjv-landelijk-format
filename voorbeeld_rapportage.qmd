@@ -8,7 +8,7 @@ format:
     toc: TRUE
     embed-resources: true
 params:
-  gemeentecode: 2 
+  gemeentecode: 2
   regiocode: 23
   regionaam: 'GGD Limburg-Noord'
   path_monitor_data: "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
@@ -170,7 +170,7 @@ In de periode van april tot juli van 2024 vond de **Gezondheidsmonitor Jongvolwa
 
 Voor de Gezondheidsmonitor Jongvolwassenen 2024 is geen steekproef getrokken. De vragenlijst was in te vullen via een open link en respondenten zijn geworven via een online social media campagne.
 
-In totaal hebben `r monitor_df %>% nrow()` jongvolwassenen uit Nederland de vragenlijst ingevuld. Van deze respondenten komen `r monitor_df %>% filter(GGDregio == params$regiocode) %>% nrow()` jongvolwassenen uit `r monitor_df %>% filter(GGDregio == params$regiocode) %>% labelled_naar_character("GGDregio") %>% unique()`.
+In totaal hebben `r monitor_df %>% filter(GGDregio == params$regiocode) %>% nrow()` jongvolwassenen uit `r monitor_df %>% filter(GGDregio == params$regiocode) %>% labelled_naar_character("GGDregio") %>% unique()` de vragenlijst ingevuld. Van deze respondenten komen `r monitor_df %>% filter(Gemeentecode == params$gemeentecode) %>% nrow()` jongvolwassenen uit `r monitor_df %>% filter(Gemeentecode == params$gemeentecode) %>% labelled_naar_character("Gemeentecode") %>% unique()`.
 
 De resultaten kunnen helpen bij de invulling en ontwikkeling van het gezondheidsbeleid. Uit de resultaten kan bijvoorbeeld blijken dat het nodig is om meer hulp te bieden aan bepaalde groepen jongvolwassenen of extra voorzieningen op te zetten in de regio of in een gemeente.
 
@@ -178,23 +178,59 @@ De resultaten kunnen helpen bij de invulling en ontwikkeling van het gezondheids
 
 Vanwege de betrouwbaarheid van de resultaten en de privacy van de respondenten hanteren wij bij de rapportage een minimum van 100 respondenten die de vraag ingevuld hebben en een minimum van 10 respondenten per specifiek antwoord. Indien de aantallen lager liggen, worden de cijfers niet weergegeven.
 
-De cijfers die hier worden gepresenteerd zijn gestandaardiseerd naar GGD-regio, leeftijd (16-17 jaar, 18-20 jaar en 21-25 jaar) en gender (in twee groepen: mannen en vrouwen). Dit betekent dat er is gecorrigeerd voor een niet-representatieve verhouding van deze kenmerken in de data, zodat de cijfers een zo representatief mogelijk beeld geven van alle jongvolwassenen in Nederland en de verschillende regio's. In de Gezondheidsmonitor Jongvolwassenen 2024 is genderidentiteit uitgevraagd met de antwoordopties "man", "vrouw", "non-binair" en "anders dan bovenstaande". Ten behoeve van de standaardisatie is een nieuwe variabele 'Geslacht_standaardisatie' aangemaakt, waarin gender "non-binair"/"anders dan bovenstaande" (samen 1,4%) random geïmputeerd zijn tot man/vrouw. Deze methode is gekozen omdat de populatiereferentie-aantallen (vanuit het CBS) alleen beschikbaar zijn voor geslacht man en vrouw. De variabele "Geslacht_standaardisatie" is alleen gebruikt voor het berekenen van standaardisatiefactoren en is niet gebruikt voor de cijfers uitgesplitst naar mannen en vrouwen in deze rapportage.
+De cijfers die hier worden gepresenteerd zijn gestandaardiseerd naar GGD-regio, leeftijd (16-17 jaar, 18-20 jaar en 21-25 jaar) en gender (in twee groepen: mannen en vrouwen). Op deze manier geven de cijfers een zo representatief mogelijk beeld geven van alle jongvolwassenen in Nederland en de verschillende regio's. In de Gezondheidsmonitor Jongvolwassenen 2024 is genderidentiteit uitgevraagd met de antwoordopties "man", "vrouw", "non-binair" en "anders dan bovenstaande". Ten behoeve van de standaardisatie is een nieuwe variabele 'Geslacht_standaardisatie' aangemaakt, waarin gender "non-binair"/"anders dan bovenstaande" (samen 1,4%) random geïmputeerd zijn tot man/vrouw. Deze methode is gekozen omdat de populatiereferentie-aantallen (vanuit het CBS) alleen beschikbaar zijn voor geslacht man en vrouw. De variabele "Geslacht_standaardisatie" is alleen gebruikt voor het berekenen van standaardisatiefactoren en is niet gebruikt voor de cijfers uitgesplitst naar mannen en vrouwen in deze rapportage.
 
 # Achtergrondkenmerken
 
-::: {layout="[[30,30,30],[30,30,30]]"}
+::: {layout="[100]"}
 ::: column
-Van de respondenten is `r monitor_df %>% maak_percentage(var_inhoud = 'AGGSA401', value = 2)` vrouw en `r monitor_df %>% maak_percentage(var_inhoud = 'AGGSA401', value = 1)` man. Daarnaast geeft `r monitor_df %>% maak_percentage(var_inhoud = 'AGGSA401', value = 3)` aan zich anders dan man of vrouw te voelen.
+Van de respondenten in uw gemeente is `r monitor_df %>% maak_percentage(var_inhoud = 'AGGSA401', value = 2, niveau = "gemeente")` vrouw en `r monitor_df %>% maak_percentage(var_inhoud = 'AGGSA401', value = 1, niveau = "gemeente")` man. Daarnaast geeft `r monitor_df %>% maak_percentage(var_inhoud = 'AGGSA401', value = 3, niveau = "gemeente")` aan zich anders dan man of vrouw te voelen.
+:::
+:::
+
+::: {layout="[50,50]"}
+::: column
+```{r Achtergrondkenmerken 2, echo = F}
+# Cirkeldiagram gender deelnemers regio
+plot = monitor_df %>% 
+  maak_cirkeldiagram(
+    var_inhoud = "AGGSA401",
+    titel = paste("Gender deelnemers", params$regionaam),
+    niveaus = "regio"
+  )
+
+plot
+```
 :::
 
 ::: column
-Van de respondenten is `r monitor_df %>% maak_percentage(var_inhoud = 'AGLFA401', value = 1)` 16 of 17 jaar, `r monitor_df %>% maak_percentage(var_inhoud = 'AGLFA401', value = 2)` tussen de 18 en 20 jaar en `r monitor_df %>% maak_percentage(var_inhoud = 'AGLFA401', value = 3)` tussen de 21 en 25 jaar.
+```{r Achtergrondkenmerken 3, echo = F}
+# Cirkeldiagram gender deelnemers gemeente
+plot = monitor_df %>% 
+  maak_cirkeldiagram(
+    var_inhoud = "AGGSA401",
+    niveaus = "gemeente",
+    titel = paste("Gender deelnemers",
+                  monitor_df %>%
+                    filter(Gemeentecode == params$gemeentecode) %>%
+                    labelled_naar_character("Gemeentecode") %>%
+                    unique())
+  )
 
-<br>
-
-`r monitor_df %>% maak_percentage(var_inhoud = 'AGETS411', value = 1)` heeft een Nederlandse herkomst.
+plot
+```
+:::
 :::
 
+::: {layout="[100]"}
+::: column
+Van de respondenten in uw gemeente is `r monitor_df %>% maak_percentage(var_inhoud = 'AGLFA401', value = 1, niveau = "gemeente")` 16 of 17 jaar, `r monitor_df %>% maak_percentage(var_inhoud = 'AGLFA401', value = 2, niveau = "gemeente")` tussen de 18 en 20 jaar en `r monitor_df %>% maak_percentage(var_inhoud = 'AGLFA401', value = 3, niveau = "gemeente")` tussen de 21 en 25 jaar.
+
+`r monitor_df %>% maak_percentage(var_inhoud = 'AGETS411', value = 1, niveau = "gemeente")` heeft een Nederlandse herkomst.
+:::
+:::
+
+::: {layout="[50,50]"}
 ::: column
 ```{r Achtergrondkenmerken 1, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
 plot = monitor_df %>% maak_grafiek_cbs_bevolking(
@@ -207,37 +243,12 @@ plot
 :::
 
 ::: column
-```{r Achtergrondkenmerken 2, echo = F}
-# Cirkeldiagram gender deelnemers NL
-plot = monitor_df %>% 
-  maak_cirkeldiagram(
-    var_inhoud = "AGGSA401",
-    titel = "Gender deelnemers Nederland"
-  )
-
-plot
-```
-:::
-
-::: column
-```{r Achtergrondkenmerken 3, echo = F}
-# Cirkeldiagram gender deelnemers NL
-plot = monitor_df %>% 
-  maak_cirkeldiagram(
-    var_inhoud = "AGGSA401",
-    titel = paste("Gender deelnemers", params$regionaam)
-  )
-
-plot
-```
-:::
-
-::: column
 ```{r Achtergrondkenmerken 4, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
 plot = monitor_df %>% 
   maak_staafdiagram_meerdere_staven(
     var_inhoud = "AGOWS402",
-    titel = "Opleidingsniveau"
+    titel = "Opleidingsniveau",
+    niveaus = c("gemeente", "regio")
   )
 
 plot
@@ -247,7 +258,7 @@ plot
 
 # Woon- en werksituatie en financiën
 
-::: {layout="[[30,30,30],[30,30,30]]"}
+::: {layout="[100]"}
 ::: column
 De woon-, werk- en financiële situatie kan veel invloed hebben op het welzijn en de mentale en fysieke gezondheid van jongvolwassenen. In een tijd waarin er sprake is van een woningcrisis en een onzekere financiële situatie is het van belang om deze aspecten goed te monitoren.
 
@@ -255,42 +266,13 @@ De woon-, werk- en financiële situatie kan veel invloed hebben op het welzijn e
 
 **Woonsituatie**
 
-De meeste jongvolwassenen in uw gemeente wonen `r monitor_df %>% maak_top(var_inhoud = 'AGHHA403', value = 1:8, top = 1)`. `r monitor_df %>% maak_vergelijking(var_inhoud = 'AGHHA403', value = 8, variabele_label = 'in deze woonsituatie woont', var_crossing = 'AGOJB401')`
+De meeste jongvolwassenen in uw gemeente wonen `r monitor_df %>% maak_top(var_inhoud = 'AGHHA403', value = 1:8, top = 1, niveau = "gemeente")`. `r monitor_df %>% maak_vergelijking(var_inhoud = 'AGHHA401', variabele_label = 'bij ouders/verzorgers woont', var_crossing = 'AGOJB401', niveau = "regio")`
+:::
 :::
 
+::: {layout="[50,50]"}
 ::: column
-**Werk- en financiële situatie**
-
-De meeste werkende jongvolwassenen in uw gemeente werken `r #monitor_df %>% maak_top(var_inhoud = 'AGWSA413', value = 1:5, top = 1)`. `r #monitor_df %>% maak_vergelijking(var_inhoud = 'AGWSA413', variabele_label = 'zoveel uren werkt', var_crossing = 'AGOJB401')`
-
-<br>
-
-`r #monitor_df %>% maak_vergelijking(var_inhoud = '', var_crossing = 'AGOJB401')` `r #monitor_df %>% maak_vergelijking(var_inhoud = 'AGWSA412', var_crossing = 'AGOJB401')`
-:::
-
-::: column
-```{r Woonsituatie 1, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
-plot = monitor_df %>%
-  maak_staafdiagram_vergelijking(
-    var_inhoud = "AGOWA401",
-    var_crossings = "AGLFA401",
-     titel = "Volgt een opleiding")
-plot
-
-```
-
-```{r Woonsituatie 2, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
-plot = monitor_df %>%
-  maak_staafdiagram_vergelijking(
-    var_inhoud = "AGWSA401",
-    var_crossings = "AGLFA401",
-     titel = "Heeft betaald werk")
-plot
-```
-:::
-
-::: column
-```{r Woonsituatie 3, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Woonsituatie, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
 plot = monitor_df %>% 
    maak_staafdiagram_meerdere_staven(
      var_inhoud = "AGHHA403",
@@ -303,7 +285,51 @@ plot = monitor_df %>%
 :::
 
 ::: column
-```{r Woonsituatie 4, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+2e grafiek invoegen?
+:::
+:::
+
+::: {layout="[100]"}
+::: column
+**Werk- en financiële situatie**
+
+De meeste werkende jongvolwassenen in uw gemeente werken `r #monitor_df %>% maak_top(var_inhoud = 'AGWSA413', value = 1:5, top = 1)`. `r #monitor_df %>% maak_vergelijking(var_inhoud = 'AGWSA413', variabele_label = 'zoveel uren werkt', var_crossing = 'AGOJB401')`
+
+<br>
+
+`r #monitor_df %>% maak_vergelijking(var_inhoud = '', var_crossing = 'AGOJB401')` `r #monitor_df %>% maak_vergelijking(var_inhoud = 'AGWSA412', var_crossing = 'AGOJB401')`
+
+<br>
+[Het Nibud](https://www.nibud.nl/) (Nationaal Instituut voor Budgetvoorlichting) geeft advies over onder andere rondkomen, sparen en geldproblemen.
+:::
+:::
+
+::: {layout="[50,50]"}
+```{r Woonsituatie 2, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+plot = monitor_df %>%
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "AGWSA401",
+    var_crossings = "AGLFA401",
+     titel = "Heeft betaald werk")
+plot
+```
+:::
+
+::: column
+```{r Werksituatie 1, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+plot = monitor_df %>%
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "AGOWA401",
+    var_crossings = "AGLFA401",
+     titel = "Volgt een opleiding")
+plot
+
+```
+:::
+:::
+
+::: column
+```{r Werksituatie 4, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
 
 # plot = monitor_df %>% 
 #   maak_staafdiagram_meerdere_staven(
@@ -323,11 +349,6 @@ plot = monitor_df %>%
 # plot
 
 ```
-:::
-
-::: column
-[Het Nibud](https://www.nibud.nl/) (Nationaal Instituut voor Budgetvoorlichting) geeft advies over onder andere rondkomen, sparen en geldproblemen.
-:::
 :::
 
 # Gezondheid en geluk
