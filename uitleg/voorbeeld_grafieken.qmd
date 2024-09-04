@@ -4,7 +4,6 @@ author: ""
 format:
   html:
     page-layout: full
-    css: custom.css
     toc: TRUE
     toc-location: left
     embed-resources: true
@@ -22,7 +21,7 @@ params:
 format-links: false
 ---
 
-#GMJV Grafiekfuncties
+# GMJV Grafiekfuncties
 
 ```{r, echo=F, message=F, warning=F}
 

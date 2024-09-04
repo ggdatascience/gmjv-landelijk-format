@@ -4,7 +4,6 @@ author: ""
 format:
   html:
     page-layout: full
-    css: custom.css
     toc: TRUE
     embed-resources: true
 params:
