@@ -13,7 +13,9 @@ book:
     - rapport-uitdraaien.qmd
     - tekst-en-layout.qmd
     - voorbeeld_grafieken.qmd
-    - alt-text.qmd
+    - voorbeeld_tekstfuncties.qmd
+    - digitoegankelijkheid.qmd
+    - uploaden-swing.qmd
     - handige-bronnen.qmd
     
 
