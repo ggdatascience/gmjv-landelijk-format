@@ -1,25 +1,3 @@
----
-title: ""
-author: ""
-format:
-  html:
-    page-layout: full
-    toc: TRUE
-    embed-resources: true
-params:
-  gemeentecode: 2 
-  regiocode: 23
-  regionaam: 'GGD Limburg-Noord'
-  path_monitor_data: "../nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
-  path_hulpfuncties: "../hulpfuncties.R"
-  path_cbs_data: "../JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx"
-  default_nvar: 100
-  default_ncel: 10
-  default_kleuren_grafiek: !expr c("#012C17","#76B82A","#007E48")
-  default_kleuren_responstabel: !expr c("header" = "#012C17", "kleur_1" = "#007E48", "kleur_2" = "#76B82A","kleur_tekst" = "#FFFFFF")
-format-links: false
----
-
 # GMJV Functies Gebruiken
 Voor de rapportage hebben we een aantal R-functies geschreven waarmee de resultaten van de monitor enigzins gebruiksvriendelijk in de lopende tekst, grafieken of tabellen gezet kunnen worden.
 

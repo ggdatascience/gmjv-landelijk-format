@@ -1,12 +1,4 @@
 ---
-title: ""
-author: ""
-format:
-  html:
-    page-layout: full
-    toc: TRUE
-    toc-location: left
-    embed-resources: true
 params:
   gemeentecode: 2 
   regiocode: 23
@@ -18,7 +10,6 @@ params:
   default_ncel: 10
   default_kleuren_grafiek: !expr c("#012C17","#76B82A","#007E48")
   default_kleuren_responstabel: !expr c("header" = "#012C17", "kleur_1" = "#007E48", "kleur_2" = "#76B82A","kleur_tekst" = "#FFFFFF")
-format-links: false
 ---
 
 # GMJV Grafiekfuncties
@@ -97,35 +88,9 @@ for(var in names(monitor_df)){
 
 ```
 
-# Uitleg grafiekfuncties en argumenten
-
-In dit document worden de verschillende grafiekfuncties uitgelegd en hoe hier aanpassingen in gedaan kunnen worden.\
-\
-
-::: callout-tip
-In dit document wordt gebruikt gemaakt van de 'pipe-operator' *%\>%*.
-
-De pipe-operator stuurt een resultaat door naar de volgende functie. Op deze manier kunnen meerdere bewerkingen in R overzichtelijk aan elkaar gekoppeld worden. Lees [hier](#0) een uitleg van de magrittr pipe (en de voordelen).
-
-Zonder de pipe-operator zou het aanroepen van maak_responstabel er zo uit zien:
-
-``` r
-maak_responstabel(df = monitor_df, crossings = "gender_2cat", ...)
-```
-
-Met pipe-operator
-
-``` r
-monitor_df %>% maak_responstabel(crossings = "gender_2cat", ...)
-```
-
-Alle functies in dit document hebben als eerste argument 'data', waar een dataframe wordt verwacht. Dit argument zal niet expliciet genoemd worden in de uitleg, omdat het altijd nodig is.
-:::
-
-
-# Grafieken
-
 Hieronder volgt uitleg voor de grafiekfuncties. De functies genereren automatisch alt-text, maar deze kan ook handmatig ingevoerd worden.
+
+## Alt-text in code-blokken
 
 ::: callout-caution
 Als je in Quarto zelf nieuwe blokjes code maakt met grafieken is het belangrijk dat alt-text goed wordt meegenomen bij het renderen van het document. Hier zijn 2 dingen voor nodig:

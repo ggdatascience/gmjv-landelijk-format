@@ -1,11 +1,4 @@
 ---
-title: ""
-author: ""
-format:
-  html:
-    page-layout: full
-    toc: TRUE
-    embed-resources: true
 params:
   gemeentecode: 2 
   regiocode: 23
@@ -17,9 +10,10 @@ params:
   default_ncel: 10
   default_kleuren_grafiek: !expr c("#012C17","#76B82A","#007E48")
   default_kleuren_responstabel: !expr c("header" = "#012C17", "kleur_1" = "#007E48", "kleur_2" = "#76B82A","kleur_tekst" = "#FFFFFF")
-format-links: false
 ---
-# Algemeen
+
+# Overige functies
+
 ```{r Instellingen, echo=F, message=F, warning=F}
 
 # Deze moeten bij de eerste keer lokaal worden geinstalleerd
@@ -36,33 +30,10 @@ library(glue) #om strings aangenaam aan elkaar te plakken
 library(plotly)
 
 options(dplyr.summarise.inform = FALSE)
-source("hulpfuncties.R")
-
-#TODO instelbare variabelen overzichtelijk maken
-
-#Standaardwaarden in te stellen door gebruiker:
-# Standaard kleuren
-default_kleuren_grafiek <- c("#012C17","#76B82A","#007E48")
-default_kleuren_responstabel <- c("header" = "#012C17",
-                                  "kleur_1" = "#007E48",
-                                  "kleur_2" = "#76B82A",
-                                  "kleur_tekst" = "#FFFFFF"
-                                  )
-
-# Standaard minima voor groep & cel
-default_Nvar = 100 # Minimum aantal invullers per vraag.
-default_Ncel = 10 # Minimum aantal invullers oper antwoordoptie.
-
-
-#SPSS data inlezen
-# Regionaal bestand
-#file_path_regio = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
-
-# Landelijk bestand
-file_path = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
+source(params$path_hulpfuncties)
 
 #Lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
-monitor_df = haven::read_spss(file_path, user_na =T) %>%
+monitor_df = haven::read_spss(params$path_monitor_data, user_na =T) %>%
   labelled::user_na_to_na()
 
 #TODO verwijderen bij echte data. tijdelijk varlabel voor jaarvariabele
@@ -107,74 +78,9 @@ for(var in names(monitor_df)){
 
 }
 
-# ALTERNATIEVE METHODE VAN INLADEN: regionale data invoegen in landelijk
-# Landelijk bestand inladen
-# df <- haven::read_spss(file.choose(), user_na =T) %>%
-#   labelled::user_na_to_na()
-# 
-# # Regionaal bestand inladen
-# df_regio <- haven::read_spss(file.choose(), user_na =T) %>%
-#   labelled::user_na_to_na()
-# 
-# # Check of aantallen gelijk zijn.
-# # NB. Alleen deelnemers met landelijke weegfactor zitten in landelijk bestand.
-# if (sum(df_regio$Standaardisatiefactor != 0) != nrow(df %>% filter(GGDregio == regiocode))) {
-#   print("Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data.")
-# }
-# 
-#
-# TODO zorgen dat hier ook nog op jaar gefilterd wordt!
-# # Filter regio uit landelijk databestand
-# df <- df %>%
-#   filter(GGDregio != regiocode)
-# 
-# # Voeg regiobestand toe aan landelijk bestand
-# df <- df %>%
-#   full_join(df_regio)
-# 
-# # Opschonen
-# rm(df_regio)
-# 
-# #Er is niet goed aangegeven wat missing is in SPSS.
-# #tijdelijke functie om 9 Onbekend te verwijderen & naar NA te zetten
-# 
-# for(var in names(df)){
-#   
-#   df <- df %>% verwijder_9_onbekend(var)
-# 
-# }
-# 
-# # Regionale data filteren
-# df %>%
-#   filter(GGDregio == params$regiocode)
-# 
-# # Gemeentelijke data filteren
-# df %>%
-#   filter(Gemeentecode == params$gemeentecode)
-
 ```
 
-
-
-In dit document worden de Responstabel functie en Bol met cijfer uitgelegd en hoe hier aanpassingen in gedaan kunnen worden.\
-
-::: callout-tip
-In dit document wordt gebruikt gemaakt van de 'pipe-operator' *%\>%*.
-
-De pipe-operator stuurt een resultaat door naar de volgende functie. Op deze manier kunnen meerdere bewerkingen in R overzichtelijk aan elkaar gekoppeld worden. Lees [hier](#0) een uitleg van de magrittr pipe (en de voordelen).
-
-Zonder de pipe-operator zou het aanroepen van maak_responstabel er zo uit zien:
-
-``` r
-maak_responstabel(df = monitor_df, crossings = "gender_2cat", ...)
-```
-
-Met pipe-operator ziet dit er zo uit:
-
-``` r
-monitor_df %>% maak_responstabel(crossings = "gender_2cat", ...)
-```
-:::
+In dit document worden de Responstabel functie en Bol met cijfer uitgelegd en hoe hier aanpassingen in gedaan kunnen worden.
 
 # Responstabel
 
