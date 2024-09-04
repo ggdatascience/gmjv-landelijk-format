@@ -1833,22 +1833,83 @@ maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = default_
 
 }
 
-bol_met_cijfer <- function(getal, kleur = default_kleuren_grafiek[3], kleur_outline = "#FFFFFF", kleur_text = "#FFFFFF"){
+bol_met_cijfer <- function(getal, omschrijving = NA, omschrijving2 = NA, niveau = NA,
+                           kleur = default_kleuren_grafiek[3], kleur_outline = "#FFFFFF", 
+                           kleur_getal = "#FFFFFF", kleur_omschrijving = "#000000"){
   
+  alt_tekst <- getal
   
+  # Maak een stukje svg code aan waarin de ingevoerde tekst is opgenomen en een variabele voor het aanvullen van de alternatieve tekst
+  tekst <- c()
+  
+  for (regel in c(omschrijving, omschrijving2)){
+    if(!is.na(regel)){
+      
+      alt_tekst <- paste(alt_tekst, regel)
+      
+      if(length(tekst) == 0){
+        tekst <- paste0('<tspan>', regel, '</tspan>')
+        
+      }
+      else if (length(tekst) > 0){
+        tekst <- paste0(tekst, '<tspan x=50 dy="1em">', regel, '</tspan>')
+      }
+    } else {
+      
+      # Als geen omschrijving meegegeven is, voer dan spatie in
+      if(length(tekst) == 0){
+        tekst <- paste0('<tspan>', " ", '</tspan>')
+        
+      }
+      else if (length(tekst) > 0){
+        tekst <- paste0(tekst, '<tspan x=50 dy="1em">', " ", '</tspan>')
+      }
+    }
+  }
+  
+  if (is.na(omschrijving) & is.na(omschrijving)) {
+    # Als geen omschrijvingen getoond worden, maak dan de afbeelding kleiner.
+    
+    viewbox = "0 0 50 75"
+    
+  } else {
+    
+    viewbox = "0 0 225 75"
+    
+  }
+  
+  # Voeg niveau toe aan alt_tekst
+  if(!is.na(niveau)) {
+    
+    alt_tekst <- paste(alt_tekst, "in de", niveau)
+    
+  } else {
+    
+    # Als geen omschrijving meegegeven is, voer dan spatie in
+    niveau = " "
+    
+  }
+
   # Voeg de ingevoerde informatie op de juiste plekken in de svg code met behulp van glue
-  svg_code <- glue::glue('<svg class="cirkel" role="img" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality;"
-                viewBox="0 0 50 50">
-                <title>{getal}</title>
+  svg_code <- glue::glue('<svg role="img" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality;"
+                viewBox="{viewbox}"> # Origineel 0 0 225 75
+                <title>{alt_tekst}</title>
                 
                 <g id="circle">
                     <circle style="fill:{kleur};" cx="25" cy="25" r="20" stroke = "{kleur_outline}">
                     </circle>
-                    <text x=25 y="25" text-anchor="middle" fill="{kleur_text}" stroke="{kleur_text}" stroke-width="1px" dy=".3em" font-size="1em">{getal}</text>
+                    <text x=25 y="25" text-anchor="middle" fill="{kleur_getal}" stroke="{kleur_getal}" stroke-width="1px" dy=".3em" font-size="1em">{getal}</text>
+                </g>
+                    
+                <g id="tekst">
+                <text x=50 y="25" fill="{kleur_omschrijving}" stroke="{kleur_omschrijving}" stroke-width="0.01px" dy=".3em" font-size="0.5em">{tekst}</text>
+                </g>
+                
+                <g id="niveau">
+                <text x=25 y="50" text-anchor="middle" fill="{kleur}" stroke="{kleur}" stroke-width="0.01px" dy=".3em" font-size="0.5em">{niveau}</text>
                 </g>
                 
                 </svg>')
-  
   
   return(svg_code %>% knitr::raw_html())
 }
