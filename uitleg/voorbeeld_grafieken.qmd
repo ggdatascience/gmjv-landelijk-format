@@ -15,7 +15,10 @@ params:
   path_monitor_data: "../nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
   path_hulpfuncties: "../hulpfuncties.R"
   path_cbs_data: "../JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx"
-editor: visual
+  default_nvar: 100
+  default_ncel: 10
+  default_kleuren_grafiek: !expr c("#012C17","#76B82A","#007E48")
+  default_kleuren_responstabel: !expr c("header" = "#012C17", "kleur_1" = "#007E48", "kleur_2" = "#76B82A","kleur_tekst" = "#FFFFFF")
 format-links: false
 ---
 
@@ -108,62 +111,6 @@ for(var in names(monitor_df)){
 
 }
 
-#TODO Tijdelijke filter op alleen gemeente in parameter
-# monitor_df_regio <- monitor_df
-# monitor_df <- monitor_df %>%
-#   filter(Gemeentecode == params$gemeentecode)
-
-#Maak survey design gemeente
-# Gemeente 2022 en 2024
-# design_gem <- survey_design_maken(
-#                           strata = 'Stratum', 
-#                           gewichten = 'Standaardisatiefactor', 
-#                           data = monitor_df)
-
-# ALTERNATIEVE METHODE VAN INLADEN: regionale data invoegen in landelijk
-# Landelijk bestand inladen
-# df <- haven::read_spss(file.choose(), user_na =T) %>%
-#   labelled::user_na_to_na()
-# 
-# # Regionaal bestand inladen
-# df_regio <- haven::read_spss(file.choose(), user_na =T) %>%
-#   labelled::user_na_to_na()
-# 
-# # Check of aantallen gelijk zijn.
-# # NB. Alleen deelnemers met landelijke weegfactor zitten in landelijk bestand.
-# if (sum(df_regio$Standaardisatiefactor != 0) != nrow(df %>% filter(GGDregio == regiocode))) {
-#   print("Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data.")
-# }
-# 
-#
-# TODO zorgen dat hier ook nog op jaar gefilterd wordt!
-# # Filter regio uit landelijk databestand
-# df <- df %>%
-#   filter(GGDregio != regiocode)
-# 
-# # Voeg regiobestand toe aan landelijk bestand
-# df <- df %>%
-#   full_join(df_regio)
-# 
-# # Opschonen
-# rm(df_regio)
-# 
-# #Er is niet goed aangegeven wat missing is in SPSS.
-# #tijdelijke functie om 9 Onbekend te verwijderen & naar NA te zetten
-# 
-# for(var in names(df)){
-#   
-#   df <- df %>% verwijder_9_onbekend(var)
-# 
-# }
-# 
-# # Regionale data filteren
-# df %>%
-#   filter(GGDregio == regiocode)
-# 
-# # Gemeentelijke data filteren
-# df %>%
-#   filter(Gemeentecode == params$gemeentecode)
 
 ```
 
@@ -515,12 +462,6 @@ plot
 
 Functie om een horizontaal georienteerd gestapeld staafdiagram te maken waarin populatiegegevens van het CBS worden vergeleken met de response op de per regio en gemeente. Dit kan o.b.v. de kruisvariabelen leeftijd en geslacht gedaan worden.
 
-::: calout-warning
-Hieronder wordt monitor_df_regio gebruikt ITT bovenstaande waar monitor_df wordt gebruikt.
-
-TODO; landelijke demografische cijfers toevoegen aan functie TODO; uitzoeken wel dataframes er allemaal gebruikt zullen worden.
-:::
-
 ### Optionele argumenten
 
 -   **gem_code:** character variabele met gemeentenaam. Standaard de 'huidige' gemeente o.b.v. params\$gemeentecode.
@@ -533,7 +474,7 @@ TODO; landelijke demografische cijfers toevoegen aan functie TODO; uitzoeken wel
 ### Standaard Populatiegrafiek CBS
 
 ```{r, fig.alt = ggplot2::get_alt_text(plot)}
-plot <- monitor_df_regio %>% 
+plot <- monitor_df %>% 
   maak_grafiek_cbs_bevolking()
 
 
@@ -543,7 +484,7 @@ plot
 ### Aangepaste Populatiegrafiek CBS
 
 ```{r, fig.alt = ggplot2::get_alt_text(plot)}
-plot <- monitor_df_regio %>% 
+plot <- monitor_df %>% 
   maak_grafiek_cbs_bevolking(
     niveaus = c("regio","gemeente"),
     crossing_cbs = "geslacht",

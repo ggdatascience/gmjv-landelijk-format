@@ -14,8 +14,11 @@ params:
   path_monitor_data: "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
   path_hulpfuncties: "hulpfuncties.R"
   path_cbs_data: "JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx"
+  default_nvar: 100
+  default_ncel: 10
+  default_kleuren_grafiek: !expr c("#012C17","#76B82A","#007E48")
+  default_kleuren_responstabel: !expr c("header" = "#012C17", "kleur_1" = "#007E48", "kleur_2" = "#76B82A","kleur_tekst" = "#FFFFFF")
   is_pdf: false
-editor: visual
 format-links: false
 ---
 
@@ -38,15 +41,6 @@ options(dplyr.summarise.inform = FALSE)
 source(params$path_hulpfuncties)
 
 #TODO instelbare variabelen overzichtelijk maken
-
-#Standaardwaarden in te stellen door gebruiker:
-# Standaard kleuren
-default_kleuren_grafiek <- c("#012C17","#76B82A","#007E48")
-default_kleuren_responstabel <- c("header" = "#012C17",
-                                  "kleur_1" = "#007E48",
-                                  "kleur_2" = "#76B82A",
-                                  "kleur_tekst" = "#FFFFFF"
-                                  )
 
 # Standaard minima voor groep & cel
 default_Nvar = 100 # Minimum aantal invullers per vraag.

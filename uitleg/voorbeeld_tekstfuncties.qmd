@@ -15,7 +15,10 @@ params:
   path_monitor_data: "../nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
   path_hulpfuncties: "../hulpfuncties.R"
   path_cbs_data: "../JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx"
-editor: visual
+  default_nvar: 100
+  default_ncel: 10
+  default_kleuren_grafiek: !expr c("#012C17","#76B82A","#007E48")
+  default_kleuren_responstabel: !expr c("header" = "#012C17", "kleur_1" = "#007E48", "kleur_2" = "#76B82A","kleur_tekst" = "#FFFFFF")
 format-links: false
 ---
 
@@ -34,20 +37,8 @@ library(survey) # Package om te werken met gewogen gemiddelds incl. betrouwbaarh
 library(glue) #om strings aangenaam aan elkaar te plakken
 
 options(dplyr.summarise.inform = FALSE)
+#hulpfuncties lezen
 source(params$path_hulpfuncties)
-
-#Standaardwaarden in te stellen door gebruiker:
-# Standaard kleuren
-default_kleuren_grafiek <- c("#012C17","#76B82A","#007E48")
-default_kleuren_responstabel <- c("header" = "#012C17",
-                                  "kleur_1" = "#007E48",
-                                  "kleur_2" = "#76B82A",
-                                  "kleur_tekst" = "#FFFFFF"
-                                  )
-
-# Standaard minima voor groep & cel
-default_Nvar = 100 # Minimum aantal invullers per vraag.
-default_Ncel = 10 # Minimum aantal invullers oper antwoordoptie.
 
 #SPSS data inlezen
 #Lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
