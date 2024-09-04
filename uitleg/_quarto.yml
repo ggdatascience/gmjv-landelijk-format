@@ -11,8 +11,7 @@ book:
     - index.qmd
     - beginnen.qmd
     - rapport-uitdraaien.qmd
-    - tekst-aanpassen.qmd
-    - layout.qmd
+    - tekst-en-layout.qmd
     - voorbeeld_grafieken.qmd
     - alt-text.qmd
     - handige-bronnen.qmd
