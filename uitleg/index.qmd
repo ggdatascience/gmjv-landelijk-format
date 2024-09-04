@@ -1,5 +1,6 @@
 # Introductie
 
+
 Op deze paginas wordt uitgelegd hoe je de standaardrapportage voor GMJV 2024 kan uitdraaien en aanpassen. De standaardrapportage is (net als dit boek) gemaakt met Quarto. Met Quarto kunnen opgemaakte tekst en afbeeldingen gecombineerd worden met code. Deze uitleg zal ingaan op de enkele technieken die gebruikt kunnen worden om de rapportage aan te passen. Het is géén uitleg van R, Quarto of HTML en CSS. Daar zijn betere boeken voor (Zie het hoofdstuk [handige bronnen](handige-bronnen.qmd))
 
 Naast het Quarto boek zijn er ook filmpjes met uitleg gemaakt. Die vind je hier [Uitlegvideo's standaardrapportage GMJV](https://youtu.be/o-holF6ntbU?si=CKG8NVE2Uo-zD7eB)
