@@ -9,8 +9,8 @@
 # Deze moeten bij de eerste keer lokaal worden geinstalleerd. 
 # Dat doe je met behulp van de functie: install.packages() 
 # (Verwijder de # aan het begin van onderstaande regel om de code te runnen en de benodigde packages te installeren.)
+# TODO alle alt-texten nakijken. Door recente aanpassingen mogelijk niet meer waterdicht
 # TODO code opschonen; dataverwerking voor grafiek in eigen functies stoppen om complexiteit / lengte van functies te verkleinen.
-
 
 # Hieronder worden de benodige packages geladen
 library(gt)
@@ -161,8 +161,8 @@ prop_ci_berekenen <- function(data = NULL, variabele = NULL, nummer = NULL, cros
 #Maakt een kruistabel
 #Deze functie wordt niet direct gebruikt in het script, maar wordt binnen de maak-grafieken functies gebruikt
 bereken_kruistabel <- function(data, survey_design = NULL, variabele = NULL, crossing = NULL,
-                               var_jaar = NULL, min_observaties_per_vraag = default_Nvar,
-                               min_observaties_per_antwoord = default_Ncel) { 
+                               var_jaar = NULL, min_observaties_per_vraag = params$default_nvar,
+                               min_observaties_per_antwoord = params$default_ncel) { 
 
   #survey pikt het niet als delen v formules niet in .globalEnv staan. Daarom <<- en later
   #opruimen.
@@ -453,13 +453,20 @@ labelled_naar_character <- function(data,var){
 
 kruistabel_met_subset <- function(data, variabele = NULL, crossing = NULL, subsetvar,
                                   survey_design = NULL,
-                                  nvar = default_Nvar,
-                                  ncel = default_Ncel){
+                                  nvar = params$default_nvar,
+                                  ncel = params$default_ncel){
 
   #alle lvls van subsetvar
   alle_subsets <- unique(data[[subsetvar]])
 
   meerdere_kruistabellen <- lapply(alle_subsets, function(lvl_subset){
+    
+    label_val = val_label(data[[subsetvar]], lvl_subset)
+    
+    #Als label_val NULL is gaat het om een missing. Overslaan.
+    if(is.null(label_val)){
+      return(NULL)
+    }
     
     #subset maken v design
     subset_design <<- subset(survey_design, get(subsetvar) == lvl_subset)
@@ -471,7 +478,7 @@ kruistabel_met_subset <- function(data, variabele = NULL, crossing = NULL, subse
                        min_observaties_per_vraag = nvar,
                        min_observaties_per_antwoord = ncel
                        ) %>%
-      mutate(!!sym(subsetvar) := factor(lvl_subset))
+      mutate(!!sym(subsetvar) := label_val)
     
   }) %>% do.call(rbind,.)
   
@@ -517,18 +524,20 @@ maak_alt_text <- function(plot, doelgroep = "jongvolwassenen", type_grafiek = "s
   
 }
 
-cbs_populatie_opschonen <- function(file = "JongVolwassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx",
+cbs_populatie_opschonen <- function(file = params$path_cbs_data,
                                     sheet = NULL){
   
   #niet als dataframe aangeleverd. ontbrekende kolomkoppen. meerdere rijen boven dataset.
-  if (file %in% dir()) { # Als file bestaat, inladen
+  if (file.exists(file)) { # Als file bestaat, inladen
     
     cbs_df <- openxlsx::read.xlsx(paste(file),
                                   sheet = sheet)[-c(1:4),] #1e 4 rijen verwijderen
       
   } else { # Als file niet bestaat, error
     
-    stop(paste("Bestand", file, "is niet aanwezig in working directory. Voeg bestand toe of wijzig working directory."))                              
+    stop(glue("Bestand: {file} is niet aanwezig in working directory op locatie
+               '{params$path_cbs_data}' voeg bestand toe of pas het bestandspad in
+              de parameter 'path_cbs_data' aan "))                              
   
     }
 
@@ -566,12 +575,45 @@ cbs_populatie_opschonen <- function(file = "JongVolwassenenNaarGeslachtEnLeeftij
 
 # Tabelfuncties -------------------------------------------------------
 maak_responstabel <- function(data, crossings, missing_label = "Onbekend",
-                              kleuren = default_kleuren_responstabel){
+                              kleuren = params$default_kleuren_responstabel,
+                              huidig_jaar = 2024,
+                              jaarvar = "AGOJB401",
+                              niveaus = "regio"
+                              
+                              ){
 
   #TODO Hoe om te gaan met missing waarden? Meetellen als 'onbekend' of niet weergeven?
   #In laatste geval kloppen de totalen van crossings onderling niet. Kan prima zijn
-  #Voorlopige keuze: Missings weergeven als "onebekend"
+  #Voorlopige keuze: Missings weergeven als "onbekend"
 
+  #filteren op jaar; of jaar als crossing
+  if(jaarvar %in% crossings){
+    #niks doen
+  } else{
+    data <- data %>% filter(!!sym(jaarvar) == huidig_jaar)
+  }
+  
+  #filteren op niveau 
+  #mag max 1 niveau invoeren
+  if(length(niveaus) > 1 ){
+    stop(glue(
+    "Kies maximaal 1 niveau.
+    niveaus: {paste(niveaus,collapse = ',')}
+    "))
+  } else{
+    if(niveaus == "regio"){
+      data <- data %>% filter(GGDregio == params$regiocode)
+    } else if (niveaus == "gemeente") {
+      data <- data %>% filter(Gemeentecode == params$gemeentecode)
+    } else if (niveaus == "nl"){
+      #niks doen
+    } else{
+     stop(glue("
+     foute waarde bij niveaus ingevoerd. Kies 'nl', 'regio' of 'gemeente'
+          niveaus: {niveaus}"))
+    }
+    #filteren op niveau
+  }
   
   aantallen_per_crossing <- lapply(crossings, function(x){
     
@@ -690,8 +732,8 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
                                                    var_crossing_groep = NULL,
                                                    var_crossing_kleur = NULL,
                                                    titel = "",
-                                                   kleuren = default_kleuren_grafiek,
-                                                   nvar = default_Nvar, ncel = default_Ncel,
+                                                   kleuren = params$default_kleuren_grafiek,
+                                                   nvar = params$default_nvar, ncel = params$default_ncel,
                                                    alt_text = NULL,
                                                    huidig_jaar = 2024,
                                                    jaarvar = "AGOJB401",
@@ -715,13 +757,16 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
   #Als beide crossing typpen zijn ingevuld mag er maar 1 niveau zijn en wordt op dat niveau gefilterd.
   #anders error
   
-  #TODO LEESBAAR MAKEN
 
-  if(! #Als 1 van onderstaande niet waar is dan mag het niet
+
+  if(
+    !( #Als 1 van onderstaande niet waar is dan mag het niet
+     
     #1 van de twee crossings ontbreekt en er zijn meer niveaus DAT MAG
     (xor(is.null(var_crossing_groep), is.null(var_crossing_kleur)) & length(niveaus) > 1) | #OF
     #Beide crossings zijn ingevuld en er is 1 niveau DAT MAG OOK
     ((!is.null(var_crossing_groep) & !is.null(var_crossing_kleur)) & length(niveaus) == 1)
+    )
   ){
     
     invoer_kleur = ifelse(is.null(var_crossing_groep),"Leeg",var_crossing_groep)
@@ -900,8 +945,8 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
 
 
 maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, titel = "",
-                                           kleuren = default_kleuren_grafiek,
-                                           nvar = default_Nvar, ncel = default_Ncel,
+                                           kleuren = params$default_kleuren_grafiek,
+                                           nvar = params$default_nvar, ncel = params$default_ncel,
                                            alt_text = NULL,
                                            huidig_jaar = 2024,
                                            jaarvar = "AGOJB401",
@@ -1062,8 +1107,8 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
 
 maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = NULL, 
                                               titel = "",
-                                              kleuren = default_kleuren_grafiek,
-                                              flip = FALSE, nvar = default_Nvar, ncel = default_Ncel,
+                                              kleuren = params$default_kleuren_grafiek,
+                                              flip = FALSE, nvar = params$default_nvar, ncel = params$default_ncel,
                                               alt_text = NULL,
                                               huidig_jaar = 2024,
                                               jaarvar = "AGOJB401",
@@ -1329,9 +1374,10 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
 
 #TODO Overal chekc inbouwen of een var wel een lbl+dbl is. Of niet afh. van maak_kruistabel() output.
 maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_crossings, titel = "",
-                                                        kleuren = default_kleuren_grafiek,
+                                                        kleuren = params$default_kleuren_grafiek,
                                                         kleuren_per_crossing = F, fade_kleuren = F,
-                                                        flip = FALSE, nvar = default_Nvar, ncel = default_Ncel,
+                                                        flip = FALSE, nvar = params$default_nvar,
+                                                        ncel = params$default_ncel,
                                                         alt_text = NULL,
                                                         huidig_jaar = 2024,
                                                         jaarvar = "AGOJB401",
@@ -1542,8 +1588,8 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
 
 #horizontaal gestapeld staafdiagram
 maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, titel = "",
-                                        kleuren = default_kleuren_grafiek, x_label = "",
-                                        nvar = default_Nvar, ncel = default_Ncel,
+                                        kleuren = params$default_kleuren_grafiek, x_label = "",
+                                        nvar = params$default_nvar, ncel = params$default_ncel,
                                         alt_text = NULL,
                                         huidig_jaar = 2024,
                                         jaarvar = "AGOJB401",
@@ -1709,8 +1755,8 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
 
 #TODO titel tekst kan wegvallen bij Cirkeldiagram
 
-maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = default_kleuren_grafiek,
-                               nvar = default_Nvar, ncel = default_Ncel, alt_text = NULL,
+maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = params$default_kleuren_grafiek,
+                               nvar = params$default_nvar, ncel = params$default_ncel, alt_text = NULL,
                                niveaus = "regio", huidig_jaar = 2024, jaarvar = "AGOJB401") {
   
   if(!labelled::is.labelled(data[[var_inhoud]])){
@@ -1839,9 +1885,9 @@ maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = default_
 }
 
 bol_met_cijfer <- function(getal, omschrijving = NA, omschrijving2 = NA, niveau = NA,
-                           kleur = default_kleuren_grafiek[3], kleur_outline = "#FFFFFF", 
+                           kleur = params$default_kleuren_grafiek[3], kleur_outline = "#FFFFFF", 
                            kleur_getal = "#FFFFFF", kleur_omschrijving = "#000000"){
-  
+
   alt_tekst <- getal
   
   # Maak een stukje svg code aan waarin de ingevoerde tekst is opgenomen en een variabele voor het aanvullen van de alternatieve tekst
@@ -1931,7 +1977,7 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
                                        niveaus = c("nl","regio","gemeente"),
                                        missing_label = "Onbekend",
                                        missing_bewaren = TRUE,
-                                       kleuren = default_kleuren_grafiek,
+                                       kleuren = params$default_kleuren_grafiek,
                                        titel = "",
                                        x_label = "",
                                        alt_text = NULL

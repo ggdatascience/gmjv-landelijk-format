@@ -14,11 +14,11 @@ maakt het makkelijker voor eindgebruikers?
 
 */
 
-/*experiment met page-breaks/ pagedown & custom toc functie*/
+/*experiment met page-breaks/ pagedown & custom toc functie
 .page-break { 
     page-break-before: always; 
 }
-
+*/
 
 .voorblad_achtergrond,
 .pagina_header_img{
