@@ -2220,6 +2220,15 @@ maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL,
   #temp design verwijderen uit globalEnv.
   rm(design_temp, data_x, envir = .GlobalEnv)
   
+  # Check NAs in result$percentage. Stop als deze er zijn.
+  if (any(is.na(result$percentage))) {
+    
+    warning("Indicator heeft geen waarde voor een of meerdere crossings. Daarom kan niet vergeleken worden.")
+    
+    return(paste("NIKS TONEN IVM NAs")) # TODO dit nog aanpassen, hoe willen we dit tonen?
+    
+  }
+    
   # Check lengte van kruistabel
   if (nrow(result) < 2 | nrow(result) > 3) {
     
@@ -2262,20 +2271,49 @@ maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL,
     label <- variabele_label
   }
   
-  if (var_crossing == "niveau") { # Vergelijk 2 niveaust
-    
-    crossings <- case_when(niveaus == "gemeente" ~ "in de gemeente",
-                           niveaus == "regio" ~ "regionaal",
-                           niveaus == "nl" ~ "landelijk",
-                           .default = "")
-    
-    resultaat_vergelijking <- case_when(result$ci_lower[1] > result$ci_upper[2] ~ " hoger dan ",
-                                        result$ci_lower[2] > result$ci_upper[1] ~ " lager dan ",
-                                        TRUE ~ " gelijk aan ")
-    
-    return(paste0("Het percentage dat ", label, " is ", crossings[1], resultaat_vergelijking, 
-                  crossings[2], "."))
-    
+  if (var_crossing == "niveau") { 
+
+    if (length(niveaus) == 2) {
+      # Vergelijk 2 niveaus      
+      
+      crossings <- case_when(niveaus == "gemeente" ~ "in de gemeente",
+                             niveaus == "regio" ~ "regionaal",
+                             niveaus == "nl" ~ "landelijk",
+                             .default = "")
+      
+      resultaat_vergelijking <- case_when(result$ci_lower[1] > result$ci_upper[2] ~ " hoger dan ",
+                                          result$ci_lower[2] > result$ci_upper[1] ~ " lager dan ",
+                                          TRUE ~ " gelijk aan ")
+      
+      return(paste0("Het percentage dat ", label, " is ", crossings[1], resultaat_vergelijking, 
+                    crossings[2], "."))
+      
+    } else if (length(niveaus) == 3) {
+      # Vergelijk 3 niveaus
+      
+      crossings <- case_when(niveaus == "gemeente" ~ "de gemeente",
+                             niveaus == "regio" ~ "regionaal",
+                             niveaus == "nl" ~ "landelijk",
+                             .default = "")
+      
+      resultaat_vergelijking1 <- case_when(result$ci_lower[1] > result$ci_upper[2] ~ " hoger dan ",
+                                           result$ci_lower[2] > result$ci_upper[1] ~ " lager dan ",
+                                           TRUE ~ " gelijk aan ")
+      
+      resultaat_vergelijking2 <- case_when(result$ci_lower[1] > result$ci_upper[3] ~ " hoger dan ",
+                                           result$ci_lower[3] > result$ci_upper[1] ~ " lager dan ",
+                                           TRUE ~ " gelijk aan ")
+      
+      return(paste0("Het percentage dat ", label, " is ", crossings[2], resultaat_vergelijking1, 
+                    "en ", crossings[3], resultaat_vergelijking2, 
+                    crossings[1], "."))
+      
+    } else {
+      
+      stop("Er zijn meer dan 3 niveaus opgegeven. Dit kan niet. Vul minder niveaus in. ")
+      
+    }
+
   } else if (var_crossing == 'AGOJB401') { # Vergelijking 2 jaren
     
     resultaat_vergelijking <- case_when(result$ci_lower[1] > result$ci_upper[2] ~ " afgenomen ",
@@ -2288,7 +2326,7 @@ maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL,
     } else {
       return(paste0("Het percentage dat " , label, " is ", label_niveau, resultaat_vergelijking, 
                   "t.o.v. ", crossings[1], " (", result$percentage[1], "%)."))
-    }
+    } 
   } else if (nrow(result) == 2 ) { # Vergelijk 2 groepen:
 
     resultaat_vergelijking <- case_when(result$ci_lower[1] > result$ci_upper[2] ~ " hoger dan ",
@@ -2384,23 +2422,29 @@ maak_top <- function(data, var_inhoud, toon_label = T, value = 1, niveau = "regi
   list <- list %>%
     filter(waarde == value) %>% # Filter de gegevens voor value eruit. Standaard is dit 1.
     arrange(desc(percentage)) # Sorteer op hoogte van estimate (percentage)
-  
+
   # Print top
   if (toon_label) { # Wanneer label getoond moet worden
     
     if (length(var_inhoud) > 1) { # Bij meerdere indicatoren als input
       
-      return(paste0(tolower(var_label(data[list$varcode[top]])), " (", list$percentage[top], "%)"))
+      return(paste0(tolower(var_label(data[list$varcode[top]])), 
+                    " (", 
+                    ifelse(is.na(list$percentage[top]), "-", list$percentage[top]),
+                    "%)"))
     
     } else { # Bij één indicator als input
       
-      return(paste0(tolower(labelled_naar_character(list, var_inhoud))[top], " (", list$percentage[top], "%)")) 
+      return(paste0(tolower(labelled_naar_character(list, var_inhoud))[top], 
+                    " (", 
+                    ifelse(is.na(list$percentage[top]), "-", list$percentage[top]),
+                    "%)")) 
       
     }
        
   } else { # Wanneer geen label getoond moet worden
 
-    return(paste0(list$percentage[top], "%")) 
+    return(paste0(ifelse(is.na(list$percentage[top]), "-", list$percentage[top]), "%")) 
     
   }
 }
@@ -2459,7 +2503,7 @@ maak_percentage <- function(data, var_inhoud, value = 1, niveau = "regio",
   rm(design_temp, envir = .GlobalEnv)
   
   # Output van functie maken
-  return(paste0(result$percentage, "%"))
+  return(paste0(ifelse(is.na(result$percentage), "-", result$percentage), "%"))
   
 }
 

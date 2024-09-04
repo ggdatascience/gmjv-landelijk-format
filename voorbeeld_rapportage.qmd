@@ -193,13 +193,13 @@ De cijfers die hier worden gepresenteerd zijn gestandaardiseerd naar GGD-regio, 
 
 # Achtergrondkenmerken
 
-::: {layout="[[100]]"}
+::: {layout="[100]"}
 ::: column
 Van de respondenten in uw gemeente is `r monitor_df %>% maak_percentage(var_inhoud = 'AGGSA401', value = 2, niveau = "gemeente")` vrouw en `r monitor_df %>% maak_percentage(var_inhoud = 'AGGSA401', value = 1, niveau = "gemeente")` man. Daarnaast geeft `r monitor_df %>% maak_percentage(var_inhoud = 'AGGSA401', value = 3, niveau = "gemeente")` aan zich anders dan man of vrouw te voelen.
 :::
 :::
 
-::: {layout="[[50,50]]"}
+::: {layout="[50,50]"}
 ::: column
 ```{r Achtergrondkenmerken 2, echo = F}
 # Cirkeldiagram gender deelnemers regio
@@ -233,7 +233,7 @@ plot
 :::
 :::
 
-::: {layout="[[100]]"}
+::: {layout="[100]"}
 ::: column
 Van de respondenten in uw gemeente is `r monitor_df %>% maak_percentage(var_inhoud = 'AGLFA401', value = 1, niveau = "gemeente")` 16 of 17 jaar, `r monitor_df %>% maak_percentage(var_inhoud = 'AGLFA401', value = 2, niveau = "gemeente")` tussen de 18 en 20 jaar en `r monitor_df %>% maak_percentage(var_inhoud = 'AGLFA401', value = 3, niveau = "gemeente")` tussen de 21 en 25 jaar.
 
@@ -241,7 +241,7 @@ Van de respondenten in uw gemeente is `r monitor_df %>% maak_percentage(var_inho
 :::
 :::
 
-::: {layout="[[50,50]]"}
+::: {layout="[50,50]"}
 ::: column
 ```{r Achtergrondkenmerken 1, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
 plot = monitor_df %>% maak_grafiek_cbs_bevolking(
@@ -269,7 +269,7 @@ plot
 
 # Woon- en werksituatie en financiën
 
-::: {layout="[[30,30,30],[30,30,30]]"}
+::: {layout="[100]"}
 ::: column
 De woon-, werk- en financiële situatie kan veel invloed hebben op het welzijn en de mentale en fysieke gezondheid van jongvolwassenen. In een tijd waarin er sprake is van een woningcrisis en een onzekere financiële situatie is het van belang om deze aspecten goed te monitoren.
 
@@ -277,42 +277,13 @@ De woon-, werk- en financiële situatie kan veel invloed hebben op het welzijn e
 
 **Woonsituatie**
 
-De meeste jongvolwassenen in uw gemeente wonen `r monitor_df %>% maak_top(var_inhoud = 'AGHHA403', value = 1:8, top = 1)`. `r monitor_df %>% maak_vergelijking(var_inhoud = 'AGHHA403', value = 8, variabele_label = 'in deze woonsituatie woont', var_crossing = 'AGOJB401')`
+De meeste jongvolwassenen in uw gemeente wonen `r monitor_df %>% maak_top(var_inhoud = 'AGHHA403', value = 1:8, top = 1, niveau = "gemeente")`. `r monitor_df %>% maak_vergelijking(var_inhoud = 'AGHHA401', variabele_label = 'bij ouders/verzorgers woont', var_crossing = 'AGOJB401', niveau = "regio")`
+:::
 :::
 
+::: {layout="[50,50]"}
 ::: column
-**Werk- en financiële situatie**
-
-De meeste werkende jongvolwassenen in uw gemeente werken `r #monitor_df %>% maak_top(var_inhoud = 'AGWSA413', value = 1:5, top = 1)`. `r #monitor_df %>% maak_vergelijking(var_inhoud = 'AGWSA413', variabele_label = 'zoveel uren werkt', var_crossing = 'AGOJB401')`
-
-<br>
-
-`r #monitor_df %>% maak_vergelijking(var_inhoud = '', var_crossing = 'AGOJB401')` `r #monitor_df %>% maak_vergelijking(var_inhoud = 'AGWSA412', var_crossing = 'AGOJB401')`
-:::
-
-::: column
-```{r Woonsituatie 1, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
-plot = monitor_df %>%
-  maak_staafdiagram_vergelijking(
-    var_inhoud = "AGOWA401",
-    var_crossings = "AGLFA401",
-     titel = "Volgt een opleiding")
-plot
-
-```
-
-```{r Woonsituatie 2, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
-plot = monitor_df %>%
-  maak_staafdiagram_vergelijking(
-    var_inhoud = "AGWSA401",
-    var_crossings = "AGLFA401",
-     titel = "Heeft betaald werk")
-plot
-```
-:::
-
-::: column
-```{r Woonsituatie 3, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Woonsituatie, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
 plot = monitor_df %>% 
    maak_staafdiagram_meerdere_staven(
      var_inhoud = "AGHHA403",
@@ -325,7 +296,51 @@ plot = monitor_df %>%
 :::
 
 ::: column
-```{r Woonsituatie 4, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+2e grafiek invoegen?
+:::
+:::
+
+::: {layout="[100]"}
+::: column
+**Werk- en financiële situatie**
+
+De meeste werkende jongvolwassenen in uw gemeente werken `r #monitor_df %>% maak_top(var_inhoud = 'AGWSA413', value = 1:5, top = 1)`. `r #monitor_df %>% maak_vergelijking(var_inhoud = 'AGWSA413', variabele_label = 'zoveel uren werkt', var_crossing = 'AGOJB401')`
+
+<br>
+
+`r #monitor_df %>% maak_vergelijking(var_inhoud = '', var_crossing = 'AGOJB401')` `r #monitor_df %>% maak_vergelijking(var_inhoud = 'AGWSA412', var_crossing = 'AGOJB401')`
+
+<br>
+[Het Nibud](https://www.nibud.nl/) (Nationaal Instituut voor Budgetvoorlichting) geeft advies over onder andere rondkomen, sparen en geldproblemen.
+:::
+:::
+
+::: {layout="[50,50]"}
+```{r Woonsituatie 2, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+plot = monitor_df %>%
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "AGWSA401",
+    var_crossings = "AGLFA401",
+     titel = "Heeft betaald werk")
+plot
+```
+:::
+
+::: column
+```{r Werksituatie 1, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+plot = monitor_df %>%
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "AGOWA401",
+    var_crossings = "AGLFA401",
+     titel = "Volgt een opleiding")
+plot
+
+```
+:::
+:::
+
+::: column
+```{r Werksituatie 4, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
 
 # plot = monitor_df %>% 
 #   maak_staafdiagram_meerdere_staven(
@@ -345,11 +360,6 @@ plot = monitor_df %>%
 # plot
 
 ```
-:::
-
-::: column
-[Het Nibud](https://www.nibud.nl/) (Nationaal Instituut voor Budgetvoorlichting) geeft advies over onder andere rondkomen, sparen en geldproblemen.
-:::
 :::
 
 # Gezondheid en geluk
