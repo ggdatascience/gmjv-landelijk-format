@@ -1867,8 +1867,13 @@ bol_met_cijfer <- function(getal, omschrijving = NA, omschrijving2 = NA, niveau 
     }
   }
   
-  if (is.na(omschrijving) & is.na(omschrijving)) {
-    # Als geen omschrijvingen getoond worden, maak dan de afbeelding kleiner.
+  if (is.na(omschrijving) & is.na(omschrijving) & is.na(niveau)) {
+    # Als geen omschrijvingen en niveau getoond worden, maak dan de afbeelding kleiner.
+    
+    viewbox = "0 0 50 50"
+    
+  } else if (is.na(omschrijving) & is.na(omschrijving)) {
+    # Als alleen niveau getoond worrdt, maak afbeelding ook kleiner
     
     viewbox = "0 0 50 75"
     

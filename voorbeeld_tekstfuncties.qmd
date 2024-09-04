@@ -6,19 +6,14 @@ format:
     page-layout: full
     css: custom.css
     toc: TRUE
-    toc-location: left
     embed-resources: true
-  pdf: 
-    classoption: landscape
-    toc: TRUE
-    tol: TRUE
 params:
-  gemeentecode: 1 
+  gemeentecode: 2
+  regiocode: 23
+  regionaam: 'GGD Limburg-Noord'
+  is_pdf: false
 editor: visual
 format-links: false
-crossref:
-  fig-title: Tekstfuncties
-  fig-prefix: Tekstfuncties
 ---
 
 ```{r Instellingen, echo=F, message=F, warning=F}
@@ -34,9 +29,12 @@ library(stringr) # Voor str_replace
 library(labelled) # Package om te werken met datalabels, o.a. voor to_character()
 library(survey) # Package om te werken met gewogen gemiddelds incl. betrouwbaarheidsintervallen
 library(glue) #om strings aangenaam aan elkaar te plakken
+library(plotly)
 
 options(dplyr.summarise.inform = FALSE)
 source("hulpfuncties.R")
+
+#TODO instelbare variabelen overzichtelijk maken
 
 #Standaardwaarden in te stellen door gebruiker:
 # Standaard kleuren
@@ -51,39 +49,50 @@ default_kleuren_responstabel <- c("header" = "#012C17",
 default_Nvar = 100 # Minimum aantal invullers per vraag.
 default_Ncel = 10 # Minimum aantal invullers oper antwoordoptie.
 
-# Standaard regio
-# Pas onderstaande naam en code aan naar de naam en code van je eigen regio.
-regionaam <- 'GGD Limburg-Noord'
-regiocode <- 23
 
 #SPSS data inlezen
 # Regionaal bestand
-file_path_regio = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
+#file_path_regio = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
 
 # Landelijk bestand
-#file_path_land = "Totaalbestand_CGMJV2022_2024_GGD_versie 1 (N = xxx).sav"
+file_path = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
 
 #Lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
-monitor_df = haven::read_spss(file_path_regio, user_na =T) %>%
+monitor_df = haven::read_spss(file_path, user_na =T) %>%
   labelled::user_na_to_na()
 
 #TODO verwijderen bij echte data. tijdelijk varlabel voor jaarvariabele
 var_label(monitor_df$AGOJB401) <- "Jaar"
-#monitor_df_land = haven::read_spss(file_path_land,user_na =T) %>%
-#  labelled::user_na_to_na()
 
 #Maak survey designs
-# Regionaal 2022 en 2024
-design_regio <- survey_design_maken(
-                          strata = 'Stratum', 
-                          gewichten = 'Standaardisatiefactor', 
-                          data = monitor_df)
 
+#TODO bij echte data standaardisatiefactor en stratum aanpassen per niveau
+
+# Het landelijk en regionaal design hebben dezelfde weegfactoren. Daarom maken we een landelijk design obv landelijke dataset en een regionaal design obv een subset van het landelijk design.
 # Landelijk 2022 en 2024
-#design_land <- survey_design_maken(
-#                          strata = 'Stratum', 
-#                          gewichten = 'Standaardisatiefactor', 
-#                          data = monitor_df_land)
+design_land <- survey_design_maken(
+                         strata = 'Stratum',
+                         gewichten = 'Standaardisatiefactor',
+                         data = monitor_df)
+
+
+#design regio is een subset van design land met ggdregio overgehouden.
+# Regionaal 2022 en 2024
+design_regio <- subset(design_land, GGDregio == params$regiocode)
+
+
+#Het gemeentelijk design heeft andere weegfactoren. De gehele dataset waar het gem. design over geld is de GGDregio. Daarom maken we eerst een regionaal design o.b.v. de hele ggdregio en subsetten we daarna het gemeentedesign.
+design_gem_regio <- survey_design_maken(
+                          strata = 'Stratum', #hier komen andere parameters
+                          gewichten = 'Standaardisatiefactor',  #hier ook
+                          data = monitor_df %>% 
+
+                            filter(GGDregio == params$regiocode))
+
+# Gemeentelijk 2022 en 2024
+design_gem <- subset(design_gem_regio, Gemeentecode == params$gemeentecode)
+
+rm(design_gem_regio) #temp regiodesign voor gemdesign verwijderen niet meer nodig
 
 #Er is niet goed aangegeven wat missing is in SPSS.
 #tijdelijke functie om 9 Onbekend te verwijderen & naar NA te zetten
@@ -93,18 +102,6 @@ for(var in names(monitor_df)){
   monitor_df <- monitor_df %>% verwijder_9_onbekend(var)
 
 }
-
-#TODO Tijdelijke filter op alleen gemeente in parameter
-monitor_df_regio <- monitor_df
-monitor_df <- monitor_df %>%
-  filter(Gemeentecode == params$gemeentecode)
-
-#Maak survey design gemeente
-# Gemeente 2022 en 2024
-design_gem <- survey_design_maken(
-                          strata = 'Stratum', 
-                          gewichten = 'Standaardisatiefactor', 
-                          data = monitor_df)
 
 # ALTERNATIEVE METHODE VAN INLADEN: regionale data invoegen in landelijk
 # Landelijk bestand inladen
@@ -121,6 +118,8 @@ design_gem <- survey_design_maken(
 #   print("Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data.")
 # }
 # 
+#
+# TODO zorgen dat hier ook nog op jaar gefilterd wordt!
 # # Filter regio uit landelijk databestand
 # df <- df %>%
 #   filter(GGDregio != regiocode)
@@ -143,13 +142,14 @@ design_gem <- survey_design_maken(
 # 
 # # Regionale data filteren
 # df %>%
-#   filter(GGDregio == regiocode)
+#   filter(GGDregio == params$regiocode)
 # 
 # # Gemeentelijke data filteren
 # df %>%
 #   filter(Gemeentecode == params$gemeentecode)
 
 ```
+
 
 # Algemeen
 
@@ -185,22 +185,29 @@ De functie **maak_percentage()** berekent een percentage van een indicator. De f
 
 ### Nodige argumenten:
 
--   **survey_design:**\
-    Een survey_design, berekent met svydesign. Dit is noodzakelijk om percentages en confidence intervallen te kunnen berekenen.
--   **variabele:**\
+-   **var_inhoud:**\
     Een character vector met de naam van de indicator waarvan je het percentage wil berekenen.
 
 ### Optionele argumenten:
 
--   **value:\
-    **Een getal dat aangeeft welk value van de de variabele vergeleken wordt. Default is 1.
+-   **value:**\
+    Een getal dat aangeeft welk value van de de variabele vergeleken wordt. Default is 1.
+    
+-   **niveau:**\
+    Het gebiedsniveau waarop je het percentage wil berekenen. Kan "regio", "gemeente" of "nl" zijn. Default is "regio".
+    
+-   **huidig_jaar:**\
+    Het jaar waarover je het percentage wil berekenen. Default is 2024.
 
+-   **var_jaar:**\
+    De indicator die aangeeft uit welk jaar de deelnemer is. Default is "AGOJB401".
+    
 ### Standaard percentage
 
 ```{r Maak percentage 1, warning = F}
 # Standaard percentage:
 monitor_df %>%
-  maak_percentage(survey_design = design_gem, variabele = 'GZGGA402')
+  maak_percentage(var_inhoud = 'GZGGA402')
 ```
 
 ### Bereken standaard percentage en toon in bol grafiek
@@ -208,7 +215,7 @@ monitor_df %>%
 ```{r Maak percentage 2, warning = F}
 # Percentage in bol grafiek
 monitor_df %>%
-  maak_percentage(survey_design = design_gem, variabele = 'LVPKS403') %>% # bereken percentage
+  maak_percentage(var_inhoud = 'LVPKS403') %>% # bereken percentage
   bol_met_cijfer() # toon in bol grafiek
 ```
 
@@ -218,20 +225,28 @@ De functie **maak_vergelijking()** maakt een vergelijking tussen de categorieën
 
 ### Nodige argumenten:
 
--   **survey_design:**\
-    Een survey_design, berekent met svydesign. Dit is noodzakelijk om percentages en confidence intervallen te kunnen berekenen.
--   **variabele:**\
+-   **var_inhoud:**\
     Een character vector met de naam van de indicator waarvan je de percentages wil vergelijken.
--   **vergelijking:**\
-    Een character vector met de naam van de indicator waarover je wil uitsplitsen. De indicator moet minimaal 2 categorieën en maximaal 3 categorieën bevatten.
+    
+-   **var_crossing:**\
+    Een character vector met de naam van de indicator waarover je wil uitsplitsen. De indicator moet minimaal 2 categorieën en maximaal 3 categorieën bevatten. var_crossing kan leeg gelaten worden indien je meerdere niveaus aangeeft. Dan zal niveau gebruikt worden als crossing.
 
 ### Optionele argumenten:
 
 -   **variabele_label:**\
     Een character variabele met een alternatief label voor de variabele. Default is NULL (automatisch label o.b.v. label van variabele in data).
 
--   **value:\
-    **Een getal dat aangeeft welk value van de de variabele vergeleken wordt. Default is 1.
+-   **value**:\
+    Een getal dat aangeeft welk value van de de variabele vergeleken wordt. Default is 1.
+
+-   **niveau:**\
+    Het gebiedsniveau waarop je het percentage wil berekenen. Kan "regio", "gemeente" of "nl" zijn. Default is "regio". Je kan ook meerdere niveaus invoeren, dan wordt niveau gebruikt als crossing. In dit geval moet je var_crossing leeg laten.
+    
+-   **huidig_jaar:**\
+    Het jaar waarover je het percentage wil berekenen. Default is 2024.
+
+-   **var_jaar:**\
+    De indicator die aangeeft uit welk jaar de deelnemer is. Default is "AGOJB401".
 
 ### Standaard vergelijking tussen mannen en vrouwen
 
@@ -240,10 +255,9 @@ De functie **maak_vergelijking()** maakt een vergelijking tussen de categorieën
 # Bij gebruik van andere indicatoren worden de labels uit de data gebruikt
 
 # Standaard vergelijking tussen mannen en vrouwen:
-monitor_df %>% maak_vergelijking(survey_design = design_gem, 
-                                 variabele = 'GZGGA402', 
+monitor_df %>% maak_vergelijking(var_inhoud = 'GZGGA402', 
                                  variabele_label = "hun eigen gezondheid als (zeer) goed ervaart",
-                                 vergelijking = 'AGGSA401')
+                                 var_crossing = 'AGGSA401')
 ```
 
 ### Vergelijking tussen 3 groepen
@@ -252,10 +266,9 @@ monitor_df %>% maak_vergelijking(survey_design = design_gem,
 # Bij gebruik van andere indicatoren dan gender en leeftijdscategorieën worden de labels uit de data gebruikt.
 
 # Vergelijking tussen migratieachtergrond in 3 categorieën:
-monitor_df %>% maak_vergelijking(survey_design = design_gem, 
-                                 variabele = 'GZGGA402', 
+monitor_df %>% maak_vergelijking(var_inhoud = 'GZGGA402', 
                                  variabele_label = "hun eigen gezondheid als (zeer) goed ervaart",
-                                 vergelijking = 'AGETS414')
+                                 var_crossing = 'AGETS414')
 
 ```
 
@@ -265,27 +278,34 @@ De functie **maak_top()** sorteert indicatoren van hoogst naar laagst percentage
 
 ### Nodige argumenten:
 
--   **survey_design:**\
-    Een survey_design, berekent met svydesign. Dit is noodzakelijk om percentages en confidence intervallen te kunnen berekenen.
--   **variabelen:**\
+-   **var_inhoud:**\
     Een character vector met de na(a)m(en) van de indicator(en) waarvan je de percentages van hoog naar laag wil sorteren.
--   **top:**\
-    Een getal dat aangeeft welke percentages van de top je als output wil. Dit kan een getal zijn (bv. 3, dan is de output het op 2-na-hoogste percentage) of een reeks van getallen (bv. 1:5, dan is de output de top 5 van hoogste percentages). Default is 1.
 
 ### Optionele argumenten:
+
+-   **top:**\
+    Een getal dat aangeeft welke percentages van de top je als output wil. Dit kan een getal zijn (bv. 3, dan is de output het op 2-na-hoogste percentage) of een reeks van getallen (bv. 1:5, dan is de output de top 5 van hoogste percentages). Default is 1.
 
 -   **toon_label:**\
     Boolean (TRUE of FALSE) die aangeeft of het label van het percentage bij de output gegeven moet worden. TRUE geeft aan dat het label bij de output komt. Default is TRUE.
 
--   **value:\
-    **Een getal dat aangeeft welk value van de de variabele vergeleken wordt. Default is 1.
+-   **value:**\
+    Een getal dat aangeeft welk value van de de variabele vergeleken wordt. Default is 1.
+    
+-   **niveau:**\
+    Het gebiedsniveau waarop je het percentage wil berekenen. Kan "regio", "gemeente" of "nl" zijn. Default is "regio". Je kan ook meerdere niveaus invoeren, dan wordt niveau gebruikt als crossing. In dit geval moet je var_crossing leeg laten.
+    
+-   **huidig_jaar:**\
+    Het jaar waarover je het percentage wil berekenen. Default is 2024.
+
+-   **var_jaar:**\
+    De indicator die aangeeft uit welk jaar de deelnemer is. Default is "AGOJB401".
 
 ### Bereken hoogste percentage
 
 ```{r Maak top 1, warning = F}
 # Top 1 zonder label
-monitor_df %>% maak_top(survey_design = design_gem, 
-                        variabelen = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"),
+monitor_df %>% maak_top(var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"),
                         toon_label = FALSE, # Wijzig FALSE naar TRUE om label te tonen.
                         top = 1)
 ```
@@ -294,8 +314,7 @@ monitor_df %>% maak_top(survey_design = design_gem,
 
 ```{r Maak top 2, warning = F}
 # Top 3
-monitor_df %>% maak_top(survey_design = design_gem, 
-                        variabelen = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"),
+monitor_df %>% maak_top(var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"),
                         top = 1:3)
 ```
 
@@ -303,8 +322,7 @@ monitor_df %>% maak_top(survey_design = design_gem,
 
 ```{r Maak top 3, warning = F}
 # Top 3 
-monitor_df %>% maak_top(survey_design = design_gem, 
-                        variabelen = 'AGLFA401',
+monitor_df %>% maak_top(var_inhoud = 'AGLFA401',
                         value = 1:3, # Vul hier alle values in die voorkomen bij indicator
                         top = 1:3)
 ```
