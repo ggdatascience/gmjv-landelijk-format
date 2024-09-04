@@ -1,0 +1,111 @@
+# Tekst en layout aanpassen
+
+De standaardrapportage GMJV is (net als dit boek) gemaakt met Quarto. Met Quarto kunnen opgemaakte tekst en afbeeldingen gecombineerd worden met code. In dit hoofdstuk worden de enkele technieken behandeld waarmee je een quarto document kan bewerken.
+
+## 'Source' en 'Visual' editor
+
+Linksboven in een quarto document kan je kiezen tussen twee manieren van bewerken: **Source** en **Visual**. Als je niet zo thuis bent in programmeren of markdown zal je waarschijnlijk gebruik willen maken van de *visual-editor*. Dit lijkt het meest op andere tekstverwerkers. Desalnietttemin is het goed om bewust te zijn van beide mogelijkheden, al is het slechts om terug te wisselen wanneer je perongeluk op source hebt geklikt.
+
+-   In de visual-editor worden opgemaakte tekst en afbeeldingen getoond. Ook krijg je bovenaan een werkbalk te zien zoals in Word & andere tekstverwerkers. Met deze werkbalk kan je o.a.
+
+    -   Tekst opmaken.
+
+    -   Een type Kop / Header selecteren.
+
+    -   Lijsten maken
+
+    -   Links, plaatjes , codeblokken of tabellen invoegen.
+
+    -   [Lees hier meer over de Visual Editor](https://quarto.org/docs/visual-editor/)
+
+-   In de source-editor wordt de 'markdown-syntax' van je document weergeven. Dit is de onderliggende logica van je document. In de source-editor ontbreekt de werkbalk. Toch kan je alle dingen doen die ook in de *visual editor kunnen.* Hiervoor kan je gebruik maken van markdown-syntax. Bijvoorbeeld:
+
+    -   Een regel die met een hashtag begint wordt een kop. De hoeveelheid hashtags geeft het niveau van de kop aan. Dus: "\# Kop 1" "\## Kop 2" etc.
+
+    -   \*\*woord\*\* maakt 'woord' **vetgedrukt**, \*woord\* maakt 'woord' *schuingedrukt.*
+
+    -   [Lees hier meer over Markdown Basics](https://quarto.org/docs/authoring/markdown-basics.html)
+
+## R code in code-blokken
+
+Om te zorgen dat tabellen en grafieken met een dynamische inhoud in de rapportage geplaatst kunnen worden maken we gebruik van code-blokken met R code. Een code-blok kan je tijdens het bewerken van je rapport draaien door rechtsbovenin het code-blok op de groene pijl te klikken. De uitvoer van de code zal dan onder het blok verschijnen.
+
+Een nieuw code-blok kan je als volgt aanmaken:
+
+-   In de visual editor: **Insert \> Executable Cell \> R**
+
+-   In de source editor: Zoals hieronder. Type drie backticks '```' gevolgd door '{r}' Sluit het blok af met drie backticks. 
+```{r naam-blokje, echo=FALSE}
+#| echo: fenced
+
+#Hier R code
+
+```
+
+Standaard worden codeblokjes ook in de rapportage getoond. Dat is meestal niet de bedoeling. Daarom is hierboven de *chunk-option* **'echo=FALSE'** opgegeven. Optioneel kan je het code-blok een naam geven zoals **naam-blokje** hierboven. Een naam kan helpen met overzicht en het opsporen van fouten.
+
+
+## R code in lopende tekst
+Het is ook mogelijk om R code in lopende tekst te plaatsen. Op de plek waar je de code aanroept toont de rapportage dan het resultaat van de code. Bijvoorbeeld een percentage, of een gemeentenaam. De syntax is als volgt:
+
+> \` r \#hier code \`
+
+Deze syntax kan je overal gebruiken in de lopende tekst bijvoorbeeld:
+
+-   Een Header 1 met een dynamische gemeentenaam: 
+
+> \# \` r params$gemeentenaam\` 
+
+-   Inline berekeningen: 
+
+> Er waren \` r totaal_deelnemers \` deelnemers. Daarvan was \` r deelnemers_geslaagd \/ totaal_deelnemers * 100\` % geslaagd.
+
+## Kolomlayout
+Je kan onderdelen van je rapportage naast elkaar presenteren in Quarto. Hier wordt een van de manieren om dit te doen uitgelegd. Hierbij wordt steeds gebruik gemaakt van twee setjes van drie dubbele punten naast elkaar. Voor mensen die thuis zijn in html is het handig te weten dat dit de markdown syntax is voor een 'div'.
+
+::: callout-warning
+
+Let op. Om deze werkwijze toe te passen het nodig om de editor op 'Source' in te stellen.
+
+:::
+
+Zie ook het Quarto boek over [Custom layouts](https://quarto.org/docs/authoring/figures.html#complex-layouts)
+
+### Syntax voor twee kolommen van gelijke grote:
+
+> \:\:\: \{layout="[50,50]"\}
+>
+> \:\:\: column
+>
+> Dit is tekst in de linkerkolom
+>
+> \:\:\:
+>
+> Dit is tekst in de rechterkolom
+>
+> \:\:\: column
+>
+> \:\:\:
+
+### Het resultaat:
+
+::: {layout="[5,5]"}
+::: column
+Dit is tekst in de linkerkolom
+:::
+::: column
+Dit is tekst in de rechterkolom
+:::
+:::
+
+### Toelichting
+
+-   Het buitenste setje van ':::' bepaald de layout.
+    -   Achter de eerste ':::' komt '{layout="\[50,50\]"}' te staan
+    -   Het maakt alleen uit hoe de getallen zich tot elkaar verhouden.
+        -   \[5,5\] geeft hetzelfde resultaat als \[50,50\].
+        -   \[3,7\] maakt twee kolommen waarvan de linker kolom 30% van de ruimte opneemt en de rechterkolom 70%.
+        -   Het mogelijk meer dan twee kolommen te definieren.
+-   Tussen het buitenste setje ':::' worden setjes geplaatst voor de alle kolommen.
+    -   Achter de eerste ':::' van de kolom komt het woordt 'column' te staan
+    -   Tussen de eerte en laatste ':::' van de kolom kan je ieder soort inhoud plaatsen. Een afbeelding, tekst of een code-blok waar een grafiek uitkomt.

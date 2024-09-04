@@ -8,11 +8,17 @@ format:
     toc: TRUE
     embed-resources: true
 params:
-  gemeentecode: 2
+  gemeentecode: 2 
   regiocode: 23
   regionaam: 'GGD Limburg-Noord'
+  path_monitor_data: "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
+  path_hulpfuncties: "hulpfuncties.R"
+  path_cbs_data: "JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx"
+  default_nvar: 100
+  default_ncel: 10
+  default_kleuren_grafiek: !expr c("#012C17","#76B82A","#007E48")
+  default_kleuren_responstabel: !expr c("header" = "#012C17", "kleur_1" = "#007E48", "kleur_2" = "#76B82A","kleur_tekst" = "#FFFFFF")
   is_pdf: false
-editor: visual
 format-links: false
 ---
 
@@ -32,33 +38,17 @@ library(glue) #om strings aangenaam aan elkaar te plakken
 library(plotly)
 
 options(dplyr.summarise.inform = FALSE)
-source("hulpfuncties.R")
+source(params$path_hulpfuncties)
 
 #TODO instelbare variabelen overzichtelijk maken
-
-#Standaardwaarden in te stellen door gebruiker:
-# Standaard kleuren
-default_kleuren_grafiek <- c("#012C17","#76B82A","#007E48")
-default_kleuren_responstabel <- c("header" = "#012C17",
-                                  "kleur_1" = "#007E48",
-                                  "kleur_2" = "#76B82A",
-                                  "kleur_tekst" = "#FFFFFF"
-                                  )
 
 # Standaard minima voor groep & cel
 default_Nvar = 100 # Minimum aantal invullers per vraag.
 default_Ncel = 10 # Minimum aantal invullers oper antwoordoptie.
 
-
 #SPSS data inlezen
-# Regionaal bestand
-#file_path_regio = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
-
-# Landelijk bestand
-file_path = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
-
 #Lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
-monitor_df = haven::read_spss(file_path, user_na =T) %>%
+monitor_df = haven::read_spss(params$path_monitor_data, user_na =T) %>%
   labelled::user_na_to_na()
 
 #TODO verwijderen bij echte data. tijdelijk varlabel voor jaarvariabele
@@ -74,7 +64,6 @@ design_land <- survey_design_maken(
                          strata = 'Stratum',
                          gewichten = 'Standaardisatiefactor',
                          data = monitor_df)
-
 
 #design regio is een subset van design land met ggdregio overgehouden.
 # Regionaal 2022 en 2024
@@ -519,7 +508,6 @@ Psychische klachten worden gemeten met de ‘Mental Health Inventory 5’ (MHI-5
 :::
 
 ::: column
-
 `r monitor_df %>% maak_percentage(var_inhoud = 'LVPKS403') %>% bol_met_cijfer()` `r monitor_df %>% maak_percentage(var_inhoud = 'LVPKS403') %>% bol_met_cijfer()`
 :::
 
@@ -557,7 +545,6 @@ plot
 :::
 
 ::: column
-
 `r monitor_df %>% maak_percentage(var_inhoud = 'LVPKS403')` van de jongvolwassenen heeft met iemand gepraat over de gedachte om een eind te maken aan het leven. `r monitor_df %>% maak_percentage(var_inhoud = 'LVPKS403')` van de jongvolwassenen heeft in de laatste 12 maanden een poging ondernomen om een eind te maken aan het leven.
 
 <br>
@@ -918,7 +905,6 @@ Bolletjes problematisch social meida gebruik
 :::
 
 ::: column
-
 :::
 
 ::: column
@@ -942,8 +928,7 @@ Online gokken gaat over het spelen van online gokspellen (bijvoorbeeld fruitauto
 
 <br>
 
-`r monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente")` van de jongvolwassenen in uw gemeente heeft in de afgelopen 12 maanden online gegokt voor geld. 
-`r monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente")` van de jongvolwassenen in uw gemeente geeft aan geld te beleggen. 
+`r monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente")` van de jongvolwassenen in uw gemeente heeft in de afgelopen 12 maanden online gegokt voor geld. `r monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente")` van de jongvolwassenen in uw gemeente geeft aan geld te beleggen.
 :::
 
 ::: column
@@ -999,12 +984,12 @@ Bolletjes SESEA419 en SESEA417
 :::
 
 ::: column
-[grafiek: geen anticonceptie  SESEA419 naar leeftijd, regioniveau]
+\[grafiek: geen anticonceptie SESEA419 naar leeftijd, regioniveau\]
 :::
 :::
 
 # Kernboodschappen
- 
+
 Op deze pagina kunnen GGD’en hun kernboodschappen toevoegen.
 
 # Contact
