@@ -8,16 +8,21 @@ format:
     toc: TRUE
     embed-resources: true
 params:
-  gemeentecode: 2
+  gemeentecode: 2 
   regiocode: 23
   regionaam: 'GGD Limburg-Noord'
-  is_pdf: false
-editor: visual
+  path_monitor_data: "../nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
+  path_hulpfuncties: "../hulpfuncties.R"
+  path_cbs_data: "../JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx"
+  default_nvar: 100
+  default_ncel: 10
+  default_kleuren_grafiek: !expr c("#012C17","#76B82A","#007E48")
+  default_kleuren_responstabel: !expr c("header" = "#012C17", "kleur_1" = "#007E48", "kleur_2" = "#76B82A","kleur_tekst" = "#FFFFFF")
 format-links: false
 ---
-
+# Algemeen
 ```{r Instellingen, echo=F, message=F, warning=F}
-# Het script maakt gebruik van een aantal packages
+
 # Deze moeten bij de eerste keer lokaal worden geinstalleerd
 # Hieronder worden de benodige packages geladen
 library(gt)
@@ -150,7 +155,7 @@ for(var in names(monitor_df)){
 
 ```
 
-# Algemeen
+
 
 In dit document worden de Responstabel functie en Bol met cijfer uitgelegd en hoe hier aanpassingen in gedaan kunnen worden.\
 
@@ -187,8 +192,7 @@ De functie **maak_responstabel()** maakt een responstabel met het totaal aantal 
     Een character variabele met een alternatief label voor missing waarden (standaard 'Onbekend').
 
 -   **kleuren:\
-    **Een named character vector met alternatieve kleuren voor de tabel. Vector moet  4 elementen hebben     met namen: 'header', 'kleur_1', 'kleur_2' en 'tekst'.
-
+    **Een named character vector met alternatieve kleuren voor de tabel. Vector moet 4 elementen hebben met namen: 'header', 'kleur_1', 'kleur_2' en 'tekst'.
 
 ### Standaard responstabel met twee crossings
 
@@ -271,4 +275,3 @@ monitor_df %>%
   bol_met_cijfer(omschrijving = "kan werken met R.", niveau = "Onderzoekers",
                  kleur = "#FEC805", kleur_getal = "#009BD9", kleur_omschrijving = "#1A2C54") # toon in bol grafiek
 ```
-
