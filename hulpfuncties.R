@@ -490,8 +490,8 @@ kruistabel_met_subset <- function(data, variabele = NULL, crossing = NULL, subse
 }
   
  
-maak_alt_text <- function(plot, doelgroep = "jongvolwassenen", type_grafiek = "staafdiagram",
-                          vars_crossing = "onderdeel",label_inhoud, label_crossings = NULL){
+maak_alt_text <- function(data, plot, doelgroep = "jongvolwassenen", type_grafiek = "staafdiagram",
+                          vars_crossing = "onderdeel",label_inhoud, label_crossings = NULL, niveaus){
   
   
   plot_data <- ggplot_build(plot)
@@ -512,13 +512,25 @@ maak_alt_text <- function(plot, doelgroep = "jongvolwassenen", type_grafiek = "s
   string_waarden = paste0(labels,": ",percentages, collapse = ", ")
 
   
+  #niveaus waarop data wordt getoond
+  niveau_string <- niveaus %>% str_replace("nl","Nederland") %>% 
+    str_replace("regio",params$regionaam) %>% 
+    str_replace("gemeente",val_label(data$Gemeentecode, params$gemeentecode)) %>% 
+    paste0(collapse = " en ")
+  
+  if(length(niveaus) >  2){
+    niveau_string <- niveau_string %>% str_replace(" en",",") 
+  }
+  
+  
+  
   if(is.null(label_crossings)){
     #Grafiek zonder crossings:
-    glue("{type_grafiek} met percentages voor de indicator '{label_inhoud}' bij {doelgroep}: {string_waarden}")
+    glue("{type_grafiek} met percentages voor de indicator '{label_inhoud}' bij {doelgroep} in {niveau_string}:  {string_waarden}")
   } else{
     #Grafiek met crossings
     label_crossings = label_crossings %>% paste(collapse = " en ")
-    glue("{type_grafiek} met percentages voor de indicator '{label_inhoud}' bij {doelgroep} per {label_crossings}: {string_waarden}")  
+    glue("{type_grafiek} met percentages voor de indicator '{label_inhoud}' bij {doelgroep} per {label_crossings} in {niveau_string}: {string_waarden}")  
   }
   
   
@@ -928,7 +940,7 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
   #alt text aanmaken voor grafiek als deze niet handmatig is opgegeven
   if(is.null(alt_text)){
     
-    alt_text <- maak_alt_text(plot, 
+    alt_text <- maak_alt_text(data, plot, niveaus = niveaus, 
                               label_inhoud = var_label(data[[var_inhoud]]),
                               label_crossings =  c(
                                 var_label(data[[var_crossing_groep]]),
@@ -1036,7 +1048,9 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
    
    kleuren <- df_plot$kleuren
    names(kleuren) <- onderdeel_levels
-
+  
+   #str_wrap toegevoegd om te zorgen dat hele lange varlabels leesbaar blijven.
+   df_plot$groep <- str_wrap(df_plot$groep, 40)
 
    plot = ggplot(df_plot) +
      geom_col(aes(x = groep, y = percentage, fill = onderdeel),
@@ -1090,7 +1104,7 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
    #Alt text toevoegen als deze niet handmatig is opgegeven
    if(is.null(alt_text)){
      
-     alt_text <- maak_alt_text(plot, 
+     alt_text <- maak_alt_text(data, plot, niveaus = niveaus, 
                                label_inhoud = var_label(data[[var_inhoud]]),
                                label_crossings = sapply(var_crossings, function(var) var_label(data[[var]]))
                                )
@@ -1113,7 +1127,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
                                               huidig_jaar = 2024,
                                               jaarvar = "AGOJB401",
                                               niveaus = "regio",
-                                              var_inhoud_waarde = NULL
+                                              var_inhoud_waarden = NULL
                                               ){
   
   #Keuzes die we gebruikers willen bieden mbt niveau:
@@ -1245,13 +1259,15 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
     var_inhoud_plot <- var_inhoud
   }
   
-  #Afhandelen van var_inhoud_waarde
-  if(!is.null(var_inhoud_waarde)){
+  #Afhandelen van var_inhoud_waarden
+  if(!is.null(var_inhoud_waarden)){
     
     #Filteren op ingegeven waarde
-    df_plot <- df_plot %>% filter(waarde == var_inhoud_waarde)
+    df_plot <- df_plot %>% filter(waarde %in% var_inhoud_waarden)
     
-    if(length(var_inhoud) == 1){
+    #Als er slechts 1 waarde is ingegeven bij var_inhoud_waarden 
+    #Is het de bedoeling om het var_label te tonen ipv het val_label
+    if(length(var_inhoud) == 1 & length(var_inhoud_waarden) == 1){
     df_plot[[var_inhoud]] <- var_label(data[[var_inhoud]])
     }
   }
@@ -1337,22 +1353,27 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
     if(length(var_inhoud) > 1){
       
       
-      alt_text <- maak_alt_text(plot,
-                    label_inhoud = "",
-                    label_crossings = var_label(data[[var_crossing]]),
-                    vars_crossing = c("var_label",var_crossing)
+      alt_text <- maak_alt_text(data,
+                                plot,
+                                niveaus = niveaus,
+                                label_inhoud = "",
+                                label_crossings = var_label(data[[var_crossing]]),
+                                vars_crossing = c("var_label",var_crossing)
       ) %>% 
         str_replace("voor de indicator ''","voor verschillende indicatoren")
         
       
     } else{
     
-      alt_text <- maak_alt_text(plot,
+      alt_text <- maak_alt_text(data,
+                                plot,
                                 label_inhoud = var_label(data[[var_inhoud]]),
                                 label_crossings = var_label(data[[var_crossing]]),
-                                vars_crossing = c(var_crossing,var_inhoud)
+                                vars_crossing = c(var_crossing,var_inhoud),
+                                niveaus = niveaus
         )
     }
+    
   }
   plot <- plot +  labs(alt = alt_text)
   
@@ -1575,12 +1596,14 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
   #Alt text maken o.b.v. data als geen eigen tekst is ingegeven
   if(is.null(alt_text)){
     
-    alt_text <- maak_alt_text(plot,
+    alt_text <- maak_alt_text(data, plot, niveaus = niveaus,
                               label_inhoud = var_label(data[[var_inhoud]]),
                               label_crossings = sapply(var_crossings, function(var) var_label(data[[var]]))
                               )
     
   } 
+  
+  plot <- plot + labs(alt = alt_text)
  
   return(plot) 
  
@@ -1712,7 +1735,7 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
       size = 7) + # Hier grootte van percentages aanpassen
     
     scale_fill_manual(values= kleuren,
-                      labels = function(x) str_wrap(x, width = 40)
+                      labels = function(x) str_wrap(x, width = 20)
                       ) +
     scale_x_continuous(
       limits = c(0,101),
@@ -1739,7 +1762,7 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
   
   if(is.null(alt_text)){
     
-    alt_text <- maak_alt_text(plot,
+    alt_text <- maak_alt_text(data, plot, niveaus = niveaus,
                               type_grafiek = "gestapeld staafdiagram",
                               label_inhoud = var_label(data[[var_inhoud]]),
                               label_crossings = var_label(data[[var_crossing]]),
