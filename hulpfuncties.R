@@ -2108,8 +2108,8 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
     ) +
     scale_x_continuous(
       limits = c(0,101),
-      breaks = seq(0,101, by = 10),
-      labels = paste0(seq(0,100, by = 10),"%"),
+      breaks = seq(0,101, by = 25),
+      labels = paste0(seq(0,100, by = 25),"%"),
       expand = expansion(mult = c(0, 0.05)))+
     ggtitle(titel) + 
     ylab(x_label) + 
