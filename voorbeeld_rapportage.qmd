@@ -1009,6 +1009,65 @@ monitor_df %>%
 :::
 :::
 
+::: {layout="[50,50]"}
+::: column
+```{r Sporten 5, echo = F, warning = F, fig.alt = ggplot2::get_alt_text(plot)}
+#Staafdiagram met uitsplitsingen naast elkaar, met overlopende kleuren & horizontaal
+plot = monitor_df %>% 
+  maak_staafdiagram_uitsplitsing_naast_elkaar(
+    var_inhoud = "LFBWA401",
+    var_crossings = c("AGGSA402","AGLFA401"),
+    kleuren_per_crossing = TRUE,
+    fade_kleuren = TRUE,
+    flip = TRUE, 
+    titel = "Beweegt minimaal een half uur per dag"
+  )
+
+plot
+```
+:::
+
+::: column
+```{r Sporten 6, echo = F, warning = F, fig.alt = ggplot2::get_alt_text(plot)}
+#Staafdiagram met uitsplitsingen naast elkaar, met overlopende kleuren & horizontaal
+plot = monitor_df %>% 
+  maak_staafdiagram_uitsplitsing_naast_elkaar(
+    var_inhoud = "LFBWA403",
+    var_crossings = c("AGGSA402","AGLFA401"),
+    kleuren_per_crossing = TRUE,
+    fade_kleuren = TRUE,
+    flip = TRUE, 
+    titel = "Sport wekelijks"
+  )
+
+plot
+```
+:::
+:::
+
+::: {layout="[50,50]"}
+::: column
+```{r Sporten 7, echo = F, warning = F, fig.alt = ggplot2::get_alt_text(plot)}
+#Staafdiagram met uitsplitsingen naast elkaar, met overlopende kleuren & horizontaal
+plot = monitor_df %>% 
+  maak_staafdiagram_uitsplitsing_naast_elkaar(
+    var_inhoud = "LFBWA405",
+    var_crossings = c("AGGSA402","AGLFA401"),
+    kleuren_per_crossing = TRUE,
+    fade_kleuren = TRUE,
+    flip = TRUE, 
+    titel = "Is lid van een sportclub, sportschool of heeft een (online) sportabonnement"
+  )
+
+plot
+```
+:::
+
+::: column
+Selectie maken van grafieken hier?
+:::
+:::
+
 # Middelengebruik
 
 ::: {layout="[[30,30,30],[30,30,30]]"}
