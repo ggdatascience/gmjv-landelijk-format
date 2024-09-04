@@ -93,7 +93,7 @@ Hieronder volgt uitleg voor de grafiekfuncties. De functies genereren automatisc
 ## Alt-text in code-blokken
 
 ::: callout-caution
-Als je in Quarto zelf nieuwe blokjes code maakt met grafieken is het belangrijk dat alt-text goed wordt meegenomen bij het renderen van het document. Hier zijn 2 dingen voor nodig:
+Als je in Quarto zelf nieuwe blokjes code maakt met grafieken is het belangrijk dat alt-text goed wordt meegenomen bij het renderen van het document. Alt-text is tekst die bij een afbeelding hoort en door  screenreader voorgelezen wordt. Om de alt-text van een ggplot2 grafiek goed mee te geven aan een codeblok in quarto is het volgende nodig:
 
 -   De grafiek moet opgeslagen worden in een object (hieronder 'plot')
 
@@ -128,7 +128,7 @@ De functie **maak_staafdiagram_dubbele_uitsplitsing()** maakt een staafdiagram v
 
 -   **kleuren:** Een character vector met alternatieve kleuren voor de grafiek
 
--   **alt_text:** Een character met de 'alt-text' voor de grafiek. Als deze waarde leeg is, wordt er automatisch gegenereerde alt-text meegegeven die alle waarden in de grafiek bevat.
+-   **alt_text:** Een character met de 'alt-text' voor de grafiek. Als deze waarde leeg is, wordt er automatisch gegenereerde alt-text meegegeven die alle waarden in de grafiek bevat. Let op; De verteerbaarheid van automatisch gegenereerde tekst neemt af wanneer de grafieken erg complex zijn, of variabellabels erg lang zijn.
 
 -   **nvar:** Een numeric met het minimum aantal observaties per vraag. Als deze waarde leeg is, wordt de standaardwaarde voor nvar aangehouden.
 
@@ -146,7 +146,7 @@ plot = monitor_df %>%
     var_inhoud = "LVEES404",
     var_crossing_groep = "AGGSA402",
     var_crossing_kleur = "AGLFA401"
-  )
+    )
 
 plot
 
@@ -155,7 +155,8 @@ plot
 ### Aangepast staafdiagram met dubbele uitsplitsing
 
 ```{r, fig.alt= ggplot2::get_alt_text(plot)}
-#Staafdiagram met dubbele uitsplitsing, eigen titel, kleuren, custom alt-text, nvar en ncel
+#Staafdiagram met dubbele uitsplitsing,
+#aangepaste titel, kleuren, alt-text, nvar en ncel
 plot = monitor_df %>% 
   maak_staafdiagram_dubbele_uitsplitsing(
     var_inhoud = "LVEES404",
@@ -215,7 +216,8 @@ Alternatief kan de functie gebruikt worden om meerdere indicatoren naast elkaar 
 
 -   **var_crossing:** Een character met de naam van één kruisvariabele
 -   **niveaus:** Een character vector met de niveaus c("nl","regio","gemeente"). Standaard op GGD-regio "regio" ingesteld. Kan meerdere niveaus hebben voor niveauvergelijking. Dit kan alleen als var_crossing leeg is.
--   **var_inhoud_waarden:** Een numeric vector waar de numerieke waarden voor antwoorden ingevuld kunnen worden. Als deze waarde leeg is worden alle antwoorden getoond. Anders alleen de antwoorden die zijn ingevuld.
+-   **var_inhoud_waarde:** Een numeric waar de numerieke waarde voor een antwoord ingevuld kan worden. Als deze waarde leeg is worden alle antwoorden getoond. Anders alleen het  antwoorden dat is. 
+Let op: als je een waarde invult die niet bestaat gebeurd er niks.
 -   **flip:** TRUE of FALSE. Als TRUE wordt de grafiek horizontaal weergeven
 
 Naast dezelfde optionele argumenten als in [**maak_staafdiagram_dubbele_uitsplitsing():**](#optionele-argumenten-1):
@@ -263,26 +265,28 @@ plot = monitor_df %>%
     var_inhoud = c("LVVTA405","LVVTA406","LVVTA407"),
     var_crossing = "AGGSA402",
     flip = TRUE
-    
-  )
+    )
 
 plot
 
 ```
 
 
-### Aangepast staafdiagram met meerdere staven: Antwoorden filteren
+### Aangepast staafdiagram met meerdere staven: Filteren op 1 antwoord
 
-Het is ook mogelijk om antwoorden weg te filteren uit maak_staafdiagram_meerdere_staven(). Dit kan met de parameter **var_inhoud_waarden**
-Let op: Als je waarden invoert die niet bestaan zullen die zonder foutmelding genegeerd worden. 
+Het is ook mogelijk om antwoorden weg te filteren uit maak_staafdiagram_meerdere_staven(). Dit kan met de parameter **var_inhoud_waarde**. 
+
+Wanneer var_inhoud waarde is ingevuld worden het label van de staven aangepast naar het variabel-label i.p.v. het val_label.
+
+Deze optie is geschikt voor dichitome / binaire variabelen.
 
 ```{r, fig.alt = ggplot2::get_alt_text(plot)}
 #Staafdiagram met meerdere staven, kruisvariabele en flip = TRUE
 plot = monitor_df %>% 
   maak_staafdiagram_meerdere_staven(
-    var_inhoud = "LVVTA404",
+    var_inhoud = "LVSTA415",
     niveaus = c("nl","regio", "gemeente"),
-    var_inhoud_waarden = c(1,2),
+    var_inhoud_waarde = 1,
     flip = TRUE
     )
 
@@ -375,8 +379,7 @@ Naast dezelfde optionele argumenten als in [**maak_staafdiagram_dubbele_uitsplit
 #Standaard gestapeld staafdiagram
 plot = monitor_df %>% 
   maak_staafdiagram_gestapeld(
-    var_inhoud = "LVVTA404",
-    niveaus = c("nl","regio")
+    var_inhoud = "LVVTA404"
   )
 
 plot
@@ -422,7 +425,7 @@ plot
 
 ## Populatiegrafiek CBS
 
-Functie om een horizontaal georienteerd gestapeld staafdiagram te maken waarin populatiegegevens van het CBS worden vergeleken met de response op de per regio en gemeente. Dit kan o.b.v. de kruisvariabelen leeftijd en geslacht gedaan worden.
+Functie om een horizontaal georienteerd gestapeld staafdiagram te maken waarin populatiegegevens van het CBS worden vergeleken met de response op de per regio en gemeente. Dit kan o.b.v. de kruisvariabelen 'leeftijd' en 'geslacht' gedaan worden.
 
 ### Optionele argumenten
 

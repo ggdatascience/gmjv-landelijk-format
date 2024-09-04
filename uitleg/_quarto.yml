@@ -16,9 +16,10 @@ book:
     - voorbeeld_grafieken.qmd
     - voorbeeld_tekstfuncties.qmd
     - voorbeeld_overige_functies.qmd
-    - digitoegankelijkheid.qmd
     - uploaden-swing.qmd
     - handige-bronnen.qmd
+    
+warning: false
     
 
 

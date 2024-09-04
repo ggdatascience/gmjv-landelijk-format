@@ -1127,7 +1127,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
                                               huidig_jaar = 2024,
                                               jaarvar = "AGOJB401",
                                               niveaus = "regio",
-                                              var_inhoud_waarden = NULL
+                                              var_inhoud_waarde = NULL
                                               ){
   
   #Keuzes die we gebruikers willen bieden mbt niveau:
@@ -1252,22 +1252,30 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
 
   
   #Afhandelen van meerdere var_inhouds: var_inhoud wordt var_label
-  #TODO error handling voor meerdere var_inhouds
   if(length(var_inhoud) > 1){
     var_inhoud_plot <- "var_label"
   } else{
     var_inhoud_plot <- var_inhoud
   }
   
-  #Afhandelen van var_inhoud_waarden
-  if(!is.null(var_inhoud_waarden)){
+  #Afhandelen van var_inhoud_waarde
+  if(!is.null(var_inhoud_waarde)){
     
     #Filteren op ingegeven waarde
-    df_plot <- df_plot %>% filter(waarde %in% var_inhoud_waarden)
+    df_plot <- df_plot %>% filter(waarde == var_inhoud_waarde)
     
-    #Als er slechts 1 waarde is ingegeven bij var_inhoud_waarden 
-    #Is het de bedoeling om het var_label te tonen ipv het val_label
-    if(length(var_inhoud) == 1 & length(var_inhoud_waarden) == 1){
+    if(nrow(df_plot) < 1){
+      stop(
+      glue(
+      "Filter var_inhoud_waarde heeft alle data weggefilterd. Pas var_inhoud_waarde aan.
+      waarden in var_inhoud '{var_inhoud}':{unique(data[[var_inhoud]]) %>% unname() %>% paste0(collapse = ',')}
+      ingevuld bij var_inhoud_waarde: {var_inhoud_waarde}
+      "))
+    }
+      
+    #var_label ipv val_label toewijzen als var_inhoud
+    #niet van toepassing bij meerdere niveaus (dan wordt var_label in plot gebruikt)
+    if(length(var_inhoud) == 1){
     df_plot[[var_inhoud]] <- var_label(data[[var_inhoud]])
     }
   }
@@ -1901,7 +1909,7 @@ maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = params$d
     #plotly heeft zelf geen alt-text optie; met js toevoegen aan object
     htmlwidgets::onRender(glue("
   function(el, x) {{
-    el.setAttribute('alt', '{{alt_text}}');
+    el.setAttribute('alt', '{alt_text}');
   }}"))
   fig
 

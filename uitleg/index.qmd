@@ -7,7 +7,8 @@ Naast het Quarto boek zijn er ook filmpjes met uitleg gemaakt. Die vind je hier 
 
 ## Iets melden
 
-Het is de bedoeling dat je hier alle informatie vind die nodig is om de standaardrapportage uit te draaien en aan te passen. Als je merkt dat er informatie ontbreekt, een idee voor verbetering hebt of vastloopt op een foutmelding kan je dat doorgeven. Lees goed hoe dat werkt.
+Het is de bedoeling dat je hier alle informatie vind die nodig is om de standaardrapportage uit te draaien en aan te passen.
+Dat is vast niet in één keer gelukt. Als je merkt dat er informatie ontbreekt, je een idee voor verbetering hebt of als je vastloopt op een foutmelding kan je dat doorgeven. Lees hieronder goed hoe dat werkt.
 
 ::: {.callout-important title="Verzoeken en problemen melden"}
 
