@@ -19,7 +19,7 @@ toc-title: "Inhoudsopgave"
 ---
 ```
 
-Om de standaardrapportage met eigen data uit te draaie    n moeten enkele aanpassingen gedaan worden in de frontmatter.
+Om de standaardrapportage met eigen data uit te draaien moeten enkele aanpassingen gedaan worden in de frontmatter.
 
 TODO
 
@@ -63,7 +63,7 @@ De meeste instellingen kan je laten staan. Het volgende moet aangepast of gecont
 -   **default_nvar:** voer hier het algemene minimum aantal respondenten per vraag in
 -   **default_ncel:** voer hier het algemene minimum aantal respondenten per antwoord in
 -   **default_kleuren_grafiek:** Voer hier een vector in met de standaard kleurcodes voor grafieken. 
--   **default_kleuren_responstabel:** Voer hier een vector in met de standaard kleurcodes voor responstabellen
+-   **default_kleuren_responstabel:** Voer hier een named vector in met 4 kleurcodes als standaard voor responstabellen. Zie het voorbeeld voor de namen.
 
 
 ## Rapporten per gemeente uitdraaien
@@ -111,3 +111,12 @@ Als de pagina-einden goed ingesteld staan kan je de rapportage als PDF bestand u
 -   Controleer of de variabelen **file_path**, **regiocode** goed staan ingesteld.
 -   Draai het hele script.
 -   Controleer de uitvoer.
+
+## HTML-rapporten uploaden naar Swing
+
+Als je een html-bestand naar Swing upload en in de Viewer plaatst gaat dat niet automatisch goed. De layout van het bestand overhoop raken. Dit komt omdat de opmaak (CSS) van Swing zelf ook doorwerkt op het html-document.
+Dit kan je oplossen door raporten standaard in een 'iframe' te plaatsen. Dit is relatief makkelijk in te stellen in Swing.
+
+-   Log in bij Swing Studio als Admin
+-   Kies Viewer > Settings > Viewer Settings
+-   Zoek de optie "Show report in an iframe" en vink deze optie aan

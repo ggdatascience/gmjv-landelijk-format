@@ -1,12 +1,4 @@
 ---
-title: ""
-author: ""
-format:
-  html:
-    page-layout: full
-    css: custom.css
-    toc: TRUE
-    embed-resources: true
 params:
   gemeentecode: 2 
   regiocode: 23
@@ -18,8 +10,9 @@ params:
   default_ncel: 10
   default_kleuren_grafiek: !expr c("#012C17","#76B82A","#007E48")
   default_kleuren_responstabel: !expr c("header" = "#012C17", "kleur_1" = "#007E48", "kleur_2" = "#76B82A","kleur_tekst" = "#FFFFFF")
-format-links: false
 ---
+
+# Tekstfuncties
 
 ```{r Instellingen, echo=F, message=F, warning=F}
 # Het script maakt gebruik van een aantal packages
@@ -90,33 +83,6 @@ for(var in names(monitor_df)){
 
 
 ```
-
-
-# Algemeen
-
-In dit document worden de verschillende tekstfuncties uitgelegd en hoe hier aanpassingen in gedaan kunnen worden.
-
-Alle functies in dit document hebben als eerste argument 'data', waar een dataframe wordt verwacht. Dit argument zal niet expliciet genoemd worden in de uitleg, omdat het altijd nodig is.\
-
-::: callout-tip
-In dit document wordt gebruikt gemaakt van de 'pipe-operator' *%\>%*.
-
-De pipe-operator stuurt een resultaat door naar de volgende functie. Op deze manier kunnen meerdere bewerkingen in R overzichtelijk aan elkaar gekoppeld worden. Lees [hier](#0) een uitleg van de magrittr pipe (en de voordelen).
-
-Zonder de pipe-operator zou het aanroepen van maak_responstabel er zo uit zien:
-
-``` r
-maak_responstabel(df = monitor_df, crossings = "gender_2cat", ...)
-```
-
-Met pipe-operator ziet dit er zo uit:
-
-``` r
-monitor_df %>% maak_responstabel(crossings = "gender_2cat", ...)
-```
-:::
-
-# Uitleg tekstfuncties
 
 Hieronder volgen een aantal functies die gebruikt kunnen worden in een tekst.
 
