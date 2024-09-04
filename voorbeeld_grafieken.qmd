@@ -205,45 +205,6 @@ monitor_df %>% maak_responstabel(crossings = "gender_2cat", ...)
 Alle functies in dit document hebben als eerste argument 'data', waar een dataframe wordt verwacht. Dit argument zal niet expliciet genoemd worden in de uitleg, omdat het altijd nodig is.
 :::
 
-# Responstabel
-
-De functie **maak_responstabel()** maakt een responstabel met het totaal aantal respondenten & deze respondenten uitgesplitst naar kruisvariabelen. Missing waarden op die kruisvariabelen worden standaard weergeven als 'Onbekend'
-
-## Nodige argumenten:
-
--   **crossings:**\
-    Een character vector met kruisvariabelen waarover je N ingevulde vragenlijsten over wilt opsplitsen. Kan 1 of meer zijn.
-
-## Optionele argumenten:
-
--   **missing_label:**\
-    Een character variabele met een alternatief label voor missing waarden (standaard 'Onbekend').
-
--   **kleuren:\
-    **Een named character vector met alternatieve kleuren voor de tabel
-
-### Standaard responstabel met twee crossings
-
-```{r}
-#Standaard responstabel met twee crossings:
-monitor_df %>% maak_responstabel(
-  crossings = c("AGGSA402","AGLFA401"))
-```
-
-### Aangepaste responstabel met drie crossings
-
-```{r}
-#Responstabel met drie crossings, aangepast missing_label en aangepaste kleuren.
-monitor_df %>% maak_responstabel( 
-  crossings = c("AGGSA402","AGLFA401","AGOWS404"),
-  missing_label = "Niet ingevuld",
-  kleuren = c(header =  "#FEC805",
-              kleur_1 = "#1A2C54",
-              kleur_2 = "#009BD9",
-              kleur_tekst = "#FFFFFF"
-              )
-  )
-```
 
 # Grafieken
 
