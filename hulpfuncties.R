@@ -2366,7 +2366,7 @@ maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL,
                                         result$ci_lower[2] > result$ci_upper[1] ~ " toegenomen ",
                                         TRUE ~ " gelijk gebleven ")
     
-    if (resultaat_vergelijking == " is gelijk gebleven ") {
+    if (resultaat_vergelijking == " gelijk gebleven ") {
       return(paste0("Het percentage dat " , label, " is ", label_niveau, resultaat_vergelijking, 
                     "t.o.v. ", crossings[1], "."))
     } else {

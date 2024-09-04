@@ -248,7 +248,7 @@ plot = monitor_df %>%
   maak_staafdiagram_meerdere_staven(
     var_inhoud = "AGOWS402",
     titel = "Opleidingsniveau",
-    niveaus = c("gemeente", "regio")
+    niveaus = c("regio", "gemeente")
   )
 
 plot
@@ -305,6 +305,7 @@ De meeste werkende jongvolwassenen in uw gemeente werken `r #monitor_df %>% maak
 :::
 
 ::: {layout="[50,50]"}
+::: column
 ```{r Woonsituatie 2, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
 plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
@@ -328,6 +329,7 @@ plot
 :::
 :::
 
+::: {layout="[100]"}
 ::: column
 ```{r Werksituatie 4, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
 
@@ -350,44 +352,34 @@ plot
 
 ```
 :::
+:::
 
 # Gezondheid en geluk
 
-::: {layout="[[30,30,30],[30,30,30]]"}
+::: {layout="[100]"}
 ::: column
-**Ervaren Gezondheid**
-
 Gezondheid is meer dan de afwezigheid van lichamelijke en mentale klachten. Iedereen geeft zijn eigen betekenis aan gezondheid en jongvolwassenen kunnen zelf het beste aangeven hoe zij hun eigen gezondheid ervaren, dit is een betrouwbare indicator voor de algehele gezondheidstoestand.
 
 <br>
 
-Uit de resultaten blijkt dat `r monitor_df %>% maak_percentage(var_inhoud = "GZGGA402")` van de jongvolwassen in uw gemeente de eigen gezondheid als (zeer) goed ervaart. `r monitor_df %>% maak_vergelijking(var_inhoud = 'GZGGA402', variabele_label = "hun eigen gezondheid als (zeer) goed ervaart", var_crossing = 'AGOJB401')`
-:::
-
-::: column
-**Geluk**
-
-Een andere belangrijke indicator voor het welzijn van jongvolwassenen is hoe gelukkig zij zich voelen. `r monitor_df %>% maak_percentage(var_inhoud = "LVPKA407")` van de jongvolwassenen in uw gemeente voelde zich in de afgelopen vier weken vaak tot voortdurend gelukkig. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVPKA407', variabele_label = "hun eigen gezondheid als (zeer) goed ervaart", var_crossing = 'AGOJB401')`
-:::
-
-::: column
-**Slaap**
-
-Slaap is belangrijk voor het ‘schoonmaken’ van de hersenen, het onthouden van belangrijke dingen en het verwerken van emoties. Slapen is daarom net zo belangrijk als voeding en beweging om gezond te blijven.
+`r monitor_df %>% maak_percentage(var_inhoud = "GZGGA402", niveau = "gemeente")` van de jongvolwassen in uw gemeente ervaart de eigen gezondheid als (zeer) goed. `r monitor_df %>% maak_vergelijking(var_inhoud = 'GZGGA402', variabele_label = "hun eigen gezondheid als (zeer) goed ervaart", var_crossing = 'AGOJB401')`
 
 <br>
 
-`r monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402') %>% bol_met_cijfer()`
+`r monitor_df %>% maak_percentage(var_inhoud = "LVPKA407", niveau = "gemeente")` van de jongvolwassenen in uw gemeente voelde zich in de afgelopen vier weken vaak tot voortdurend gelukkig. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVPKA407', variabele_label = "zich vaak tot voortdurend gelukkig voelt", var_crossing = 'AGOJB401')`
+:::
 :::
 
+::: {layout="[50,50]"}
 ::: column
 ```{r Gezondheid 1, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
 
 plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
     var_inhoud = "GZGGA402",
-    var_crossings = "AGGSA401",
-    titel = "(zeer) goed ervaren gezondheid"
+    var_crossings = "AGGSA402",
+    titel = "(Zeer) goed ervaren gezondheid",
+    niveaus = "regio"
   )
 
 plot
@@ -401,31 +393,111 @@ plot
 plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
     var_inhoud = "LVPKA407",
-    var_crossings = "AGGSA401",
-    titel = "Vaak tot voortdurend gelukkig"
+    var_crossings = "AGGSA402",
+    titel = "Vaak tot voortdurend gelukkig",
+    niveaus = "regio"
   )
 
 plot
 
 ```
 :::
+:::
+
+::: {layout="[100]"}
+::: column
+**Slaap**
+
+Slaap is belangrijk voor het ‘schoonmaken’ van de hersenen, het onthouden van belangrijke dingen en het verwerken van emoties. Slapen is daarom net zo belangrijk als voeding en beweging om gezond te blijven.
+
+:::
+:::
+
+::: {layout="[50,225,50,225]"}
+::: column
+```{r Slaap 1, echo = F, warning = F}
+
+monitor_df %>%
+  maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>% 
+  bol_met_cijfer(niveau = "Regio")
+
+```
+:::
 
 ::: column
-`r monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402') %>% bol_met_cijfer()`
+```{r Slaap 2, echo = F, warning = F}
+
+monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>%
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "slaapt meestal zeer slecht.",
+                 kleur = params$default_kleuren_grafiek[2])
+
+
+```
+:::
+
+::: column
+```{r Slaap 3, echo = F, warning = F}
+
+monitor_df %>%
+  maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>% 
+  bol_met_cijfer(niveau = "Regio")
+
+```
+:::
+
+::: column
+```{r Slaap 4, echo = F, warning = F}
+
+monitor_df %>% 
+  maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>%
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "voelt zich bijna elke dag slaperig of moe", 
+                 omschrijving2 = "doordat ze niet goed slapen.",
+                 kleur = params$default_kleuren_grafiek[2])
+
+
+```
 :::
 :::
 
-# Mentaal welbevinden
+::: {layout="[100]"}
+::: column
+**Tevredenheid met jezelf, je lichaam en je leven**
 
-::: {layout="[[30,30,30],[30,30,30]]"}
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'LVTEA406', variabele_label = "(zeer) tevreden is met hun leven", var_crossing = 'AGOJB401')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVTEA406', variabele_label = "(zeer) tevreden is met hun leven", var_crossing = 'AGGSA402')`
+:::
+:::
+
+::: {layout="[50,50]"}
+::: column
+```{r Tevredenheid, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+plot = monitor_df %>% 
+  maak_staafdiagram_meerdere_staven(
+    var_inhoud = c("LVTEA402", "LVTEA404", "LVTEA406"),
+    titel = "Tevredenheid",
+    niveaus = c("regio", "gemeente"),
+    var_inhoud_waarde =  1
+  )
+
+plot
+```
+:::
+
+::: column
+hier nog grafiek?
+:::
+:::
+
+# Stress en prestatiedruk
+
+::: {layout="[100]"}
 ::: column
 **Stress**
 
-Het hebben van stress (spanning of druk) kan zowel gezond als ongezond zijn. Gezonde stress kan ervoor zorgen dat je extra alert kunt reageren en geconcentreerd kunt werken. Wanneer stress te lang duurt (ongezonde stress), is er meer tijd nodig om te herstellen. Bij te veel stress is er te weinig tijd om tussendoor te herstellen en kan dit leiden tot spanningsklachten en een burn-out.
-:::
+Wanneer stress te lang duurt (ongezonde stress), is er meer tijd nodig om te herstellen. Bij te veel stress is er te weinig tijd om tussendoor te herstellen en kan dit leiden tot spanningsklachten en een burn-out.
 
-::: column
-`r monitor_df %>% maak_vergelijking(var_inhoud = 'LVSTA415', variabele_label = 'zich (heel) vaak gestrest voelt in de regio', var_crossing = 'AGOJB401')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVSTA415', variabele_label = 'zich (heel) vaak gestrest voelt', var_crossing = 'AGGSA402')`
+<br>
+
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'LVSTA415', variabele_label = 'zich (heel) vaak gestrest voelt', var_crossing = 'AGOJB401')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVSTA415', variabele_label = 'zich (heel) vaak gestrest voelt', var_crossing = 'AGGSA402')`
 
 <br>
 
@@ -437,7 +509,44 @@ Top 5 bronnen van stress:
 -   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 4)`
 -   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 5)`
 :::
+:::
 
+::: {layout="[50,50]"}
+::: column
+```{r Stress 1, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+
+plot = monitor_df %>%
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "LVSTA415",
+    var_crossings = "AGGSA402",
+    titel = "Voelt zich (heel) vaak gestrest",
+    niveaus = "regio"
+  )
+
+plot
+
+```
+:::
+
+::: column
+```{r Stress 2, echo = F, fig.alt= ggplot2::get_alt_text(plot), warning = F}
+
+# Staafgrafiek (zeer) vaak gestresst naar leeftijd, regio vergeleken met landelijk
+
+plot = monitor_df %>%
+   maak_staafdiagram_dubbele_uitsplitsing(
+     var_inhoud = "LVSTA415",
+     niveaus = c("regio", "nl"),
+     var_crossing_kleur = "AGLFA401",
+     titel = "Voelt zich (heel) vaak gestrest")
+
+plot
+
+```
+:::
+:::
+
+::: {layout="[100]"}
 ::: column
 **Prestatiedruk**
 
@@ -455,58 +564,77 @@ Top 3 van anderen die druk opleggen:
 -   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 2)`
 -   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 3)`
 :::
+:::
 
+::: {layout="[50,225,50,225]"}
 ::: column
-```{r Mentaal welbevinden 1, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Prestatiedruk 1, echo = F, warning = F}
 
-plot = monitor_df %>%
-  maak_staafdiagram_vergelijking(
-    var_inhoud = "LVSTA415",
-    var_crossings = "AGGSA402",
-    titel = "Voelt zich (heel) vaak gestrest"
-  )
-
-plot
+monitor_df %>%
+  maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>% 
+  bol_met_cijfer(niveau = "Regio")
 
 ```
 :::
 
 ::: column
-```{r Mentaal welbevinden 2, echo = F, fig.alt= ggplot2::get_alt_text(plot), warning = F}
+```{r Prestatiedruk 2, echo = F, warning = F}
 
-# Staafgrafiek (zeer) vaak gestresst naar leeftijd, regio vergeleken met landelijk
+monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>%
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "ervaart prestatiedruk vanuit zichzelf.",
+                 kleur = params$default_kleuren_grafiek[2])
 
-# plot = monitor_df %>% 
-#    maak_staafdiagram_dubbele_uitsplitsing(
-#      var_inhoud = "LVSTA415", 
-#      var_crossing_groep = "AGOJB401",  # TODO jaar nog wijzigen naar vergelijking met landelijk
-#      var_crossing_kleur = "AGLFA401",
-#      titel = "Voelt zich (heel) vaak gestrest")
-# 
-# plot
 
 ```
 :::
 
 ::: column
-```{r Mentaal welbevinden 3, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Prestatiedruk 3, echo = F, warning = F}
+
+monitor_df %>%
+  maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>% 
+  bol_met_cijfer(niveau = "Regio")
+
+```
+:::
+
+::: column
+```{r Prestatiedruk 4, echo = F, warning = F}
+
+monitor_df %>% 
+  maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>%
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "ervaart prestatiedruk vanuit zichzelf", 
+                 kleur = params$default_kleuren_grafiek[2])
+
+
+```
+:::
+:::
+
+::: {layout="[50,50]"}
+::: column
+```{r Prestatiedruk 5, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
 
 plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
     var_inhoud = "GZGGA402",
     var_crossings = "AGLFA401",
-    titel = "Ervaart regelmatig tot vaak prestatiedruk vanuit zichzelf"
+    niveaus = "regio",
+    titel = "Ervaart prestatiedruk vanuit zichzelf"
   )
 
 plot
 ```
+:::
 
-```{r Mentaal welbevinden 4, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+::: column
+```{r Prestatiedruk 6, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
 plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
     var_inhoud = "GZGGA402",
     var_crossings = "AGLFA401",
-    titel = "Ervaart regelmatig tot vaak prestatiedruk vanuit anderen"
+    niveaus = "regio",
+    titel = "Ervaart prestatiedruk vanuit anderen"
   )
 
 plot
@@ -517,21 +645,65 @@ plot
 
 # Mentaal welbevinden
 
-::: {layout="[[30,30,30],[30,30,30]]"}
+::: {layout="[100]"}
 ::: column
 **Psychische klachten**
 
-Psychische klachten vinden vaak hun oorsprong op jonge leeftijd. Uit [internationaal onderzoek](https://www.trimbos.nl/kennis/geluk-onder-druk-onderzoek-naar-mentaal-welzijn-jongeren/kennisagenda/) blijkt dat driekwart van de psychische klachten begint voor de leeftijd van 24 jaar en de helft van de psychische klachten voor de leeftijd van 14 jaar. Psychische problemen op jonge leeftijd hebben vaak lichamelijke en psychische problemen op latere leeftijd tot gevolg, waaronder middelengebruik, slaapproblemen, depressieve stoornissen en het vaker ondernemen van zelfmoordpogingen.
+Psychische klachten vinden vaak hun oorsprong op jonge leeftijd. Uit [internationaal onderzoek](https://www.trimbos.nl/kennis/geluk-onder-druk-onderzoek-naar-mentaal-welzijn-jongeren/kennisagenda/) blijkt dat driekwart van de psychische klachten begint voor de leeftijd van 24 jaar en de helft van de psychische klachten voor de leeftijd van 14 jaar. Psychische problemen op jonge leeftijd hebben vaak lichamelijke en psychische problemen op latere leeftijd tot gevolg.
 
 <br>
 
 Psychische klachten worden gemeten met de ‘Mental Health Inventory 5’ (MHI-5). Het geeft een indicatie van de psychische gezondheid, waaronder zich somber voelen en zenuwachtig zijn.
+
+<br>
+
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'LVPKS403', variabele_label = 'recent angst- of depressieve gevoelens had', var_crossing = 'AGOJB401')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVPKS403', variabele_label = 'recent angst- of depressieve gevoelens had', var_crossing = 'AGGSA402')`
+
+<br>
+
+[Happyles](https://www.trimbos.nl/aanbod/programmas/happyles-depressiepreventie-bij-jongeren/) is een klassikale interventie ter bevordering van welbevinden en geluk en ter preventie van depressiekrachten bij jongvolwassenen.
+:::
+:::
+
+::: {layout="[50,225,275]"}
+::: column
+```{r Psychische klachten 1, echo = F, warning = F}
+
+monitor_df %>%
+  maak_percentage(var_inhoud = 'LVPKS403', niveau = "regio") %>% 
+  bol_met_cijfer(niveau = "Regio")
+
+```
 :::
 
 ::: column
-`r monitor_df %>% maak_percentage(var_inhoud = 'LVPKS403') %>% bol_met_cijfer()` `r monitor_df %>% maak_percentage(var_inhoud = 'LVPKS403') %>% bol_met_cijfer()`
+```{r Psychische klachten 2, echo = F, warning = F}
+
+monitor_df %>% maak_percentage(var_inhoud = 'LVPKS403', niveau = "gemeente") %>%
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "heeft angst- of depressieve gevoelens.",
+                 kleur = params$default_kleuren_grafiek[2])
+
+
+```
 :::
 
+::: column
+```{r Psychische klachten 3, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+
+plot = monitor_df %>%
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "LVPKS403",
+    var_crossings = "AGLFA401",
+    titel = "Heeft angst- of depressieve gevoelens"
+  )
+
+plot
+
+```
+:::
+:::
+
+::: {layout="[100]"}
 ::: column
 **Suicidegedachten**
 
@@ -539,33 +711,10 @@ Als gevoelens zoals angst, paniek, somberheid, leegte, zelfverwijt, boosheid, sc
 
 <br>
 
-`r monitor_df %>% maak_vergelijking(var_inhoud = 'NGSGA401', variabele_label = 'wel eens serieus heeft nagedacht over suïcide in de regio', var_crossing = 'AGGSA402')`
-:::
-
-::: column
-`r monitor_df %>% maak_vergelijking(var_inhoud = 'LVPKS403', variabele_label = 'psychische klachten heeft in de regio', var_crossing = 'AGOJB401')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVPKS403', variabele_label = 'psychische klachten heeft', var_crossing = 'AGGSA402')`
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'NGSGA401', variabele_label = 'wel eens serieus heeft nagedacht over suïcide', var_crossing = 'AGOJB401')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'NGSGA401', variabele_label = 'wel eens serieus heeft nagedacht over suïcide', var_crossing = 'AGGSA402')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'NGSGA401', variabele_label = 'wel eens serieus heeft nagedacht over suïcide', var_crossing = 'AGLFA401')`
 
 <br>
 
-[Happyles](https://www.trimbos.nl/aanbod/programmas/happyles-depressiepreventie-bij-jongeren/) is een klassikale interventie ter bevordering van welbevinden en geluk en ter preventie van depressiekrachten bij jongvolwassenen.
-:::
-
-::: column
-```{r Mentaal welbevinden 5, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
-
-plot = monitor_df %>%
-  maak_staafdiagram_vergelijking(
-    var_inhoud = "LVPKS403",
-    var_crossings = "AGLFA401",
-    titel = "Heeft psychische klachten"
-  )
-
-plot
-
-```
-:::
-
-::: column
 `r monitor_df %>% maak_percentage(var_inhoud = 'LVPKS403')` van de jongvolwassenen heeft met iemand gepraat over de gedachte om een eind te maken aan het leven. `r monitor_df %>% maak_percentage(var_inhoud = 'LVPKS403')` van de jongvolwassenen heeft in de laatste 12 maanden een poging ondernomen om een eind te maken aan het leven.
 
 <br>
@@ -574,17 +723,75 @@ plot
 :::
 :::
 
-# Mentaal welbevinden
-
-::: {layout="[[30,30,30],[30,30,30]]"}
+::: {layout="[50,225,50,225]"}
 ::: column
-**Sociale steun**
+```{r Zelfmoord 1, echo = F, warning = F}
 
-Langdurige eenzaamheid kan gevolgen hebben voor de ontwikkeling van jongvolwassenen. Eenzaamheid is één van de belangrijkste risicofactoren voor het ontwikkelen van mentale klachten. Daarnaast kan eenzaamheid zorgen voor gedragsproblemen (middelengebruik), lichamelijke problemen (stress) of maatschappelijke problemen (vroegtijdig schoolverlaten).
+monitor_df %>%
+  maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>% 
+  bol_met_cijfer(niveau = "Regio")
+
+```
 :::
 
 ::: column
-```{r Mentaal welbevinden 6, echo = F, fig.alt = ggplot2::get_alt_text(plot), warning = F}
+```{r Zelfmoord 2, echo = F, warning = F}
+
+monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>%
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "heeft wel eens serieus nagedacht over suïcide.",
+                 kleur = params$default_kleuren_grafiek[2])
+
+
+```
+:::
+
+::: column
+```{r Zelfmoord 3, echo = F, warning = F}
+
+monitor_df %>%
+  maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>% 
+  bol_met_cijfer(niveau = "Regio")
+
+```
+:::
+
+::: column
+```{r Zelfmoord 4, echo = F, warning = F}
+
+monitor_df %>% 
+  maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>%
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "heeft (heel) vaak serieus nagedacht", 
+                 omschrijving2 = "over suïcide.",
+                 kleur = params$default_kleuren_grafiek[2])
+
+
+```
+:::
+:::
+
+::: {layout="[100]"}
+::: column
+**Eenzaamheid**
+
+Eenzaamheid is één van de belangrijkste risicofactoren voor het ontwikkelen van mentale klachten. Daarnaast kan eenzaamheid zorgen voor gedragsproblemen (middelengebruik), lichamelijke problemen (stress) of maatschappelijke problemen (vroegtijdig schoolverlaten).
+
+<br>
+
+Van de jongvolwassenen in uw gemeente voelt `r monitor_df %>% maak_percentage(var_inhoud = 'LVEES402')` zich enigszins eenzaam en `r monitor_df %>% maak_percentage(var_inhoud = 'LVEES402', value = 2)` voelt zich sterk eenzaam. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVEES402', value = 2, variabele_label = 'zich sterk eenzaam voelt', var_crossing = 'AGGSA402')`
+
+<br>
+
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'LVEES410', value = 3, variabele_label = 'zich sterk emotioneel eenzaam voelt', var_crossing = 'AGLFA402')`
+
+<br>
+
+[Aanpakeenzaamheid.nl](https://aanpakeenzaamheid.nl/jongeren/) bundelt hulpmiddelen die door gemeenten en organisaties in te zetten zijn tegen eenzaamheid.
+:::
+:::
+
+::: {layout="[50,50]"}
+::: column
+```{r Eenzaamheid 1, echo = F, fig.alt = ggplot2::get_alt_text(plot), warning = F}
 
 plot = monitor_df %>% 
   maak_staafdiagram_gestapeld(
@@ -598,17 +805,7 @@ plot
 :::
 
 ::: column
-[Aanpakeenzaamheid.nl](https://aanpakeenzaamheid.nl/jongeren/) bundelt hulpmiddelen die door gemeenten en organisaties in te zetten zijn tegen eenzaamheid.
-:::
-
-::: column
-Van de jongvolwassenen in uw gemeente voelt `r monitor_df %>% maak_percentage(var_inhoud = 'LVEES402')` zich enigszins eenzaam en `r monitor_df %>% maak_percentage(var_inhoud = 'LVEES402', value = 2)` voelt zich sterk eenzaam. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVEES402', value = 2, variabele_label = 'zich sterk eenzaam voelt in de regio', var_crossing = 'AGOJB401')`
-
-Met name vrouwen voelen zich vaker emotioneel eenzaam (iemand die een intieme, hechte band mist) dan mannen.
-:::
-
-::: column
-```{r Mentaal welbevinden 7, echo = F, fig.alt = ggplot2::get_alt_text(plot), warning = F}
+```{r Eenzaamheid 2, echo = F, fig.alt = ggplot2::get_alt_text(plot), warning = F}
 
 plot = monitor_df %>% 
   maak_staafdiagram_gestapeld(
@@ -620,14 +817,11 @@ plot = monitor_df %>%
 plot
 ```
 :::
-
-::: column
-:::
 :::
 
 # Beschermende factoren en vertrouwen in de toekomst
 
-::: {layout="[[30,30,30],[30,30,30]]"}
+::: {layout="[[100]]"}
 ::: column
 **Veerkracht**
 
@@ -635,59 +829,60 @@ Hoe jongvolwassenen omgaan met de uitdagingen van het leven wordt mede bepaald d
 
 <br>
 
-`r monitor_df %>% maak_vergelijking(var_inhoud = 'LVEES410', variabele_label = 'het niet moeilijk vindt om stressvolle gebeurtenissen te doorstaan in de regio', var_crossing = 'AGGSA402')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVEES410', variabele_label = 'stel herstelt na een moeilijke periode in de regio', var_crossing = 'AGGSA402')`
-:::
-
-::: column
-[Institute for positive health](https://www.iph.nl/) zet in op positieve gezondheid. Door in gesprek te gaan met jongvolwassenen wordt duidelijk waar hun kracht zit en wat hen helpt om sterker uit een stressvolle of moeilijke periode te komen. Het concept van positieve gezondheid biedt daarvoor aanknopingspunten.
-:::
-
-::: column
-**Opkomen voor jezelf**
-
-Weerbaarheid is de basis voor een goede psychische gezondheid. Weerbare jongvolwassenen hebben zelfvertrouwen en kunnen goed voor zichzelf opkomen, met respect voor anderen. Zij kunnen ook, al dan niet na een periode van experimenteren, gezonde keuzes maken ten aanzien van de eigen leefstijl.
-:::
-
-::: column
-`r monitor_df %>% maak_percentage(var_inhoud = 'LVEES410') %>% bol_met_cijfer()`
-:::
-
-::: column
-`r monitor_df %>% maak_percentage(var_inhoud = 'LVEES410') %>% bol_met_cijfer()`
-:::
-
-::: column
-`r monitor_df %>% maak_percentage(var_inhoud = 'OJWHS402')` van de jongvolwassenen in uw gemeente is voldoende weerbaar (kan goed voor zichzelf opkomen). `r monitor_df %>% maak_vergelijking(var_inhoud = 'OJWHS402', variabele_label = 'voldoende weerbaar is,', var_crossing = 'AGOJB401')`
-:::
-:::
-
-# Beschermende factoren en vertrouwen in de toekomst ALTERNATIEVE LAYOUT
-
-::: {layout="[[100],[50,50]]"}
-::: column
-**Veerkracht**
-
-Hoe jongvolwassenen omgaan met de uitdagingen van het leven wordt mede bepaald door hun veerkracht en weerbaarheid.
-
-<br>
-
-`r monitor_df %>% maak_vergelijking(var_inhoud = 'LVEES410', variabele_label = 'het niet moeilijk vindt om stressvolle gebeurtenissen te doorstaan in de regio', var_crossing = 'AGGSA402')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVEES410', variabele_label = 'stel herstelt na een moeilijke periode in de regio', var_crossing = 'AGGSA402')`
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'GZGGA402', variabele_label = 'het niet moeilijk vindt om stressvolle gebeurtenissen te doorstaan', var_crossing = 'AGGSA402')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'GZGGA402', variabele_label = 'stel herstelt na een moeilijke periode', var_crossing = 'AGGSA402')`
 
 <br>
 
 [Institute for positive health](https://www.iph.nl/) zet in op positieve gezondheid. Door in gesprek te gaan met jongvolwassenen wordt duidelijk waar hun kracht zit en wat hen helpt om sterker uit een stressvolle of moeilijke periode te komen. Het concept van positieve gezondheid biedt daarvoor aanknopingspunten.
 :::
+:::
+
+::: {layout="[50,225,50,225]"}
+::: column
+```{r Veerkracht 1, echo = F, warning = F}
+
+monitor_df %>%
+  maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>% 
+  bol_met_cijfer(niveau = "Regio")
+
+```
+:::
 
 ::: column
-`r monitor_df %>% maak_percentage(var_inhoud = 'LVEES410') %>% bol_met_cijfer()`
+```{r Veerkracht 2, echo = F, warning = F}
+
+monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>%
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "vindt het niet moeilijk om stressvolle",
+                 omschrijving2 = "gebeurtenissen te doorstaan.", kleur = params$default_kleuren_grafiek[2])
+
+
+```
 :::
 
 ::: column
-`r monitor_df %>% maak_percentage(var_inhoud = 'LVEES410') %>% bol_met_cijfer()`
+```{r Veerkracht 3, echo = F, warning = F}
+
+monitor_df %>%
+  maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>% 
+  bol_met_cijfer(niveau = "Regio")
+
+```
+:::
+
+::: column
+```{r Veerkracht 4, echo = F, warning = F}
+
+monitor_df %>% 
+  maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>%
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "herstelt snel na een moeilijke periode.", 
+                 kleur = params$default_kleuren_grafiek[2])
+
+
+```
 :::
 :::
 
-::: {layout="[[100],[50,50]]"}
+::: {layout="[100]"}
 ::: column
 **Opkomen voor jezelf**
 
@@ -701,13 +896,37 @@ Weerbaarheid is de basis voor een goede psychische gezondheid. Weerbare jongvolw
 
 [Movisie](https://www.movisie.nl/publicatie/wat-werkt-versterken-weerbaarheid-jongeren) legt uit wat werkt voor het versterken van weerbaarheid bij jongvolwassenen.
 :::
+:::
 
+::: {layout="[50,50]"}
 ::: column
-HIER STAAFGRAFIEK INVOEGEN
+```{r Weerbaarheid, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+
+plot = monitor_df %>%
+  maak_staafdiagram_dubbele_uitsplitsing(
+    var_inhoud = "OJWHS402",
+    var_crossing_kleur = "AGGSA402",
+    titel = "Kan voldoende opkomen voor zichzelf",
+    niveaus = c("regio", "nl")
+  )
+
+plot
+
+```
 :::
 
 ::: column
-HIER STACKED BAR INVOEGEN
+```{r Vertrouwen in de toekomst, echo = F, fig.alt = ggplot2::get_alt_text(plot), warning = F}
+
+plot = monitor_df %>% 
+  maak_staafdiagram_gestapeld(
+    var_inhoud = "LVVTA404",
+    niveaus = c("nl", "regio"),
+    titel = "Vertrouwen in de toekomst"
+  )
+
+plot
+```
 :::
 :::
 
@@ -715,7 +934,7 @@ HIER STACKED BAR INVOEGEN
 ::: column
 **Vertrouwen in de toekomst**
 
-Ondanks de uitdagingen die zij in hun leven tegenkomen, heeft een groot deel van de jongvolwassenen in uw gemeente (\[LVVTA404, 3\]%) (heel) veel vertrouwen in hun toekomst.
+Ondanks de uitdagingen die zij in hun leven tegenkomen, heeft een groot deel van de jongvolwassenen in uw gemeente (`r monitor_df %>% maak_percentage(var_inhoud = 'LVVTA404', value = 3, niveau = "gemeente")`) (heel) veel vertrouwen in hun toekomst. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVVTA404', value = 3, variabele_label = '(heel) veel vertrouwen in de toekomst heeft', var_crossing = 'AGOJB401')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVVTA404', value = 3, variabele_label = '(heel) veel vertrouwen in de toekomst heeft', var_crossing = 'AGGSA402')`
 
 <br>
 
@@ -727,35 +946,66 @@ Jongvolwassenen in uw gemeente maken zich het meest zorgen om:
 
 <br>
 
-Het percentage jongvolwassenen dat zich zorgen maakt over maatschappelijke thema’s is regionaal ...
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'LVVTA404', value = 3, variabele_label = '(heel) veel vertrouwen in de toekomst heeft', var_crossing = 'AGOJB401')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVVTA404', value = 3, variabele_label = '(heel) veel vertrouwen in de toekomst heeft', var_crossing = 'AGGSA402')`
 :::
 :::
 
 # Bewegen en sporten
 
-::: {layout="[[30,30,30],[30,30,30]]"}
+::: {layout="[100]"}
 ::: column
 Sporten en bewegen is goed voor zowel fysieke als mentale gezondheid. Het vermindert de kans op een aantal chronische aandoeningen. Daarnaast kan bewegen mensen helpen beter in hun vel te zitten en sociale interactie bevorderen.
-:::
-
-::: column
-:::
-
-::: column
-:::
-
-::: column
-Het percentage jongvolwassenen in de regio dat elke dag minimaal een half uur beweegt is \[toegenomen/afgenomen/gelijk gebleven\] ten opzichte van 2022 (xx%).
 
 <br>
 
-LFBWA403% van de jongvolwassenen in uw gemeente sport minstens één keer per week. Regionaal sport xx% wekelijks. Dit is (regionaal) \[toegenomen/afgenomen/gelijk gebleven\] ten opzichte van 2022 (xx%).
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'LFBWA401', variabele_label = 'elke dag minimaal een half uur beweegt', var_crossing = 'AGOJB401')` 
+`r monitor_df %>% maak_percentage(var_inhoud = 'LFBWA403', niveau = "gemeente")` van de jongvolwassenen in uw gemeente sport minstens één keer per week. Regionaal sport `r monitor_df %>% maak_percentage(var_inhoud = 'LFBWA403', niveau = "regio")` wekelijks. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LFBWA403', variabele_label = 'elke dag minimaal een half uur beweegt', var_crossing = 'AGOJB401')` 
+:::
+:::
+
+::: {layout="[50,225,50,225]"}
+::: column
+```{r Sporten 1, echo = F, warning = F}
+
+monitor_df %>%
+  maak_percentage(var_inhoud = 'LFBWA401', niveau = "regio") %>% 
+  bol_met_cijfer(niveau = "Regio")
+
+```
 :::
 
 ::: column
+```{r Sporten 2, echo = F, warning = F}
+
+monitor_df %>% maak_percentage(var_inhoud = 'LFBWA401', niveau = "gemeente") %>%
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "beweegt elke dag minimaal een half uur.",
+                 kleur = params$default_kleuren_grafiek[2])
+
+
+```
 :::
 
 ::: column
+```{r Sporten 3, echo = F, warning = F}
+
+monitor_df %>%
+  maak_percentage(var_inhoud = 'LFBWA405', niveau = "regio") %>% 
+  bol_met_cijfer(niveau = "Regio")
+
+```
+:::
+
+::: column
+```{r Sporten 4, echo = F, warning = F}
+
+monitor_df %>% 
+  maak_percentage(var_inhoud = 'LFBWA405', niveau = "gemeente") %>%
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "is lid van een sportclub, sportschool,",
+                 omschrijving2 = "of heeft een (online) sportabonnement.", 
+                 kleur = params$default_kleuren_grafiek[2])
+
+
+```
 :::
 :::
 
