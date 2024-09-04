@@ -836,10 +836,10 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
     
     geom_text(aes(x = !!sym(var_crossing_groep),
                   y = percentage,
-                  label = paste(percentage,"%"),
+                  label = paste0(percentage,"%"),
                   vjust = -1),
               position = position_dodge2(width = 0.8),
-              size = 5,
+              size = 7, # Hier grootte van percentages aanpassen
               na.rm = T
     ) +
     #sterretje invoegen bij weggestreepte data omdat nvar of ncel niet gehaald wordt
@@ -864,7 +864,7 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
     
     scale_y_continuous(limits = c(0,100),
                        breaks = seq(0,100, by = 10),
-                       labels = paste(seq(0,100, by = 10),"%"),
+                       labels = paste0(seq(0,100, by = 10),"%"),
                        expand = expansion(mult = c(0, 0.05))
                        ) +
     theme(axis.title = element_blank(),
@@ -874,7 +874,8 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
           legend.title = element_blank(),
           legend.spacing.x = unit(.1,"cm"),
           legend.position = "bottom",
-          plot.title = element_text(hjust = .5),
+          plot.title = element_text(hjust = .5, size = 20), # Hier grootte van titel aanpassen
+          text = element_text(size = 17), # Hier grootte labels etc aanpassen
           axis.line.x.bottom = element_line(linewidth = 1),
           axis.line.y.left = element_line(linewidth = 1,)
     )
@@ -998,10 +999,10 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
               na.rm = T) +
      geom_text(aes(x = groep,
                    y = percentage,
-                   label = paste(percentage,"%"),
+                   label = paste0(percentage,"%"),
                    vjust = -1),
                position = position_dodge2(width = 0.8),
-               size = 5,
+               size = 7, # Hier grootte van percentages aanpassen
                na.rm = T
      ) +
      #sterretje invoegen bij weggestreepte data omdat nvar of ncel niet gehaald wordt
@@ -1023,7 +1024,7 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
      
      scale_y_continuous(limits = c(0,100),
                         breaks = seq(0,100, by = 10),
-                        labels = paste(seq(0,100, by = 10),"%"),
+                        labels = paste0(seq(0,100, by = 10),"%"),
                         expand = expansion(mult = c(0, 0.05))
      ) +
      coord_cartesian(ylim = c(0,100))+
@@ -1034,7 +1035,8 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
            legend.title = element_blank(),
            legend.spacing.x = unit(.1, 'cm'),
            legend.position = "bottom",
-           plot.title = element_text(hjust = .5),
+           plot.title = element_text(hjust = .5, size = 20), # Hier grootte van titel aanpassen
+           text = element_text(size = 17), # Hier grootte labels etc aanpassen
            axis.line.x.bottom = element_line(linewidth = 1, colour = "black"),
            axis.line.y.left = element_line(linewidth = 1)
      )
@@ -1236,11 +1238,11 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
     geom_text(aes(x = !!sym(var_inhoud_plot),
                   y = percentage,
                   group = !!sym(var_crossing),
-                  label =  paste(percentage,"%"),
+                  label =  paste0(percentage,"%"),
                   vjust = v_just_text,
                   hjust = h_just_text),
               position = position_dodge2(width = 0.8),
-              size = 5,
+              size = 7, # Hier grootte van percentages aanpassen
               na.rm = T) +
     
     #sterretje invoegen bij weggestreepte data omdat nvar of ncel niet gehaald wordt
@@ -1265,7 +1267,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
     
     scale_y_continuous(limits = c(0,100),
                        breaks = seq(0,100, by = 10),
-                       labels = paste(seq(0,100, by = 10),"%"),
+                       labels = paste0(seq(0,100, by = 10),"%"),
                        expand = expansion(mult = c(0, 0.05))
     ) +
     #lange labels opsplitsen
@@ -1278,7 +1280,8 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
           legend.title = element_blank(),
           legend.spacing.x = unit(.1,"cm"),
           legend.position = "bottom",
-          plot.title = element_text(hjust = .5),
+          plot.title = element_text(hjust = .5, size = 20), # Hier grootte van titel aanpassen
+          text = element_text(size = 17), # Hier grootte labels etc aanpassen
           axis.line.x.bottom = element_line(linewidth = 1),
           axis.line.y.left = element_line(linewidth = 1,)
     )
@@ -1463,12 +1466,12 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
              ) +
     geom_text(aes(x = onderdeel,
                   y = percentage,
-                  label = paste(percentage,"%"),
+                  label = paste0(percentage,"%"),
                   vjust = v_just_text,
                   hjust = h_just_text),
               color = "white",
               position = position_dodge2(width = 0.8),
-              size = 5,
+              size = 7, # Hier grootte van percentages aanpassen
               na.rm = T
               ) +
     #sterretje invoegen bij weggestreepte data omdat nvar of ncel niet gehaald wordt
@@ -1489,7 +1492,8 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
     ggtitle(titel) +
     theme(panel.background = element_blank(),
           legend.position = "none",
-          plot.title = element_text(hjust = .5),
+          plot.title = element_text(hjust = .5, size = 20), # Hier grootte van titel aanpassen
+          text = element_text(size = 17), # Hier grootte labels etc aanpassen
           axis.line.y.left = element_line(linewidth = 1)
     ) +
     labs(
@@ -1659,7 +1663,7 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
       label = paste0(round(percentage),"%")),
       color = "#FFFFFF",
       position = position_stack(vjust = 0.5),
-      size = 3) +
+      size = 7) + # Hier grootte van percentages aanpassen
     
     scale_fill_manual(values= kleuren,
                       labels = function(x) str_wrap(x, width = 40)
@@ -1667,7 +1671,7 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
     scale_x_continuous(
       limits = c(0,101),
       breaks = seq(0,101, by = 10),
-      labels = paste(seq(0,100, by = 10),"%"),
+      labels = paste0(seq(0,100, by = 10),"%"),
       expand = expansion(mult = c(0, 0.05)))+
     ggtitle(titel) + 
     ylab(x_label) + 
@@ -1679,7 +1683,8 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
           legend.title = element_blank(),
           legend.spacing.x = unit(.1,"cm"),
           legend.position = "bottom",
-          plot.title = element_text(hjust = .5),
+          plot.title = element_text(hjust = .5, size = 20), # Hier grootte van titel aanpassen
+          text = element_text(size = 17), # Hier grootte labels etc aanpassen
           axis.line.x.bottom = element_line(linewidth = 1),
           axis.line.y.left = element_line(linewidth = 1,)
         ) +
@@ -2050,7 +2055,7 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
       label = paste0(round(percentage),"%")),
       color = "#FFFFFF",
       position = position_stack(vjust = 0.5),
-      size = 3) +
+      size = 3) + #Hier grootte percentages aanpassen
     
     scale_fill_manual(values= kleuren,
                       labels = function(x) str_wrap(x, width = 40)
@@ -2058,7 +2063,7 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
     scale_x_continuous(
       limits = c(0,101),
       breaks = seq(0,101, by = 10),
-      labels = paste(seq(0,100, by = 10),"%"),
+      labels = paste0(seq(0,100, by = 10),"%"),
       expand = expansion(mult = c(0, 0.05)))+
     ggtitle(titel) + 
     ylab(x_label) + 
@@ -2070,7 +2075,8 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
       legend.title = element_blank(),
       legend.spacing.x = unit(.1,"cm"),
       legend.position = "bottom",
-      plot.title = element_text(hjust = .5),
+      plot.title = element_text(hjust = .5, size = 20), # Hier grootte van titel aanpassen
+      text = element_text(size = 17), # Hier grootte labels etc aanpassen
       axis.line.x.bottom = element_line(linewidth = 1),
       axis.line.y.left = element_line(linewidth = 1,)
     ) +
