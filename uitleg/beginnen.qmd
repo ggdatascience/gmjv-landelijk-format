@@ -39,6 +39,8 @@ De versie moet ten minste **Chrome 128 zijn** (update van Augustus 2024).
 
 
 ## R project openen en voorbeeldrapport uitdraaien
+Er is een voorbeeldrapportage die gebruik maakt van fictieve data. Deze rapportage kan je als test uitdraaien. Als dit fout gaat is er waarschijnlijk iets verouderd aan je installatie van R, Rstudio of libraries.
+
 -   Open het bestand "gmjv-landelijk-format.Rproj" in Rstudio. Door het project te openen, in plaats van een goed bestand is de werkmap automatisch goed ingesteld.
 
 -   Zoek rechtsonder in Rstudio bij "files" het bestand "voorbeeld_rapportage.qmd" op.

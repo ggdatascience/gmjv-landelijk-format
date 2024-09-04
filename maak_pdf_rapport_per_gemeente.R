@@ -4,26 +4,20 @@ library(dplyr)
 
 # Hier bestandsnaam invullen ----------------------------------------------
 file_path = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
-# Hier code regio invullen ------------------------------------------------
 regiocode = 23
-# Hier naam variabele gemeente invullen -----------------------------------
-var_gemeente = "Gemeentecode"
-
 #SPSS data inlezen
 #lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
 monitor_df = haven::read_spss(file_path,user_na =T) %>%
   labelled::user_na_to_na()
 
-
-
-gemeentecodes_in_regio = monitor_df[[var_gemeente]][monitor_df$GGDregio == regiocode] %>% 
+gemeentecodes_in_regio = monitor_df$Gemeentecode[monitor_df$GGDregio == regiocode] %>% 
   unique() %>% 
   as.numeric() %>% 
   sort()
 
 # PDF uitdraai ------------------------------------------------------------
 
-for(gemeentecode in alle_gemeentecodes){
+for(gemeentecode in gemeentecodes_in_regio){
   
   html_file =  glue::glue("gemeenterapport_{gemeentecode}.html")
   

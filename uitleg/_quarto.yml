@@ -10,13 +10,12 @@ book:
   chapters:
     - index.qmd
     - beginnen.qmd
+    - rapport-uitdraaien.qmd
     - tekst-aanpassen.qmd
     - layout.qmd
     - voorbeeld_grafieken.qmd
     - alt-text.qmd
-    - pdf-uitdraai.qmd
     - handige-bronnen.qmd
-    - frontmatter.qmd
     
 
 

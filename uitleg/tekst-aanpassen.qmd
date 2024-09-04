@@ -63,6 +63,12 @@ Deze syntax kan je overal gebruiken in de lopende tekst bijvoorbeeld:
 ## Kolomlayout
 Je kan onderdelen van je rapportage naast elkaar presenteren in Quarto. Hier wordt een van de manieren om dit te doen uitgelegd. Hierbij wordt steeds gebruik gemaakt van twee setjes van drie dubbele punten naast elkaar. Voor mensen die thuis zijn in html is het handig te weten dat dit de markdown syntax is voor een 'div'.
 
+::: callout-warning
+
+Let op. Om deze werkwijze toe te passen het nodig om de editor op 'Source' in te stellen.
+
+:::
+
 Zie ook het Quarto boek over [Custom layouts](https://quarto.org/docs/authoring/figures.html#complex-layouts)
 
 ### Syntax voor twee kolommen van gelijke grote:
