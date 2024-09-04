@@ -22,14 +22,9 @@ params:
 format-links: false
 ---
 
-```{r, echo=F, message=F, warning=F}
-# Het script maakt gebruik van een aantal packages
-# Deze moeten bij de eerste keer lokaal worden geinstalleerd
-# Hieronder worden de benodige packages geladen
+#GMJV Grafiekfuncties
 
-#TODO uitleg jaarvariabelen
-#TODO uitleg regiovariabelen
-#TODO uitleg meerdere vars in meerdere staven
+```{r, echo=F, message=F, warning=F}
 
 library(gt)
 library(dplyr)
@@ -44,17 +39,6 @@ library(plotly)
 
 options(dplyr.summarise.inform = FALSE)
 source(params$path_hulpfuncties)
-
-#TODO instelbare variabelen overzichtelijk maken
-
-#Standaardwaarden in te stellen door gebruiker:
-# Standaard kleuren
-default_kleuren_grafiek <- c("#012C17","#76B82A","#007E48")
-default_kleuren_responstabel <- c("header" = "#012C17",
-                                  "kleur_1" = "#007E48",
-                                  "kleur_2" = "#76B82A",
-                                  "kleur_tekst" = "#FFFFFF"
-                                  )
 
 # Standaard minima voor groep & cel
 default_Nvar = 100 # Minimum aantal invullers per vraag.
@@ -170,9 +154,9 @@ De functie **maak_staafdiagram_dubbele_uitsplitsing()** maakt een staafdiagram v
 
 -   **var_inhoud:** Een character met de naam van een dichotome variabele
 
--   **var_crossing_groep:** Een character met de naam van een kruisvariabele
+-   **var_crossing_groep:** Een character met de naam van een kruisvariabele. Mag leeg zijn als er meerdere  niveaus zijn en de andere var_crossing gevuld is.
 
--   **var_crossing_kleur:** Een character met de naam van een kruisvariabele
+-   **var_crossing_kleur:** Een character met de naam van een kruisvariabele. Mag leeg zijn als er meerdere niveaus zijn en de andere var_crossing gevuld is.
 
 ### Optionele argumenten: {#optionele-argumenten-1}
 
@@ -180,11 +164,13 @@ De functie **maak_staafdiagram_dubbele_uitsplitsing()** maakt een staafdiagram v
 
 -   **kleuren:** Een character vector met alternatieve kleuren voor de grafiek
 
--   **alt_text:** Een character met de 'alt-text' voor de grafiek. Als deze waarde leeg is, wordt er automatisch gegenereerde alt-text meegegeven die alle waarden in de grafiek bevat
+-   **alt_text:** Een character met de 'alt-text' voor de grafiek. Als deze waarde leeg is, wordt er automatisch gegenereerde alt-text meegegeven die alle waarden in de grafiek bevat.
 
 -   **nvar:** Een numeric met het minimum aantal observaties per vraag. Als deze waarde leeg is, wordt de standaardwaarde voor nvar aangehouden.
 
 -   **ncel:** Een numeric met het minimum aantal observaties per antwoord. Als deze waarde leeg is, wordt de standaardwaarde voor ncel aangehouden.
+
+-   **niveaus:** Een character vector met de niveaus c("nl","regio","gemeente"). Standaard op GGD-regio "regio" ingesteld. Kan meerdere niveaus hebben voor niveauvergelijking. Dit kan alleen als var_crossing_kleur OF var_crossing_groep leeg is. De regio-vergelijking neemt de lege plek dan over.
 
 ### Standaard staafdiagram met dubbele uitsplitsing
 
@@ -205,7 +191,7 @@ plot
 ### Aangepast staafdiagram met dubbele uitsplitsing
 
 ```{r, fig.alt= ggplot2::get_alt_text(plot)}
-#Staafdiagram met dubbele uitsplitsing, eigen titel, kleuren, alt-text, nvar en ncel
+#Staafdiagram met dubbele uitsplitsing, eigen titel, kleuren, custom alt-text, nvar en ncel
 plot = monitor_df %>% 
   maak_staafdiagram_dubbele_uitsplitsing(
     var_inhoud = "LVEES404",
@@ -233,7 +219,9 @@ De functie **maak_staafdiagram_vergelijking()** maakt een staafdiagram voor een 
 
 ### Optionele argumenten:
 
-Dezelfde optionele argumenten als in [**maak_staafdiagram_dubbele_uitsplitsing():**](#optionele-argumenten-1):
+-   **niveaus:** Een character met één niveau uit "nl","regio" of "gemeente". Standaard op GGD-regio "regio" ingesteld. Filtert data op ingegeven niveau.
+
+Verder dezelfde optionele argumenten als in [**maak_staafdiagram_dubbele_uitsplitsing():**](#optionele-argumenten-1) 
 
 ### Standaard staafdiagram met vergelijking
 
@@ -253,16 +241,22 @@ plot
 
 De functie **maak_staafdiagram_meerdere_staven()** maakt een staafdiagram voor ieder soort variabele waarbij de percentages per antwoord worden weergeven. Optioneel kan een kruisvariabele ingevoerd worden, de grafiek zal de percentages dan opsplitsen op kleur. De grafiek kan ook horizontaal weergeven worden.
 
+Alternatief kan de functie gebruikt worden om meerdere indicatoren naast elkaar te tonen of om slechts de percentages van 1 antwoord te tonen (ipv alle antwoorden).
+
 ### Nodige argumenten:
 
 -   **var_inhoud:** Een character met de naam van een dichotome variabele
 
 ### Optionele argumenten:
 
+-   **var_crossing:** Een character met de naam van één kruisvariabele
+-   **niveaus:** Een character vector met de niveaus c("nl","regio","gemeente"). Standaard op GGD-regio "regio" ingesteld. Kan meerdere niveaus hebben voor niveauvergelijking. Dit kan alleen als var_crossing leeg is.
+-   **var_inhoud_waarden:** Een numeric vector waar de numerieke waarden voor antwoorden ingevuld kunnen worden. Als deze waarde leeg is worden alle antwoorden getoond. Anders alleen de antwoorden die zijn ingevuld.
+-   **flip:** TRUE of FALSE. Als TRUE wordt de grafiek horizontaal weergeven
+
 Naast dezelfde optionele argumenten als in [**maak_staafdiagram_dubbele_uitsplitsing():**](#optionele-argumenten-1):
 
--   **var_crossing:** Een character met de naam van één kruisvariabele
--   **flip:** TRUE of FALSE. Als TRUE wordt de grafiek horizontaal weergeven
+
 
 ### Standaard staafdiagram met meerdere staven
 
@@ -270,7 +264,8 @@ Naast dezelfde optionele argumenten als in [**maak_staafdiagram_dubbele_uitsplit
 #Standaard staafdiagram met meerdere staven
 plot = monitor_df %>% 
   maak_staafdiagram_meerdere_staven(
-    var_inhoud = "LVVTA404"
+    var_inhoud = "LVVTA404",
+    niveaus = c("nl","gemeente")
     )
 
 plot
@@ -291,6 +286,47 @@ plot = monitor_df %>%
 plot
 ```
 
+### Aangepast staafdiagram met meerdere staven: Verschillende indicatoren
+
+Om de percentages van meerdere indicatoren te tonen kan bij var_inhoud een vector ingevoerd worden met die indicatoren. Per indiactor wordt dan het percentage gegeven voor het antwoord met de waarde 1.
+
+Deze mogelijkheid is daarom alleen geschikt voor dichotome vragen waarbij het bevestigende antwoord de waarde 1 heeft.
+
+```{r, fig.alt = ggplot2::get_alt_text(plot)}
+#Staafdiagram met meerdere staven, kruisvariabele en flip = TRUE
+plot = monitor_df %>% 
+  maak_staafdiagram_meerdere_staven(
+    var_inhoud = c("LVVTA405","LVVTA406","LVVTA407"),
+    var_crossing = "AGGSA402",
+    flip = TRUE
+    
+  )
+
+plot
+
+```
+
+
+### Aangepast staafdiagram met meerdere staven: Antwoorden filteren
+
+Het is ook mogelijk om antwoorden weg te filteren uit maak_staafdiagram_meerdere_staven(). Dit kan met de parameter **var_inhoud_waarden**
+Let op: Als je waarden invoert die niet bestaan zullen die zonder foutmelding genegeerd worden. 
+
+```{r, fig.alt = ggplot2::get_alt_text(plot)}
+#Staafdiagram met meerdere staven, kruisvariabele en flip = TRUE
+plot = monitor_df %>% 
+  maak_staafdiagram_meerdere_staven(
+    var_inhoud = "LVVTA404",
+    niveaus = c("nl","regio", "gemeente"),
+    var_inhoud_waarden = c(1,2),
+    flip = TRUE
+    )
+
+plot
+```
+
+
+
 ## Staafdiagram uitsplitsing naast elkaar
 
 De functie **maak_staafdiagram_uitsplitsing_naast_elkaar()** maakt een staafdiagram voor **dichotome variabelen** waarbij de percentages 'ja' (1) voor meerdere kruisvariabelen per uitsplitsing worden weergeven. Optioneel worden de onderscheiden op kleur. De grafiek kan ook horizontaal weergeven worden.
@@ -309,6 +345,8 @@ Naast dezelfde optionele argumenten als in [**maak_staafdiagram_dubbele_uitsplit
 -   **fade_kleuren:** TRUE of FALSE. Als TRUE is er overloop in de kleuren per uitsplitsing
 
 -   **flip:** TRUE of FALSE. Als TRUE wordt de grafiek horizontaal weergeven
+
+-   **niveaus:** Een character met één niveau uit "nl","regio" of "gemeente". Standaard op GGD-regio "regio" ingesteld. Filtert data op ingegeven niveau.
 
 ### Standaard staafdiagram met uitsplitsingen naast elkaar
 
@@ -333,8 +371,7 @@ plot = monitor_df %>%
     var_crossings = c("AGGSA402","AGLFA401","AGOWS404"),
     kleuren_per_crossing = TRUE,
     fade_kleuren = TRUE,
-    flip = TRUE,
-    niveaus = "gemeente"
+    flip = TRUE
   )
 
 plot
@@ -374,7 +411,8 @@ Naast dezelfde optionele argumenten als in [**maak_staafdiagram_dubbele_uitsplit
 #Standaard gestapeld staafdiagram
 plot = monitor_df %>% 
   maak_staafdiagram_gestapeld(
-    var_inhoud = "LVVTA404"
+    var_inhoud = "LVVTA404",
+    niveaus = c("nl","regio")
   )
 
 plot
@@ -388,7 +426,6 @@ plot = monitor_df %>%
   maak_staafdiagram_gestapeld(
     var_inhoud = "LVVTA404",
     var_crossing = "AGGSA402"
-    
   )
 
 plot
