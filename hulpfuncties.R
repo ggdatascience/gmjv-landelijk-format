@@ -161,8 +161,8 @@ prop_ci_berekenen <- function(data = NULL, variabele = NULL, nummer = NULL, cros
 #Maakt een kruistabel
 #Deze functie wordt niet direct gebruikt in het script, maar wordt binnen de maak-grafieken functies gebruikt
 bereken_kruistabel <- function(data, survey_design = NULL, variabele = NULL, crossing = NULL,
-                               var_jaar = NULL, min_observaties_per_vraag = default_Nvar,
-                               min_observaties_per_antwoord = default_Ncel) { 
+                               var_jaar = NULL, min_observaties_per_vraag = params$default_nvar,
+                               min_observaties_per_antwoord = params$default_ncel) { 
 
   #survey pikt het niet als delen v formules niet in .globalEnv staan. Daarom <<- en later
   #opruimen.
@@ -453,8 +453,8 @@ labelled_naar_character <- function(data,var){
 
 kruistabel_met_subset <- function(data, variabele = NULL, crossing = NULL, subsetvar,
                                   survey_design = NULL,
-                                  nvar = default_Nvar,
-                                  ncel = default_Ncel){
+                                  nvar = params$default_nvar,
+                                  ncel = params$default_ncel){
 
   #alle lvls van subsetvar
   alle_subsets <- unique(data[[subsetvar]])
@@ -575,7 +575,7 @@ cbs_populatie_opschonen <- function(file = params$path_cbs_data,
 
 # Tabelfuncties -------------------------------------------------------
 maak_responstabel <- function(data, crossings, missing_label = "Onbekend",
-                              kleuren = default_kleuren_responstabel,
+                              kleuren = params$default_kleuren_responstabel,
                               huidig_jaar = 2024,
                               jaarvar = "AGOJB401",
                               niveaus = "regio"
@@ -732,8 +732,8 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
                                                    var_crossing_groep = NULL,
                                                    var_crossing_kleur = NULL,
                                                    titel = "",
-                                                   kleuren = default_kleuren_grafiek,
-                                                   nvar = default_Nvar, ncel = default_Ncel,
+                                                   kleuren = params$default_kleuren_grafiek,
+                                                   nvar = params$default_nvar, ncel = params$default_ncel,
                                                    alt_text = NULL,
                                                    huidig_jaar = 2024,
                                                    jaarvar = "AGOJB401",
@@ -944,8 +944,8 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
 
 
 maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, titel = "",
-                                           kleuren = default_kleuren_grafiek,
-                                           nvar = default_Nvar, ncel = default_Ncel,
+                                           kleuren = params$default_kleuren_grafiek,
+                                           nvar = params$default_nvar, ncel = params$default_ncel,
                                            alt_text = NULL,
                                            huidig_jaar = 2024,
                                            jaarvar = "AGOJB401",
@@ -1105,8 +1105,8 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
 
 maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = NULL, 
                                               titel = "",
-                                              kleuren = default_kleuren_grafiek,
-                                              flip = FALSE, nvar = default_Nvar, ncel = default_Ncel,
+                                              kleuren = params$default_kleuren_grafiek,
+                                              flip = FALSE, nvar = params$default_nvar, ncel = params$default_ncel,
                                               alt_text = NULL,
                                               huidig_jaar = 2024,
                                               jaarvar = "AGOJB401",
@@ -1371,9 +1371,10 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
 
 #TODO Overal chekc inbouwen of een var wel een lbl+dbl is. Of niet afh. van maak_kruistabel() output.
 maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_crossings, titel = "",
-                                                        kleuren = default_kleuren_grafiek,
+                                                        kleuren = params$default_kleuren_grafiek,
                                                         kleuren_per_crossing = F, fade_kleuren = F,
-                                                        flip = FALSE, nvar = default_Nvar, ncel = default_Ncel,
+                                                        flip = FALSE, nvar = params$default_nvar,
+                                                        ncel = params$default_ncel,
                                                         alt_text = NULL,
                                                         huidig_jaar = 2024,
                                                         jaarvar = "AGOJB401",
@@ -1583,8 +1584,8 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
 
 #horizontaal gestapeld staafdiagram
 maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, titel = "",
-                                        kleuren = default_kleuren_grafiek, x_label = "",
-                                        nvar = default_Nvar, ncel = default_Ncel,
+                                        kleuren = params$default_kleuren_grafiek, x_label = "",
+                                        nvar = params$default_nvar, ncel = params$default_ncel,
                                         alt_text = NULL,
                                         huidig_jaar = 2024,
                                         jaarvar = "AGOJB401",
@@ -1749,8 +1750,8 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
 
 #TODO titel tekst kan wegvallen bij Cirkeldiagram
 
-maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = default_kleuren_grafiek,
-                               nvar = default_Nvar, ncel = default_Ncel, alt_text = NULL,
+maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = params$default_kleuren_grafiek,
+                               nvar = params$default_nvar, ncel = params$default_ncel, alt_text = NULL,
                                niveaus = "regio", huidig_jaar = 2024, jaarvar = "AGOJB401") {
   
   if(!labelled::is.labelled(data[[var_inhoud]])){
@@ -1878,7 +1879,7 @@ maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = default_
 
 }
 
-bol_met_cijfer <- function(getal, kleur = default_kleuren_grafiek[3], kleur_outline = "#FFFFFF", kleur_text = "#FFFFFF"){
+bol_met_cijfer <- function(getal, kleur = params$default_kleuren_grafiek[3], kleur_outline = "#FFFFFF", kleur_text = "#FFFFFF"){
   
   
   # Voeg de ingevoerde informatie op de juiste plekken in de svg code met behulp van glue
@@ -1905,7 +1906,7 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
                                        niveaus = c("nl","regio","gemeente"),
                                        missing_label = "Onbekend",
                                        missing_bewaren = TRUE,
-                                       kleuren = default_kleuren_grafiek,
+                                       kleuren = params$default_kleuren_grafiek,
                                        titel = "",
                                        x_label = "",
                                        alt_text = NULL
