@@ -63,7 +63,7 @@ De meeste instellingen kan je laten staan. Het volgende moet aangepast of gecont
 -   **default_nvar:** voer hier het algemene minimum aantal respondenten per vraag in
 -   **default_ncel:** voer hier het algemene minimum aantal respondenten per antwoord in
 -   **default_kleuren_grafiek:** Voer hier een vector in met de standaard kleurcodes voor grafieken. 
--   **default_kleuren_responstabel:** Voer hier een vector in met de standaard kleurcodes voor responstabellen
+-   **default_kleuren_responstabel:** Voer hier een named vector in met 4 kleurcodes als standaard voor responstabellen. Zie het voorbeeld voor de namen.
 
 
 ## Rapporten per gemeente uitdraaien
