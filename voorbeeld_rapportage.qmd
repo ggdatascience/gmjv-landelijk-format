@@ -178,7 +178,7 @@ De resultaten kunnen helpen bij de invulling en ontwikkeling van het gezondheids
 
 Vanwege de betrouwbaarheid van de resultaten en de privacy van de respondenten hanteren wij bij de rapportage een minimum van 100 respondenten die de vraag ingevuld hebben en een minimum van 10 respondenten per specifiek antwoord. Indien de aantallen lager liggen, worden de cijfers niet weergegeven.
 
-De cijfers die hier worden gepresenteerd zijn gestandaardiseerd naar GGD-regio, leeftijd (16-17 jaar, 18-20 jaar en 21-25 jaar) en gender (in twee groepen: mannen en vrouwen). Op deze manier geven de cijfers een zo representatief mogelijk beeld geven van alle jongvolwassenen in Nederland en de verschillende regio's. In de Gezondheidsmonitor Jongvolwassenen 2024 is genderidentiteit uitgevraagd met de antwoordopties "man", "vrouw", "non-binair" en "anders dan bovenstaande". Ten behoeve van de standaardisatie is een nieuwe variabele 'Geslacht_standaardisatie' aangemaakt, waarin gender "non-binair"/"anders dan bovenstaande" (samen 1,4%) random geïmputeerd zijn tot man/vrouw. Deze methode is gekozen omdat de populatiereferentie-aantallen (vanuit het CBS) alleen beschikbaar zijn voor geslacht man en vrouw. De variabele "Geslacht_standaardisatie" is alleen gebruikt voor het berekenen van standaardisatiefactoren en is niet gebruikt voor de cijfers uitgesplitst naar mannen en vrouwen in deze rapportage.
+De cijfers die hier worden gepresenteerd zijn gestandaardiseerd naar GGD-regio, leeftijd (16-17 jaar, 18-20 jaar en 21-25 jaar) en gender (in twee groepen: mannen en vrouwen). Op deze manier geven de cijfers een zo representatief mogelijk beeld van van alle jongvolwassenen in uw gemeente en de regio. In de Gezondheidsmonitor Jongvolwassenen 2024 is genderidentiteit uitgevraagd met de antwoordopties "man", "vrouw", "non-binair" en "anders dan bovenstaande". Ten behoeve van de standaardisatie is een nieuwe variabele 'Geslacht_standaardisatie' aangemaakt, waarin gender "non-binair"/"anders dan bovenstaande" (samen 1,4%) random geïmputeerd zijn tot man/vrouw. Deze methode is gekozen omdat de populatiereferentie-aantallen (vanuit het CBS) alleen beschikbaar zijn voor geslacht man en vrouw. De variabele "Geslacht_standaardisatie" is alleen gebruikt voor het berekenen van standaardisatiefactoren en is niet gebruikt voor de cijfers uitgesplitst naar mannen en vrouwen in deze rapportage.
 
 # Achtergrondkenmerken
 
@@ -603,7 +603,7 @@ monitor_df %>%
 
 monitor_df %>% 
   maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>%
-  bol_met_cijfer(niveau = "Gemeente", omschrijving = "ervaart prestatiedruk vanuit zichzelf", 
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "ervaart prestatiedruk vanuit anderen.", 
                  kleur = params$default_kleuren_grafiek[2])
 
 
@@ -1070,7 +1070,7 @@ Selectie maken van grafieken hier?
 
 # Middelengebruik
 
-::: {layout="[[30,30,30],[30,30,30]]"}
+::: {layout="[100]"}
 ::: column
 **Alcohol**
 
@@ -1078,77 +1078,358 @@ De hersenen van jongvolwassenen zijn tot het 25e levensjaar volop in ontwikkelin
 
 <br>
 
-Het advies van de Gezondheidsraad is: Drink geen alcohol of in ieder geval niet meer dan één glas per dag. LFALS401% van de jongvolwassenen in uw gemeente voldoet aan dit advies. Dit is regionaal \[toegenomen/afgenomen/gelijk gebleven\] ten opzichte van 2022 (XX%).
+Het advies van de Gezondheidsraad is: Drink geen alcohol of in ieder geval niet meer dan één glas per dag. `r monitor_df %>% maak_percentage(var_inhoud = 'LFALS401', niveau = "gemeente")` van de jongvolwassenen in uw gemeente voldoet aan dit advies. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LFALS401', variabele_label = 'maximaal 1 glas alcohol per dag drinkt', var_crossing = 'AGOJB401')`
+
+<br>
+
+`r monitor_df %>% maak_percentage(var_inhoud = 'LFALA416', niveau = "gemeente")` van de jongvolwassenen in uw gemeente geeft aan dat vrienden het normaal vinden om 10 glazen alcohol op één dag of avond te drinken. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LFALA416', variabele_label = 'dit aangeeft', var_crossing = 'AGOJB401')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LFALA416', variabele_label = 'aangeeft dat vrienden het normaal vinden om 10 glazen alcohol op één gelegenheid te drinken', var_crossing = 'AGLFA401')`
+:::
+:::
+
+::: {layout="[50,225,50,225]"}
+::: column
+```{r Alcohol 1, echo = F, warning = F}
+
+monitor_df %>%
+  maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>% 
+  bol_met_cijfer(niveau = "Regio")
+
+```
 :::
 
 ::: column
-Grafiek alcohol drinken LFALA413
+```{r Alcohol 2, echo = F, warning = F}
+
+monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>%
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "is een zware drinker.",
+                 kleur = params$default_kleuren_grafiek[2])
+
+
+```
 :::
 
 ::: column
-LFALA416% van de jongvolwassenen in uw gemeente geeft aan dat vrienden het normaal vinden om 10 glazen alcohol op één dag of avond te drinken. Dit is regionaal \[toegenomen/afgenomen/gelijk gebleven\] ten opzichte van 2022 (XX%). Dit percentage is regionaal hoger/lager onder XX-jarigen.
 :::
 
 ::: column
-Bolletjes LFALS402
+Hier nog andere bolletjes zetten?
+:::
+:::
+
+::: {layout="[50,50]"}
+::: column
+```{r Alcohol 3, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+
+plot = monitor_df %>%
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "GZGGA402",
+    var_crossings = "AGLFA401",
+    titel = "Alcoholgebruik in het afgelopen jaar"
+  )
+
+plot
+
+```
 :::
 
 ::: column
-Grafiek alcohol drinken LFALA414
+```{r Alcohol 4, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+
+plot = monitor_df %>%
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "GZGGA402",
+    var_crossings = "AGLFA401",
+    titel = "Alcoholgebruik in de afgelopen 4 weken"
+  )
+
+plot
+
+```
+:::
 :::
 
+::: {layout="[100]"}
 ::: column
 **Roken, vapen en snus**
 
 Roken is een belangrijke oorzaak van ziekte en sterfte in Nederland. Hoe jonger iemand start met roken, hoe groter de kans is op een rookverslaving.
 
 `r monitor_df %>% maak_vergelijking(var_inhoud = 'LFRKA403', variabele_label = 'wel eens rookt', var_crossing = 'AGOJB401')`
-:::
-:::
 
-# Middelengebruik 2
+<br>
 
-::: {layout="[[30,30,30],[30,30,30]]"}
-::: column
-`r monitor_df %>% maak_percentage(var_inhoud = 'LFRKA403') %>% bol_met_cijfer()`
-:::
-
-::: column
 Vapen is een vorm van roken, waarbij vloeistof opgewarmd wordt en niet verbrand. Net als bij roken, zitten in vapes veel stoffen die slecht zijn voor de gezondheid. De nicotinezouten die in sommige vapes zitten, zijn vele malen sterker dan nicotine in een sigaret.
 
 `r monitor_df %>% maak_vergelijking(var_inhoud = 'LFRKA403', variabele_label = 'vapet', var_crossing = 'AGLFA401')`
-:::
 
-::: column
-`r monitor_df %>% maak_percentage(var_inhoud = 'LFRKA403') %>% bol_met_cijfer()`
-:::
+<br>
 
-::: column
-`r monitor_df %>% maak_percentage(var_inhoud = 'LFRKA403') %>% bol_met_cijfer()`
-:::
-
-::: column
 Snus zijn nicotinezakjes die in de mond worden gestopt. Nicotinezakjes verhogen het risico op bepaalde vormen van kanker, zoals kanker in de mondholte.
 
 `r monitor_df %>% maak_vergelijking(var_inhoud = 'LFRKA403', variabele_label = 'snus gebruikt', var_crossing = 'AGLFA401')`
 :::
+:::
 
+::: {layout="[50,225,50,225]"}
+::: column
+```{r Roken 1, echo = F, warning = F}
+
+monitor_df %>%
+  maak_percentage(var_inhoud = 'LFRKA403', niveau = "regio") %>% 
+  bol_met_cijfer(niveau = "Regio")
+
+```
+:::
+
+::: column
+```{r Roken 2, echo = F, warning = F}
+
+monitor_df %>% maak_percentage(var_inhoud = 'LFRKA403', niveau = "gemeente") %>%
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "rookt wel eens.",
+                 kleur = params$default_kleuren_grafiek[2])
+
+
+```
+:::
+
+::: column
+```{r Roken 3, echo = F, warning = F}
+
+monitor_df %>%
+  maak_percentage(var_inhoud = 'LFRKA403', niveau = "regio") %>% 
+  bol_met_cijfer(niveau = "Regio")
+
+```
+:::
+
+::: column
+```{r Roken 4, echo = F, warning = F}
+
+monitor_df %>% 
+  maak_percentage(var_inhoud = 'LFRKA403', niveau = "gemeente") %>%
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "vapet wel eens.",
+                 kleur = params$default_kleuren_grafiek[2])
+
+
+```
+:::
+:::
+
+::: {layout="[50,50]"}
+::: column
+```{r Roken 5, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+
+plot = monitor_df %>%
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "GZGGA402",
+    var_crossings = "AGLFA401",
+    titel = "Rookt wel eens"
+  )
+
+plot
+
+```
+:::
+
+::: column
+```{r Roken 6, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+
+plot = monitor_df %>%
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "GZGGA402",
+    var_crossings = "AGLFA401",
+    titel = "Rookt wekelijks"
+  )
+
+plot
+
+```
+:::
+:::
+
+::: {layout="[50,50]"}
+::: column
+```{r Roken 7, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+
+plot = monitor_df %>%
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "GZGGA402",
+    var_crossings = "AGLFA401",
+    titel = "Rookt dagelijks"
+  )
+
+plot
+
+```
+:::
+
+::: column
+```{r Roken 8, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+
+plot = monitor_df %>%
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "GZGGA402",
+    var_crossings = "AGLFA401",
+    titel = "Vapet wel eens"
+  )
+
+plot
+
+```
+:::
+:::
+
+::: {layout="[50,50]"}
+::: column
+```{r Roken 9, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+
+plot = monitor_df %>%
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "GZGGA402",
+    var_crossings = "AGLFA401",
+    titel = "Vapet wekelijks"
+  )
+
+plot
+
+```
+:::
+
+::: column
+```{r Roken 10, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+
+plot = monitor_df %>%
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "GZGGA402",
+    var_crossings = "AGLFA401",
+    titel = "Vapet dagelijks"
+  )
+
+plot
+
+```
+:::
+:::
+
+::: {layout="[50,50]"}
+::: column
+```{r Roken 11, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+
+plot = monitor_df %>%
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "GZGGA402",
+    var_crossings = "AGLFA401",
+    titel = "Gebruikt wel eens snus"
+  )
+
+plot
+
+```
+:::
+
+::: column
+```{r Roken 12, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+
+plot = monitor_df %>%
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "GZGGA402",
+    var_crossings = "AGLFA401",
+    titel = "Gebruikt wekelijks snus"
+  )
+
+plot
+
+```
+:::
+:::
+
+::: {layout="[50,50]"}
+::: column
+```{r Roken 13, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+
+plot = monitor_df %>%
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "GZGGA402",
+    var_crossings = "AGLFA401",
+    titel = "Gebruikt dagelijks snus"
+  )
+
+plot
+
+```
+:::
+
+::: column
+Selectie maken in grafieken, niet allemaal tonen?
+:::
+:::
+
+::: {layout="[100]"}
 ::: column
 **Drugs**
 
 Het gebruik van drugs leidt bij langdurig en regelmatig gebruik tot (geestelijke) afhankelijkheid, psychische stoornissen en andere gezondheidsrisico’s.
 
 `r monitor_df %>% maak_vergelijking(var_inhoud = 'LFDGA427', variabele_label = 'cannabis gebruikt heeft in de afgelopen vier weken', var_crossing = 'AGOJB401')`
+
+<br>
+
+Drugs anders dan cannabis die ooit het vaakst door jongvolwassenen zijn gebruikt:
+
+-   `r maak_top(data = monitor_df, var_inhoud = c("LFDGB403", "LFDGB404", "LFDGB405", "LFDGB406", "LFDGB407", "LFDGB408", "LFDGB409", "LFDGB410", "LFDGB411"), top = 1)`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LFDGB403", "LFDGB404", "LFDGB405", "LFDGB406", "LFDGB407", "LFDGB408", "LFDGB409", "LFDGB410", "LFDGB411"), top = 2)`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LFDGB403", "LFDGB404", "LFDGB405", "LFDGB406", "LFDGB407", "LFDGB408", "LFDGB409", "LFDGB410", "LFDGB411"), top = 3)`
 :::
 :::
 
-# Middelengebruik 3
-
-::: {layout="[[30,30,30],[30,30,30]]"}
+::: {layout="[50,225,50,225]"}
 ::: column
-`r monitor_df %>% maak_percentage(var_inhoud = 'LFDGA427') %>% bol_met_cijfer()`
+```{r Drugs 1, echo = F, warning = F}
+
+monitor_df %>%
+  maak_percentage(var_inhoud = 'LFDGA427', niveau = "regio") %>% 
+  bol_met_cijfer(niveau = "Regio")
+
+```
 :::
 
+::: column
+```{r Drugs 2, echo = F, warning = F}
+
+monitor_df %>% maak_percentage(var_inhoud = 'LFDGA427', niveau = "gemeente") %>%
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "heeft cannabis gebruikt",
+                 omschrijving2 = "in afgelopen 4 weken.",
+                 kleur = params$default_kleuren_grafiek[2])
+
+
+```
+:::
+
+::: column
+```{r Drugs 3, echo = F, warning = F}
+
+monitor_df %>%
+  maak_percentage(var_inhoud = 'LFDGS404', niveau = "regio") %>% 
+  bol_met_cijfer(niveau = "Regio")
+
+```
+:::
+
+::: column
+```{r Drugs 4, echo = F, warning = F}
+
+monitor_df %>% 
+  maak_percentage(var_inhoud = 'LFDGS404', niveau = "gemeente") %>%
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "heeft andere drugs dan cannabis gebruikt",
+                 omschrijving2 = "in afgelopen 4 weken.",
+                 kleur = params$default_kleuren_grafiek[2])
+
+
+```
+:::
+:::
+
+::: {layout="[50,50]"}
 ::: column
 ```{r Middelengebruik 3, echo = F, warning = F, fig.alt = ggplot2::get_alt_text(plot)}
 #Staafdiagram met uitsplitsingen naast elkaar, met overlopende kleuren & horizontaal
@@ -1167,27 +1448,13 @@ plot
 :::
 
 ::: column
-:::
-
-::: column
-`r monitor_df %>% maak_percentage(var_inhoud = 'LFDGS404') %>% bol_met_cijfer()`
-:::
-
-::: column
-Drugs anders dan cannabis die ooit het vaakst door jongvolwassenen zijn gebruikt:
-
--   `r maak_top(data = monitor_df, var_inhoud = c("LFDGB403", "LFDGB404", "LFDGB405", "LFDGB406", "LFDGB407", "LFDGB408", "LFDGB409", "LFDGB410", "LFDGB411"), top = 1)`
--   `r maak_top(data = monitor_df, var_inhoud = c("LFDGB403", "LFDGB404", "LFDGB405", "LFDGB406", "LFDGB407", "LFDGB408", "LFDGB409", "LFDGB410", "LFDGB411"), top = 2)`
--   `r maak_top(data = monitor_df, var_inhoud = c("LFDGB403", "LFDGB404", "LFDGB405", "LFDGB406", "LFDGB407", "LFDGB408", "LFDGB409", "LFDGB410", "LFDGB411"), top = 3)`
-:::
-
-::: column
+Hier nog iets plaatsen?
 :::
 :::
 
-# Jongvolwassenen en de coronaperiode
+# De coronaperiode
 
-::: {layout="[[30,30,30],[30,30,30]]"}
+::: {layout="[100]"}
 ::: column
 De coronaperiode ligt inmiddels achter ons, maar de gevolgen kunnen nog wel merkbaar zijn.
 
@@ -1195,11 +1462,72 @@ De coronaperiode ligt inmiddels achter ons, maar de gevolgen kunnen nog wel merk
 
 Jongvolwassen ervaren zowel positieve als negatieve gevolgen van de coronaperiode.
 :::
-
-::: column
-`r monitor_df %>% maak_percentage(var_inhoud = 'LFDGA427') %>% bol_met_cijfer()`
 :::
 
+::: {layout="[50,225,50,225]"}
+::: column
+```{r Corona 1, echo = F, warning = F}
+
+monitor_df %>%
+  maak_percentage(var_inhoud = 'LFDGA427', niveau = "regio") %>% 
+  bol_met_cijfer(niveau = "Regio")
+
+```
+:::
+
+::: column
+```{r Corona 2, echo = F, warning = F}
+
+monitor_df %>% maak_percentage(var_inhoud = 'LFDGA427', niveau = "gemeente") %>%
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "ervaart negatieve gevolgen van corona",
+                 kleur = params$default_kleuren_grafiek[2])
+
+
+```
+:::
+
+::: column
+```{r Corona 3, echo = F, warning = F}
+
+monitor_df %>%
+  maak_percentage(var_inhoud = 'LFDGS404', niveau = "regio") %>% 
+  bol_met_cijfer(niveau = "Regio")
+
+```
+:::
+
+::: column
+```{r Corona 4, echo = F, warning = F}
+
+monitor_df %>% 
+  maak_percentage(var_inhoud = 'LFDGS404', niveau = "gemeente") %>%
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "ervaart positieve gevolgen van corona",
+                 kleur = params$default_kleuren_grafiek[2])
+
+
+```
+:::
+:::
+
+::: {layout="[50,50]"}
+::: column
+Top 3 van negatieve gevolgen:
+
+-   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 1, niveau = "gemeente")`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 2, niveau = "gemeente")`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 3, niveau = "gemeente")`
+:::
+
+::: column
+Top 3 van positieve gevolgen:
+
+-   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 1, niveau = "gemeente")`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 2, niveau = "gemeente")`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 3, niveau = "gemeente")`
+:::
+:::
+
+::: {layout="[100]"}
 ::: column
 `r #monitor_df %>% maak_percentage(var_inhoud = 'CPLCA405')` van de jongvolwassenen in uw gemeente heeft 3 maanden of langer klachten van het coronavirus. Bij `r #monitor_df %>% maak_percentage(var_inhoud = 'CPLCA410')` is post-covid vastgesteld door een arts.
 
@@ -1207,50 +1535,113 @@ Jongvolwassen ervaren zowel positieve als negatieve gevolgen van de coronaperiod
 
 Meer informatie over post-covid en (financiële) hulp bij post-covid is te vinden op de website van de [rijksoverheid](https://www.rijksoverheid.nl/onderwerpen/coronavirus-covid-19/luchtwegvirussen-zoals-griep-en-corona/post-covid).
 :::
+:::
 
+::: {layout="[50,225,50,225]"}
 ::: column
-Top 3 invoegen?
+```{r Corona 5, echo = F, warning = F}
+
+monitor_df %>%
+  maak_percentage(var_inhoud = 'LFDGA427', niveau = "regio") %>% 
+  bol_met_cijfer(niveau = "Regio")
+
+```
 :::
 
 ::: column
-`r monitor_df %>% maak_percentage(var_inhoud = 'LFDGA427') %>% bol_met_cijfer()`
+```{r Corona 6, echo = F, warning = F}
+
+monitor_df %>% maak_percentage(var_inhoud = 'LFDGA427', niveau = "gemeente") %>%
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "heeft 3 maanden of langer",
+                 omschrijving2 = "klachten van het coronavirus.",
+                 kleur = params$default_kleuren_grafiek[2])
+
+
+```
 :::
 
 ::: column
-`r monitor_df %>% maak_percentage(var_inhoud = 'LFDGA427') %>% bol_met_cijfer()` `r monitor_df %>% maak_percentage(var_inhoud = 'LFDGA427') %>% bol_met_cijfer()`
+```{r Corona 7, echo = F, warning = F}
+
+monitor_df %>%
+  maak_percentage(var_inhoud = 'LFDGS404', niveau = "regio") %>% 
+  bol_met_cijfer(niveau = "Regio")
+
+```
+:::
+
+::: column
+```{r Corona 8, echo = F, warning = F}
+
+monitor_df %>% 
+  maak_percentage(var_inhoud = 'LFDGS404', niveau = "gemeente") %>%
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "voelt zich beperkt in het dagelijkse leven",
+                 omschrijving2 = "door klachten.",
+                 kleur = params$default_kleuren_grafiek[2])
+
+
+```
 :::
 :::
 
 # Digitale leefomgeving
 
-::: {layout="[[30,30,30],[30,30,30]]"}
+::: {layout="[100]"}
 ::: column
 **Social media en gamen**
 
-Als jongvolwassenen het gebruik van social media niet meer onder controle hebben, kunnen er problemen ontstaan in het dagelijks functioneren. Er is dan sprake van problematisch gebruik van social media.
+Als jongvolwassenen het gebruik van sociale media en/of gamen niet meer onder controle hebben, kunnen er problemen ontstaan in het dagelijks functioneren (bijvoorbeeld sociale conflicten, onthoudingsverschijnselen en vluchtgedrag). Dit kan negatieve effecten hebben op verschillende aspecten van gezondheid, zoals mentaal welbevinden, eenzaamheid en slaap.
+:::
+:::
+
+::: {layout="[50,225,50,225]"}
+::: column
+```{r Digitaal 1, echo = F, warning = F}
+
+monitor_df %>%
+  maak_percentage(var_inhoud = 'LFDGS404', niveau = "regio") %>% 
+  bol_met_cijfer(niveau = "Regio")
+
+```
 :::
 
 ::: column
-Bolletjes problematisch social meida gebruik
+```{r Digitaal 2, echo = F, warning = F}
+
+monitor_df %>% maak_percentage(var_inhoud = 'LFDGS404', niveau = "gemeente") %>%
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "heeft risico op problematisch",
+                 omschrijving2 = "social media gebruik.",
+                 kleur = params$default_kleuren_grafiek[2])
+
+
+```
 :::
 
 ::: column
+```{r Digitaal 3, echo = F, warning = F}
+
+monitor_df %>%
+  maak_percentage(var_inhoud = 'LFDGS404', niveau = "regio") %>% 
+  bol_met_cijfer(niveau = "Regio")
+
+```
 :::
 
 ::: column
-Gamen kan overgaan in risicovol gamen wanneer het wordt gekenmerkt door een verlies van controle over het gamen, sociale conflicten, continu aan gamen denken, onthoudingsverschijnselen bij niet gamen, problemen door het gamen, en vluchtgedrag in het gamen. Dit kan negatieve effecten hebben op verschillende aspecten van gezondheid, zoals mentaal welbevinden, eenzaamheid en slaap.
+```{r Digitaal 4, echo = F, warning = F}
+
+monitor_df %>% 
+  maak_percentage(var_inhoud = 'LFDGS404', niveau = "gemeente") %>%
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "heeft risico op problematisch",
+                 omschrijving2 = "gamegedrag.",
+                 kleur = params$default_kleuren_grafiek[2])
+
+
+```
+:::
 :::
 
-::: column
-Bolletjes problematisch gamen
-:::
-
-::: column
-Bolletjes met DIGOA401
-:::
-:::
-
-::: {layout="[[100],[50,50]]"}
+::: {layout="[100]"}
 ::: column
 **Online gokken en beleggen**
 
@@ -1258,19 +1649,78 @@ Online gokken gaat over het spelen van online gokspellen (bijvoorbeeld fruitauto
 
 <br>
 
-`r monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente")` van de jongvolwassenen in uw gemeente heeft in de afgelopen 12 maanden online gegokt voor geld. `r monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente")` van de jongvolwassenen in uw gemeente geeft aan geld te beleggen.
+`r monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente")` van de jongvolwassenen in uw gemeente heeft in de afgelopen 12 maanden online gegokt voor geld.
+
+<br>
+
+`r monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente")` van de jongvolwassenen in uw gemeente geeft aan geld te beleggen.
+:::
+:::
+
+::: {layout="[50,225,275]"}
+::: column
+```{r Digitaal 5 1, echo = F, warning = F}
+
+monitor_df %>%
+  maak_percentage(var_inhoud = 'LVPKS403', niveau = "regio") %>% 
+  bol_met_cijfer(niveau = "Regio")
+
+```
 :::
 
 ::: column
+```{r Digitaal 6, echo = F, warning = F}
+
+monitor_df %>% maak_percentage(var_inhoud = 'LVPKS403', niveau = "gemeente") %>%
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "heeft één of meerdere keren geldproblemen.",
+                 omschrijving2 = "gekregen door het online gokken in het afgelopen jaar.",
+                 kleur = params$default_kleuren_grafiek[2])
+
+
+```
 :::
 
 ::: column
+Hier nog iets plaatsen of grafiek weglaten?
+:::
+:::
+
+::: {layout="[50,50]"}
+::: column
+```{r Digitaal 7, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+#Staafdiagram met uitsplitsingen naast elkaar, met overlopende kleuren & horizontaal
+plot = monitor_df %>% 
+  maak_staafdiagram_uitsplitsing_naast_elkaar(
+    var_inhoud = "LFDGA427",
+    var_crossings = c("AGGSA402","AGLFA401"),
+    kleuren_per_crossing = TRUE,
+    fade_kleuren = TRUE,
+    flip = TRUE, 
+    titel = "Heeft één of meerdere keren geldproblemen gekregen door het online gokken in het afgelopen jaar."
+  )
+
+plot
+```
+:::
+
+::: column
+```{r Digitaal 8, echo = F, warning = F, fig.alt = ggplot2::get_alt_text(plot)}
+plot = monitor_df %>% 
+  maak_staafdiagram_meerdere_staven(
+    var_inhoud = c("LVTEA402", "LVTEA404", "LVTEA406"),
+    titel = "Beleggen",
+    niveaus = c("regio", "gemeente"),
+    var_inhoud_waarde =  1
+  )
+
+plot
+```
 :::
 :::
 
 # Seksualiteit
 
-::: {layout="[[100],[50,50]]"}
+::: {layout="[100]"}
 ::: column
 Seksualiteit is een onderdeel van gezondheid, net zoals gezond eten, bewegen, slapen en hoe je je mentaal voelt. Onder seksualiteit verstaan we diversiteit in gender, sekse en seksuele oriëntatie, maar ook veilige seks en seksueel risicogedrag.
 
@@ -1280,17 +1730,55 @@ Seksualiteit is een onderdeel van gezondheid, net zoals gezond eten, bewegen, sl
 
 LHBTQIA+ staat voor lesbisch, homoseksueel, biseksueel, transgender, queer, intersekse en aseksueel. De + staat voor alle andere vormen die niet heteroseksueel en cisgender zijn. Uit de [rapportage van Corona Gezondheidsmonitor Jongvolwassenen 2022 “(On)gezonde start van volwassen leven: inzicht in gezondheidsverschillen van jongvolwassenen in de nasleep van de coronapandemie”](https://ggdghor.nl/wp-content/uploads/2024/07/Verdiepend-rapport-CGM-Jongvolwassenen-2022-GGD-GHOR-Nederland.pdf) bleek dat jongvolwassenen die zichzelf identificeren als LHBTQIA+ vaker een slechtere gezondheid ervaren.
 :::
+:::
+
+::: {layout="[50,225,50,225]"}
+::: column
+```{r LHBTQIA 1, echo = F, warning = F}
+
+monitor_df %>%
+  maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>% 
+  bol_met_cijfer(niveau = "Regio")
+
+```
+:::
 
 ::: column
-Bolletjes LHBTQIA+ SERIA404
+```{r LHBTQIA 2, echo = F, warning = F}
+
+monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>%
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "identificeert zich als LHBTQIA+.",
+                 kleur = params$default_kleuren_grafiek[2])
+
+
+```
 :::
 
 ::: column
-Bolletjes LHBTQIA+ SERIA411
+```{r LHBTQIA 3, echo = F, warning = F}
+
+monitor_df %>%
+  maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>% 
+  bol_met_cijfer(niveau = "Regio")
+
+```
+:::
+
+::: column
+```{r LHBTQIA 4, echo = F, warning = F}
+
+monitor_df %>% 
+  maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>%
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "vheeft nooit of soms het gevoel", 
+                 omschrijving2 = "als LHBTQIA+er zichzelf te mogen zijn bij anderen.",
+                 kleur = params$default_kleuren_grafiek[2])
+
+
+```
 :::
 :::
 
-::: {layout="[[100],[50,50]]"}
+::: {layout="[100]"}
 ::: column
 **Seksualiteit en risicogedrag**
 
@@ -1306,15 +1794,77 @@ De meest gebruikte anticonceptiemethodes bij de laatste keer seks zijn:
 
 <br>
 
+*Advies*
+
 [Sense](https://sense.info/nl) is een voorlichtingswebsite met betrouwbare informatie over relaties en seksualiteit voor jongvolwassenen. Sense maakt gebruik van video’s, podcasts, games en andere technieken om betrouwbare informatie te delen over onder andere seksueel plezier, veilige seks en wensen en grenzen. Jongvolwassenen kunnen via chat, Whatsapp, telefoon, etc. contact leggen met een hulpverlener of een afspraak maken voor een jongvolwassenenspreekuur. Ook kunnen jongvolwassenen contact zoeken met de regionale Sense afdeling via: [link]()
 :::
+:::
 
+::: {layout="[50,225,50,225]"}
 ::: column
-Bolletjes SESEA419 en SESEA417
+```{r Seks 1, echo = F, warning = F}
+
+monitor_df %>%
+  maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>% 
+  bol_met_cijfer(niveau = "Regio")
+
+```
 :::
 
 ::: column
-\[grafiek: geen anticonceptie SESEA419 naar leeftijd, regioniveau\]
+```{r Seks 2, echo = F, warning = F}
+
+monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>%
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "heeft geen anticonceptie gebruikt",
+                 omschrijving2 = "tijdens de laatste keer seks.",
+                 kleur = params$default_kleuren_grafiek[2])
+
+
+```
+:::
+
+::: column
+```{r Seks 3, echo = F, warning = F}
+
+monitor_df %>%
+  maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>% 
+  bol_met_cijfer(niveau = "Regio")
+
+```
+:::
+
+::: column
+```{r Seks 4, echo = F, warning = F}
+
+monitor_df %>% 
+  maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>%
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "gebruikt soms of nooit een condoom of beflapje", 
+                 omschrijving2 = "tijdens seks in de laatste 6 maanden om te beschermen tegen een soa.",
+                 kleur = params$default_kleuren_grafiek[2])
+
+
+```
+:::
+:::
+
+::: {layout="[50,50]"}
+::: column
+```{r Seks 5, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+
+plot = monitor_df %>%
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "GZGGA402",
+    var_crossings = "AGLFA401",
+    titel = "Gebruikt geen anticonceptie"
+  )
+
+plot
+
+```
+:::
+
+::: column
+Hier nog iets toevoegen?
 :::
 :::
 
@@ -1324,7 +1874,7 @@ Op deze pagina kunnen GGD’en hun kernboodschappen toevoegen.
 
 # Contact
 
-Advies of hulp nodig bij de duiding van de cijfers of hoe de cijfers gebruikt kunnen worden in beleid of uitvoeringsplannen? Of heeft u nog vragen over het onderzoek?
+Heeft u nog vragen over het onderzoek?
 
 Neem dan contact op met Team Onderzoek via [mail\@organisatie.nl](mailto:mail@organisatie.nl).
 
