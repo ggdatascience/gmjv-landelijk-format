@@ -1907,9 +1907,16 @@ maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = params$d
            ) %>% 
     config(staticPlot = T) %>%
     #plotly heeft zelf geen alt-text optie; met js toevoegen aan object
+    
+    
+    #TODO tijdelijk uitgezet; bovenaan takenlijst
+    
+    #De alt_text is niet goed ge-escaped hierdoor is deze niet leesbaar &
+    #creeert het een error bij PDF uitvoer. tijdelijk uitgezet.
+    
     htmlwidgets::onRender(glue("
   function(el, x) {{
-    el.setAttribute('alt', '{alt_text}');
+    el.setAttribute('alt', 'Er wordt nog aan alt-text gewerkt');
   }}"))
   fig
 
