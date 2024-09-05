@@ -285,7 +285,16 @@ plot = monitor_df %>%
 :::
 
 ::: column
-2e grafiek invoegen?
+```{r Werksituatie, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+plot = monitor_df %>% 
+   maak_staafdiagram_meerdere_staven(
+     var_inhoud = "AGWSA401",
+     titel = "Aantal uren werk per week",
+     var_crossing = "AGLFA401")
+ 
+ plot
+
+```
 :::
 :::
 
@@ -297,7 +306,7 @@ De meeste werkende jongvolwassenen in uw gemeente werken `r #monitor_df %>% maak
 
 <br>
 
-`r #monitor_df %>% maak_vergelijking(var_inhoud = '', var_crossing = 'AGOJB401')` `r #monitor_df %>% maak_vergelijking(var_inhoud = 'AGWSA412', var_crossing = 'AGOJB401')`
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'FIIKA401', variabele_label = 'moeite heeft om alles te betalen wat moet', var_crossing = 'AGLFA401')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'FIIKA401', variabele_label = 'moeite heeft om alles te betalen wat moet', var_crossing = 'AGOJB401')`
 
 <br>
 [Het Nibud](https://www.nibud.nl/) (Nationaal Instituut voor Budgetvoorlichting) geeft advies over onder andere rondkomen, sparen en geldproblemen.
@@ -306,7 +315,7 @@ De meeste werkende jongvolwassenen in uw gemeente werken `r #monitor_df %>% maak
 
 ::: {layout="[50,50]"}
 ::: column
-```{r Woonsituatie 2, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Werksituatie 2, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
 plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
     var_inhoud = "AGWSA401",
@@ -317,7 +326,7 @@ plot
 :::
 
 ::: column
-```{r Werksituatie 1, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Werksituatie 3, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
 plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
     var_inhoud = "AGOWA401",
@@ -329,30 +338,57 @@ plot
 :::
 :::
 
-::: {layout="[100]"}
+::: {layout="[50,50]"}
 ::: column
 ```{r Werksituatie 4, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+plot = monitor_df %>% 
+  maak_staafdiagram_meerdere_staven(
+    var_inhoud = c("AGOWA401", "GZGGA402"),
+    titel = "Combineert werk met opleiding en werkt niet en volgt geen opleiding",
+    niveaus = c("regio"),
+    var_inhoud_waarde =  1
+  )
 
-# plot = monitor_df %>% 
-#   maak_staafdiagram_meerdere_staven(
-#     var_inhoud = c("AGWSA410", "AGWSA411", "AGWSA412", "AGWSA406"),
-#     titel = "Werksituatie",
-#     flip = T
-#   )
-# 
-# plot
+plot
+```
+:::
 
-# plot = monitor_df %>% 
-#   maak_staafdiagram_meerdere_staven(
-#     var_inhoud = c("FIIKA401", "FIIKA402", "FIIKA403"),
-#     titel = "Financiële situatie"
-#   )
-# 
-# plot
+::: column
+```{r Werksituatie 5, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+plot = monitor_df %>% 
+  maak_staafdiagram_meerdere_staven(
+    var_inhoud = c("AGOWA401", "GZGGA402", "LVPKA407", "LVTEA406"),
+    titel = "Redenen waarom iemand niet werkt",
+    niveaus = c("regio"),
+    var_inhoud_waarde =  1
+  )
+
+plot
 
 ```
 :::
 :::
+
+::: {layout="[50,50]"}
+::: column
+```{r Werksituatie 6, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+plot = monitor_df %>% 
+  maak_staafdiagram_meerdere_staven(
+    var_inhoud = c("FIIKA401", "FIIKA402", "FIIKA403"),
+    titel = "Financieële problemen",
+    niveaus = c("gemeente"),
+    var_inhoud_waarde =  1
+  )
+
+plot
+```
+:::
+
+::: column
+Grafiek weglaten of toevoegen?
+:::
+:::
+
 
 # Gezondheid en geluk
 
