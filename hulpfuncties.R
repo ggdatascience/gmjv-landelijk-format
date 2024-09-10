@@ -231,9 +231,10 @@ bereken_kruistabel <- function(data, survey_design = NULL, variabele = NULL, cro
     #Check of voldaan wordt aan kleine N regels.
     #Als er minder min_observaties_per_antwoord per antwoordoptie zijn OF 
     #minder dan min_observaties zijn bij een vraag; maak CI's en estimates NA.
-    if (any(table(monitor_df[['GZGGA402']]) < min_observaties_per_antwoord) |
+    
+    if (any(table(data_global[[variabele]]) < min_observaties_per_antwoord) |
         exists('lege_antwoorden') & min_observaties_per_antwoord != 0 |
-        sum(table(data_global[[variabele]])) < min_observaties_per_vraag) {
+        sum(table(data_global[[variabele]])) < min_observaties_per_vraag){
       
       confidence_intervals <- matrix(data = NA, 
                                      nrow = length(ct), 
@@ -1871,7 +1872,6 @@ maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = params$d
   df_plot <- df_plot %>% mutate(
     !!sym(var_inhoud) := str_wrap(!!sym(var_inhoud),30) 
   )
-
 
   #plotly pie chart
   fig <- plot_ly(df_plot,
