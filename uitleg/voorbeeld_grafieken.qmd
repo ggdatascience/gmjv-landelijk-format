@@ -12,7 +12,7 @@ params:
   default_kleuren_responstabel: !expr c("header" = "#012C17", "kleur_1" = "#007E48", "kleur_2" = "#76B82A","kleur_tekst" = "#FFFFFF")
 ---
 
-# GMJV Grafiekfuncties
+# Grafiekfuncties
 
 ```{r, echo=F, message=F, warning=F}
 

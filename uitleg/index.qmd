@@ -1,7 +1,6 @@
 # Introductie
 
-
-Op deze paginas wordt uitgelegd hoe je de standaardrapportage voor GMJV 2024 kan uitdraaien en aanpassen. De standaardrapportage is (net als dit boek) gemaakt met Quarto. Met Quarto kunnen opgemaakte tekst en afbeeldingen gecombineerd worden met code. Deze uitleg zal ingaan op de enkele technieken die gebruikt kunnen worden om de rapportage aan te passen. Het is géén uitleg van R, Quarto of HTML en CSS. Daar zijn betere boeken voor (Zie het hoofdstuk [handige bronnen](handige-bronnen.qmd))
+Op deze website wordt uitgelegd hoe je de standaardrapportage voor GMJV 2024 kan uitdraaien en aanpassen. De standaardrapportage is (net als deze website) gemaakt met Quarto. Met Quarto kunnen opgemaakte tekst en afbeeldingen gecombineerd worden met code. De uitleg zal ingaan op de enkele technieken die gebruikt kunnen worden om de rapportage aan te passen. Het is géén uitleg van R, Quarto of HTML en CSS. Daar zijn betere bronnen voor (Zie het hoofdstuk [handige bronnen](handige-bronnen.qmd))
 
 Naast het Quarto boek zijn er ook filmpjes met uitleg gemaakt. Die vind je hier [Uitlegvideo's standaardrapportage GMJV](https://youtu.be/o-holF6ntbU?si=CKG8NVE2Uo-zD7eB)
 
@@ -13,9 +12,9 @@ Dat is vast niet in één keer gelukt. Als je merkt dat er informatie ontbreekt,
 
 ::: {.callout-important title="Verzoeken en problemen melden"}
 
-Ideeën verzoeken en foutmeldingen worden afgehandeld via GitHub en **niet via e-mail**. Dit is noodzakelijk om te zorgen dat issues op tijd worden opgepakt en er geen onnodig werk wordt verricht. Volg de volgende stappen:
+Ideeën verzoeken en foutmeldingen worden afgehandeld via GitHub en **niet via e-mail**. Op deze manier kunnen issues op tijd worden opgepakt en wordt onnodig werk voorkomen. Volg de volgende stappen:
 
--   Zorg bij een foutmelding eerst dat je de in elk geval de voorbeeldrapportage kan uitdraaien. Als dit niet lukt controleer je eerst de stappen bij [Up-to-date software](beginnen.qmd#up-to-date-software)
+-   Zorg bij een foutmelding eerst dat je in elk geval de voorbeeldrapportage kan uitdraaien. Als dat niet lukt controleer je eerst de stappen bij [Up-to-date software](beginnen.qmd#up-to-date-software).
 
 -   Ga naar [gmjv-landelijk-format](https://github.com/ggdatascience/gmjv-landelijk-format) en klik op 'Issues'.
 
@@ -25,7 +24,6 @@ Ideeën verzoeken en foutmeldingen worden afgehandeld via GitHub en **niet via e
 
 :::
 
-
 ## Op de hoogte blijven van updates
 
-Volg **gmjv-landelijk-format** door in github het oogje met "watch" te  klikken. Je kan dan instellen kiezen berichten te ontvangen wanneer er updates zijn Op die manier wordt je van wijzigingen op de hoogte gehouden.
+Volg **gmjv-landelijk-format** door in github het oogje met "watch" te  klikken. Je kan dan instellen dat je berichten te ontvangt wanneer er updates zijn Op die manier wordt je van wijzigingen op de hoogte gehouden.

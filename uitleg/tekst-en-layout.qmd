@@ -1,4 +1,4 @@
-# Tekst en layout aanpassen
+# Tekst, Code invoegen en layout aanpassen
 
 De standaardrapportage GMJV is (net als dit boek) gemaakt met Quarto. Met Quarto kunnen opgemaakte tekst en afbeeldingen gecombineerd worden met code. In dit hoofdstuk worden de enkele technieken behandeld waarmee je een quarto document kan bewerken.
 
