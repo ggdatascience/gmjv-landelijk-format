@@ -1642,6 +1642,15 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
                                         
                                         ){
   
+  #TODO
+  #Grafisch probleem fixen met percentages als percentage erg laag is
+  
+  #TODO
+  #nu wordt de hele grafiek uitgezet zodra 1 percentage te laag is. bij gebruik var_crossing
+  #kan het nuttig zijn alleen de crossings met te lage percentages te verwijderen en de grafiek toch
+  #te tonen. dan wel zorgen dat er warning wordt gemaakt.
+  
+  
   if(!labelled::is.labelled(data[[var_inhoud]])){
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
   }
@@ -1822,7 +1831,7 @@ maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = params$d
                                nvar = params$default_nvar, ncel = params$default_ncel, alt_text = NULL,
                                niveaus = "regio", huidig_jaar = 2024, jaarvar = "AGOJB401",
                                desc = FALSE) {
-  
+
   if(!labelled::is.labelled(data[[var_inhoud]])){
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
   }
