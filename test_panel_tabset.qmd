@@ -92,50 +92,6 @@ for(var in names(monitor_df)){
 
 }
 
-# ALTERNATIEVE METHODE VAN INLADEN: regionale data invoegen in landelijk
-# Landelijk bestand inladen
-# df <- haven::read_spss(file.choose(), user_na =T) %>%
-#   labelled::user_na_to_na()
-# 
-# # Regionaal bestand inladen
-# df_regio <- haven::read_spss(file.choose(), user_na =T) %>%
-#   labelled::user_na_to_na()
-# 
-# # Check of aantallen gelijk zijn.
-# # NB. Alleen deelnemers met landelijke weegfactor zitten in landelijk bestand.
-# if (sum(df_regio$Standaardisatiefactor != 0) != nrow(df %>% filter(GGDregio == regiocode))) {
-#   print("Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data.")
-# }
-# 
-#
-# TODO zorgen dat hier ook nog op jaar gefilterd wordt!
-# # Filter regio uit landelijk databestand
-# df <- df %>%
-#   filter(GGDregio != regiocode)
-# 
-# # Voeg regiobestand toe aan landelijk bestand
-# df <- df %>%
-#   full_join(df_regio)
-# 
-# # Opschonen
-# rm(df_regio)
-# 
-# #Er is niet goed aangegeven wat missing is in SPSS.
-# #tijdelijke functie om 9 Onbekend te verwijderen & naar NA te zetten
-# 
-# for(var in names(df)){
-#   
-#   df <- df %>% verwijder_9_onbekend(var)
-# 
-# }
-# 
-# # Regionale data filteren
-# df %>%
-#   filter(GGDregio == params$regiocode)
-# 
-# # Gemeentelijke data filteren
-# df %>%
-#   filter(Gemeentecode == params$gemeentecode)
 
 ```
 
