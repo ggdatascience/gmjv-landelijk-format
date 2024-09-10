@@ -22,6 +22,7 @@ library(labelled) # Package om te werken met datalabels, o.a. voor to_character(
 library(survey) # Package om te werken met gewogen gemiddelds incl. betrouwbaarheidsintervallen
 library(glue) #om strings aangenaam aan elkaar te plakken
 library(plotly)
+library(forcats)
 # utility ----------------------------------------------------------------
 
 ##### Survey functies gebaseerd op oud tabellenboekscript ####
@@ -1278,6 +1279,9 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
     #niet van toepassing bij meerdere niveaus (dan wordt var_label in plot gebruikt)
     if(length(var_inhoud) == 1){
     df_plot[[var_inhoud]] <- var_label(data[[var_inhoud]])
+    
+    
+    
     }
   }
   
@@ -1299,6 +1303,15 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
   namen_kleuren <- unique(df_plot[[var_crossing]])
   
   kleuren <- kleuren[1:length(namen_kleuren)]
+  
+  #volgorde var_inhoud_plot vastzetten obv waarde
+  if(length(var_inhoud) == 1){
+  df_plot <- df_plot %>% 
+    mutate(!!sym(var_inhoud_plot) := fct_reorder(!!sym(var_inhoud_plot),
+                                                 waarde,
+                                                 .desc = TRUE
+                                                 ))
+  }
   
   plot =
     ggplot(df_plot) +
@@ -1440,8 +1453,8 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
   }
   #o.b.v. de orientatie van de grafiek (flip = horizontaal)
   #De correctie van de geom_text aanpassen  zodat deze netjes in het midden v.e. balk komt 
-  v_just_text = ifelse(flip,0.5,1.5)
-  h_just_text = ifelse(flip,1.5,0.5)
+  v_just_text = ifelse(flip,0.5,-1.5)
+  h_just_text = ifelse(flip,-.5,0.5)
 
   
   #design en dataset bepalen o.b.v. regio
@@ -1545,7 +1558,7 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
                   label = paste0(percentage,"%"),
                   vjust = v_just_text,
                   hjust = h_just_text),
-              color = "white",
+              color = "black",
               position = position_dodge2(width = 0.8),
               size = 7, # Hier grootte van percentages aanpassen
               na.rm = T
@@ -1580,7 +1593,7 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
     plot <- plot + 
       scale_y_continuous(limits = c(0,100),
                          expand = expansion(mult = c(0, 0.05))) +
-      scale_x_discrete(labels = function(x) str_wrap(x,width = 20)) +
+      scale_x_discrete(labels = function(x) str_wrap(x,width = 50)) +
       coord_flip() +
       theme(axis.title = element_blank(),
             axis.ticks.x = element_blank(),
@@ -1592,7 +1605,7 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
       theme(axis.line.x.bottom = (element_line(linewidth = 1))) +
       scale_y_continuous(limits = c(0,100),
                          expand = expansion(mult = c(0, 0))) +
-      scale_x_discrete(labels = function(x) str_wrap(x,width = 20)) +
+      scale_x_discrete(labels = function(x) str_wrap(x, width = 5)) +
       theme(
         #axis.text.x = element_text(angle = 90, hjust = .95, vjust = .2),
         strip.background = element_blank(),
@@ -1727,15 +1740,33 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
   #TODO checken of een leeg plot de standaardrapportage niet verpest
   if(any(is.na(df_plot$percentage))){
     warning(glue("Plot kan niet gemaakt worden! Te weinig observaties voor {var_inhoud}. De instellingen zijn: nvar = {nvar} en ncel = {ncel}"))
-    return(NULL)
     
+    #leeg plot tonen & functie vroegtijdig afbreken
+    return(
+      ggplot() +
+        annotate("text", x = 0.5, y = 0.5,
+                 label =  glue("Onvoldoende observaties in {niveaus}
+            Voor grafiek: {str_wrap(titel,40)}  \n 
+                        Min observaties per vraag: {nvar} \n
+                        Min observaties per antwoord: {ncel}"),
+                 size = 6, hjust = 0.5, vjust = 0.5) +
+        theme_void() +
+        theme(plot.margin = margin(50, 50, 50, 50)) # Add margin to take up space)
+    )
   }
 
   namen_kleuren <- levels(df_plot[[var_inhoud]])
   
   kleuren <- kleuren[1:length(namen_kleuren)]
   
-  plot <- ggplot(df_plot, aes(x = percentage, y = !!sym(var_crossing), fill = !!sym(var_inhoud))) + 
+  #factor levels van var_inhoud goed zetten o.b.v. variabele waarde
+  df_plot <- df_plot %>% 
+    mutate(!!sym(var_inhoud) := fct_reorder(!!sym(var_inhoud),
+                                            as.numeric(waarde),
+                                            .desc = TRUE))
+  
+  plot <- ggplot(df_plot, aes(x = percentage, y = !!sym(var_crossing),
+                              fill = !!sym(var_inhoud))) + 
     geom_bar(stat = "identity", position = "stack") +
     geom_text(aes(
       label = paste0(round(percentage),"%")),
@@ -1789,7 +1820,8 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
 
 maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = params$default_kleuren_grafiek,
                                nvar = params$default_nvar, ncel = params$default_ncel, alt_text = NULL,
-                               niveaus = "regio", huidig_jaar = 2024, jaarvar = "AGOJB401") {
+                               niveaus = "regio", huidig_jaar = 2024, jaarvar = "AGOJB401",
+                               desc = FALSE) {
   
   if(!labelled::is.labelled(data[[var_inhoud]])){
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
@@ -1838,6 +1870,8 @@ maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = params$d
                                 ) %>% 
     mutate(weggestreept = as.numeric(weggestreept)) 
     
+
+  
   #titel ophalen uit var_label als niet opgegeven
   if(is.null(titel)){
     
@@ -1873,6 +1907,42 @@ maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = params$d
     !!sym(var_inhoud) := str_wrap(!!sym(var_inhoud),30) 
   )
 
+  
+  #Als er een percentage ontbreekt door te weinig obs; laten zien dat dit zo is
+  #functie eerder afbreken
+  if(any(is.na(df_plot$percentage))){
+    
+    warning(glue("Plot kan niet gemaakt worden! Te weinig observaties voor {var_inhoud}. De instellingen zijn: nvar = {nvar} en ncel = {ncel}"))
+    
+    return(
+      #Leeg plot met text in het midden
+      plot_ly(data.frame(0),
+              type = "pie") %>%
+        layout(
+          annotations = list(
+            x = 0.5,
+            y = 0.5,
+            text = glue("Onvoldoende observaties in {niveaus}
+            Voor grafiek: {str_wrap(titel,40)}  \n 
+                        Min observaties per vraag: {nvar} \n
+                        Min observaties per antwoord: {ncel}"),
+            showarrow = FALSE,
+            font = list(size = 12),
+            xref = "paper",
+            yref = "paper"
+          ),
+          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)
+        ) %>% 
+        config(staticPlot = T) 
+    )
+  }
+  
+  #Als desc: df_plot omgekeerd sorteren obv var_inhoud waarde. Hoogste waarde eerst; laagste als laatst
+  if(desc){
+    df_plot <- df_plot %>% arrange(desc(waarde))
+  }
+  
   #plotly pie chart
   fig <- plot_ly(df_plot,
                  labels = ~get(var_inhoud),
@@ -1881,6 +1951,7 @@ maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = params$d
                  type = "pie",
                  hoverinfo = "text",
                  text = "",
+                 direction = "clockwise",
                  marker = list(colors = kleuren,
                                line = list(color = "#FFFFFF", width = 1)
                                ),
@@ -1891,7 +1962,8 @@ maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = params$d
                  outsidetextfont = list(
                    color = "#000000",
                    size = 15
-                 )
+                 ),
+                 sort = FALSE
                  
                  ) %>% 
     layout(title = list(text = titel,
