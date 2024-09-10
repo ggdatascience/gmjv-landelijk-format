@@ -14,7 +14,9 @@ gemeentecodes_in_regio = monitor_df$Gemeentecode[monitor_df$GGDregio == regiocod
   unique() %>% 
   as.numeric() %>% 
   sort()
-alle_gemeentecodes
+
+#print codes
+gemeentecodes_in_regio
 
 # HTML uitdraai -----------------------------------------------------------
 for(gemeentecode in gemeentecodes_in_regio){

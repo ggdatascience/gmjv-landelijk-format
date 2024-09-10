@@ -1,5 +1,14 @@
 # Standaard rapportage uitdraaien
 
+::: {.callout-important title="Data 2024 nog niet binnen of verwerkt"}
+De data voor 2024 is nog niet beschikbaar. De stappen op deze pagina zijn daarom nog niet volledig uit te voeren.
+Nadat de data beschikbaar is zal deze pagina geupdated worden.
+
+Je kan de pagina doornemen a.d.h.v. de voorbeeldrapportage in het bestand **voorbeeld_rapportage.qmd**.
+Hierbij zullen aanpassingen van de regio- of gemeentecodes echter niet werken.
+
+:::
+
 ## Data klaarzetten en samenvoegen
 
 TODO. 
