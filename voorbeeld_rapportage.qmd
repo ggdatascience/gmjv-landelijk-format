@@ -178,7 +178,7 @@ De resultaten kunnen helpen bij de invulling en ontwikkeling van het gezondheids
 
 Vanwege de betrouwbaarheid van de resultaten en de privacy van de respondenten hanteren wij bij de rapportage een minimum van 100 respondenten die de vraag ingevuld hebben en een minimum van 10 respondenten per specifiek antwoord. Indien de aantallen lager liggen, worden de cijfers niet weergegeven.
 
-De cijfers die hier worden gepresenteerd zijn gestandaardiseerd naar GGD-regio, leeftijd (16-17 jaar, 18-20 jaar en 21-25 jaar) en gender (in twee groepen: mannen en vrouwen). Op deze manier geven de cijfers een zo representatief mogelijk beeld van van alle jongvolwassenen in uw gemeente en de regio. In de Gezondheidsmonitor Jongvolwassenen 2024 is genderidentiteit uitgevraagd met de antwoordopties "man", "vrouw", "non-binair" en "anders dan bovenstaande". Ten behoeve van de standaardisatie is een nieuwe variabele 'Geslacht_standaardisatie' aangemaakt, waarin gender "non-binair"/"anders dan bovenstaande" (samen 1,4%) random geïmputeerd zijn tot man/vrouw. Deze methode is gekozen omdat de populatiereferentie-aantallen (vanuit het CBS) alleen beschikbaar zijn voor geslacht man en vrouw. De variabele "Geslacht_standaardisatie" is alleen gebruikt voor het berekenen van standaardisatiefactoren en is niet gebruikt voor de cijfers uitgesplitst naar mannen en vrouwen in deze rapportage.
+De cijfers die hier worden gepresenteerd zijn gestandaardiseerd naar GGD-regio, leeftijd (16-17 jaar, 18-20 jaar en 21-25 jaar) en gender (in twee groepen: mannen en vrouwen). Op deze manier geven de cijfers een zo representatief mogelijk beeld van alle jongvolwassenen in uw gemeente en de regio. Ten behoeve van de standaardisatie zijn mensen met een gender "non-binair" of "anders” willekeurig toegevoegd als man of vrouw (landelijk 0,9%). Dit is alleen gebruikt voor het berekenen van standaardisatiefactoren en is niet gebruikt voor de cijfers uitgesplitst naar mannen en vrouwen in deze rapportage.
 
 # Achtergrondkenmerken
 
@@ -523,161 +523,6 @@ hier nog grafiek?
 :::
 :::
 
-# Stress en prestatiedruk
-
-::: {layout="[100]"}
-::: column
-**Stress**
-
-Wanneer stress te lang duurt (ongezonde stress), is er meer tijd nodig om te herstellen. Bij te veel stress is er te weinig tijd om tussendoor te herstellen en kan dit leiden tot spanningsklachten en een burn-out.
-
-<br>
-
-`r monitor_df %>% maak_vergelijking(var_inhoud = 'LVSTA415', variabele_label = 'zich (heel) vaak gestrest voelt', var_crossing = 'AGOJB401')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVSTA415', variabele_label = 'zich (heel) vaak gestrest voelt', var_crossing = 'AGGSA402')`
-
-<br>
-
-Top 5 bronnen van stress:
-
--   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 1)`
--   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 2)`
--   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 3)`
--   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 4)`
--   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 5)`
-:::
-:::
-
-::: {layout="[50,50]"}
-::: column
-```{r Stress 1, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
-
-plot = monitor_df %>%
-  maak_staafdiagram_vergelijking(
-    var_inhoud = "LVSTA415",
-    var_crossings = "AGGSA402",
-    titel = "Voelt zich (heel) vaak gestrest",
-    niveaus = "regio"
-  )
-
-plot
-
-```
-:::
-
-::: column
-```{r Stress 2, echo = F, fig.alt= ggplot2::get_alt_text(plot), warning = F}
-
-# Staafgrafiek (zeer) vaak gestresst naar leeftijd, regio vergeleken met landelijk
-
-plot = monitor_df %>%
-   maak_staafdiagram_dubbele_uitsplitsing(
-     var_inhoud = "LVSTA415",
-     niveaus = c("regio", "nl"),
-     var_crossing_kleur = "AGLFA401",
-     titel = "Voelt zich (heel) vaak gestrest")
-
-plot
-
-```
-:::
-:::
-
-::: {layout="[100]"}
-::: column
-**Prestatiedruk**
-
-Sommige jongvolwassenen voelen druk om aan verwachtingen te voldoen. Ze hebben vaak het gevoel dat ze iets goed of beter moeten doen. Ze willen hoge cijfers halen, een goede baan hebben of voldoen aan het perfecte plaatje.
-
-<br>
-
-`r monitor_df %>% maak_vergelijking(var_inhoud = 'GZGGA402', variabele_label = 'prestatiedruk ervaart vanuit zichzelf en vanuit anderen in de regio', var_crossing = 'AGGSA402')`
-
-<br>
-
-Top 3 van anderen die druk opleggen:
-
--   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 1)`
--   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 2)`
--   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 3)`
-:::
-:::
-
-::: {layout="[50,225,50,225]"}
-::: column
-```{r Prestatiedruk 1, echo = F, warning = F}
-
-monitor_df %>%
-  maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>% 
-  bol_met_cijfer(niveau = "Regio")
-
-```
-:::
-
-::: column
-```{r Prestatiedruk 2, echo = F, warning = F}
-
-monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>%
-  bol_met_cijfer(niveau = "Gemeente", omschrijving = "ervaart prestatiedruk vanuit zichzelf.",
-                 kleur = params$default_kleuren_grafiek[2])
-
-
-```
-:::
-
-::: column
-```{r Prestatiedruk 3, echo = F, warning = F}
-
-monitor_df %>%
-  maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>% 
-  bol_met_cijfer(niveau = "Regio")
-
-```
-:::
-
-::: column
-```{r Prestatiedruk 4, echo = F, warning = F}
-
-monitor_df %>% 
-  maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>%
-  bol_met_cijfer(niveau = "Gemeente", omschrijving = "ervaart prestatiedruk vanuit anderen.", 
-                 kleur = params$default_kleuren_grafiek[2])
-
-
-```
-:::
-:::
-
-::: {layout="[50,50]"}
-::: column
-```{r Prestatiedruk 5, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
-
-plot = monitor_df %>%
-  maak_staafdiagram_vergelijking(
-    var_inhoud = "GZGGA402",
-    var_crossings = "AGLFA401",
-    niveaus = "regio",
-    titel = "Ervaart prestatiedruk vanuit zichzelf"
-  )
-
-plot
-```
-:::
-
-::: column
-```{r Prestatiedruk 6, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
-plot = monitor_df %>%
-  maak_staafdiagram_vergelijking(
-    var_inhoud = "GZGGA402",
-    var_crossings = "AGLFA401",
-    niveaus = "regio",
-    titel = "Ervaart prestatiedruk vanuit anderen"
-  )
-
-plot
-
-```
-:::
-:::
 
 # Mentaal welbevinden
 
@@ -855,6 +700,162 @@ plot
 :::
 :::
 
+# Stress en prestatiedruk
+
+::: {layout="[100]"}
+::: column
+**Stress**
+
+Wanneer stress te lang duurt (ongezonde stress), is er meer tijd nodig om te herstellen. Bij te veel stress is er te weinig tijd om tussendoor te herstellen en kan dit leiden tot spanningsklachten en een burn-out.
+
+<br>
+
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'LVSTA415', variabele_label = 'zich (heel) vaak gestrest voelt', var_crossing = 'AGOJB401')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVSTA415', variabele_label = 'zich (heel) vaak gestrest voelt', var_crossing = 'AGGSA402')`
+
+<br>
+
+Top 5 bronnen van stress:
+
+-   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 1)`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 2)`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 3)`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 4)`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 5)`
+:::
+:::
+
+::: {layout="[50,50]"}
+::: column
+```{r Stress 1, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+
+plot = monitor_df %>%
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "LVSTA415",
+    var_crossings = "AGGSA402",
+    titel = "Voelt zich (heel) vaak gestrest",
+    niveaus = "regio"
+  )
+
+plot
+
+```
+:::
+
+::: column
+```{r Stress 2, echo = F, fig.alt= ggplot2::get_alt_text(plot), warning = F}
+
+# Staafgrafiek (zeer) vaak gestresst naar leeftijd, regio vergeleken met landelijk
+
+plot = monitor_df %>%
+   maak_staafdiagram_dubbele_uitsplitsing(
+     var_inhoud = "LVSTA415",
+     niveaus = c("regio", "nl"),
+     var_crossing_kleur = "AGLFA401",
+     titel = "Voelt zich (heel) vaak gestrest")
+
+plot
+
+```
+:::
+:::
+
+::: {layout="[100]"}
+::: column
+**Prestatiedruk**
+
+Sommige jongvolwassenen voelen druk om aan verwachtingen te voldoen. Ze hebben vaak het gevoel dat ze iets goed of beter moeten doen. Ze willen hoge cijfers halen, een goede baan hebben of voldoen aan het perfecte plaatje.
+
+<br>
+
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'GZGGA402', variabele_label = 'prestatiedruk ervaart vanuit zichzelf en vanuit anderen in de regio', var_crossing = 'AGGSA402')`
+
+<br>
+
+Top 3 van anderen die druk opleggen:
+
+-   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 1)`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 2)`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 3)`
+:::
+:::
+
+::: {layout="[50,225,50,225]"}
+::: column
+```{r Prestatiedruk 1, echo = F, warning = F}
+
+monitor_df %>%
+  maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>% 
+  bol_met_cijfer(niveau = "Regio")
+
+```
+:::
+
+::: column
+```{r Prestatiedruk 2, echo = F, warning = F}
+
+monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>%
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "ervaart prestatiedruk vanuit zichzelf.",
+                 kleur = params$default_kleuren_grafiek[2])
+
+
+```
+:::
+
+::: column
+```{r Prestatiedruk 3, echo = F, warning = F}
+
+monitor_df %>%
+  maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>% 
+  bol_met_cijfer(niveau = "Regio")
+
+```
+:::
+
+::: column
+```{r Prestatiedruk 4, echo = F, warning = F}
+
+monitor_df %>% 
+  maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>%
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "ervaart prestatiedruk vanuit anderen.", 
+                 kleur = params$default_kleuren_grafiek[2])
+
+
+```
+:::
+:::
+
+::: {layout="[50,50]"}
+::: column
+```{r Prestatiedruk 5, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+
+plot = monitor_df %>%
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "GZGGA402",
+    var_crossings = "AGLFA401",
+    niveaus = "regio",
+    titel = "Ervaart prestatiedruk vanuit zichzelf"
+  )
+
+plot
+```
+:::
+
+::: column
+```{r Prestatiedruk 6, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+plot = monitor_df %>%
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "GZGGA402",
+    var_crossings = "AGLFA401",
+    niveaus = "regio",
+    titel = "Ervaart prestatiedruk vanuit anderen"
+  )
+
+plot
+
+```
+:::
+:::
+
 # Beschermende factoren en vertrouwen in de toekomst
 
 ::: {layout="[[100]]"}
@@ -982,7 +983,7 @@ Jongvolwassenen in uw gemeente maken zich het meest zorgen om:
 
 <br>
 
-`r monitor_df %>% maak_vergelijking(var_inhoud = 'LVVTA404', value = 3, variabele_label = '(heel) veel vertrouwen in de toekomst heeft', var_crossing = 'AGOJB401')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVVTA404', value = 3, variabele_label = '(heel) veel vertrouwen in de toekomst heeft', var_crossing = 'AGGSA402')`
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'LVVTA404', value = 3, variabele_label = "zich zorgen maakt over maatschappelijke thema's", var_crossing = 'AGGSA402')`
 :::
 :::
 
@@ -1259,7 +1260,7 @@ plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
     var_inhoud = "GZGGA402",
     var_crossings = "AGLFA401",
-    titel = "Rookt wel eens"
+    titel = "Rookt dagelijks"
   )
 
 plot
@@ -1274,129 +1275,12 @@ plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
     var_inhoud = "GZGGA402",
     var_crossings = "AGLFA401",
-    titel = "Rookt wekelijks"
-  )
-
-plot
-
-```
-:::
-:::
-
-::: {layout="[50,50]"}
-::: column
-```{r Roken 7, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
-
-plot = monitor_df %>%
-  maak_staafdiagram_vergelijking(
-    var_inhoud = "GZGGA402",
-    var_crossings = "AGLFA401",
-    titel = "Rookt dagelijks"
-  )
-
-plot
-
-```
-:::
-
-::: column
-```{r Roken 8, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
-
-plot = monitor_df %>%
-  maak_staafdiagram_vergelijking(
-    var_inhoud = "GZGGA402",
-    var_crossings = "AGLFA401",
-    titel = "Vapet wel eens"
-  )
-
-plot
-
-```
-:::
-:::
-
-::: {layout="[50,50]"}
-::: column
-```{r Roken 9, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
-
-plot = monitor_df %>%
-  maak_staafdiagram_vergelijking(
-    var_inhoud = "GZGGA402",
-    var_crossings = "AGLFA401",
-    titel = "Vapet wekelijks"
-  )
-
-plot
-
-```
-:::
-
-::: column
-```{r Roken 10, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
-
-plot = monitor_df %>%
-  maak_staafdiagram_vergelijking(
-    var_inhoud = "GZGGA402",
-    var_crossings = "AGLFA401",
     titel = "Vapet dagelijks"
   )
 
 plot
 
 ```
-:::
-:::
-
-::: {layout="[50,50]"}
-::: column
-```{r Roken 11, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
-
-plot = monitor_df %>%
-  maak_staafdiagram_vergelijking(
-    var_inhoud = "GZGGA402",
-    var_crossings = "AGLFA401",
-    titel = "Gebruikt wel eens snus"
-  )
-
-plot
-
-```
-:::
-
-::: column
-```{r Roken 12, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
-
-plot = monitor_df %>%
-  maak_staafdiagram_vergelijking(
-    var_inhoud = "GZGGA402",
-    var_crossings = "AGLFA401",
-    titel = "Gebruikt wekelijks snus"
-  )
-
-plot
-
-```
-:::
-:::
-
-::: {layout="[50,50]"}
-::: column
-```{r Roken 13, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
-
-plot = monitor_df %>%
-  maak_staafdiagram_vergelijking(
-    var_inhoud = "GZGGA402",
-    var_crossings = "AGLFA401",
-    titel = "Gebruikt dagelijks snus"
-  )
-
-plot
-
-```
-:::
-
-::: column
-Selectie maken in grafieken, niet allemaal tonen?
 :::
 :::
 
@@ -1412,9 +1296,9 @@ Het gebruik van drugs leidt bij langdurig en regelmatig gebruik tot (geestelijke
 
 Drugs anders dan cannabis die ooit het vaakst door jongvolwassenen zijn gebruikt:
 
--   `r maak_top(data = monitor_df, var_inhoud = c("LFDGB403", "LFDGB404", "LFDGB405", "LFDGB406", "LFDGB407", "LFDGB408", "LFDGB409", "LFDGB410", "LFDGB411"), top = 1)`
--   `r maak_top(data = monitor_df, var_inhoud = c("LFDGB403", "LFDGB404", "LFDGB405", "LFDGB406", "LFDGB407", "LFDGB408", "LFDGB409", "LFDGB410", "LFDGB411"), top = 2)`
--   `r maak_top(data = monitor_df, var_inhoud = c("LFDGB403", "LFDGB404", "LFDGB405", "LFDGB406", "LFDGB407", "LFDGB408", "LFDGB409", "LFDGB410", "LFDGB411"), top = 3)`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LFDGB403", "LFDGB404", "LFDGB405", "LFDGB406", "LFDGB407", "LFDGB408", "LFDGB409", "LFDGB410", "LFDGB411"), top = 1, niveau = "gemeente")`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LFDGB403", "LFDGB404", "LFDGB405", "LFDGB406", "LFDGB407", "LFDGB408", "LFDGB409", "LFDGB410", "LFDGB411"), top = 2, niveau = "gemeente")`
+-   `r maak_top(data = monitor_df, var_inhoud = c("LFDGB403", "LFDGB404", "LFDGB405", "LFDGB406", "LFDGB407", "LFDGB408", "LFDGB409", "LFDGB410", "LFDGB411"), top = 3, niveau = "gemeente")`
 :::
 :::
 
@@ -1805,7 +1689,7 @@ monitor_df %>%
 
 monitor_df %>% 
   maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>%
-  bol_met_cijfer(niveau = "Gemeente", omschrijving = "vheeft nooit of soms het gevoel", 
+  bol_met_cijfer(niveau = "Gemeente", omschrijving = "heeft nooit of soms het gevoel", 
                  omschrijving2 = "als LHBTQIA+er zichzelf te mogen zijn bij anderen.",
                  kleur = params$default_kleuren_grafiek[2])
 
