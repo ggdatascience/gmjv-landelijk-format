@@ -1,0 +1,155 @@
+---
+title: ""
+author: ""
+format:
+  html:
+    page-layout: full
+    css: custom.css
+    toc: TRUE
+    embed-resources: true
+params:
+  gemeentecode: 2
+  regiocode: 23
+  regionaam: 'GGD Limburg-Noord'
+  path_monitor_data: "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
+  path_hulpfuncties: "hulpfuncties.R"
+  path_cbs_data: "JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx"
+  default_nvar: 100
+  default_ncel: 10
+  default_kleuren_grafiek: !expr c("#012C17","#76B82A","#007E48")
+  default_kleuren_responstabel: !expr c("header" = "#012C17", "kleur_1" = "#007E48", "kleur_2" = "#76B82A","kleur_tekst" = "#FFFFFF")
+  is_pdf: false
+format-links: false
+---
+
+```{r Instellingen, echo=F, message=F, warning=F}
+# Het script maakt gebruik van een aantal packages
+# Deze moeten bij de eerste keer lokaal worden geinstalleerd
+# Hieronder worden de benodige packages geladen
+library(gt)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(haven)
+library(stringr) # Voor str_replace
+library(labelled) # Package om te werken met datalabels, o.a. voor to_character()
+library(survey) # Package om te werken met gewogen gemiddelds incl. betrouwbaarheidsintervallen
+library(glue) #om strings aangenaam aan elkaar te plakken
+library(plotly)
+
+options(dplyr.summarise.inform = FALSE)
+source(params$path_hulpfuncties)
+
+#TODO instelbare variabelen overzichtelijk maken
+
+# Standaard minima voor groep & cel
+default_Nvar = 100 # Minimum aantal invullers per vraag.
+default_Ncel = 10 # Minimum aantal invullers oper antwoordoptie.
+
+#SPSS data inlezen
+#Lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
+monitor_df = haven::read_spss(params$path_monitor_data, user_na =T) %>%
+  labelled::user_na_to_na()
+
+#TODO verwijderen bij echte data. tijdelijk varlabel voor jaarvariabele
+var_label(monitor_df$AGOJB401) <- "Jaar"
+
+#Maak survey designs
+
+#TODO bij echte data standaardisatiefactor en stratum aanpassen per niveau
+
+# Het landelijk en regionaal design hebben dezelfde weegfactoren. Daarom maken we een landelijk design obv landelijke dataset en een regionaal design obv een subset van het landelijk design.
+# Landelijk 2022 en 2024
+design_land <- survey_design_maken(
+                         strata = 'Stratum',
+                         gewichten = 'Standaardisatiefactor',
+                         data = monitor_df)
+
+#design regio is een subset van design land met ggdregio overgehouden.
+# Regionaal 2022 en 2024
+design_regio <- subset(design_land, GGDregio == params$regiocode)
+
+
+#Het gemeentelijk design heeft andere weegfactoren. De gehele dataset waar het gem. design over geld is de GGDregio. Daarom maken we eerst een regionaal design o.b.v. de hele ggdregio en subsetten we daarna het gemeentedesign.
+design_gem_regio <- survey_design_maken(
+                          strata = 'Stratum', #hier komen andere parameters
+                          gewichten = 'Standaardisatiefactor',  #hier ook
+                          data = monitor_df %>% 
+
+                            filter(GGDregio == params$regiocode))
+
+# Gemeentelijk 2022 en 2024
+design_gem <- subset(design_gem_regio, Gemeentecode == params$gemeentecode)
+
+rm(design_gem_regio) #temp regiodesign voor gemdesign verwijderen niet meer nodig
+
+#Er is niet goed aangegeven wat missing is in SPSS.
+#tijdelijke functie om 9 Onbekend te verwijderen & naar NA te zetten
+
+for(var in names(monitor_df)){
+  
+  monitor_df <- monitor_df %>% verwijder_9_onbekend(var)
+
+}
+
+# ALTERNATIEVE METHODE VAN INLADEN: regionale data invoegen in landelijk
+# Landelijk bestand inladen
+# df <- haven::read_spss(file.choose(), user_na =T) %>%
+#   labelled::user_na_to_na()
+# 
+# # Regionaal bestand inladen
+# df_regio <- haven::read_spss(file.choose(), user_na =T) %>%
+#   labelled::user_na_to_na()
+# 
+# # Check of aantallen gelijk zijn.
+# # NB. Alleen deelnemers met landelijke weegfactor zitten in landelijk bestand.
+# if (sum(df_regio$Standaardisatiefactor != 0) != nrow(df %>% filter(GGDregio == regiocode))) {
+#   print("Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data.")
+# }
+# 
+#
+# TODO zorgen dat hier ook nog op jaar gefilterd wordt!
+# # Filter regio uit landelijk databestand
+# df <- df %>%
+#   filter(GGDregio != regiocode)
+# 
+# # Voeg regiobestand toe aan landelijk bestand
+# df <- df %>%
+#   full_join(df_regio)
+# 
+# # Opschonen
+# rm(df_regio)
+# 
+# #Er is niet goed aangegeven wat missing is in SPSS.
+# #tijdelijke functie om 9 Onbekend te verwijderen & naar NA te zetten
+# 
+# for(var in names(df)){
+#   
+#   df <- df %>% verwijder_9_onbekend(var)
+# 
+# }
+# 
+# # Regionale data filteren
+# df %>%
+#   filter(GGDregio == params$regiocode)
+# 
+# # Gemeentelijke data filteren
+# df %>%
+#   filter(Gemeentecode == params$gemeentecode)
+
+```
+
+::: {.panel-tabset}
+```{r, results='asis'}
+
+monitor_df %>% maak_staafdiagram_uitsplitsing_naast_elkaar(
+                      var_inhoud = "LFDGA427",
+                      var_crossings = c("AGGSA402","AGLFA401"),
+                      kleuren_per_crossing = TRUE,
+                      fade_kleuren = TRUE,
+                      flip = TRUE, 
+                      titel = "Cannabisgebruik in de afgelopen 4 weken",
+                      tabel_en_grafiek = TRUE
+                      )
+```
+:::
