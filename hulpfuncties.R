@@ -1410,7 +1410,8 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
                                                         alt_text = NULL,
                                                         huidig_jaar = 2024,
                                                         jaarvar = "AGOJB401",
-                                                        niveaus = "regio"
+                                                        niveaus = "regio",
+                                                        tabel_en_grafiek = FALSE
                                                         ){
   
   if(!labelled::is.labelled(data[[var_inhoud]])){
@@ -1612,8 +1613,30 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
   } 
   
   plot <- plot + labs(alt = alt_text)
- 
-  return(plot) 
+
+  if(!tabel_en_grafiek){
+    
+    return(plot)
+    
+  } else {
+    
+    grafiek = plot
+    tabel = gt(plot$data)
+    
+    tabset_items = list("Grafiek" = grafiek,
+                        "Tabel" = tabel) 
+    
+    
+    purrr::iwalk(tabset_items, ~ {
+      cat('## ', .y, '\n\n')
+      
+      print(.x)
+      
+      cat('\n\n')
+      
+    })
+  }
+  
  
 }
 
@@ -1781,7 +1804,10 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
     
   plot <- plot + labs(alt = alt_text)
   
-  return(plot)
+  
+
+  
+
 }
 
 #TODO titel tekst kan wegvallen bij Cirkeldiagram
@@ -2634,3 +2660,22 @@ render_toc <- function(
   knitr::asis_output(paste(x, collapse = "\n"))
 }
 
+
+# tabset panel test -------------------------------------------------------
+
+panel_tabset <- function(plots_list) {
+  
+  title = names(plots_list)
+  # Start the tabset
+  cat("::: {.panel-tabset}\n")
+  
+  # Iterate over the list of plots and titles, and construct tabs
+  purrr::iwalk(plots_list, function(plot, title) {
+    cat("## ", title, "\n\n")
+    print(plot)  # Print each plot inside its own panel
+    cat("\n\n")
+  })
+  
+  # End the tabset
+  cat(":::\n")
+}
