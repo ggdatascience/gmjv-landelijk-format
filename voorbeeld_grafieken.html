@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.353">
+<meta name="generator" content="quarto-1.4.555">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Uitleg GMJV rapportage in Quarto - 6&nbsp; GMJV Grafiekfuncties</title>
+<title>Uitleg GMJV rapportage in Quarto - 6&nbsp; Grafiekfuncties</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -81,7 +81,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "start",
   "type": "textbox",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -90,19 +96,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script>
 <link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+
 <script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
-<script src="site_libs/plotly-binding-4.10.4/plotly.js"></script>
+
+<script src="site_libs/plotly-binding-4.10.2/plotly.js"></script>
+
 <script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+
 <script src="site_libs/jquery-3.5.1/jquery.min.js"></script>
+
 <link href="site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
+
 <script src="site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+
 <link href="site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+
 <script src="site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+
 
 
 </head>
@@ -113,13 +130,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./voorbeeld_grafieken.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">GMJV Grafiekfuncties</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
-      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./voorbeeld_grafieken.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Grafiekfuncties</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -128,7 +145,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">Uitleg GMJV rapportage in Quarto</a> 
@@ -162,7 +179,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./tekst-en-layout.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Tekst en layout aanpassen</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Tekst, Code invoegen en layout aanpassen</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -174,7 +191,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./voorbeeld_grafieken.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">GMJV Grafiekfuncties</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Grafiekfuncties</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -204,7 +221,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -267,7 +284,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">GMJV Grafiekfuncties</span></h1>
+<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Grafiekfuncties</span></h1>
 </div>
 
 
@@ -280,7 +297,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
+
 
 <p>Hieronder volgt uitleg voor de grafiekfuncties. De functies genereren automatisch alt-text, maar deze kan ook handmatig ingevoerd worden.</p>
 <section id="alt-text-in-code-blokken" class="level2" data-number="6.1">
@@ -345,7 +364,11 @@ Caution
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" alt="staafdiagram met percentages voor de indicator 'Is sterk eenzaam' bij jongvolwassenen per Gender in twee categorieën en Leeftijd in 3 categorieën (16-17 jaar; 18-20 jaar; 21-25 jaar) in GGD Limburg-Noord: Vrouw 16-17 jaar: 25%, Vrouw 18-20 jaar: 30%, Vrouw 21-25 jaar: 25%, Man 16-17 jaar: Onbekend, Man 18-20 jaar: 28%, Man 21-25 jaar: 33%" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" alt="staafdiagram met percentages voor de indicator 'Is sterk eenzaam' bij jongvolwassenen per Gender in twee categorieën en Leeftijd in 3 categorieën (16-17 jaar; 18-20 jaar; 21-25 jaar) in GGD Limburg-Noord: Vrouw 16-17 jaar: 25%, Vrouw 18-20 jaar: 30%, Vrouw 21-25 jaar: 25%, Man 16-17 jaar: Onbekend, Man 18-20 jaar: 28%, Man 21-25 jaar: 33%" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -368,7 +391,11 @@ Caution
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" alt="Tekst die de grafiek toelicht t.b.v. digitoegankelijkheid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" alt="Tekst die de grafiek toelicht t.b.v. digitoegankelijkheid" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -402,7 +429,11 @@ Caution
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" alt="staafdiagram met percentages voor de indicator 'Is sterk eenzaam' bij jongvolwassenen per Gender in twee categorieën en Leeftijd in 3 categorieën (16-17 jaar; 18-20 jaar; 21-25 jaar) in GGD Limburg-Noord: Man: 31%, Vrouw: 26%, 16-17 jaar: 27%, 18-20 jaar: 30%, 21-25 jaar: 27%" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" alt="staafdiagram met percentages voor de indicator 'Is sterk eenzaam' bij jongvolwassenen per Gender in twee categorieën en Leeftijd in 3 categorieën (16-17 jaar; 18-20 jaar; 21-25 jaar) in GGD Limburg-Noord: Man: 31%, Vrouw: 26%, 16-17 jaar: 27%, 18-20 jaar: 30%, 21-25 jaar: 27%" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -439,7 +470,11 @@ Caution
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" alt="staafdiagram met percentages voor de indicator 'Vertrouwen in zijn/haar eigen toekomst in 3 categorieën' bij jongvolwassenen in Nederland en NepgemeenteB:  Nederland Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 15%, Nederland Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 40%, Nederland (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 44%, NepgemeenteB Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 16%, NepgemeenteB Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 40%, NepgemeenteB (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 45%" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" alt="staafdiagram met percentages voor de indicator 'Vertrouwen in zijn/haar eigen toekomst in 3 categorieën' bij jongvolwassenen in Nederland en NepgemeenteB:  Nederland Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 15%, Nederland Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 40%, Nederland (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 44%, NepgemeenteB Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 16%, NepgemeenteB Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 40%, NepgemeenteB (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 45%" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -457,7 +492,11 @@ Caution
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" alt="staafdiagram met percentages voor de indicator 'Vertrouwen in zijn/haar eigen toekomst in 3 categorieën' bij jongvolwassenen per Gender in twee categorieën in GGD Limburg-Noord: Man Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 16%, Man Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 39%, Man (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 45%, Vrouw Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 16%, Vrouw Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 40%, Vrouw (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 44%" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" alt="staafdiagram met percentages voor de indicator 'Vertrouwen in zijn/haar eigen toekomst in 3 categorieën' bij jongvolwassenen per Gender in twee categorieën in GGD Limburg-Noord: Man Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 16%, Man Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 39%, Man (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 45%, Vrouw Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 16%, Vrouw Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 40%, Vrouw (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 44%" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -476,7 +515,11 @@ Caution
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" alt="staafdiagram met percentages voor verschillende indicatoren bij jongvolwassenen per Gender in twee categorieën in GGD Limburg-Noord: Heeft (heel) veel zorgen over de werkgelegenheid Man: 11%, Heeft (heel) veel zorgen over de werkgelegenheid Vrouw: 11%, Heeft (heel) veel zorgen over de woningmarkt Man: 63%, Heeft (heel) veel zorgen over de woningmarkt Vrouw: 66%, Heeft (heel) veel zorgen over het klimaat Man: 41%, Heeft (heel) veel zorgen over het klimaat Vrouw: 42%" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" alt="staafdiagram met percentages voor verschillende indicatoren bij jongvolwassenen per Gender in twee categorieën in GGD Limburg-Noord: Heeft (heel) veel zorgen over de werkgelegenheid Man: 11%, Heeft (heel) veel zorgen over de werkgelegenheid Vrouw: 11%, Heeft (heel) veel zorgen over de woningmarkt Man: 63%, Heeft (heel) veel zorgen over de woningmarkt Vrouw: 66%, Heeft (heel) veel zorgen over het klimaat Man: 41%, Heeft (heel) veel zorgen over het klimaat Vrouw: 42%" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -497,7 +540,11 @@ Caution
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" alt="staafdiagram met percentages voor de indicator 'Voelt zich (heel) vaak gestrest' bij jongvolwassenen in Nederland, GGD Limburg-Noord en NepgemeenteB:  Nederland Voelt zich (heel) vaak gestrest: 47%, GGD Limburg-Noord Voelt zich (heel) vaak gestrest: 46%, NepgemeenteB Voelt zich (heel) vaak gestrest: 46%" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" alt="staafdiagram met percentages voor de indicator 'Voelt zich (heel) vaak gestrest' bij jongvolwassenen in Nederland, GGD Limburg-Noord en NepgemeenteB:  Nederland Voelt zich (heel) vaak gestrest: 47%, GGD Limburg-Noord Voelt zich (heel) vaak gestrest: 46%, NepgemeenteB Voelt zich (heel) vaak gestrest: 46%" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -534,7 +581,11 @@ Caution
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" alt="staafdiagram met percentages voor de indicator 'Is sterk eenzaam' bij jongvolwassenen per Gender in twee categorieën en Leeftijd in 3 categorieën (16-17 jaar; 18-20 jaar; 21-25 jaar) en Hoogste opleiding (huidig of afgerond, in 2 categorieën) in GGD Limburg-Noord: Man: 31%, Vrouw: 26%, 16-17 jaar: 27%, 18-20 jaar: 30%, 21-25 jaar: 27%, Laag/midden (Geen opleiding, vso, praktijkonderwijs, vmbo, havo, vwo, mbo): 29%, Hoog (hbo, wo): 27%" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" alt="staafdiagram met percentages voor de indicator 'Is sterk eenzaam' bij jongvolwassenen per Gender in twee categorieën en Leeftijd in 3 categorieën (16-17 jaar; 18-20 jaar; 21-25 jaar) en Hoogste opleiding (huidig of afgerond, in 2 categorieën) in GGD Limburg-Noord: Man: 31%, Vrouw: 26%, 16-17 jaar: 27%, 18-20 jaar: 30%, 21-25 jaar: 27%, Laag/midden (Geen opleiding, vso, praktijkonderwijs, vmbo, havo, vwo, mbo): 29%, Hoog (hbo, wo): 27%" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -553,7 +604,11 @@ Caution
 <span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" alt="staafdiagram met percentages voor de indicator 'Is sterk eenzaam' bij jongvolwassenen per Gender in twee categorieën en Leeftijd in 3 categorieën (16-17 jaar; 18-20 jaar; 21-25 jaar) en Hoogste opleiding (huidig of afgerond, in 2 categorieën) in GGD Limburg-Noord: Man: 31%, Vrouw: 26%, 16-17 jaar: 27%, 18-20 jaar: 30%, 21-25 jaar: 27%, Laag/midden (Geen opleiding, vso, praktijkonderwijs, vmbo, havo, vwo, mbo): 29%, Hoog (hbo, wo): 27%" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" alt="staafdiagram met percentages voor de indicator 'Is sterk eenzaam' bij jongvolwassenen per Gender in twee categorieën en Leeftijd in 3 categorieën (16-17 jaar; 18-20 jaar; 21-25 jaar) en Hoogste opleiding (huidig of afgerond, in 2 categorieën) in GGD Limburg-Noord: Man: 31%, Vrouw: 26%, 16-17 jaar: 27%, 18-20 jaar: 30%, 21-25 jaar: 27%, Laag/midden (Geen opleiding, vso, praktijkonderwijs, vmbo, havo, vwo, mbo): 29%, Hoog (hbo, wo): 27%" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -604,7 +659,11 @@ Tip
 <span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" alt="gestapeld staafdiagram met percentages voor de indicator 'Vertrouwen in zijn/haar eigen toekomst in 3 categorieën' bij jongvolwassenen in GGD Limburg-Noord:   Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 16%,  Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 40%,  (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 44%" width="1152"></p>
+<div>
+<figure class="figure">
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" alt="gestapeld staafdiagram met percentages voor de indicator 'Vertrouwen in zijn/haar eigen toekomst in 3 categorieën' bij jongvolwassenen in GGD Limburg-Noord:   Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 16%,  Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 40%,  (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 44%" width="1152"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -620,7 +679,11 @@ Tip
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" alt="gestapeld staafdiagram met percentages voor de indicator 'Vertrouwen in zijn/haar eigen toekomst in 3 categorieën' bij jongvolwassenen per Gender in twee categorieën in GGD Limburg-Noord: Man Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 16%, Man Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 39%, Man (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 45%, Vrouw Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 16%, Vrouw Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 40%, Vrouw (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 44%" width="1152"></p>
+<div>
+<figure class="figure">
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" alt="gestapeld staafdiagram met percentages voor de indicator 'Vertrouwen in zijn/haar eigen toekomst in 3 categorieën' bij jongvolwassenen per Gender in twee categorieën in GGD Limburg-Noord: Man Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 16%, Man Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 39%, Man (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 45%, Vrouw Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 16%, Vrouw Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 40%, Vrouw (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 44%" width="1152"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -650,8 +713,8 @@ Tip
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="plotly html-widget html-fill-item" id="htmlwidget-68d1a7232ef7dc76480c" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-68d1a7232ef7dc76480c">{"x":{"visdat":{"1614185418":["function () ","plotlyVisDat"]},"cur_data":"1614185418","attrs":{"1614185418":{"labels":{},"textinfo":"percent","values":{},"hoverinfo":"text","text":"","marker":{"colors":["#012C17","#76B82A","#007E48"],"line":{"color":"#FFFFFF","width":1}},"insidetextfont":{"color":"#FFFFFF","size":15},"outsidetextfont":{"color":"#000000","size":15},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"pie"}},"layout":{"margin":{"b":40,"l":60,"t":100,"r":10},"title":{"text":"Vertrouwen in zijn/haar eigen toekomst in 3<br />categorieën","font":{"size":15}},"legend":{"orientation":"h","x":0.5,"y":-0.20000000000000001,"xanchor":"center","yanchor":"top","font":{"size":12}},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false,"staticPlot":true},"data":[{"labels":["Weinig tot geen vertrouwen<br />in zijn/haar eigen toekomst<br />(cijfer 5 of lager)","Matig tot redelijk vertrouwen<br />in zijn/haar eigen toekomst<br />(cijfer 6 of 7)","(Heel) veel vertrouwen in<br />zijn/haar eigen toekomst<br />(cijfer 8 of hoger)"],"textinfo":"percent","values":[16,40,44],"hoverinfo":["text","text","text"],"text":["","",""],"marker":{"color":"rgba(31,119,180,1)","colors":["#012C17","#76B82A","#007E48"],"line":{"color":"#FFFFFF","width":1}},"insidetextfont":{"color":"#FFFFFF","size":15},"outsidetextfont":{"color":"#000000","size":15},"type":"pie","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":{"render":[{"code":"function(el, x) {\n  el.setAttribute('alt', 'Cirkeldiagram voor de indicator 'Vertrouwen in zijn/haar eigen toekomst in 3 categorieën' bij jongvolwassenen: Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 16%, Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 40%, (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 44%');\n}","data":null}]}}</script>
+<div class="plotly html-widget html-fill-item" id="htmlwidget-bbe39912073cd60afc7f" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-bbe39912073cd60afc7f">{"x":{"visdat":{"47246064178d":["function () ","plotlyVisDat"]},"cur_data":"47246064178d","attrs":{"47246064178d":{"labels":{},"textinfo":"percent","values":{},"hoverinfo":"text","text":"","marker":{"colors":["#012C17","#76B82A","#007E48"],"line":{"color":"#FFFFFF","width":1}},"insidetextfont":{"color":"#FFFFFF","size":15},"outsidetextfont":{"color":"#000000","size":15},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"pie"}},"layout":{"margin":{"b":40,"l":60,"t":100,"r":10},"title":{"text":"Vertrouwen in zijn/haar eigen toekomst in 3<br />categorieën","font":{"size":15}},"legend":{"orientation":"h","x":0.5,"y":-0.20000000000000001,"xanchor":"center","yanchor":"top","font":{"size":12}},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false,"staticPlot":true},"data":[{"labels":["Weinig tot geen vertrouwen<br />in zijn/haar eigen toekomst<br />(cijfer 5 of lager)","Matig tot redelijk vertrouwen<br />in zijn/haar eigen toekomst<br />(cijfer 6 of 7)","(Heel) veel vertrouwen in<br />zijn/haar eigen toekomst<br />(cijfer 8 of hoger)"],"textinfo":"percent","values":[16,40,44],"hoverinfo":["text","text","text"],"text":["","",""],"marker":{"color":"rgba(31,119,180,1)","colors":["#012C17","#76B82A","#007E48"],"line":{"color":"#FFFFFF","width":1}},"insidetextfont":{"color":"#FFFFFF","size":15},"outsidetextfont":{"color":"#000000","size":15},"type":"pie","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":{"render":[{"code":"function(el, x) {\n  el.setAttribute('alt', 'Cirkeldiagram voor de indicator 'Vertrouwen in zijn/haar eigen toekomst in 3 categorieën' bij jongvolwassenen: Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 16%, Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 40%, (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 44%');\n}","data":null}]}}</script>
 </div>
 </div>
 </section>
@@ -679,7 +742,11 @@ Tip
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" alt="gestapeld staafdiagram met percentages per leeftijd in de bevolking en bij deelnemers: Bevolking Totaal Nederland: 16-17: 17%, 18-20: 30%, 21-25: 53%, Deelnemers Totaal Nederland: 16-17: 22%, 18-20: 31%, 21-25: 47%, Bevolking GGD Limburg-Noord: 16-17: 19%, 18-20: 29%, 21-25: 52%, Deelnemers GGD Limburg-Noord: 16-17: 22%, 18-20: 32%, 21-25: 46%, Bevolking NepgemeenteB: 16-17: 7%, 18-20: 30%, 21-25: 63%, Deelnemers NepgemeenteB: 16-17: 23%, 18-20: 29%, 21-25: 48%" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" alt="gestapeld staafdiagram met percentages per leeftijd in de bevolking en bij deelnemers: Bevolking Totaal Nederland: 16-17: 17%, 18-20: 30%, 21-25: 53%, Deelnemers Totaal Nederland: 16-17: 22%, 18-20: 31%, 21-25: 47%, Bevolking GGD Limburg-Noord: 16-17: 19%, 18-20: 29%, 21-25: 52%, Deelnemers GGD Limburg-Noord: 16-17: 22%, 18-20: 32%, 21-25: 46%, Bevolking NepgemeenteB: 16-17: 7%, 18-20: 30%, 21-25: 63%, Deelnemers NepgemeenteB: 16-17: 23%, 18-20: 29%, 21-25: 48%" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -697,7 +764,11 @@ Tip
 <span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" alt="gestapeld staafdiagram met percentages per geslacht in de bevolking en bij deelnemers: Bevolking GGD Limburg-Noord: man: 52%, vrouw: 48%, Deelnemers GGD Limburg-Noord: man: 30%, vrouw: 69%, niet ingevuld: 1%, Bevolking NepgemeenteB: man: 46%, vrouw: 54%, Deelnemers NepgemeenteB: man: 29%, vrouw: 70%, niet ingevuld: 1%" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" alt="gestapeld staafdiagram met percentages per geslacht in de bevolking en bij deelnemers: Bevolking GGD Limburg-Noord: man: 52%, vrouw: 48%, Deelnemers GGD Limburg-Noord: man: 30%, vrouw: 69%, niet ingevuld: 1%, Bevolking NepgemeenteB: man: 46%, vrouw: 54%, Deelnemers NepgemeenteB: man: 29%, vrouw: 70%, niet ingevuld: 1%" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 
@@ -785,10 +856,27 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -798,8 +886,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -811,7 +908,130 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       try { href = new URL(href).hash; } catch {}
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
-      return note.innerHTML;
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -855,6 +1075,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -880,6 +1101,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -941,17 +1188,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./gmjv-functies-gebruiken.html" class="pagination-link">
+      <a href="./gmjv-functies-gebruiken.html" class="pagination-link" aria-label="GMJV Functies Gebruiken">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">GMJV Functies Gebruiken</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./voorbeeld_tekstfuncties.html" class="pagination-link">
+      <a href="./voorbeeld_tekstfuncties.html" class="pagination-link" aria-label="Tekstfuncties">
         <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Tekstfuncties</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
+
 
 
 
