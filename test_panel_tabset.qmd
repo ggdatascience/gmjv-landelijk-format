@@ -97,15 +97,8 @@ for(var in names(monitor_df)){
 
 ::: {.panel-tabset}
 ```{r, results='asis'}
-
-monitor_df %>% maak_staafdiagram_uitsplitsing_naast_elkaar(
-                      var_inhoud = "LFDGA427",
-                      var_crossings = c("AGGSA402","AGLFA401"),
-                      kleuren_per_crossing = TRUE,
-                      fade_kleuren = TRUE,
-                      flip = TRUE, 
-                      titel = "Cannabisgebruik in de afgelopen 4 weken",
-                      tabel_en_grafiek = TRUE
-                      )
+  
+monitor_df %>% maak_cirkeldiagram(var_inhoud = "LVVTA404",
+                                  tabel_en_grafiek = TRUE)
 ```
 :::
