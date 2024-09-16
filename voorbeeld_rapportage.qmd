@@ -40,7 +40,7 @@ library(survey) # Package om te werken met gewogen gemiddelds incl. betrouwbaarh
 library(glue) #om strings aangenaam aan elkaar te plakken
 library(plotly)
 library(forcats)
-library(cowplot) #om spacing tussen legenda-elementen mogelijk te maken voor staafdiagram_vergelijking
+#library(cowplot) #om spacing tussen legenda-elementen mogelijk te maken voor staafdiagram_vergelijking #voorlopig uit omdat het alt-text onmogelijk maakt
 
 options(dplyr.summarise.inform = FALSE)
 source(params$path_hulpfuncties)
