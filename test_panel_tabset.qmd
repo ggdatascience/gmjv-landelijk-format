@@ -95,10 +95,8 @@ for(var in names(monitor_df)){
 
 ```
 
-::: {.panel-tabset}
 ```{r, results='asis'}
   
 monitor_df %>% maak_cirkeldiagram(var_inhoud = "LVVTA404",
                                   tabel_en_grafiek = TRUE)
 ```
-:::

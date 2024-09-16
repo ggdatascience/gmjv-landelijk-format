@@ -2182,108 +2182,75 @@ maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = params$d
     
     return(
       #Leeg plot met text in het midden
-      plot_ly(data.frame(0),
-              type = "pie") %>%
-        layout(
-          annotations = list(
-            x = 0.5,
-            y = 0.5,
-            text = glue("Onvoldoende observaties in {niveaus}
-            Voor grafiek: {str_wrap(titel,40)}  \n 
-                        Min observaties per vraag: {nvar} \n
-                        Min observaties per antwoord: {ncel}"),
-            showarrow = FALSE,
-            font = list(size = 12),
-            xref = "paper",
-            yref = "paper"
-          ),
-          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)
-        ) %>% 
-        config(staticPlot = T) 
+      #todO LEEG PLOT; zIE EQUIVALENTE GGPLOT CODE
     )
   }
   
   #Als desc: df_plot omgekeerd sorteren obv var_inhoud waarde. Hoogste waarde eerst; laagste als laatst
   if(desc){
     df_plot <- df_plot %>% arrange(desc(waarde))
+    #todo AANPASSEN AAN FACTOR/GGPLOT LOGICA VOOR VOLGORDCE
   }
   
-  #plotly pie chart
-  fig <- plot_ly(df_plot,
-                 labels = ~get(var_inhoud),
-                 textinfo = "percent",
-                 values = ~percentage, 
-                 type = "pie",
-                 hoverinfo = "text",
-                 text = "",
-                 direction = "clockwise",
-                 marker = list(colors = kleuren,
-                               line = list(color = "#FFFFFF", width = 1)
-                               ),
-                 insidetextfont = list(
-                   color = "#FFFFFF",
-                   size = 15
-                 ),
-                 outsidetextfont = list(
-                   color = "#000000",
-                   size = 15
-                 ),
-                 sort = FALSE
-                 
-                 ) %>% 
-    layout(title = list(text = titel,
-                        font = list(size = 15)),
-           margin = list(t = 100),
-           
-           legend = list(orientation = "h",    
-                         x = 0.5,          
-                         y = -0.2,          
-                         xanchor = "center", 
-                         yanchor = "top",
-                         font = list(size = 12))     
-           ) %>% 
-    #config(staticPlot = T) %>%
-    #plotly heeft zelf geen alt-text optie; met js toevoegen aan object
-    
-    
-    #TODO tijdelijk uitgezet; bovenaan takenlijst
-    
-    #De alt_text is niet goed ge-escaped hierdoor is deze niet leesbaar &
-    #creeert het een error bij PDF uitvoer. tijdelijk uitgezet.
-    #iets met glue en hoe het krulhaakjes verwerkt
-    htmlwidgets::onRender(glue("
-  function(el, x) {{
-    el.setAttribute('alt', 'Er wordt nog aan alt-text gewerkt');
-  }}"))
-
+  # GGPLOT PIE CHART
+  
+  plot <- ggplot(df_plot, aes(x = "", y = percentage, fill = !!sym(var_inhoud))) +
+    geom_col(color = "black") +
+    geom_text(aes(label = percentage),
+              position = position_stack(vjust = 0.5),
+              color = "#FFFFFF",
+              size = 8) +
+    coord_polar(theta = "y") +
+    scale_fill_manual(
+      str_wrap(var_label(data[[var_inhoud]]),30),
+      label = str_wrap(namen_kleuren,30),
+                      values = kleuren) +
+    theme_void()
+  
+  plot
 if(!tabel_en_grafiek){
   #alleen plot wanneer tabel niet gevraagd is
-  fig
+  plot
 } else{
   
-  tabel = df_plot %>% gt()
+  #Als gekozen is beide een grafiek en tabel in 'tabset panels' te plaatsen
+  #tbv digitoegankelijkheid; maak een leesbare tabel
   
-  #grafiek wegschrijven als temp html
-  temp_file <- tempfile("plot", fileext = ".png")
-  pagedown::chrome_print(fig, output = temp_file, format = "png")
-
-  
-  tabset_items <- list("Grafiek" = fig,
-                       "Tabel" = tabel)
-  
-  purrr::iwalk(tabset_items, ~ {
-    cat('## ', .y, '\n\n')
     
-    # Print the object directly
-    if (inherits(.x, "htmlwidget")) {
-     shiny::HTML(temp_file)# Directly print Plotly or htmlwidget object
-    } else {
-      print(.x)  # Print ggplot or table objects
-    }
+  #tabel in elkaar zetten; als titel is ingevuld; titel anders var-label
     
-    cat('\n\n')
-  })
+    label_inhoud = ifelse(nchar(titel) > 0,
+                          titel,
+                          var_label(data[[var_inhoud]])) #label inhoud var ophalen
+    
+    tabel <- plot$data %>% #data uit plot halen
+      select(all_of(var_inhoud), percentage) %>% 
+      mutate(
+        percentage = case_when(  
+          is.na(percentage) ~ "*",#* toevoegen als te weinig obs 
+          TRUE ~ paste0(percentage, "%") #% teken toevoegen
+        )
+      )  %>% 
+      rename(" " = 1) %>% #header 
+      gt() %>% #gt_tabel van maken 
+      tab_header(label_inhoud) #label inhoud als header
+    
+    tabset_items = list("Grafiek" = plot,
+                        "Tabel" = tabel) 
+    
+    
+    cat("::: {.panel-tabset}\n\n")
+    
+    purrr::iwalk(tabset_items, ~ {
+      cat('## ', .y, '\n\n')
+      
+      print(.x)
+      
+      cat('\n\n')
+      
+    })
+    
+    cat(":::\n")
 }
 
 }
