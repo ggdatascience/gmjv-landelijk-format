@@ -587,6 +587,34 @@ cbs_populatie_opschonen <- function(file = params$path_cbs_data,
   
 }  
 
+
+#Functie die markdown syntax om een grafiek en tabel heen genereert om een panel-tabset te maken
+#Geeft twee 'tabbladen' met een grafiek en tabel.
+#Moet in combinatie met results 'asis' gebruikt worden
+#wordt in grafiekfuncties aangeroepen wanneer grafiek_en_tabel = TRUE.
+
+maak_panel_tabset <- function(grafiek, tabel){
+  
+  tabset_items = list("Grafiek" = grafiek,
+                      "Tabel" = tabel) 
+  
+  #Genereer markdown-syntax om R code voor tabel & grafiek heen
+  cat("::: {.panel-tabset}\n\n")
+  
+  purrr::iwalk(tabset_items, ~ {
+    cat('## ', .y, '\n\n')
+    
+    print(.x)
+    
+    cat('\n\n')
+    
+  })
+  
+  cat(":::\n")
+  
+}
+
+
 # Tabelfuncties -------------------------------------------------------
 maak_responstabel <- function(data, crossings, missing_label = "Onbekend",
                               kleuren = params$default_kleuren_responstabel,
@@ -751,7 +779,8 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
                                                    alt_text = NULL,
                                                    huidig_jaar = 2024,
                                                    jaarvar = "AGOJB401",
-                                                   niveaus = "regio"
+                                                   niveaus = "regio",
+                                                   tabel_en_grafiek = FALSE
                                                    ){
   
   if(!labelled::is.labelled(data[[var_inhoud]])){
@@ -954,7 +983,42 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
   
   plot <- plot + labs(alt = alt_text)
   
-  return(plot)
+  
+  if(!tabel_en_grafiek){
+    
+    return(plot)
+    
+  } else {
+    #Als gekozen is beide een grafiek en tabel in 'tabset panels' te plaatsen
+    #tbv digitoegankelijkheid; maak een leesbare tabel
+    grafiek = plot
+    
+    #tabel in elkaar zetten; als titel is ingevuld; titel anders var-label
+    
+    label_inhoud = ifelse(nchar(titel) > 0,
+                          titel,
+                          var_label(data[[var_inhoud]])) #label inhoud var ophalen
+    
+    tabel = plot$data %>% #data uit plot halen
+      select(
+        all_of(c(var_crossing_groep, var_crossing_kleur)),
+        percentage) %>% #var_crossings & percentage bewaren 
+      mutate(
+        percentage = case_when(  
+          is.na(percentage) ~ "*",#* toevoegen als te weinig obs 
+          TRUE ~ paste0(percentage, "%") #% teken toevoegen
+          )
+        ) %>% 
+      pivot_wider(names_from = !!sym(var_crossing_groep),
+                  values_from =  percentage) %>% #crossing_groep = kolom
+      rename(" " = 1) %>% #varlabel crossing_kleur verwijderen
+      gt() %>% #gt tabel van maken
+      gt::tab_header(label_inhoud) #label toevoegen
+    
+    #genereer markdown syntax om plot & grafiek heen voor panel tabset
+    maak_panel_tabset(plot,tabel)    
+  }
+
 }
 
 
@@ -964,7 +1028,8 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
                                            alt_text = NULL,
                                            huidig_jaar = 2024,
                                            jaarvar = "AGOJB401",
-                                           niveaus = "regio"
+                                           niveaus = "regio",
+                                           tabel_en_grafiek = FALSE
                                              ){
   
   if(!labelled::is.labelled(data[[var_inhoud]])){
@@ -1116,7 +1181,36 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
    
    plot <- plot + labs(alt = alt_text)
    
-   return(plot)
+   if(!tabel_en_grafiek){
+     
+     return(plot)
+     
+   } else {
+     #Als gekozen is beide een grafiek en tabel in 'tabset panels' te plaatsen
+     #tbv digitoegankelijkheid; maak een leesbare tabel
+     grafiek = plot
+     
+     #tabel in elkaar zetten; als titel is ingevuld; titel anders var-label
+     
+     label_inhoud = ifelse(nchar(titel) > 0,
+                           titel,
+                           var_label(data[[var_inhoud]])) #label inhoud var ophalen
+     
+     tabel = plot$data %>% #data uit plot halen
+       select(onderdeel, percentage) %>% #groepnaam & percentage bewaren
+       rename("groep" = onderdeel) %>% #hernoemen variabele
+       mutate(
+         percentage = case_when(  
+           is.na(percentage) ~ "*",#* toevoegen als te weinig obs 
+           TRUE ~ paste0(percentage, "%") #% teken toevoegen
+         )
+       ) %>%
+       gt() %>% #gt_tabel van maken 
+       tab_header(label_inhoud) #label inhoud als header
+     
+     #genereer markdown syntax om plot & grafiek heen voor panel tabset
+     maak_panel_tabset(plot,tabel)    
+   }
 }
 
 
@@ -1129,7 +1223,8 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
                                               huidig_jaar = 2024,
                                               jaarvar = "AGOJB401",
                                               niveaus = "regio",
-                                              var_inhoud_waarde = NULL
+                                              var_inhoud_waarde = NULL,
+                                              tabel_en_grafiek = FALSE
                                               ){
   
   #Keuzes die we gebruikers willen bieden mbt niveau:
@@ -1137,7 +1232,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
   # - uitsplitsen op niveau
   # Implementatie:
     #als length(niveaus) = 1; filteren op niveau
-    #als length(niveaus) > 1; uitsplitsen op niveau & var_crossing negeren
+    #als length(niveaus) > 1; uitsplitsen op niveau & var_crossing onmogelijk maken 
   
   if(length(niveaus) > 1 & !is.null(var_crossing)){
     stop(glue("
@@ -1154,7 +1249,8 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
   }
   
 
-  #TODO bij vergelijking### Optioneel: regio-gemeente vs gemeente. 
+  #TODO Optie om het correcter te doen dan gebruikelijk
+  # regio zonder gemeente vs gemeente. 
   
   remove_legend = F
 
@@ -1308,7 +1404,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
   if(length(var_inhoud) == 1){
   df_plot <- df_plot %>% 
     mutate(!!sym(var_inhoud_plot) := fct_reorder(!!sym(var_inhoud_plot),
-                                                 waarde,
+                                                 as.numeric(waarde),
                                                  .desc = TRUE
                                                  ))
   }
@@ -1410,7 +1506,62 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
   }
   
   
-  plot
+  
+  if(!tabel_en_grafiek){
+    
+    return(plot)
+    
+  } else {
+    #Als gekozen is beide een grafiek en tabel in 'tabset panels' te plaatsen
+    #tbv digitoegankelijkheid; maak een leesbare tabel
+    grafiek = plot
+    
+    #tabel in elkaar zetten; als 
+      #1 var_inhoud en titel niet is ingevuld: var_label
+      #anders titel
+
+    if(length(var_inhoud) == 1){
+      label_inhoud = ifelse(nchar(titel) > 0,
+                            titel,
+                            var_label(data[[var_inhoud]])) #label inhoud var ophalen
+      
+    } else {
+      label_inhoud = titel
+    }
+
+    tabel = plot$data %>% #data uit plot halen
+      select(all_of(c(var_crossing, var_inhoud_plot)),
+             percentage) %>% #crossing, var_inhoud & percentage bewaren
+      mutate(
+        percentage = case_when(  
+          is.na(percentage) ~ "*",#* toevoegen als te weinig obs 
+          TRUE ~ paste0(percentage, "%") #% teken toevoegen
+        )
+      )
+    
+    #als er geen crossing is; alleen lege variabele verwijderen
+    if(var_crossing == "leeg"){
+      tabel <- tabel %>% select(-all_of(var_crossing))
+        
+    } else {
+    #als er wel een crossing is; pivot_wider() crossing wordt kolom
+      tabel <- tabel %>% 
+        pivot_wider(names_from = !!sym(var_crossing), 
+                                     values_from = percentage) 
+    }
+    
+      tabel <- tabel %>% 
+      rename(" " = 1) %>% #header 
+      gt() %>% #gt_tabel van maken 
+      tab_header(label_inhoud) #label inhoud als header
+    
+    
+      #genereer markdown syntax om plot & grafiek heen voor panel tabset
+      maak_panel_tabset(plot,tabel)
+  }
+
+  
+  
  
 }
 
@@ -1628,27 +1779,36 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
   
   plot <- plot + labs(alt = alt_text)
 
+
   if(!tabel_en_grafiek){
     
     return(plot)
     
   } else {
-    
+    #Als gekozen is beide een grafiek en tabel in 'tabset panels' te plaatsen
+    #tbv digitoegankelijkheid; maak een leesbare tabel
     grafiek = plot
-    tabel = gt(plot$data)
     
-    tabset_items = list("Grafiek" = grafiek,
-                        "Tabel" = tabel) 
+    #tabel in elkaar zetten; als titel is ingevuld; titel anders var-label
     
+    label_inhoud = ifelse(nchar(titel) > 0,
+                          titel,
+                          var_label(data[[var_inhoud]])) #label inhoud var ophalen
     
-    purrr::iwalk(tabset_items, ~ {
-      cat('## ', .y, '\n\n')
-      
-      print(.x)
-      
-      cat('\n\n')
-      
-    })
+    tabel = plot$data %>% #data uit plot halen
+      select(onderdeel, percentage) %>% #groepnaam & percentage bewaren
+      rename("groep" = onderdeel) %>% #hernoemen variabele
+      mutate(
+        percentage = case_when(  
+          is.na(percentage) ~ "*",#* toevoegen als te weinig obs 
+          TRUE ~ paste0(percentage, "%") #% teken toevoegen
+        )
+      ) %>%
+      gt() %>% #gt_tabel van maken 
+      tab_header(label_inhoud) #label inhoud als header
+    
+    #genereer markdown syntax om plot & grafiek heen voor panel tabset
+    maak_panel_tabset(plot,tabel)
   }
   
  
@@ -1661,12 +1821,10 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
                                         alt_text = NULL,
                                         huidig_jaar = 2024,
                                         jaarvar = "AGOJB401",
-                                        niveaus = "regio"
+                                        niveaus = "regio",
+                                        tabel_en_grafiek = FALSE
                                         
                                         ){
-  
-  #TODO
-  #Grafisch probleem fixen met percentages als percentage erg laag is
   
   #TODO
   #nu wordt de hele grafiek uitgezet zodra 1 percentage te laag is. bij gebruik var_crossing
@@ -1787,15 +1945,14 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
     )
   }
 
-  namen_kleuren <- levels(df_plot[[var_inhoud]])
-  
-  kleuren <- kleuren[1:length(namen_kleuren)]
-  
   #factor levels van var_inhoud goed zetten o.b.v. variabele waarde
   df_plot <- df_plot %>% 
     mutate(!!sym(var_inhoud) := fct_reorder(!!sym(var_inhoud),
                                             as.numeric(waarde),
                                             .desc = TRUE))
+  
+  namen_kleuren <- levels(df_plot[[var_inhoud]])
+  kleuren <- kleuren[1:length(namen_kleuren)]
   
   plot <- ggplot(df_plot, aes(x = percentage, y = !!sym(var_crossing),
                               fill = !!sym(var_inhoud))) + 
@@ -1845,7 +2002,51 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
     
   plot <- plot + labs(alt = alt_text)
   
-  
+  if(!tabel_en_grafiek){
+    
+    return(plot)
+    
+  } else {
+    #Als gekozen is beide een grafiek en tabel in 'tabset panels' te plaatsen
+    #tbv digitoegankelijkheid; maak een leesbare tabel
+    grafiek = plot
+    
+    #tabel in elkaar zetten; als titel is ingevuld; titel anders var-label
+    
+    label_inhoud = ifelse(nchar(titel) > 0,
+                          titel,
+                          var_label(data[[var_inhoud]])) #label inhoud var ophalen
+    
+    tabel <- plot$data %>% #data uit plot halen
+      select(all_of(c(var_inhoud,var_crossing)), percentage) %>% 
+      mutate(
+        percentage = case_when(  
+          is.na(percentage) ~ "*",#* toevoegen als te weinig obs 
+          TRUE ~ paste0(percentage, "%") #% teken toevoegen
+        )
+      )
+    
+    #als er geen crossing is; alleen lege variabele verwijderen
+    if(var_crossing == "leeg"){
+      tabel <- tabel %>% select(-all_of(var_crossing))
+      
+    } else {
+      #als er wel een crossing is; pivot_wider() crossing wordt kolom
+      tabel <- tabel %>% 
+        pivot_wider(names_from = !!sym(var_crossing), 
+                    values_from = percentage) 
+    }
+    
+    tabel <- tabel %>% 
+      rename(" " = 1) %>% #header 
+      gt() %>% #gt_tabel van maken 
+      tab_header(label_inhoud) #label inhoud als header
+    
+    
+    #genereer markdown syntax om plot & grafiek heen voor panel tabset
+    maak_panel_tabset(plot,tabel)
+    
+  }
 
   
 
@@ -1856,7 +2057,9 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
 maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = params$default_kleuren_grafiek,
                                nvar = params$default_nvar, ncel = params$default_ncel, alt_text = NULL,
                                niveaus = "regio", huidig_jaar = 2024, jaarvar = "AGOJB401",
-                               desc = FALSE) {
+                               desc = FALSE,
+                               tabel_en_grafiek = FALSE
+                               ) {
 
   if(!labelled::is.labelled(data[[var_inhoud]])){
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
@@ -1912,13 +2115,7 @@ maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = params$d
     
     titel <- var_label(data[[var_inhoud]]) %>% str_wrap(50)
   }
-  
-  #kleuren labelen o.b.v. levels var_inhoud
-  namen_kleuren <- df_plot[[var_inhoud]]
-  
-  kleuren <- kleuren[1:length(namen_kleuren)]
-  
-  
+
   #alt text toevoegen als deze niet handmatig is toegevoegd
   #kan niet met maak_alt_text omdat hier plotly gebruikt wordt ipv ggplot
   if(is.null(alt_text)){
@@ -1950,82 +2147,76 @@ maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = params$d
     warning(glue("Plot kan niet gemaakt worden! Te weinig observaties voor {var_inhoud}. De instellingen zijn: nvar = {nvar} en ncel = {ncel}"))
     
     return(
-      #Leeg plot met text in het midden
-      plot_ly(data.frame(0),
-              type = "pie") %>%
-        layout(
-          annotations = list(
-            x = 0.5,
-            y = 0.5,
-            text = glue("Onvoldoende observaties in {niveaus}
+      ggplot() +
+        annotate("text", x = 0.5, y = 0.5,
+                 label =  glue("Onvoldoende observaties in {niveaus}
             Voor grafiek: {str_wrap(titel,40)}  \n 
                         Min observaties per vraag: {nvar} \n
                         Min observaties per antwoord: {ncel}"),
-            showarrow = FALSE,
-            font = list(size = 12),
-            xref = "paper",
-            yref = "paper"
-          ),
-          xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
-          yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE)
-        ) %>% 
-        config(staticPlot = T) 
+                 size = 6, hjust = 0.5, vjust = 0.5) +
+        theme_void() +
+        theme(plot.margin = margin(50, 50, 50, 50)) # Add margin to take up space)
     )
   }
   
-  #Als desc: df_plot omgekeerd sorteren obv var_inhoud waarde. Hoogste waarde eerst; laagste als laatst
-  if(desc){
-    df_plot <- df_plot %>% arrange(desc(waarde))
-  }
+
+  #volgorde levels cirkeldiagram bepalen. parameter desc bepaald richting.
+  df_plot <- df_plot %>%
+    mutate(!!sym(var_inhoud) := fct_reorder(!!sym(var_inhoud),
+                                            as.numeric(waarde),
+                                            .desc = desc))
   
-  #plotly pie chart
-  fig <- plot_ly(df_plot,
-                 labels = ~get(var_inhoud),
-                 textinfo = "percent",
-                 values = ~percentage, 
-                 type = "pie",
-                 hoverinfo = "text",
-                 text = "",
-                 direction = "clockwise",
-                 marker = list(colors = kleuren,
-                               line = list(color = "#FFFFFF", width = 1)
-                               ),
-                 insidetextfont = list(
-                   color = "#FFFFFF",
-                   size = 15
-                 ),
-                 outsidetextfont = list(
-                   color = "#000000",
-                   size = 15
-                 ),
-                 sort = FALSE
-                 
-                 ) %>% 
-    layout(title = list(text = titel,
-                        font = list(size = 15)),
-           margin = list(t = 100),
-           
-           legend = list(orientation = "h",    
-                         x = 0.5,          
-                         y = -0.2,          
-                         xanchor = "center", 
-                         yanchor = "top",
-                         font = list(size = 12))     
-           ) %>% 
-    config(staticPlot = T) %>%
-    #plotly heeft zelf geen alt-text optie; met js toevoegen aan object
+  
+  #kleuren labelen o.b.v. levels var_inhoud
+  namen_kleuren <- levels(df_plot[[var_inhoud]])
+  
+  kleuren <- kleuren[1:length(namen_kleuren)]
+  
+  # GGPLOT PIE CHART
+  plot <- ggplot(df_plot, aes(x = "", y = percentage, fill = !!sym(var_inhoud))) +
+    geom_col(color = "black") +
+    geom_text(aes(label = percentage),
+              position = position_stack(vjust = 0.5),
+              color = "#FFFFFF",
+              size = 8) +
+    coord_polar(theta = "y") +
+    scale_fill_manual(
+      str_wrap(var_label(data[[var_inhoud]]),30),
+      label = str_wrap(namen_kleuren,30),
+                      values = kleuren) +
+    theme_void()
+  
+if(!tabel_en_grafiek){
+  #alleen plot wanneer tabel niet gevraagd is
+  plot
+} else{
+  
+  #Als gekozen is beide een grafiek en tabel in 'tabset panels' te plaatsen
+  #tbv digitoegankelijkheid; maak een leesbare tabel
+  
     
+  #tabel in elkaar zetten; als titel is ingevuld; titel anders var-label
     
-    #TODO tijdelijk uitgezet; bovenaan takenlijst
+    label_inhoud = ifelse(nchar(titel) > 0,
+                          titel,
+                          var_label(data[[var_inhoud]])) #label inhoud var ophalen
     
-    #De alt_text is niet goed ge-escaped hierdoor is deze niet leesbaar &
-    #creeert het een error bij PDF uitvoer. tijdelijk uitgezet.
-    
-    htmlwidgets::onRender(glue("
-  function(el, x) {{
-    el.setAttribute('alt', 'Er wordt nog aan alt-text gewerkt');
-  }}"))
-  fig
+    tabel <- plot$data %>% #data uit plot halen
+      select(all_of(var_inhoud), percentage) %>% 
+      mutate(
+        percentage = case_when(  
+          is.na(percentage) ~ "*",#* toevoegen als te weinig obs 
+          TRUE ~ paste0(percentage, "%") #% teken toevoegen
+        )
+      )  %>% 
+      rename(" " = 1) %>% #header 
+      gt() %>% #gt_tabel van maken 
+      tab_header(label_inhoud) #label inhoud als header
+
+    #genereer markdown syntax om plot & grafiek heen voor panel tabset
+    maak_panel_tabset(plot,tabel)    
+
+}
 
 }
 
@@ -2125,7 +2316,8 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
                                        kleuren = params$default_kleuren_grafiek,
                                        titel = "",
                                        x_label = "",
-                                       alt_text = NULL
+                                       alt_text = NULL,
+                                       tabel_en_grafiek = FALSE
                                        ){
 
   #leeftijd en geslacht aan varnamen uit monitor koppelen
@@ -2308,7 +2500,31 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
   
   plot <- plot + labs(alt = alt_text)
   
-  return(plot)
+
+  #Hier panel tabset logica;
+  
+  if(!tabel_en_grafiek){
+    
+    plot
+  } else {
+    
+    tabel = plot$data %>%
+      ungroup() %>% 
+      select(-c(.group, type, aantal, regio)) %>% 
+      mutate(percentage = round(percentage,1)) %>% 
+      pivot_wider(names_from = crossing, 
+                  values_from = percentage) %>% 
+      arrange(label) %>%
+      mutate(label = as.character(label)) %>% 
+      rename(" " = 1) %>% 
+      gt() %>% 
+      tab_header(glue("Percentages in populatie en deelnemers per {var_label(data[[crossing_monitor]])}"))
+
+     
+    
+    maak_panel_tabset(plot, tabel)
+  }
+  
   
 }
 
@@ -2746,24 +2962,4 @@ render_toc <- function(
   })
   x <- x[x != ""]
   knitr::asis_output(paste(x, collapse = "\n"))
-}
-
-
-# tabset panel test -------------------------------------------------------
-
-panel_tabset <- function(plots_list) {
-  
-  title = names(plots_list)
-  # Start the tabset
-  cat("::: {.panel-tabset}\n")
-  
-  # Iterate over the list of plots and titles, and construct tabs
-  purrr::iwalk(plots_list, function(plot, title) {
-    cat("## ", title, "\n\n")
-    print(plot)  # Print each plot inside its own panel
-    cat("\n\n")
-  })
-  
-  # End the tabset
-  cat(":::\n")
 }
