@@ -917,6 +917,7 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
 
   namen_kleuren <- unique(df_plot[[var_crossing_kleur]])
   kleuren <- kleuren[1:length(namen_kleuren)]
+
   
   plot = ggplot(df_plot) +
     geom_col(aes(x = !!sym(var_crossing_groep), y = percentage, fill = !!sym(var_crossing_kleur)),
@@ -943,7 +944,7 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
                na.rm = T
                ) +
     #TODO toelichting op sterretje in grafiek?
-    ggtitle(titel) +
+    ggtitle(str_wrap(titel, 50)) +
     #Hier worden de kleuren en volgorde bepaald.
     #Voor de fill van de balken
     scale_fill_manual(values= kleuren,
@@ -1142,7 +1143,7 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
                 show.legend = FALSE,
                 na.rm = T
      ) +
-     ggtitle(titel) +
+     ggtitle(str_wrap(titel, 50)) +
      #Hier worden de kleuren en volgorde bepaald.
      scale_fill_manual(values= kleuren,
                        guide = guide_legend(nrow = 1, byrow = TRUE,
@@ -1436,7 +1437,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
                na.rm = T
     ) +
     
-    ggtitle(titel) +
+    ggtitle(str_wrap(titel, 50)) +
     #Hier worden de kleuren en volgorde bepaald.
     scale_fill_manual(values= kleuren,
                       guide = guide_legend(nrow = 1, byrow = TRUE,
@@ -1732,7 +1733,7 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
     #kleuren voor balken
     scale_fill_manual(values = kleuren) + 
     
-    ggtitle(titel) +
+    ggtitle(str_wrap(titel, 50)) +
     theme(panel.background = element_blank(),
           legend.position = "none",
           plot.title = element_text(hjust = .5, size = 20), # Hier grootte van titel aanpassen
@@ -1973,7 +1974,7 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
       breaks = seq(0,101, by = 10),
       labels = paste0(seq(0,100, by = 10),"%"),
       expand = expansion(mult = c(0, 0.05)))+
-    ggtitle(titel) + 
+    ggtitle(str_wrap(titel, 50)) + 
     ylab(x_label) + 
       theme(
         axis.title = element_blank(),
@@ -2056,7 +2057,7 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
 
 #TODO titel tekst kan wegvallen bij Cirkeldiagram
 
-maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = params$default_kleuren_grafiek,
+maak_cirkeldiagram <- function(data, var_inhoud, titel = "", kleuren = params$default_kleuren_grafiek,
                                nvar = params$default_nvar, ncel = params$default_ncel, alt_text = NULL,
                                niveaus = "regio", huidig_jaar = 2024, jaarvar = "AGOJB401",
                                desc = FALSE,
@@ -2109,15 +2110,7 @@ maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = params$d
                                 min_observaties_per_antwoord = ncel
                                 ) %>% 
     mutate(weggestreept = as.numeric(weggestreept)) 
-    
-
   
-  #titel ophalen uit var_label als niet opgegeven
-  if(is.null(titel)){
-    
-    titel <- var_label(data[[var_inhoud]]) %>% str_wrap(50)
-  }
-
   #alt text toevoegen als deze niet handmatig is toegevoegd
   #kan niet met maak_alt_text omdat hier plotly gebruikt wordt ipv ggplot
   if(is.null(alt_text)){
@@ -2182,6 +2175,7 @@ maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = params$d
               color = "#FFFFFF",
               size = 8) +
     coord_polar(theta = "y") +
+    ggtitle(str_wrap(titel, 50)) +
     scale_fill_manual(
       str_wrap(var_label(data[[var_inhoud]]),30),
       label = str_wrap(namen_kleuren,30),
@@ -2450,7 +2444,7 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
       breaks = seq(0,101, by = 25),
       labels = paste0(seq(0,100, by = 25),"%"),
       expand = expansion(mult = c(0, 0.05)))+
-    ggtitle(titel) + 
+    ggtitle(str_wrap(titel, 50)) + 
     ylab(x_label) + 
     theme(
       axis.title = element_blank(),
