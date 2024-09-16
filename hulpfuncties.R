@@ -587,6 +587,34 @@ cbs_populatie_opschonen <- function(file = params$path_cbs_data,
   
 }  
 
+
+#Functie die markdown syntax om een grafiek en tabel heen genereert om een panel-tabset te maken
+#Geeft twee 'tabbladen' met een grafiek en tabel.
+#Moet in combinatie met results 'asis' gebruikt worden
+#wordt in grafiekfuncties aangeroepen wanneer grafiek_en_tabel = TRUE.
+
+maak_panel_tabset <- function(grafiek, tabel){
+  
+  tabset_items = list("Grafiek" = grafiek,
+                      "Tabel" = tabel) 
+  
+  #Genereer markdown-syntax om R code voor tabel & grafiek heen
+  cat("::: {.panel-tabset}\n\n")
+  
+  purrr::iwalk(tabset_items, ~ {
+    cat('## ', .y, '\n\n')
+    
+    print(.x)
+    
+    cat('\n\n')
+    
+  })
+  
+  cat(":::\n")
+  
+}
+
+
 # Tabelfuncties -------------------------------------------------------
 maak_responstabel <- function(data, crossings, missing_label = "Onbekend",
                               kleuren = params$default_kleuren_responstabel,
@@ -987,18 +1015,8 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
       gt() %>% #gt tabel van maken
       gt::tab_header(label_inhoud) #label toevoegen
     
-    tabset_items = list("Grafiek" = grafiek,
-                        "Tabel" = tabel) 
-    
-    
-    purrr::iwalk(tabset_items, ~ {
-      cat('## ', .y, '\n\n')
-      
-      print(.x)
-      
-      cat('\n\n')
-      
-    })
+    #genereer markdown syntax om plot & grafiek heen voor panel tabset
+    maak_panel_tabset(plot,tabel)    
   }
 
 }
@@ -1190,19 +1208,8 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
        gt() %>% #gt_tabel van maken 
        tab_header(label_inhoud) #label inhoud als header
      
-     
-     tabset_items = list("Grafiek" = grafiek,
-                         "Tabel" = tabel) 
-     
-     
-     purrr::iwalk(tabset_items, ~ {
-       cat('## ', .y, '\n\n')
-       
-       print(.x)
-       
-       cat('\n\n')
-       
-     })
+     #genereer markdown syntax om plot & grafiek heen voor panel tabset
+     maak_panel_tabset(plot,tabel)    
    }
 }
 
@@ -1549,18 +1556,8 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
       tab_header(label_inhoud) #label inhoud als header
     
     
-    tabset_items = list("Grafiek" = grafiek,
-                        "Tabel" = tabel) 
-    
-    
-    purrr::iwalk(tabset_items, ~ {
-      cat('## ', .y, '\n\n')
-      
-      print(.x)
-      
-      cat('\n\n')
-      
-    })
+      #genereer markdown syntax om plot & grafiek heen voor panel tabset
+      maak_panel_tabset(plot,tabel)
   }
 
   
@@ -1810,19 +1807,8 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
       gt() %>% #gt_tabel van maken 
       tab_header(label_inhoud) #label inhoud als header
     
-    
-    tabset_items = list("Grafiek" = grafiek,
-                        "Tabel" = tabel) 
-    
-    
-    purrr::iwalk(tabset_items, ~ {
-      cat('## ', .y, '\n\n')
-      
-      print(.x)
-      
-      cat('\n\n')
-      
-    })
+    #genereer markdown syntax om plot & grafiek heen voor panel tabset
+    maak_panel_tabset(plot,tabel)
   }
   
  
@@ -2061,20 +2047,10 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
       tab_header(label_inhoud) #label inhoud als header
     
     
-    tabset_items = list("Grafiek" = grafiek,
-                        "Tabel" = tabel) 
+    #genereer markdown syntax om plot & grafiek heen voor panel tabset
+    maak_panel_tabset(plot,tabel)
     
-    
-    purrr::iwalk(tabset_items, ~ {
-      cat('## ', .y, '\n\n')
-      
-      print(.x)
-      
-      cat('\n\n')
-      
-    })
   }
-  
 
   
 
@@ -2234,23 +2210,10 @@ if(!tabel_en_grafiek){
       rename(" " = 1) %>% #header 
       gt() %>% #gt_tabel van maken 
       tab_header(label_inhoud) #label inhoud als header
-    
-    tabset_items = list("Grafiek" = plot,
-                        "Tabel" = tabel) 
-    
-    
-    cat("::: {.panel-tabset}\n\n")
-    
-    purrr::iwalk(tabset_items, ~ {
-      cat('## ', .y, '\n\n')
-      
-      print(.x)
-      
-      cat('\n\n')
-      
-    })
-    
-    cat(":::\n")
+
+    #genereer markdown syntax om plot & grafiek heen voor panel tabset
+    maak_panel_tabset(plot,tabel)    
+
 }
 
 }
@@ -2351,7 +2314,8 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
                                        kleuren = params$default_kleuren_grafiek,
                                        titel = "",
                                        x_label = "",
-                                       alt_text = NULL
+                                       alt_text = NULL,
+                                       tabel_en_grafiek = FALSE
                                        ){
 
   #leeftijd en geslacht aan varnamen uit monitor koppelen
@@ -2534,7 +2498,31 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
   
   plot <- plot + labs(alt = alt_text)
   
-  return(plot)
+
+  #Hier panel tabset logica;
+  
+  if(!tabel_en_grafiek){
+    
+    plot
+  } else {
+    
+    tabel = plot$data %>%
+      ungroup() %>% 
+      select(-c(.group, type, aantal, regio)) %>% 
+      mutate(percentage = round(percentage,1)) %>% 
+      pivot_wider(names_from = crossing, 
+                  values_from = percentage) %>% 
+      arrange(label) %>%
+      mutate(label = as.character(label)) %>% 
+      rename(" " = 1) %>% 
+      gt() %>% 
+      tab_header(glue("Percentages in populatie en deelnemers per {var_label(data[[crossing_monitor]])}"))
+
+     
+    
+    maak_panel_tabset(plot, tabel)
+  }
+  
   
 }
 
