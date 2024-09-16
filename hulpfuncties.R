@@ -23,6 +23,7 @@ library(survey) # Package om te werken met gewogen gemiddelds incl. betrouwbaarh
 library(glue) #om strings aangenaam aan elkaar te plakken
 library(plotly)
 library(forcats)
+library(cowplot)
 # utility ----------------------------------------------------------------
 
 ##### Survey functies gebaseerd op oud tabellenboekscript ####
@@ -1125,10 +1126,13 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
      df_crossing
      
    }) %>% do.call(rbind,.)
-   
-
+  
+  
    #volgorde groepen op x-as vastzetten o.b.v. volgorde variabelen door er een factor vna te maken
-   df_plot$groep <- factor(df_plot$groep)
+   groep_levels <- df_plot$groep %>% unique()
+   df_plot$groep <- factor(df_plot$groep, levels = groep_levels)
+   
+   
    #volgorde onderdeel vastzetten o.b.v dataframe
    onderdeel_levels <- df_plot$onderdeel %>% unique()
    df_plot$onderdeel <- factor(df_plot$onderdeel, levels = onderdeel_levels)
@@ -1137,8 +1141,6 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
    kleuren <- df_plot$kleuren
    names(kleuren) <- onderdeel_levels
   
-   #str_wrap toegevoegd om te zorgen dat hele lange varlabels leesbaar blijven.
-   df_plot$groep <- str_wrap(df_plot$groep, 40)
 
    plot = ggplot(df_plot) +
      geom_col(aes(x = groep, y = percentage, fill = onderdeel),
@@ -1179,6 +1181,7 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
            panel.background = element_blank(),
            axis.ticks.x = element_blank(),
            axis.ticks.y = element_blank(),
+           axis.text.x = element_blank(), #text met naam crossing uitgezet.
            legend.title = element_blank(),
            legend.spacing.x = unit(.1, 'cm'),
            legend.position = "bottom",
@@ -1187,6 +1190,60 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
            axis.line.x.bottom = element_line(linewidth = 1, colour = "black")
      )
    
+
+   
+   #Onnodig complexe logica om een plot met DEZELFDE kleuren die VERSCHILLENDE
+   #inhoud aanduiden  met een vooraf onbekend aantal kruisvariabelen & levels werkbaar te maken
+   #Door leesbaarheid te vergroten met: Spacing tussen legenda-elementen
+   
+   #Spacing is afh. van aantal staven in staafdiagram
+   #bij 5 lvls is het ongeveer 3 cm
+   #bij 7 levels is het ongeveer 2.15
+  
+   #TODO formule afstellen
+   #formule
+   slope = -.25 #coefficient; hoe verder in de min hoe harder spacing afneemt bij meer staven
+   basis_spacing = 4.25 #baseline waarde spacing. hoe hoger, hoe meer spacing
+   spacing <- basis_spacing +  slope * nrow(df_plot)
+  
+   #TODO tekst kleiner maken o.b.v. aantal staven
+   key_size = (10 - nrow(df_plot))/10
+   
+   
+   #Zoek de index(en) op van van plek waar in legenda gesplitst moet worden
+   #door df_plot$crossing te checken op verandering in waarde (is nieuwe crossing)
+   #werkt door dmv lag te kijken op welke index een vector niet meer dezelfde waarde bevat
+   # (- 1 omdat we )
+   splits_hier = which(df_plot$crossing != dplyr::lag(df_plot$crossing)) - 1 
+   splits_hier = splits_hier * 3 #keer drie omdat iedere legend key element uit 3 grobs bestaat
+
+   #Legenda uit plot halen
+   legend <- cowplot::get_plot_component(plot + theme(legend.position = "top",
+                                                      legend.key.size = unit(key_size,"cm")), 'guide-box-top')
+   legend_gtable <- legend$grobs[[1]]  # TableGrob ophalen
+   
+   #Loop over iedere index voor splitsing 
+   for(i in 1:length(splits_hier)){
+   
+   splits = splits_hier[i]-1+i #Omdat elke toevoeging van een kolom de Grobtable ook langer maakt
+   #moet er steeds + 1 gedaan worden op het ingegeven aantal.
+   #min-1 om 1e index klopend te maken
+   
+   #Voeg spacing to in grobtable
+   legend_gtable <- gtable::gtable_add_cols(legend_gtable, unit(spacing, "cm"), splits) 
+   
+   }
+   
+   #links lege ruimte toevoegen
+   legend_gtable <- gtable::gtable_add_cols(legend_gtable, unit(3,"cm"),0)
+   #Legenda uit oorspronkelijk plot verwijderen
+   plot_no_legend <- plot + theme(legend.position = "none")
+
+   # voeg de gemodificeerde legenda weer samen met plot
+   plot <- cowplot::plot_grid(plot_no_legend, legend_gtable,
+                                    ncol = 1,
+                                    rel_heights = c(1, 0.2))
+
    
    #toon y: laat Y as zien met rechte lijn + ticklabels
    if(toon_y){
