@@ -2256,7 +2256,7 @@ maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = params$d
   function(el, x) {{
     el.setAttribute('alt', 'Er wordt nog aan alt-text gewerkt');
   }}"))
-  
+
 if(!tabel_en_grafiek){
   #alleen plot wanneer tabel niet gevraagd is
   fig
@@ -2266,7 +2266,7 @@ if(!tabel_en_grafiek){
   
   #grafiek wegschrijven als temp html
   temp_file <- tempfile("plot", fileext = ".png")
-  pagedown::chrome_print(fig, output = temp_file format = "png")
+  pagedown::chrome_print(fig, output = temp_file, format = "png")
 
   
   tabset_items <- list("Grafiek" = fig,
