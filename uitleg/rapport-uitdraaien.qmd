@@ -63,7 +63,9 @@ format-links: false
 ---
 ```
 
-De meeste instellingen kan je laten staan. Het volgende moet aangepast of gecontroleerd worden:
+De meeste instellingen kan je laten staan. Het volgende moet aangepast of gecontroleerd worden.:
+
+### Parameters onder 'Params'
 
 -   **gemeentecode:** Voer hier een gemeentecode in die bestaat in je data. Dit is als het ware je voorbeeldgemeente. Als je het rapport uitdraait via de "Render" knop zal een rapport voor die gemeente gemaakt worden.
 -   **regiocode:** voer hier de CBS code van je GGD-regio in.
@@ -73,6 +75,16 @@ De meeste instellingen kan je laten staan. Het volgende moet aangepast of gecont
 -   **default_ncel:** voer hier het algemene minimum aantal respondenten per antwoord in
 -   **default_kleuren_grafiek:** Voer hier een vector in met de standaard kleurcodes voor grafieken. 
 -   **default_kleuren_responstabel:** Voer hier een named vector in met 4 kleurcodes als standaard voor responstabellen. Zie het voorbeeld voor de namen.
+
+### Overige frontmatter instellingen
+-   **warning:** Deze parameter staat in het voorbeeldrapport op false. Als de parameter op true staat worden mogelijke problemen / 'warnings' getoond in het rapport. Dit is meestal niet wenselijk voor het eindproduct, maar nuttig tijdens ontwikkeling.
+
+::: {.callout-warning title="Let op"}
+Wees je ervan bewust dat eventuele problemen met het verwerken van de data NIET getoond worden als warning op false staat. Zorg ervoor dat deze parameter bij het  ontwikkelen van het rapport op 'true' staat, zodat je op de hoogte bent van de warnings. 
+:::
+
+
+-   **echo:** Standaard op false. Als deze parameter op true staat worden codeblokjes in het rapport getoond.
 
 
 ## Rapporten per gemeente uitdraaien

@@ -599,8 +599,10 @@ maak_panel_tabset <- function(grafiek, tabel){
                       "Tabel" = tabel) 
   
   #Genereer markdown-syntax om R code voor tabel & grafiek heen
-  cat("::: {.panel-tabset}\n\n")
+  cat("::: {.panel-tabset}\n\n") # maak panel tabset div
   
+  #Plaats R objecten voor  grafiekn & tabel onder h2 headers met naam
+  #object (Grafiek & Tabel)
   purrr::iwalk(tabset_items, ~ {
     cat('## ', .y, '\n\n')
     
@@ -610,7 +612,7 @@ maak_panel_tabset <- function(grafiek, tabel){
     
   })
   
-  cat(":::\n")
+  cat(":::\n") #sluit panel tabset div af
   
 }
 
