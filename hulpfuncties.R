@@ -782,7 +782,8 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
                                                    huidig_jaar = 2024,
                                                    jaarvar = "AGOJB401",
                                                    niveaus = "regio",
-                                                   tabel_en_grafiek = FALSE
+                                                   tabel_en_grafiek = FALSE,
+                                                   toon_y = TRUE
                                                    ){
   
   if(!labelled::is.labelled(data[[var_inhoud]])){
@@ -953,11 +954,12 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
     #voor de kleur van de sterretjes
     scale_color_manual(values= kleuren) +
     
-    scale_y_continuous(limits = c(0,100),
-                       breaks = seq(0,100, by = 10),
-                       labels = paste0(seq(0,100, by = 10),"%"),
-                       expand = expansion(mult = c(0, 0.05))
-                       ) +
+    scale_y_continuous(
+      limits = c(0,100),
+      breaks = seq(0,100, by = 10),
+      labels = paste0(seq(0,100, by = 10),"%"),
+      expand = expansion(mult = c(0, 0.05))) + 
+
     theme(axis.title = element_blank(),
           panel.background = element_blank(),
           axis.ticks.x = element_blank(),
@@ -967,9 +969,24 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
           legend.position = "bottom",
           plot.title = element_text(hjust = .5, size = 20), # Hier grootte van titel aanpassen
           text = element_text(size = 17), # Hier grootte labels etc aanpassen
-          axis.line.x.bottom = element_line(linewidth = 1),
-          axis.line.y.left = element_line(linewidth = 1,)
+          axis.line.x.bottom = element_line(linewidth = 1)
     )
+  
+  #toon y: laat Y as zien met rechte lijn + ticklabels
+  if(toon_y){
+    
+    plot <-  plot +
+      theme(
+        axis.line.y.left = element_line(linewidth = 1)
+      )
+  } else {
+    #geen y-labels
+    plot <- plot +
+      theme(
+        axis.text.y = element_blank()
+      )
+  }
+
   
   #alt text aanmaken voor grafiek als deze niet handmatig is opgegeven
   if(is.null(alt_text)){
@@ -1032,7 +1049,8 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
                                            huidig_jaar = 2024,
                                            jaarvar = "AGOJB401",
                                            niveaus = "regio",
-                                           tabel_en_grafiek = FALSE
+                                           tabel_en_grafiek = FALSE,
+                                           toon_y = TRUE
                                              ){
   
   if(!labelled::is.labelled(data[[var_inhoud]])){
@@ -1166,9 +1184,24 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
            legend.position = "bottom",
            plot.title = element_text(hjust = .5, size = 20), # Hier grootte van titel aanpassen
            text = element_text(size = 17), # Hier grootte labels etc aanpassen
-           axis.line.x.bottom = element_line(linewidth = 1, colour = "black"),
-           axis.line.y.left = element_line(linewidth = 1)
+           axis.line.x.bottom = element_line(linewidth = 1, colour = "black")
      )
+   
+   
+   #toon y: laat Y as zien met rechte lijn + ticklabels
+   if(toon_y){
+     
+     plot <-  plot +
+       theme(
+         axis.line.y.left = element_line(linewidth = 1)
+       )
+   } else {
+     #geen y-labels
+     plot <- plot +
+       theme(
+         axis.text.y = element_blank()
+       )
+   }
    
    
    #Alt text toevoegen als deze niet handmatig is opgegeven
@@ -1227,7 +1260,8 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
                                               jaarvar = "AGOJB401",
                                               niveaus = "regio",
                                               var_inhoud_waarde = NULL,
-                                              tabel_en_grafiek = FALSE
+                                              tabel_en_grafiek = FALSE,
+                                              toon_y = TRUE
                                               ){
   
   #Keuzes die we gebruikers willen bieden mbt niveau:
@@ -1464,10 +1498,36 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
           legend.position = "bottom",
           plot.title = element_text(hjust = .5, size = 20), # Hier grootte van titel aanpassen
           text = element_text(size = 17), # Hier grootte labels etc aanpassen
-          axis.line.x.bottom = element_line(linewidth = 1),
-          axis.line.y.left = element_line(linewidth = 1,)
+          axis.line.x.bottom = element_line(linewidth = 1)
     )
   
+  
+  #toon y: laat Y as zien met rechte lijn + ticklabels
+  if(toon_y){
+    
+    plot <-  plot +
+      theme(
+        axis.line.y.left = element_line(linewidth = 1)
+      )
+  } else {     #geen y-labels
+    #dit is onnodig complex; heeft te maken met op laatste moment toon_y=FALSE optie
+    #verzocht krijgen + flip van coordinaten
+    if(flip){ #Als flip; axis text X verwijderen & X lijn verwijderen.
+      plot <- plot +
+        theme(
+          axis.line.x.bottom = element_blank(),
+          axis.text.x = element_blank(),
+          axis.line.y = element_line(linewidth = 1) #en wel de y-lijn bewaren
+        )
+    } else{
+    #Als geen-y-labels en geen flip:  hetzelfde doen maar dan op de y-as
+      plot <- plot +
+        theme(
+          axis.line.y.left = element_blank(),
+          axis.text.y = element_blank()
+      )
+    }
+  }
   
   if(is.null(alt_text)){
     
@@ -1744,6 +1804,7 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
       alt = alt_text
     )
   
+  
   if(flip){
     plot <- plot + 
       scale_y_continuous(limits = c(0,100),
@@ -1825,7 +1886,8 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
                                         huidig_jaar = 2024,
                                         jaarvar = "AGOJB401",
                                         niveaus = "regio",
-                                        tabel_en_grafiek = FALSE
+                                        tabel_en_grafiek = FALSE,
+                                        toon_y = TRUE
                                         
                                         ){
   
@@ -1986,11 +2048,25 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
           legend.position = "bottom",
           plot.title = element_text(hjust = .5, size = 20), # Hier grootte van titel aanpassen
           text = element_text(size = 17), # Hier grootte labels etc aanpassen
-          axis.line.x.bottom = element_line(linewidth = 1),
+  #        axis.line.x.bottom = element_line(linewidth = 1),
           axis.line.y.left = element_line(linewidth = 1,)
         ) +
     guides(fill = guide_legend(reverse = TRUE))
   
+  if(toon_y){
+    plot <- plot +
+      theme(
+        axis.line.x.bottom = element_line(linewidth = 1)
+      )
+    
+  } else{
+    
+    plot <- plot +
+      theme(
+        axis.text.x = element_blank()
+      )
+    
+  }
   
   if(is.null(alt_text)){
     
@@ -2313,7 +2389,8 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
                                        titel = "",
                                        x_label = "",
                                        alt_text = NULL,
-                                       tabel_en_grafiek = FALSE
+                                       tabel_en_grafiek = FALSE,
+                                       toon_y = TRUE
                                        ){
 
   #leeftijd en geslacht aan varnamen uit monitor koppelen
@@ -2456,12 +2533,26 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
       legend.position = "bottom",
       plot.title = element_text(hjust = .5, size = 20), # Hier grootte van titel aanpassen
       text = element_text(size = 17), # Hier grootte labels etc aanpassen
-      axis.line.x.bottom = element_line(linewidth = 1),
       axis.line.y.left = element_line(linewidth = 1,)
     ) +
     guides(fill = guide_legend(reverse = TRUE))
   
 
+  if(toon_y){
+    
+    plot <- plot +
+      theme(
+        axis.line.x.bottom = element_line(linewidth = 1),
+      )
+  } else{
+    plot <- plot + 
+      theme(
+        axis.text.x = element_blank()
+      )
+    
+  }
+  
+  
   if(is.null(alt_text)){
     # maak_alt_text() niet geschikt omdat t ook andere data dan monitordata betreft
     df_sorted <- df_plot %>% 
