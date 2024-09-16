@@ -1827,9 +1827,6 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
                                         ){
   
   #TODO
-  #Grafisch probleem fixen met percentages als percentage erg laag is
-  
-  #TODO
   #nu wordt de hele grafiek uitgezet zodra 1 percentage te laag is. bij gebruik var_crossing
   #kan het nuttig zijn alleen de crossings met te lage percentages te verwijderen en de grafiek toch
   #te tonen. dan wel zorgen dat er warning wordt gemaakt.
@@ -1948,15 +1945,14 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
     )
   }
 
-  namen_kleuren <- levels(df_plot[[var_inhoud]])
-  
-  kleuren <- kleuren[1:length(namen_kleuren)]
-  
   #factor levels van var_inhoud goed zetten o.b.v. variabele waarde
   df_plot <- df_plot %>% 
     mutate(!!sym(var_inhoud) := fct_reorder(!!sym(var_inhoud),
                                             as.numeric(waarde),
                                             .desc = TRUE))
+  
+  namen_kleuren <- levels(df_plot[[var_inhoud]])
+  kleuren <- kleuren[1:length(namen_kleuren)]
   
   plot <- ggplot(df_plot, aes(x = percentage, y = !!sym(var_crossing),
                               fill = !!sym(var_inhoud))) + 
@@ -2119,13 +2115,7 @@ maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = params$d
     
     titel <- var_label(data[[var_inhoud]]) %>% str_wrap(50)
   }
-  
-  #kleuren labelen o.b.v. levels var_inhoud
-  namen_kleuren <- df_plot[[var_inhoud]]
-  
-  kleuren <- kleuren[1:length(namen_kleuren)]
-  
-  
+
   #alt text toevoegen als deze niet handmatig is toegevoegd
   #kan niet met maak_alt_text omdat hier plotly gebruikt wordt ipv ggplot
   if(is.null(alt_text)){
@@ -2157,19 +2147,32 @@ maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = params$d
     warning(glue("Plot kan niet gemaakt worden! Te weinig observaties voor {var_inhoud}. De instellingen zijn: nvar = {nvar} en ncel = {ncel}"))
     
     return(
-      #Leeg plot met text in het midden
-      #todO LEEG PLOT; zIE EQUIVALENTE GGPLOT CODE
+      ggplot() +
+        annotate("text", x = 0.5, y = 0.5,
+                 label =  glue("Onvoldoende observaties in {niveaus}
+            Voor grafiek: {str_wrap(titel,40)}  \n 
+                        Min observaties per vraag: {nvar} \n
+                        Min observaties per antwoord: {ncel}"),
+                 size = 6, hjust = 0.5, vjust = 0.5) +
+        theme_void() +
+        theme(plot.margin = margin(50, 50, 50, 50)) # Add margin to take up space)
     )
   }
   
-  #Als desc: df_plot omgekeerd sorteren obv var_inhoud waarde. Hoogste waarde eerst; laagste als laatst
-  if(desc){
-    df_plot <- df_plot %>% arrange(desc(waarde))
-    #todo AANPASSEN AAN FACTOR/GGPLOT LOGICA VOOR VOLGORDCE
-  }
+
+  #volgorde levels cirkeldiagram bepalen. parameter desc bepaald richting.
+  df_plot <- df_plot %>%
+    mutate(!!sym(var_inhoud) := fct_reorder(!!sym(var_inhoud),
+                                            as.numeric(waarde),
+                                            .desc = desc))
+  
+  
+  #kleuren labelen o.b.v. levels var_inhoud
+  namen_kleuren <- levels(df_plot[[var_inhoud]])
+  
+  kleuren <- kleuren[1:length(namen_kleuren)]
   
   # GGPLOT PIE CHART
-  
   plot <- ggplot(df_plot, aes(x = "", y = percentage, fill = !!sym(var_inhoud))) +
     geom_col(color = "black") +
     geom_text(aes(label = percentage),
@@ -2183,7 +2186,6 @@ maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = params$d
                       values = kleuren) +
     theme_void()
   
-  plot
 if(!tabel_en_grafiek){
   #alleen plot wanneer tabel niet gevraagd is
   plot
