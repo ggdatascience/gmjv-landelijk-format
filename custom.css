@@ -69,3 +69,6 @@ h1 {
   padding: 20px;
 }
 
+.tussenlijn {
+  border-bottom: 1px solid #888;
+}
