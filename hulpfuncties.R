@@ -782,6 +782,7 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
                                                    kleuren = params$default_kleuren_grafiek,
                                                    nvar = params$default_nvar, ncel = params$default_ncel,
                                                    alt_text = NULL,
+                                                   caption = "",
                                                    huidig_jaar = 2024,
                                                    jaarvar = "AGOJB401",
                                                    niveaus = "regio",
@@ -1004,7 +1005,8 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
                               )
     }
   
-  plot <- plot + labs(alt = alt_text)
+  plot <- plot + labs(alt = alt_text,
+                      caption = caption)
   
   
   if(!tabel_en_grafiek){
@@ -1036,7 +1038,9 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
                   values_from =  percentage) %>% #crossing_groep = kolom
       rename(" " = 1) %>% #varlabel crossing_kleur verwijderen
       gt() %>% #gt tabel van maken
-      gt::tab_header(label_inhoud) #label toevoegen
+      tab_header(label_inhoud) %>% #label toevoegen
+      tab_caption(caption)
+    
     
     #genereer markdown syntax om plot & grafiek heen voor panel tabset
     maak_panel_tabset(plot,tabel)    
@@ -1049,6 +1053,7 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
                                            kleuren = params$default_kleuren_grafiek,
                                            nvar = params$default_nvar, ncel = params$default_ncel,
                                            alt_text = NULL,
+                                           caption = "",
                                            huidig_jaar = 2024,
                                            jaarvar = "AGOJB401",
                                            niveaus = "regio",
@@ -1219,7 +1224,8 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
      
    } 
    
-   plot <- plot + labs(alt = alt_text)
+   plot <- plot + labs(alt = alt_text,
+                       caption = caption)
    
    # Dit verpest alt-text.
    # Mogelijk is alt-text overbodig omdat we voor tabset-panels gaan met tabellen
@@ -1302,7 +1308,8 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
          )
        ) %>%
        gt() %>% #gt_tabel van maken 
-       tab_header(label_inhoud) #label inhoud als header
+       tab_header(label_inhoud) %>% #label inhoud als header
+       tab_caption(caption)
      
      #genereer markdown syntax om plot & grafiek heen voor panel tabset
      maak_panel_tabset(plot,tabel)    
@@ -1316,6 +1323,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
                                               kleuren = params$default_kleuren_grafiek,
                                               flip = FALSE, nvar = params$default_nvar, ncel = params$default_ncel,
                                               alt_text = NULL,
+                                              caption = "",
                                               huidig_jaar = 2024,
                                               jaarvar = "AGOJB401",
                                               niveaus = "regio",
@@ -1616,7 +1624,8 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
     }
     
   }
-  plot <- plot +  labs(alt = alt_text)
+  plot <- plot + labs(alt = alt_text,
+                      caption = caption)
   
   if(remove_legend){
     plot <- plot + theme(legend.position = "none")
@@ -1676,7 +1685,8 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
       tabel <- tabel %>% 
       rename(" " = 1) %>% #header 
       gt() %>% #gt_tabel van maken 
-      tab_header(label_inhoud) #label inhoud als header
+      tab_header(label_inhoud) %>% #label inhoud als header
+      tab_caption(caption)
     
     
       #genereer markdown syntax om plot & grafiek heen voor panel tabset
@@ -1696,6 +1706,7 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
                                                         flip = FALSE, nvar = params$default_nvar,
                                                         ncel = params$default_ncel,
                                                         alt_text = NULL,
+                                                        caption = "",
                                                         huidig_jaar = 2024,
                                                         jaarvar = "AGOJB401",
                                                         niveaus = "regio",
@@ -1859,9 +1870,6 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
           plot.title = element_text(hjust = .5, size = 20), # Hier grootte van titel aanpassen
           text = element_text(size = 17), # Hier grootte labels etc aanpassen
           axis.line.y.left = element_line(linewidth = 1)
-    ) +
-    labs(
-      alt = alt_text
     )
   
   
@@ -1901,7 +1909,8 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
     
   } 
   
-  plot <- plot + labs(alt = alt_text)
+  plot <- plot + labs(alt = alt_text,
+                      caption = caption)
 
 
   if(!tabel_en_grafiek){
@@ -1929,7 +1938,8 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
         )
       ) %>%
       gt() %>% #gt_tabel van maken 
-      tab_header(label_inhoud) #label inhoud als header
+      tab_header(label_inhoud) %>%  #label inhoud als header
+      tab_caption(caption)
     
     #genereer markdown syntax om plot & grafiek heen voor panel tabset
     maak_panel_tabset(plot,tabel)
@@ -1943,6 +1953,7 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
                                         kleuren = params$default_kleuren_grafiek, x_label = "",
                                         nvar = params$default_nvar, ncel = params$default_ncel,
                                         alt_text = NULL,
+                                        caption = "",
                                         huidig_jaar = 2024,
                                         jaarvar = "AGOJB401",
                                         niveaus = "regio",
@@ -2139,7 +2150,8 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
     
   }
     
-  plot <- plot + labs(alt = alt_text)
+  plot <- plot + labs(alt = alt_text,
+                      caption = caption)
   
   if(!tabel_en_grafiek){
     
@@ -2179,7 +2191,8 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
     tabel <- tabel %>% 
       rename(" " = 1) %>% #header 
       gt() %>% #gt_tabel van maken 
-      tab_header(label_inhoud) #label inhoud als header
+      tab_header(label_inhoud) %>%  #label inhoud als header
+      tab_caption(caption)
     
     
     #genereer markdown syntax om plot & grafiek heen voor panel tabset
@@ -2196,6 +2209,7 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
 maak_cirkeldiagram <- function(data, var_inhoud, titel = "", kleuren = params$default_kleuren_grafiek,
                                nvar = params$default_nvar, ncel = params$default_ncel, alt_text = NULL,
                                niveaus = "regio", huidig_jaar = 2024, jaarvar = "AGOJB401",
+                               caption = "",
                                desc = FALSE,
                                tabel_en_grafiek = FALSE
                                ) {
@@ -2246,24 +2260,7 @@ maak_cirkeldiagram <- function(data, var_inhoud, titel = "", kleuren = params$de
                                 min_observaties_per_antwoord = ncel
                                 ) %>% 
     mutate(weggestreept = as.numeric(weggestreept)) 
-  
-  #alt text toevoegen als deze niet handmatig is toegevoegd
-  #kan niet met maak_alt_text omdat hier plotly gebruikt wordt ipv ggplot
-  if(is.null(alt_text)){
-    
-    doelgroep = "jongvolwassenen"
-    onderwerp = var_label(data[[var_inhoud]])
-    
-    waarden = paste0(
-      df_plot[[var_inhoud]], ": ",
-      df_plot$percentage, "%",
-      collapse = ", "
-    ) 
-    
-    
-    alt_text <- glue("Cirkeldiagram voor de indicator '{onderwerp}' bij {doelgroep}: {waarden}")
-    
-  }
+
   
   #regeleinden IN val-labels toevoegen zodat ze niet te lang op 1 regel lopen ze
   df_plot <- df_plot %>% mutate(
@@ -2317,6 +2314,30 @@ maak_cirkeldiagram <- function(data, var_inhoud, titel = "", kleuren = params$de
       label = str_wrap(namen_kleuren,30),
                       values = kleuren) +
     theme_void()
+
+  
+  #TODO Alt text logica updaten omdat we nu niet meer ploty maar ggplot2 gebruiken
+  #TODO Hopelijk besluiten dat de alt-text logica volledig weggegooid mag wordne.
+  #alt text toevoegen als deze niet handmatig is toegevoegd
+  #kan niet met maak_alt_text omdat hier plotly gebruikt wordt ipv ggplot
+  if(is.null(alt_text)){
+    
+    doelgroep = "jongvolwassenen"
+    onderwerp = var_label(data[[var_inhoud]])
+    
+    waarden = paste0(
+      df_plot[[var_inhoud]], ": ",
+      df_plot$percentage, "%",
+      collapse = ", "
+    ) 
+    
+    
+    alt_text <- glue("Cirkeldiagram voor de indicator '{onderwerp}' bij {doelgroep}: {waarden}")
+    
+  }
+  
+  plot <- plot + labs(alt = alt_text,
+                      caption = caption)
   
 if(!tabel_en_grafiek){
   #alleen plot wanneer tabel niet gevraagd is
@@ -2343,7 +2364,8 @@ if(!tabel_en_grafiek){
       )  %>% 
       rename(" " = 1) %>% #header 
       gt() %>% #gt_tabel van maken 
-      tab_header(label_inhoud) #label inhoud als header
+      tab_header(label_inhoud) %>%  #label inhoud als header
+      tab_caption(caption)
 
     #genereer markdown syntax om plot & grafiek heen voor panel tabset
     maak_panel_tabset(plot,tabel)    
@@ -2449,6 +2471,7 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
                                        titel = "",
                                        x_label = "",
                                        alt_text = NULL,
+                                       caption = "",
                                        tabel_en_grafiek = FALSE,
                                        toon_y = TRUE
                                        ){
@@ -2645,7 +2668,8 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
     
   }
   
-  plot <- plot + labs(alt = alt_text)
+  plot <- plot + labs(alt = alt_text,
+                      caption = caption)
   
 
   #Hier panel tabset logica;
@@ -2665,7 +2689,8 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
       mutate(label = as.character(label)) %>% 
       rename(" " = 1) %>% 
       gt() %>% 
-      tab_header(glue("Percentages in populatie en deelnemers per {var_label(data[[crossing_monitor]])}"))
+      tab_header(glue("Percentages in populatie en deelnemers per {var_label(data[[crossing_monitor]])}")) %>% 
+      tab_caption(caption)
 
      
     
