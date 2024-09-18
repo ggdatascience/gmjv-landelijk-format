@@ -397,7 +397,8 @@ bereken_kruistabel <- function(data, survey_design = NULL, variabele = NULL, cro
         
     }
   }
- 
+
+  print(paste("varcode: ", as.data.frame(kruistabel)$varcode, "label: ", as.data.frame(kruistabel)$label))
   
   #variabelen aanpassen voor plotfuncties
   kruistabel <- kruistabel %>% 
@@ -618,7 +619,9 @@ maak_responstabel <- function(data, crossings, missing_label = "Onbekend",
     if(niveaus == "regio"){
       data <- data %>% filter(GGDregio == params$regiocode)
     } else if (niveaus == "gemeente") {
-      data <- data %>% filter(Gemeentecode == params$gemeentecode)
+      data <- data %>% 
+        filter(Gemeentecode == params$gemeentecode) %>%
+        filter(!is.na(Standaardisatiefactor_gemeente))
     } else if (niveaus == "nl"){
       #niks doen
     } else{
@@ -821,7 +824,9 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
       
     } else if (x == "gemeente"){
       design_x <- design_gem
-      subset_x <- data %>% filter(Gemeentecode == params$gemeentecode)
+      subset_x <- data %>% 
+        filter(Gemeentecode == params$gemeentecode) %>%
+        filter(!is.na(Standaardisatiefactor_gemeente))
       niveau_label <- val_label(data$Gemeentecode, params$gemeentecode)
     
     } else{
@@ -1005,7 +1010,9 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
   } else if (niveaus == "gemeente"){
     
     design_x <<- design_gem
-    subset_x <<- data %>% filter(Gemeentecode == params$gemeentecode)
+    subset_x <<- data %>% 
+      filter(Gemeentecode == params$gemeentecode) %>%
+      filter(!is.na(Standaardisatiefactor_gemeente))
     
   } else{
     
@@ -1182,7 +1189,9 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
       
     } else if (x == "gemeente"){
       design_x <- design_gem
-      subset_x <- data %>% filter(Gemeentecode == params$gemeentecode)
+      subset_x <- data %>% 
+        filter(Gemeentecode == params$gemeentecode) %>%
+        filter(!is.na(Standaardisatiefactor_gemeente))
       niveau_label <- val_label(data$Gemeentecode, params$gemeentecode)
       
     } else{
@@ -1472,7 +1481,9 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
   } else if (niveaus == "gemeente"){
     
     design_x <<- design_gem
-    subset_x <<- data %>% filter(Gemeentecode == params$gemeentecode)
+    subset_x <<- data %>% 
+      filter(Gemeentecode == params$gemeentecode) %>%
+      filter(!is.na(Standaardisatiefactor_gemeente))
     
   } else{
     
@@ -1715,7 +1726,9 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
       
     } else if (x == "gemeente"){
       design_x <- design_gem
-      subset_x <- data %>% filter(Gemeentecode == params$gemeentecode)
+      subset_x <- data %>% 
+        filter(Gemeentecode == params$gemeentecode) %>%
+        filter(!is.na(Standaardisatiefactor_gemeente))
       niveau_label <- val_label(data$Gemeentecode, params$gemeentecode)
       
     } else{
@@ -1883,7 +1896,9 @@ maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = params$d
   } else if (niveaus == "gemeente"){
     
     design_x <<- design_gem
-    subset_x <<- data %>% filter(Gemeentecode == params$gemeentecode)
+    subset_x <<- data %>% 
+      filter(Gemeentecode == params$gemeentecode) %>%
+      filter(!is.na(Standaardisatiefactor_gemeente))
     
   } else{
     
@@ -2358,7 +2373,9 @@ maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL,
     } else if (x == "gemeente"){
       
       design_x <- design_gem
-      subset_x <- data %>% filter(Gemeentecode == params$gemeentecode)
+      subset_x <- data %>% 
+        filter(Gemeentecode == params$gemeentecode) %>%
+        filter(!is.na(Standaardisatiefactor_gemeente))
       
     } else{
       
@@ -2571,7 +2588,9 @@ maak_top <- function(data, var_inhoud, toon_label = T, value = 1, niveau = "regi
   } else if (niveau == "gemeente"){
     
     design_x <- design_gem
-    subset_x <- data %>% filter(Gemeentecode == params$gemeentecode)
+    subset_x <- data %>% 
+      filter(Gemeentecode == params$gemeentecode) %>%
+      filter(!is.na(Standaardisatiefactor_gemeente))
     
   } else{
     
@@ -2668,7 +2687,9 @@ maak_percentage <- function(data, var_inhoud, value = 1, niveau = "regio",
   } else if (niveau == "gemeente"){
     
     design_x <- design_gem
-    subset_x <- data %>% filter(Gemeentecode == params$gemeentecode)
+    subset_x <- data %>% 
+      filter(Gemeentecode == params$gemeentecode) %>%
+      filter(!is.na(Standaardisatiefactor_gemeente))
     
   } else{
     
