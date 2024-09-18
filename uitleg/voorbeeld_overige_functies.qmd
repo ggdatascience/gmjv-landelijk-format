@@ -5,7 +5,7 @@ params:
   regionaam: 'GGD Limburg-Noord'
   path_monitor_data: "../nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
   path_hulpfuncties: "../hulpfuncties.R"
-  path_cbs_data: "../JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx"
+  path_cbs_data: "../voorbeeld_JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx"
   default_nvar: 100
   default_ncel: 10
   default_kleuren_grafiek: !expr c("#012C17","#76B82A","#007E48")

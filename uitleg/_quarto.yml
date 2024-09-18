@@ -4,9 +4,11 @@ project:
 
 book:
   title: "Uitleg GMJV rapportage in Quarto"
-  author: 
-    - name: "Pieter Seinen"
-    - affiliation: "GGD Hart voor Brabant"
+  author:
+      - name: "Pieter Seinen"
+        affiliation: "GGD Hart voor Brabant"
+      - name: "Sjane van der Stappen"
+        affiliation: "GGD Limburg-Noord"
     
   chapters:
     - index.qmd

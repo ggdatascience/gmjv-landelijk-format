@@ -5,7 +5,7 @@ params:
   regionaam: 'GGD Limburg-Noord'
   path_monitor_data: "../nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
   path_hulpfuncties: "../hulpfuncties.R"
-  path_cbs_data: "../JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx"
+  path_cbs_data: "../voorbeeld_JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx"
   default_nvar: 100
   default_ncel: 10
   default_kleuren_grafiek: !expr c("#012C17","#76B82A","#007E48")
@@ -27,8 +27,12 @@ library(survey) # Package om te werken met gewogen gemiddelds incl. betrouwbaarh
 library(glue) #om strings aangenaam aan elkaar te plakken
 library(plotly)
 library(forcats)
+library(openxlsx)#om cbs populatiebestand te kunnen lezen
+library(showtext)
 
 options(dplyr.summarise.inform = FALSE)
+
+#hulpfuncties laden.
 source(params$path_hulpfuncties)
 
 # Standaard minima voor groep & cel
@@ -85,6 +89,12 @@ for(var in names(monitor_df)){
   monitor_df <- monitor_df %>% verwijder_9_onbekend(var)
 
 }
+
+
+#Lettertypen/Fonts ophalen met showtext
+#Dit is nodig voor ggplot. lettertypen voor html tekst kan in custom.css opgehaald & toegewezen worden.
+font_add_google("Open Sans")
+showtext_auto() #showtext graphics device bij renderen ggplot; standaard werkt niet met andere fonts dan windows
 
 
 ```
@@ -148,7 +158,6 @@ plot = monitor_df %>%
     var_crossing_groep = "AGGSA402",
     var_crossing_kleur = "AGLFA401"
     )
-
 plot
 
 ```
@@ -390,13 +399,14 @@ plot
 
 ```{r, fig.alt = ggplot2::get_alt_text(plot), fig.width = 12, fig.height = 3}
 #Standaard gestapeld staafdiagram
-plot = monitor_df %>% 
+plot = monitor_df %>%
   maak_staafdiagram_gestapeld(
     var_inhoud = "LVVTA404",
     var_crossing = "AGGSA402"
   )
 
 plot
+
 ```
 
 ## Cirkeldiagram

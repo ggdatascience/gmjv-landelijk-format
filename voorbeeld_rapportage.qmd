@@ -18,13 +18,15 @@ params:
   path_monitor_data_2024: "C:/Users/...." # Vul padnaam naar data 2024 in
   naam_monitor_data_2024_regionaal: "Regiobestand_GMJV2024_REGIO_versie 1.sav" # Vul naam regionaal bestand 2024 in
   path_hulpfuncties: "hulpfuncties.R"
-  path_cbs_data: "JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx"
+  path_cbs_data: "voorbeeld_JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx"
   default_nvar: 100 # Minimum aantal invullers per vraag
-  default_ncel: 10 # Minimum aantal invullers oper antwoordoptie
+  default_ncel: 10  # Minimum aantal invullers oper antwoordoptie
   default_kleuren_grafiek: !expr c("#012C17","#76B82A","#007E48")
   default_kleuren_responstabel: !expr c("header" = "#012C17", "kleur_1" = "#007E48", "kleur_2" = "#76B82A","kleur_tekst" = "#FFFFFF")
   is_pdf: false
 format-links: false
+echo: false
+warning: false
 ---
 
 ```{r Instellingen, echo=F, message=F, warning=F}
@@ -37,13 +39,15 @@ library(dplyr)
 library(ggplot2)
 library(tidyr)
 library(haven)
-library(stringr) # Voor str_replace
+library(stringr) # Voor str_replace & str_wrap
 library(labelled) # Package om te werken met datalabels, o.a. voor to_character()
 library(survey) # Package om te werken met gewogen gemiddelds incl. betrouwbaarheidsintervallen
 library(glue) #om strings aangenaam aan elkaar te plakken
 library(plotly)
 library(forcats)
-
+library(openxlsx) #om cbs populatiebestand te kunnen lezen
+library(showtext) #om andere lettertypen te kunnen gebruiken
+ 
 options(dplyr.summarise.inform = FALSE)
 source(params$path_hulpfuncties)
 
@@ -166,11 +170,16 @@ for(var in names(monitor_df)){
 
 }
 
+#Lettertypen/Fonts ophalen met showtext 
+font_add_google("Open Sans")
+#showtext_auto om te zorgen dat juist graphicsdevice wordt gebruikt
+showtext_auto()
+
 ```
 
 \
 
-```{r Inhoudsopgave, echo=F}
+```{r Inhoudsopgave}
 
 if(params$is_pdf){
   
@@ -219,7 +228,7 @@ Van de respondenten in uw gemeente is `r monitor_df %>% maak_percentage(var_inho
 
 ::: {layout="[50,50]"}
 ::: column
-```{r Achtergrondkenmerken 1, echo = F}
+```{r Achtergrondkenmerken 1}
 # Cirkeldiagram gender deelnemers regio
 plot = monitor_df %>% 
   maak_cirkeldiagram(
@@ -233,7 +242,7 @@ plot
 :::
 
 ::: column
-```{r Achtergrondkenmerken 2, echo = F}
+```{r Achtergrondkenmerken 2}
 # Cirkeldiagram gender deelnemers gemeente
 plot = monitor_df %>% 
   maak_cirkeldiagram(
@@ -261,7 +270,7 @@ Van de respondenten in uw gemeente is `r monitor_df %>% maak_percentage(var_inho
 
 ::: {layout="[50,50]"}
 ::: column
-```{r Achtergrondkenmerken 3, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Achtergrondkenmerken 3, fig.alt=ggplot2::get_alt_text(plot)}
 plot = monitor_df %>% maak_grafiek_cbs_bevolking(
    niveaus = c("regio", "gemeente"),
    titel = "Leeftijd"
@@ -272,7 +281,7 @@ plot
 :::
 
 ::: column
-```{r Achtergrondkenmerken 4, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Achtergrondkenmerken 4, fig.alt=ggplot2::get_alt_text(plot)}
 plot = monitor_df %>% 
   maak_staafdiagram_meerdere_staven(
     var_inhoud = "AGOWS402",
@@ -301,7 +310,7 @@ De meeste jongvolwassenen in uw gemeente wonen `r monitor_df %>% maak_top(var_in
 
 ::: {layout="[50,50]"}
 ::: column
-```{r Woonsituatie, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Woonsituatie, fig.alt=ggplot2::get_alt_text(plot)}
 plot = monitor_df %>% 
    maak_staafdiagram_meerdere_staven(
      var_inhoud = "AGHHA403",
@@ -328,7 +337,7 @@ De meeste werkende jongvolwassenen in uw gemeente werken `r monitor_df %>% maak_
 
 ::: {layout="[50,50]"}
 ::: column
-```{r Werksituatie, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Werksituatie, fig.alt=ggplot2::get_alt_text(plot)}
 plot = monitor_df %>% 
    maak_staafdiagram_meerdere_staven(
      var_inhoud = "AGWSA401",
@@ -342,7 +351,7 @@ plot = monitor_df %>%
 :::
 
 ::: column
-```{r Werksituatie 2, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Werksituatie 2, fig.alt=ggplot2::get_alt_text(plot)}
 plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
     var_inhoud = "AGWSA401",
@@ -355,7 +364,7 @@ plot
 
 ::: {layout="[50,50]"}
 ::: column
-```{r Werksituatie 3, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Werksituatie 3, fig.alt=ggplot2::get_alt_text(plot)}
 plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
     var_inhoud = "AGOWA401",
@@ -367,7 +376,7 @@ plot
 :::
 
 ::: column
-```{r Werksituatie 4, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Werksituatie 4, fig.alt=ggplot2::get_alt_text(plot)}
 plot = monitor_df %>% 
   maak_staafdiagram_meerdere_staven(
     var_inhoud = c("AGOWA401", "GZGGA402"),
@@ -383,7 +392,7 @@ plot
 
 ::: {layout="[50,50]"}
 ::: column
-```{r Werksituatie 5, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Werksituatie 5, fig.alt=ggplot2::get_alt_text(plot)}
 plot = monitor_df %>% 
   maak_staafdiagram_meerdere_staven(
     var_inhoud = c("AGOWA401", "GZGGA402", "LVPKA407", "LVTEA406"),
@@ -413,7 +422,7 @@ plot
 
 ::: {layout="[50,50]"}
 ::: column
-```{r Werksituatie 6, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Werksituatie 6, fig.alt=ggplot2::get_alt_text(plot)}
 plot = monitor_df %>% 
   maak_staafdiagram_meerdere_staven(
     var_inhoud = c("FIIKA401", "FIIKA402", "FIIKA403"),
@@ -448,7 +457,7 @@ plot
 
 ::: {layout="[50,50]"}
 ::: column
-```{r Gezondheid 1, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Gezondheid 1, fig.alt=ggplot2::get_alt_text(plot)}
 
 plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
@@ -464,7 +473,7 @@ plot
 :::
 
 ::: column
-```{r Gezondheid 2, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Gezondheid 2, fig.alt=ggplot2::get_alt_text(plot)}
 
 plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
@@ -490,7 +499,7 @@ Slaap is belangrijk voor het ‘schoonmaken’ van de hersenen, het onthouden va
 
 ::: {layout="[50,225,50,225]"}
 ::: column
-```{r Slaap 1, echo = F, warning = F}
+```{r Slaap 1}
 
 monitor_df %>%
   maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>% 
@@ -500,7 +509,7 @@ monitor_df %>%
 :::
 
 ::: column
-```{r Slaap 2, echo = F, warning = F}
+```{r Slaap 2}
 
 monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>%
   bol_met_cijfer(niveau = "Regio", omschrijving = "slaapt meestal zeer slecht.",
@@ -511,7 +520,7 @@ monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>%
 :::
 
 ::: column
-```{r Slaap 3, echo = F, warning = F}
+```{r Slaap 3}
 
 monitor_df %>%
   maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>% 
@@ -521,7 +530,7 @@ monitor_df %>%
 :::
 
 ::: column
-```{r Slaap 4, echo = F, warning = F}
+```{r Slaap 4}
 
 monitor_df %>% 
   maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>%
@@ -544,7 +553,7 @@ monitor_df %>%
 
 ::: {layout="[50,50]"}
 ::: column
-```{r Tevredenheid, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Tevredenheid, fig.alt=ggplot2::get_alt_text(plot)}
 plot = monitor_df %>% 
   maak_staafdiagram_meerdere_staven(
     var_inhoud = c("LVTEA402", "LVTEA404", "LVTEA406"),
@@ -578,7 +587,7 @@ Psychische klachten worden gemeten met de ‘Mental Health Inventory 5’ (MHI-5
 
 ::: {layout="[50,225,275]"}
 ::: column
-```{r Psychische klachten 1, echo = F, warning = F}
+```{r Psychische klachten 1}
 
 monitor_df %>%
   maak_percentage(var_inhoud = 'LVPKS403', niveau = "gemeente") %>% 
@@ -588,7 +597,7 @@ monitor_df %>%
 :::
 
 ::: column
-```{r Psychische klachten 2, echo = F, warning = F}
+```{r Psychische klachten 2}
 
 monitor_df %>% maak_percentage(var_inhoud = 'LVPKS403', niveau = "regio") %>%
   bol_met_cijfer(niveau = "Regio", omschrijving = "heeft angst- of depressieve gevoelens.",
@@ -618,7 +627,7 @@ monitor_df %>% maak_percentage(var_inhoud = 'LVPKS403', niveau = "regio") %>%
 
 ::: {layout="[50,50]"}
 ::: column
-```{r Psychische klachten 3, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Psychische klachten 3, fig.alt=ggplot2::get_alt_text(plot)}
 
 plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
@@ -633,7 +642,7 @@ plot
 :::
 
 ::: column
-```{r Psychische klachten 4, echo = F, fig.alt = ggplot2::get_alt_text(plot), warning = F}
+```{r Psychische klachten 4, fig.alt = ggplot2::get_alt_text(plot)}
 
 plot = monitor_df %>% 
   maak_staafdiagram_gestapeld(
@@ -657,7 +666,7 @@ Als gevoelens zoals angst, paniek, somberheid, leegte, zelfverwijt, boosheid, sc
 
 ::: {layout="[50,225,50,225]"}
 ::: column
-```{r Zelfmoord 1, echo = F, warning = F}
+```{r Zelfmoord 1}
 
 monitor_df %>%
   maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>% 
@@ -667,7 +676,7 @@ monitor_df %>%
 :::
 
 ::: column
-```{r Zelfmoord 2, echo = F, warning = F}
+```{r Zelfmoord 2}
 
 monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>%
   bol_met_cijfer(niveau = "Regio", omschrijving = "heeft wel eens serieus nagedacht over suïcide.",
@@ -678,7 +687,7 @@ monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>%
 :::
 
 ::: column
-```{r Zelfmoord 3, echo = F, warning = F}
+```{r Zelfmoord 3}
 
 monitor_df %>%
   maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>% 
@@ -688,7 +697,7 @@ monitor_df %>%
 :::
 
 ::: column
-```{r Zelfmoord 4, echo = F, warning = F}
+```{r Zelfmoord 4}
 
 monitor_df %>% 
   maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>%
@@ -733,7 +742,7 @@ Van de jongvolwassenen in uw gemeente voelt `r monitor_df %>% maak_percentage(va
 
 ::: {layout="[50,50]"}
 ::: column
-```{r Eenzaamheid 1, echo = F, fig.alt = ggplot2::get_alt_text(plot), warning = F}
+```{r Eenzaamheid 1, fig.alt = ggplot2::get_alt_text(plot)}
 
 plot = monitor_df %>% 
   maak_staafdiagram_gestapeld(
@@ -747,7 +756,7 @@ plot
 :::
 
 ::: column
-```{r Eenzaamheid 2, echo = F, fig.alt = ggplot2::get_alt_text(plot), warning = F}
+```{r Eenzaamheid 2, fig.alt = ggplot2::get_alt_text(plot)}
 
 plot = monitor_df %>% 
   maak_staafdiagram_gestapeld(
@@ -787,7 +796,7 @@ Top 5 bronnen van stress in uw gemeente:
 
 ::: {layout="[50,50]"}
 ::: column
-```{r Stress 1, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Stress 1, fig.alt=ggplot2::get_alt_text(plot)}
 
 plot = monitor_df %>%
   maak_staafdiagram_meerdere_staven(
@@ -795,7 +804,9 @@ plot = monitor_df %>%
     var_inhoud_waarde = 1,
     titel = "Voelt zich (heel) vaak gestrest",
     niveaus = c("gemeente", "regio")
-  )
+  ) +
+  theme(axis.text = element_blank())  #Om te zorgen dat deze grafiek mooi uitlijnt met staafdiagram_vergelijking hiernaast verwijderen we het as-label 
+  #ggplot theme: https://ggplot2.tidyverse.org/reference/theme.html
 
 plot
 
@@ -803,7 +814,7 @@ plot
 :::
 
 ::: column
-```{r Stress 2, echo = F, fig.alt= ggplot2::get_alt_text(plot), warning = F}
+```{r Stress 2, fig.alt= ggplot2::get_alt_text(plot)}
 
 # Staafgrafiek (zeer) vaak gestresst naar leeftijd
 
@@ -843,7 +854,7 @@ Top 3 van anderen vanuit wie of wat druk wordt ervaren in uw gemeente:
 
 ::: {layout="[50,225,50,225]"}
 ::: column
-```{r Prestatiedruk 1, echo = F, warning = F}
+```{r Prestatiedruk 1}
 
 monitor_df %>%
   maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>% 
@@ -853,7 +864,7 @@ monitor_df %>%
 :::
 
 ::: column
-```{r Prestatiedruk 2, echo = F, warning = F}
+```{r Prestatiedruk 2}
 
 monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>%
   bol_met_cijfer(niveau = "Regio", omschrijving = "ervaart prestatiedruk vanuit zichzelf.",
@@ -864,7 +875,7 @@ monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>%
 :::
 
 ::: column
-```{r Prestatiedruk 3, echo = F, warning = F}
+```{r Prestatiedruk 3}
 
 monitor_df %>%
   maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>% 
@@ -874,7 +885,7 @@ monitor_df %>%
 :::
 
 ::: column
-```{r Prestatiedruk 4, echo = F, warning = F}
+```{r Prestatiedruk 4}
 
 monitor_df %>% 
   maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>%
@@ -888,7 +899,7 @@ monitor_df %>%
 
 ::: {layout="[50,50]"}
 ::: column
-```{r Prestatiedruk 5, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Prestatiedruk 5, fig.alt=ggplot2::get_alt_text(plot)}
 
 plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
@@ -903,7 +914,7 @@ plot
 :::
 
 ::: column
-```{r Prestatiedruk 6, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Prestatiedruk 6, fig.alt=ggplot2::get_alt_text(plot)}
 plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
     var_inhoud = "GZGGA402",
@@ -932,7 +943,7 @@ Hoe jongvolwassenen omgaan met de uitdagingen van het leven wordt mede bepaald d
 
 ::: {layout="[50,225,50,225]"}
 ::: column
-```{r Veerkracht 1, echo = F, warning = F}
+```{r Veerkracht 1}
 
 monitor_df %>%
   maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>% 
@@ -942,7 +953,7 @@ monitor_df %>%
 :::
 
 ::: column
-```{r Veerkracht 2, echo = F, warning = F}
+```{r Veerkracht 2}
 
 monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>%
   bol_met_cijfer(niveau = "Regio", omschrijving = "vindt het niet moeilijk om stressvolle",
@@ -953,7 +964,7 @@ monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>%
 :::
 
 ::: column
-```{r Veerkracht 3, echo = F, warning = F}
+```{r Veerkracht 3}
 
 monitor_df %>%
   maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>% 
@@ -963,7 +974,7 @@ monitor_df %>%
 :::
 
 ::: column
-```{r Veerkracht 4, echo = F, warning = F}
+```{r Veerkracht 4}
 
 monitor_df %>% 
   maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>%
@@ -1003,7 +1014,7 @@ Weerbaarheid is de basis voor een goede psychische gezondheid. Weerbare jongvolw
 
 ::: {layout="[50,50]"}
 ::: column
-```{r Weerbaarheid, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Weerbaarheid, fig.alt=ggplot2::get_alt_text(plot)}
 
 plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
@@ -1036,7 +1047,7 @@ Ondanks de uitdagingen die zij in hun leven tegenkomen, heeft een groot deel van
 
 ::: {layout="[50,50]"}
 ::: column
-```{r Vertrouwen in de toekomst, echo = F, fig.alt = ggplot2::get_alt_text(plot), warning = F}
+```{r Vertrouwen in de toekomst, fig.alt = ggplot2::get_alt_text(plot)}
 
 plot = monitor_df %>% 
   maak_staafdiagram_gestapeld(
@@ -1070,7 +1081,7 @@ Sporten en bewegen is goed voor zowel fysieke als mentale gezondheid. Het vermin
 
 ::: {layout="[50,225,50,225]"}
 ::: column
-```{r Sporten 1, echo = F, warning = F}
+```{r Sporten 1}
 
 monitor_df %>%
   maak_percentage(var_inhoud = 'LFBWA401', niveau = "gemeente") %>% 
@@ -1080,7 +1091,7 @@ monitor_df %>%
 :::
 
 ::: column
-```{r Sporten 2, echo = F, warning = F}
+```{r Sporten 2}
 
 monitor_df %>% maak_percentage(var_inhoud = 'LFBWA401', niveau = "regio") %>%
   bol_met_cijfer(niveau = "Regio", omschrijving = "beweegt elke dag minimaal een half uur.",
@@ -1091,7 +1102,7 @@ monitor_df %>% maak_percentage(var_inhoud = 'LFBWA401', niveau = "regio") %>%
 :::
 
 ::: column
-```{r Sporten 3, echo = F, warning = F}
+```{r Sporten 3}
 
 monitor_df %>%
   maak_percentage(var_inhoud = 'LFBWA405', niveau = "gemeente") %>% 
@@ -1101,7 +1112,7 @@ monitor_df %>%
 :::
 
 ::: column
-```{r Sporten 4, echo = F, warning = F}
+```{r Sporten 4}
 
 monitor_df %>% 
   maak_percentage(var_inhoud = 'LFBWA405', niveau = "regio") %>%
@@ -1122,7 +1133,7 @@ monitor_df %>%
 
 ::: {layout="[50,50]"}
 ::: column
-```{r Sporten 5, echo = F, warning = F, fig.alt = ggplot2::get_alt_text(plot)}
+```{r Sporten 5, fig.alt = ggplot2::get_alt_text(plot)}
 #Staafdiagram met uitsplitsingen naast elkaar, met overlopende kleuren & horizontaal
 plot = monitor_df %>% 
   maak_staafdiagram_uitsplitsing_naast_elkaar(
@@ -1139,7 +1150,7 @@ plot
 :::
 
 ::: column
-```{r Sporten 6, echo = F, warning = F, fig.alt = ggplot2::get_alt_text(plot)}
+```{r Sporten 6, fig.alt = ggplot2::get_alt_text(plot)}
 #Staafdiagram met uitsplitsingen naast elkaar, met overlopende kleuren & horizontaal
 plot = monitor_df %>% 
   maak_staafdiagram_uitsplitsing_naast_elkaar(
@@ -1158,7 +1169,7 @@ plot
 
 ::: {layout="[50,50]"}
 ::: column
-```{r Sporten 7, echo = F, warning = F, fig.alt = ggplot2::get_alt_text(plot)}
+```{r Sporten 7, fig.alt = ggplot2::get_alt_text(plot)}
 #Staafdiagram met uitsplitsingen naast elkaar, met overlopende kleuren & horizontaal
 plot = monitor_df %>% 
   maak_staafdiagram_uitsplitsing_naast_elkaar(
@@ -1199,7 +1210,7 @@ Het advies van de Gezondheidsraad is: Drink geen alcohol of in ieder geval niet 
 
 ::: {layout="[50,225,50,225]"}
 ::: column
-```{r Alcohol 1, echo = F, warning = F}
+```{r Alcohol 1}
 
 monitor_df %>%
   maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>% 
@@ -1209,7 +1220,7 @@ monitor_df %>%
 :::
 
 ::: column
-```{r Alcohol 2, echo = F, warning = F}
+```{r Alcohol 2}
 
 monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>%
   bol_met_cijfer(niveau = "Regio", omschrijving = "is een zware drinker.",
@@ -1229,7 +1240,7 @@ Hier nog andere bolletjes zetten?
 
 ::: {layout="[50,50]"}
 ::: column
-```{r Alcohol 3, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Alcohol 3, fig.alt=ggplot2::get_alt_text(plot)}
 
 plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
@@ -1244,7 +1255,7 @@ plot
 :::
 
 ::: column
-```{r Alcohol 4, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Alcohol 4, fig.alt=ggplot2::get_alt_text(plot)}
 
 plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
@@ -1271,7 +1282,7 @@ Roken is een belangrijke oorzaak van ziekte en sterfte in Nederland. Hoe jonger 
 
 ::: {layout="[50,225,275]"}
 ::: column
-```{r Roken 1, echo = F, warning = F}
+```{r Roken 1}
 
 monitor_df %>%
   maak_percentage(var_inhoud = 'LFRKA403', niveau = "gemeente") %>% 
@@ -1281,7 +1292,7 @@ monitor_df %>%
 :::
 
 ::: column
-```{r Roken 2, echo = F, warning = F}
+```{r Roken 2}
 
 monitor_df %>% maak_percentage(var_inhoud = 'LFRKA403', niveau = "regio") %>%
   bol_met_cijfer(niveau = "Regio", omschrijving = "rookt wel eens.",
@@ -1292,7 +1303,7 @@ monitor_df %>% maak_percentage(var_inhoud = 'LFRKA403', niveau = "regio") %>%
 :::
 
 ::: column
-```{r Roken 5, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Roken 5, fig.alt=ggplot2::get_alt_text(plot)}
 
 plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
@@ -1317,7 +1328,7 @@ Vapen is een vorm van roken, waarbij vloeistof opgewarmd wordt en niet verbrand.
 
 ::: {layout="[50,225,275]"}
 ::: column
-```{r Roken 3, echo = F, warning = F}
+```{r Roken 3}
 
 monitor_df %>%
   maak_percentage(var_inhoud = 'LFRKA403', niveau = "gemeente") %>% 
@@ -1327,7 +1338,7 @@ monitor_df %>%
 :::
 
 ::: column
-```{r Roken 4, echo = F, warning = F}
+```{r Roken 4}
 
 monitor_df %>% 
   maak_percentage(var_inhoud = 'LFRKA403', niveau = "regio") %>%
@@ -1339,7 +1350,7 @@ monitor_df %>%
 :::
 
 ::: column
-```{r Roken 6, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Roken 6, fig.alt=ggplot2::get_alt_text(plot)}
 
 plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
@@ -1364,7 +1375,7 @@ Snus zijn nicotinezakjes die in de mond worden gestopt. Nicotinezakjes verhogen 
 
 ::: {layout="[50,225,275]"}
 ::: column
-```{r Roken 7, echo = F, warning = F}
+```{r Roken 7}
 
 monitor_df %>%
   maak_percentage(var_inhoud = 'LFRKA403', niveau = "gemeente") %>% 
@@ -1374,7 +1385,7 @@ monitor_df %>%
 :::
 
 ::: column
-```{r Roken 8, echo = F, warning = F}
+```{r Roken 8}
 
 monitor_df %>% 
   maak_percentage(var_inhoud = 'LFRKA403', niveau = "regio") %>%
@@ -1409,7 +1420,7 @@ Drugs anders dan cannabis die het vaakst door jongvolwassenen ooit zijn gebruikt
 
 ::: {layout="[50,225,50,225]"}
 ::: column
-```{r Drugs 1, echo = F, warning = F}
+```{r Drugs 1}
 
 monitor_df %>%
   maak_percentage(var_inhoud = 'LFDGA427', niveau = "gemeente") %>% 
@@ -1419,7 +1430,7 @@ monitor_df %>%
 :::
 
 ::: column
-```{r Drugs 2, echo = F, warning = F}
+```{r Drugs 2}
 
 monitor_df %>% maak_percentage(var_inhoud = 'LFDGA427', niveau = "regio") %>%
   bol_met_cijfer(niveau = "Regio", omschrijving = "heeft cannabis gebruikt",
@@ -1431,7 +1442,7 @@ monitor_df %>% maak_percentage(var_inhoud = 'LFDGA427', niveau = "regio") %>%
 :::
 
 ::: column
-```{r Drugs 3, echo = F, warning = F}
+```{r Drugs 3}
 
 monitor_df %>%
   maak_percentage(var_inhoud = 'LFDGS404', niveau = "gemeente") %>% 
@@ -1441,7 +1452,7 @@ monitor_df %>%
 :::
 
 ::: column
-```{r Drugs 4, echo = F, warning = F}
+```{r Drugs 4}
 
 monitor_df %>% 
   maak_percentage(var_inhoud = 'LFDGS404', niveau = "regio") %>%
@@ -1456,7 +1467,7 @@ monitor_df %>%
 
 ::: {layout="[50,50]"}
 ::: column
-```{r Middelengebruik 3, echo = F, warning = F, fig.alt = ggplot2::get_alt_text(plot)}
+```{r Middelengebruik 3, fig.alt = ggplot2::get_alt_text(plot)}
 #Staafdiagram met uitsplitsingen naast elkaar, met overlopende kleuren & horizontaal
 plot = monitor_df %>% 
   maak_staafdiagram_uitsplitsing_naast_elkaar(
@@ -1473,7 +1484,7 @@ plot
 :::
 
 ::: column
-```{r Middelengebruik 4, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Middelengebruik 4, fig.alt=ggplot2::get_alt_text(plot)}
 
 plot = monitor_df %>%
   maak_staafdiagram_meerdere_staven(
@@ -1521,7 +1532,7 @@ Top 3 positieve gevolgen:
 
 ::: {layout="[50,225,50,225]"}
 ::: column
-```{r Corona 1, echo = F, warning = F}
+```{r Corona 1}
 
 monitor_df %>%
   maak_percentage(var_inhoud = 'LFDGA427', niveau = "gemeente") %>% 
@@ -1531,7 +1542,7 @@ monitor_df %>%
 :::
 
 ::: column
-```{r Corona 2, echo = F, warning = F}
+```{r Corona 2}
 
 monitor_df %>% maak_percentage(var_inhoud = 'LFDGA427', niveau = "regio") %>%
   bol_met_cijfer(niveau = "Regio", omschrijving = "ervaart negatieve gevolgen van corona",
@@ -1542,7 +1553,7 @@ monitor_df %>% maak_percentage(var_inhoud = 'LFDGA427', niveau = "regio") %>%
 :::
 
 ::: column
-```{r Corona 3, echo = F, warning = F}
+```{r Corona 3}
 
 monitor_df %>%
   maak_percentage(var_inhoud = 'LFDGS404', niveau = "gemeente") %>% 
@@ -1552,7 +1563,7 @@ monitor_df %>%
 :::
 
 ::: column
-```{r Corona 4, echo = F, warning = F}
+```{r Corona 4}
 
 monitor_df %>% 
   maak_percentage(var_inhoud = 'LFDGS404', niveau = "regio") %>%
@@ -1578,7 +1589,7 @@ Meer informatie over post-covid en (financiële) hulp bij post-covid is te vinde
 
 ::: {layout="[50,225,50,225]"}
 ::: column
-```{r Corona 5, echo = F, warning = F}
+```{r Corona 5}
 
 monitor_df %>%
   maak_percentage(var_inhoud = 'LFDGA427', niveau = "gemeente") %>% 
@@ -1588,7 +1599,7 @@ monitor_df %>%
 :::
 
 ::: column
-```{r Corona 6, echo = F, warning = F}
+```{r Corona 6}
 
 monitor_df %>% maak_percentage(var_inhoud = 'LFDGA427', niveau = "regio") %>%
   bol_met_cijfer(niveau = "Regio", omschrijving = "heeft 3 maanden of langer",
@@ -1600,7 +1611,7 @@ monitor_df %>% maak_percentage(var_inhoud = 'LFDGA427', niveau = "regio") %>%
 :::
 
 ::: column
-```{r Corona 7, echo = F, warning = F}
+```{r Corona 7}
 
 monitor_df %>%
   maak_percentage(var_inhoud = 'LFDGS404', niveau = "gemeente") %>% 
@@ -1610,7 +1621,7 @@ monitor_df %>%
 :::
 
 ::: column
-```{r Corona 8, echo = F, warning = F}
+```{r Corona 8}
 
 monitor_df %>% 
   maak_percentage(var_inhoud = 'LFDGS404', niveau = "regio") %>%
@@ -1635,7 +1646,7 @@ Als jongvolwassenen het gebruik van sociale media en/of gamen niet meer onder co
 
 ::: {layout="[50,225,50,225]"}
 ::: column
-```{r Digitaal 1, echo = F, warning = F}
+```{r Digitaal 1}
 
 monitor_df %>%
   maak_percentage(var_inhoud = 'LFDGS404', niveau = "gemeente") %>% 
@@ -1645,7 +1656,7 @@ monitor_df %>%
 :::
 
 ::: column
-```{r Digitaal 2, echo = F, warning = F}
+```{r Digitaal 2}
 
 monitor_df %>% maak_percentage(var_inhoud = 'LFDGS404', niveau = "regio") %>%
   bol_met_cijfer(niveau = "Regio", omschrijving = "heeft risico op problematisch",
@@ -1657,7 +1668,7 @@ monitor_df %>% maak_percentage(var_inhoud = 'LFDGS404', niveau = "regio") %>%
 :::
 
 ::: column
-```{r Digitaal 3, echo = F, warning = F}
+```{r Digitaal 3}
 
 monitor_df %>%
   maak_percentage(var_inhoud = 'LFDGS404', niveau = "gemeente") %>% 
@@ -1667,7 +1678,7 @@ monitor_df %>%
 :::
 
 ::: column
-```{r Digitaal 4, echo = F, warning = F}
+```{r Digitaal 4}
 
 monitor_df %>% 
   maak_percentage(var_inhoud = 'LFDGS404', niveau = "regio") %>%
@@ -1698,7 +1709,7 @@ Online gokken gaat over het spelen van online gokspellen (bijvoorbeeld fruitauto
 
 ::: {layout="[50,225,275]"}
 ::: column
-```{r Digitaal 5 1, echo = F, warning = F}
+```{r Digitaal 5 1}
 
 monitor_df %>%
   maak_percentage(var_inhoud = 'LVPKS403', niveau = "gemeente") %>% 
@@ -1708,7 +1719,7 @@ monitor_df %>%
 :::
 
 ::: column
-```{r Digitaal 6, echo = F, warning = F}
+```{r Digitaal 6}
 
 monitor_df %>% maak_percentage(var_inhoud = 'LVPKS403', niveau = "regio") %>%
   bol_met_cijfer(niveau = "Regio", omschrijving = "heeft één of meerdere keren geldproblemen ",
@@ -1726,7 +1737,7 @@ Hier nog iets plaatsen of grafiek weglaten?
 
 ::: {layout="[50,50]"}
 ::: column
-```{r Digitaal 7, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Digitaal 7, fig.alt=ggplot2::get_alt_text(plot)}
 #Staafdiagram met uitsplitsingen naast elkaar, met overlopende kleuren & horizontaal
 plot = monitor_df %>% 
   maak_staafdiagram_uitsplitsing_naast_elkaar(
@@ -1743,7 +1754,7 @@ plot
 :::
 
 ::: column
-```{r Digitaal 8, echo = F, warning = F, fig.alt = ggplot2::get_alt_text(plot)}
+```{r Digitaal 8, fig.alt = ggplot2::get_alt_text(plot)}
 plot = monitor_df %>% 
   maak_staafdiagram_meerdere_staven(
     var_inhoud = c("LVTEA402", "LVTEA404", "LVTEA406"),
@@ -1773,7 +1784,7 @@ LHBTQIA+ staat voor lesbisch, homoseksueel, biseksueel, transgender, queer, inte
 
 ::: {layout="[50,225,50,225]"}
 ::: column
-```{r LHBTQIA 1, echo = F, warning = F}
+```{r LHBTQIA 1}
 
 monitor_df %>%
   maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>% 
@@ -1783,7 +1794,7 @@ monitor_df %>%
 :::
 
 ::: column
-```{r LHBTQIA 2, echo = F, warning = F}
+```{r LHBTQIA 2}
 
 monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>%
   bol_met_cijfer(niveau = "Regio", omschrijving = "identificeert zich als LHBTQIA+.",
@@ -1794,7 +1805,7 @@ monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>%
 :::
 
 ::: column
-```{r LHBTQIA 3, echo = F, warning = F}
+```{r LHBTQIA 3}
 
 monitor_df %>%
   maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>% 
@@ -1804,7 +1815,7 @@ monitor_df %>%
 :::
 
 ::: column
-```{r LHBTQIA 4, echo = F, warning = F}
+```{r LHBTQIA 4}
 
 monitor_df %>% 
   maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>%
@@ -1849,7 +1860,7 @@ In uw gemeente heeft `r monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', 
 
 ::: {layout="[50,225,275]"}
 ::: column
-```{r Seks 1, echo = F, warning = F}
+```{r Seks 1}
 
 monitor_df %>%
   maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>% 
@@ -1859,7 +1870,7 @@ monitor_df %>%
 :::
 
 ::: column
-```{r Seks 2, echo = F, warning = F}
+```{r Seks 2}
 
 monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>%
   bol_met_cijfer(niveau = "Regio", omschrijving = "het afgelopen half jaar seks gehad met verschillende partners",
@@ -1876,7 +1887,7 @@ monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>%
 
 ::: {layout="[50,50]"}
 ::: column
-```{r Seks 3, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Seks 3, fig.alt=ggplot2::get_alt_text(plot)}
 
 plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
@@ -1891,7 +1902,7 @@ plot
 :::
 
 ::: column
-```{r Seks 4, echo = F, fig.alt=ggplot2::get_alt_text(plot), warning = F}
+```{r Seks 4, fig.alt=ggplot2::get_alt_text(plot)}
 
 plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
