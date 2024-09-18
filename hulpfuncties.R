@@ -1045,6 +1045,8 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
      
    }) %>% do.call(rbind,.)
    
+    #temp dataframe & design verwijderen uit globalEnv.
+    rm(data_temp, design_temp, envir = .GlobalEnv)
 
    #volgorde groepen op x-as vastzetten o.b.v. volgorde variabelen door er een factor vna te maken
    df_plot$groep <- factor(df_plot$groep)
@@ -1538,6 +1540,9 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
     df_crossing
     
   }) %>% do.call(rbind,.)
+  
+  #temp dataframe & design verwijderen uit globalEnv.
+  rm(data_jaar, design_jaar, envir = .GlobalEnv)
 
   if(kleuren_per_crossing){
     
@@ -1918,7 +1923,8 @@ maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = params$d
                                 ) %>% 
     mutate(weggestreept = as.numeric(weggestreept)) 
     
-
+  #temp design verwijderen uit globalEnv.
+  rm(design_temp, data_temp, envir = .GlobalEnv)
   
   #titel ophalen uit var_label als niet opgegeven
   if(is.null(titel)){
@@ -1961,6 +1967,9 @@ maak_cirkeldiagram <- function(data, var_inhoud,titel = NULL, kleuren = params$d
   if(any(is.na(df_plot$percentage))){
     
     warning(glue("Plot kan niet gemaakt worden! Te weinig observaties voor {var_inhoud}. De instellingen zijn: nvar = {nvar} en ncel = {ncel}"))
+    
+    #temp design verwijderen uit globalEnv.
+    rm(subset_x, design_x, envir = .GlobalEnv)
     
     return(
       #Leeg plot met text in het midden
@@ -2710,7 +2719,7 @@ maak_percentage <- function(data, var_inhoud, value = 1, niveau = "regio",
     filter(waarde == value) #%>% # Filter de gegevens voor value eruit. Standaard is dit 1.
   
   #temp design verwijderen uit globalEnv.
-  rm(design_temp, envir = .GlobalEnv)
+  rm(data_temp, design_temp, envir = .GlobalEnv)
   
   # Output van functie maken
   return(paste0(ifelse(is.na(result$percentage), "-", result$percentage), "%"))

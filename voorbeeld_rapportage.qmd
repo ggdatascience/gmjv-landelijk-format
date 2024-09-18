@@ -15,7 +15,7 @@ params:
   path_nepdata: "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
   path_monitor_data_2022: "C:/Users/...." # Vul padnaam naar data 2022 in
   naam_monitor_data_2022_regionaal: "Regiobestand_CGMJV2022_REGIO_versie 4.sav" # Vul naam regionaal bestand 2022 in
-  path_monitor_data_2024: ""C:/Users/...." # Vul padnaam naar data 2024 in
+  path_monitor_data_2024: "C:/Users/...." # Vul padnaam naar data 2024 in
   naam_monitor_data_2024_regionaal: "Regiobestand_GMJV2024_REGIO_versie 1.sav" # Vul naam regionaal bestand 2024 in
   path_hulpfuncties: "hulpfuncties.R"
   path_cbs_data: "JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx"
@@ -282,12 +282,6 @@ plot = monitor_df %>%
 
 plot
 ```
-
-
-```{r}
-#monitor_df %>% maak_top(var_inhoud = 'AGHHA403', value = 1:8, top = 1, niveau = "gemeente")
-monitor_df %>% maak_vergelijking(var_inhoud = 'AGHHA401', variabele_label = 'bij ouders/verzorgers woont', var_crossing = 'AGOJB401', niveau = "regio")
-```
 :::
 :::
 
@@ -301,7 +295,7 @@ De woon-, werk- en financiële situatie kan veel invloed hebben op het welzijn e
 
 **Woonsituatie**
 
-De meeste jongvolwassenen in uw gemeente wonen `r #monitor_df %>% maak_top(var_inhoud = 'AGHHA403', value = 1:8, top = 1, niveau = "gemeente")`. `r #monitor_df %>% maak_vergelijking(var_inhoud = 'AGHHA401', variabele_label = 'bij ouders/verzorgers woont', var_crossing = 'AGOJB401', niveau = "regio")`
+De meeste jongvolwassenen in uw gemeente wonen `r monitor_df %>% maak_top(var_inhoud = 'AGHHA403', value = 1:8, top = 1, niveau = "gemeente")`. `r monitor_df %>% maak_vergelijking(var_inhoud = 'AGHHA401', variabele_label = 'bij ouders/verzorgers woont', var_crossing = 'AGOJB401', niveau = "regio")`
 :::
 :::
 
