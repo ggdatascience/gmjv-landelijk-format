@@ -27,6 +27,7 @@ library(survey) # Package om te werken met gewogen gemiddelds incl. betrouwbaarh
 library(glue) #om strings aangenaam aan elkaar te plakken
 library(plotly)
 library(forcats)
+library(openxlsx)#om cbs populatiebestand te kunnen lezen
 
 options(dplyr.summarise.inform = FALSE)
 source(params$path_hulpfuncties)

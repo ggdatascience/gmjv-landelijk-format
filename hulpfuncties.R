@@ -23,6 +23,7 @@ library(survey) # Package om te werken met gewogen gemiddelds incl. betrouwbaarh
 library(glue) #om strings aangenaam aan elkaar te plakken
 library(plotly)
 library(forcats)
+library(openxlsx)#om cbs populatiebestand te kunnen lezen
 #library(cowplot) #alleen gebruikt voor spacing legenda staafdiagram vergelijking.
 #voorlopig uit omdat het alt-text overhoop gooit. 
 
