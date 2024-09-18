@@ -9,14 +9,14 @@ format:
     toc-title: "Inhoud"
     embed-resources: true
 params:
-  gemeentecode: 984
+  gemeentecode: 1
   regiocode: 23
   regionaam: 'GGD Limburg-Noord' # Vul naam zoals in data CBS
   path_nepdata: "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
-  path_monitor_data_2022: "C:/Users/sjannes/OneDrive - VRLN/PSchijf/Gezondheidsmonitor/2022 Gezondheidsmonitor jongvolwassenen/4. Analyse/Data/3. Eindbestand (opgeschoond) vanuit RIVM 21 2 2023 v4/"
-  naam_monitor_data_2022_regionaal: "Regiobestand_CGMJV2022_GGD Limburg-Noord_versie 4.sav"
-  path_monitor_data_2024: "C:/Users/sjannes/OneDrive - VRLN/PSchijf/Gezondheidsmonitor/2024 Gezondheidsmonitor jongvolwassenen/4. Analyse/Data/3. Eindbestanden/"
-  naam_monitor_data_2024_regionaal: "Regiobestand_GMJV2024_GGD Limburg-Noord_versie 1.sav"
+  path_monitor_data_2022: "C:/Users/...." # Vul padnaam naar data 2022 in
+  naam_monitor_data_2022_regionaal: "Regiobestand_CGMJV2022_REGIO_versie 4.sav" # Vul naam regionaal bestand 2022 in
+  path_monitor_data_2024: ""C:/Users/...." # Vul padnaam naar data 2024 in
+  naam_monitor_data_2024_regionaal: "Regiobestand_GMJV2024_REGIO_versie 1.sav" # Vul naam regionaal bestand 2024 in
   path_hulpfuncties: "hulpfuncties.R"
   path_cbs_data: "JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx"
   default_nvar: 100 # Minimum aantal invullers per vraag
@@ -50,85 +50,88 @@ source(params$path_hulpfuncties)
 #SPSS data inlezen
 ## OPTIE 1: Nepdata
 #Lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
-# monitor_df = haven::read_spss(params$path_nepdata, user_na =T) %>%
-#   labelled::user_na_to_na()
-# 
-# #TODO verwijderen bij echte data. tijdelijk varlabel voor jaarvariabele
-# var_label(monitor_df$AGOJB401) <- "Jaar"
+monitor_df = haven::read_spss(params$path_nepdata, user_na =T) %>%
+  rename(Standaardisatiefactor_regio = Standaardisatiefactor,
+         Stratum_regio = Stratum) %>%
+  mutate(Standaardisatiefactor_gemeente = Standaardisatiefactor_regio,
+         Stratum_gemeente = Stratum_regio) %>%
+  labelled::user_na_to_na()
+
 
 ## OPTIE 2: Eigen data invoeren (landelijk + regionaal)
 #Data 2024
 #Landelijk bestand inladen
-df <- haven::read_spss(paste0(params$path_monitor_data_2024, "Totaalbestand_GMJV2024_GGD_versie 1 (N = 135.666).sav"), 
-                       user_na =T) %>%
-  labelled::user_na_to_na()
+# df <- haven::read_spss(paste0(params$path_monitor_data_2024, "Totaalbestand_GMJV2024_GGD_versie 1 (N = 135.666).sav"), 
+#                        user_na =T) %>%
+#   labelled::user_na_to_na()
+# 
+# # Regionaal bestand inladen
+# df_regio <- haven::read_spss(paste0(params$path_monitor_data_2024, params$naam_monitor_data_2024_regionaal), 
+#                              user_na =T) %>%
+#   labelled::user_na_to_na()
+# 
+# # Check of aantallen gelijk zijn.
+# # NB. Alleen deelnemers met landelijke weegfactor zitten in landelijk bestand.
+# if (sum(df_regio$Standaardisatiefactor_regio != 0, na.rm = T) != nrow(df %>% filter(GGDregio == params$regiocode))) {
+#   print("Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data.")
+# }
+# 
+# # Filter regio uit landelijk databestand
+# df <- df %>%
+#   filter(GGDregio != params$regiocode)
+# 
+# # Voeg regiobestand toe aan landelijk bestand
+# monitor_df <- df %>%
+#   full_join(df_regio)
+# 
+# # Opschonen
+# rm(df_regio, df)
+# 
+# #Data 2022
+# #Landelijk bestand inladen
+# df <- haven::read_spss(paste0(params$path_monitor_data_2022, "Totaalbestand_CGMJV2022_GGD_versie 3 (N = 69.750).sav"), 
+#                        user_na =T) %>%
+#   rename(Standaardisatiefactor_regio = Standaardisatiefactor,
+#          Stratum_regio = Stratum) %>% # Standaardidatiefactor en andere indicatoren hernoemen. TODO weghalen na trendsyntax?
+#   labelled::user_na_to_na()
+# 
+# # Regionaal bestand inladen
+# df_regio <- haven::read_spss(paste0(params$path_monitor_data_2022, params$naam_monitor_data_2022_regionaal), 
+#                              user_na =T) %>%
+#   rename(Standaardisatiefactor_regio = Standaardisatiefactor,
+#          Stratum_regio = Stratum,
+#          Invulduur = duur) %>% # Standaardidatiefactor en andere indicatoren hernoemen. TODO weghalen na trendsyntax?
+#   labelled::user_na_to_na()
+# 
+# # Check of aantallen gelijk zijn.
+# # NB. Alleen deelnemers met landelijke weegfactor zitten in landelijk bestand.
+# if (sum(df_regio$Standaardisatiefactor_regio != 0, na.rm = T) != nrow(df %>% filter(GGDregio == params$regiocode))) {
+#   print("Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data.")
+# }
+# 
+# # Filter regio uit landelijk databestand
+# df <- df %>%
+#   filter(GGDregio != params$regiocode)
+# 
+# # Voeg regiobestand toe aan landelijk bestand
+# df <- df %>%
+#   full_join(df_regio) %>%
+#   select(-colnames(df)[!(colnames(df) %in% colnames(monitor_df))]) # selecteer alleen kolommen die ook in 2024 data zitten
+# 
+# # Voeg bestand van 2022 toe aan bestand van 2024
+# monitor_df <- monitor_df %>%
+#   full_join(df)
+# 
+# # Opschonen
+# rm(df_regio, df)
 
-# Regionaal bestand inladen
-df_regio <- haven::read_spss(paste0(params$path_monitor_data_2024, params$naam_monitor_data_2024_regionaal), 
-                             user_na =T) %>%
-  labelled::user_na_to_na()
-
-# Check of aantallen gelijk zijn.
-# NB. Alleen deelnemers met landelijke weegfactor zitten in landelijk bestand.
-if (sum(df_regio$Standaardisatiefactor_regio != 0, na.rm = T) != nrow(df %>% filter(GGDregio == params$regiocode))) {
-  print("Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data.")
-}
-
-# Filter regio uit landelijk databestand
-df <- df %>%
-  filter(GGDregio != params$regiocode)
-
-# Voeg regiobestand toe aan landelijk bestand
-monitor_df <- df %>%
-  full_join(df_regio)
-
-# Opschonen
-rm(df_regio, df)
-
-#Data 2022
-#Landelijk bestand inladen
-df <- haven::read_spss(paste0(params$path_monitor_data_2022, "Totaalbestand_CGMJV2022_GGD_versie 3 (N = 69.750).sav"), 
-                       user_na =T) %>%
-  rename(Standaardisatiefactor_regio = Standaardisatiefactor,
-         Stratum_regio = Stratum) %>% # Standaardidatiefactor en andere indicatoren hernoemen. TODO weghalen na trendsyntax?
-  labelled::user_na_to_na()
-
-# Regionaal bestand inladen
-df_regio <- haven::read_spss(paste0(params$path_monitor_data_2022, params$naam_monitor_data_2022_regionaal), 
-                             user_na =T) %>%
-  rename(Standaardisatiefactor_regio = Standaardisatiefactor,
-         Stratum_regio = Stratum,
-         Invulduur = duur) %>% # Standaardidatiefactor en andere indicatoren hernoemen. TODO weghalen na trendsyntax?
-  labelled::user_na_to_na()
-
-# Check of aantallen gelijk zijn.
-# NB. Alleen deelnemers met landelijke weegfactor zitten in landelijk bestand.
-if (sum(df_regio$Standaardisatiefactor_regio != 0, na.rm = T) != nrow(df %>% filter(GGDregio == params$regiocode))) {
-  print("Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data.")
-}
-
-# Filter regio uit landelijk databestand
-df <- df %>%
-  filter(GGDregio != params$regiocode)
-
-# Voeg regiobestand toe aan landelijk bestand
-df <- df %>%
-  full_join(df_regio) %>%
-  select(-colnames(df)[!(colnames(df) %in% colnames(monitor_df))]) # selecteer alleen kolommen die ook in 2024 data zitten
-
-# Voeg bestand van 2022 toe aan bestand van 2024
-monitor_df <- monitor_df %>%
-  full_join(df)
-
-# Opschonen
-rm(df_regio, df)
+# Label toevoegen aan ongelabelde jaarindicator
+#TODO verwijderen wanneer dit in syntaxen gedaan is
+val_label(monitor_df$AGOJB401, 2024) <- '2024'
+val_label(monitor_df$AGOJB401, 2022) <- '2022'
 
 
 #Maak survey designs
-#TODO HIER VERDER GAAN
-#TODO bij echte data standaardisatiefactor en stratum aanpassen per niveau
-#TODO nepdata aanpassen zodat standaardisatiefactor en stratum _regio heet
-
 # Het landelijk en regionaal design hebben dezelfde weegfactoren. Daarom maken we een landelijk design obv landelijke dataset en een regionaal design obv een subset van het landelijk design.
 # Landelijk 2022 en 2024
 design_land <- survey_design_maken(
@@ -252,7 +255,7 @@ plot
 ::: column
 Van de respondenten in uw gemeente is `r monitor_df %>% maak_percentage(var_inhoud = 'AGLFA401', value = 1, niveau = "gemeente")` 16 of 17 jaar, `r monitor_df %>% maak_percentage(var_inhoud = 'AGLFA401', value = 2, niveau = "gemeente")` tussen de 18 en 20 jaar en `r monitor_df %>% maak_percentage(var_inhoud = 'AGLFA401', value = 3, niveau = "gemeente")` tussen de 21 en 25 jaar.
 
-`r monitor_df %>% maak_percentage(var_inhoud = 'AGETS411', value = 1, niveau = "gemeente")` van de respondenten heeft een Nederlandse herkomst.
+`r #monitor_df %>% maak_percentage(var_inhoud = 'AGETS411', value = 1, niveau = "gemeente")` van de respondenten heeft een Nederlandse herkomst.
 :::
 :::
 
@@ -279,6 +282,12 @@ plot = monitor_df %>%
 
 plot
 ```
+
+
+```{r}
+#monitor_df %>% maak_top(var_inhoud = 'AGHHA403', value = 1:8, top = 1, niveau = "gemeente")
+monitor_df %>% maak_vergelijking(var_inhoud = 'AGHHA401', variabele_label = 'bij ouders/verzorgers woont', var_crossing = 'AGOJB401', niveau = "regio")
+```
 :::
 :::
 
@@ -292,7 +301,7 @@ De woon-, werk- en financiële situatie kan veel invloed hebben op het welzijn e
 
 **Woonsituatie**
 
-De meeste jongvolwassenen in uw gemeente wonen `r monitor_df %>% maak_top(var_inhoud = 'AGHHA403', value = 1:8, top = 1, niveau = "gemeente")`. `r monitor_df %>% maak_vergelijking(var_inhoud = 'AGHHA401', variabele_label = 'bij ouders/verzorgers woont', var_crossing = 'AGOJB401', niveau = "regio")`
+De meeste jongvolwassenen in uw gemeente wonen `r #monitor_df %>% maak_top(var_inhoud = 'AGHHA403', value = 1:8, top = 1, niveau = "gemeente")`. `r #monitor_df %>% maak_vergelijking(var_inhoud = 'AGHHA401', variabele_label = 'bij ouders/verzorgers woont', var_crossing = 'AGOJB401', niveau = "regio")`
 :::
 :::
 

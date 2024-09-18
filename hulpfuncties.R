@@ -398,8 +398,6 @@ bereken_kruistabel <- function(data, survey_design = NULL, variabele = NULL, cro
     }
   }
 
-  print(paste("varcode: ", as.data.frame(kruistabel)$varcode, "label: ", as.data.frame(kruistabel)$label))
-  
   #variabelen aanpassen voor plotfuncties
   kruistabel <- kruistabel %>% 
     as_tibble() %>%
