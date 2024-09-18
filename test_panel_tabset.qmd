@@ -20,6 +20,7 @@ params:
   default_kleuren_responstabel: !expr c("header" = "#012C17", "kleur_1" = "#007E48", "kleur_2" = "#76B82A","kleur_tekst" = "#FFFFFF")
   is_pdf: false
 format-links: false
+echo: false
 ---
 
 ```{r Instellingen, echo=F, message=F, warning=F}
@@ -95,18 +96,53 @@ for(var in names(monitor_df)){
 
 ```
 
+::: tussenlijn
+:::
+
 ```{r, results='asis'}
-  
-monitor_df %>% maak_cirkeldiagram(var_inhoud = "LVVTA404",
-                                  tabel_en_grafiek = TRUE,
-                                  desc = FALSE)
-```
-  
-  
-  
-```{r, results='asis'}
+#Standaard staafdiagram met dubbele uitsplitsing
 monitor_df %>% 
-  maak_grafiek_cbs_bevolking(
+  maak_staafdiagram_dubbele_uitsplitsing(
+    var_inhoud = "LVEES404",
+    var_crossing_groep = "AGGSA402",
+    var_crossing_kleur = "AGLFA401",
+    caption = "Bron: Monitor GMJV 2024",
     tabel_en_grafiek = T
-  )
+    )
 ```
+
+# ![Icon](iconen/rollerblade.svg) Header 1
+Een verhaaltje 
+R version 4.3.0 (2023-04-21 ucrt) -- "Already Tomorrow"
+Copyright (C) 2023 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+# ![Icon](iconen/rollerblade.svg) Header 2
+Nog een verhaaltje 
+R version 4.3.0 (2023-04-21 ucrt) -- "Already Tomorrow"
+Copyright (C) 2023 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
