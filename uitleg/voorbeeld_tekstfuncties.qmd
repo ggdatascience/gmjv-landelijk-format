@@ -164,7 +164,7 @@ De functie **maak_vergelijking()** maakt een vergelijking tussen de categorieën
 # Standaard vergelijking tussen mannen en vrouwen:
 monitor_df %>% maak_vergelijking(var_inhoud = 'GZGGA402', 
                                  variabele_label = "hun eigen gezondheid als (zeer) goed ervaart",
-                                 var_crossing = 'AGGSA401')
+                                 var_crossing = 'AGGSA402')
 ```
 
 ### Vergelijking tussen 3 groepen
@@ -175,7 +175,7 @@ monitor_df %>% maak_vergelijking(var_inhoud = 'GZGGA402',
 # Vergelijking tussen migratieachtergrond in 3 categorieën:
 monitor_df %>% maak_vergelijking(var_inhoud = 'GZGGA402', 
                                  variabele_label = "hun eigen gezondheid als (zeer) goed ervaart",
-                                 var_crossing = 'AGETS414')
+                                 var_crossing = 'LVTEA401')
 
 ```
 
