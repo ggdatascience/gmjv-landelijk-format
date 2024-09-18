@@ -34,14 +34,15 @@ library(dplyr)
 library(ggplot2)
 library(tidyr)
 library(haven)
-library(stringr) # Voor str_replace
+library(stringr) # Voor str_replace & str_wrap
 library(labelled) # Package om te werken met datalabels, o.a. voor to_character()
 library(survey) # Package om te werken met gewogen gemiddelds incl. betrouwbaarheidsintervallen
 library(glue) #om strings aangenaam aan elkaar te plakken
 library(plotly)
 library(forcats)
 library(openxlsx) #om cbs populatiebestand te kunnen lezen
-
+library(showtext) #om andere lettertypen te kunnen gebruiken
+ 
 options(dplyr.summarise.inform = FALSE)
 source(params$path_hulpfuncties)
 
@@ -97,50 +98,10 @@ for(var in names(monitor_df)){
 
 }
 
-# ALTERNATIEVE METHODE VAN INLADEN: regionale data invoegen in landelijk
-# Landelijk bestand inladen
-# df <- haven::read_spss(file.choose(), user_na =T) %>%
-#   labelled::user_na_to_na()
-# 
-# # Regionaal bestand inladen
-# df_regio <- haven::read_spss(file.choose(), user_na =T) %>%
-#   labelled::user_na_to_na()
-# 
-# # Check of aantallen gelijk zijn.
-# # NB. Alleen deelnemers met landelijke weegfactor zitten in landelijk bestand.
-# if (sum(df_regio$Standaardisatiefactor != 0) != nrow(df %>% filter(GGDregio == regiocode))) {
-#   print("Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data.")
-# }
-# 
-#
-# TODO zorgen dat hier ook nog op jaar gefilterd wordt!
-# # Filter regio uit landelijk databestand
-# df <- df %>%
-#   filter(GGDregio != regiocode)
-# 
-# # Voeg regiobestand toe aan landelijk bestand
-# df <- df %>%
-#   full_join(df_regio)
-# 
-# # Opschonen
-# rm(df_regio)
-# 
-# #Er is niet goed aangegeven wat missing is in SPSS.
-# #tijdelijke functie om 9 Onbekend te verwijderen & naar NA te zetten
-# 
-# for(var in names(df)){
-#   
-#   df <- df %>% verwijder_9_onbekend(var)
-# 
-# }
-# 
-# # Regionale data filteren
-# df %>%
-#   filter(GGDregio == params$regiocode)
-# 
-# # Gemeentelijke data filteren
-# df %>%
-#   filter(Gemeentecode == params$gemeentecode)
+#Lettertypen/Fonts ophalen met showtext 
+font_add_google("Open Sans")
+#showtext_auto om te zorgen dat juist graphicsdevice wordt gebruikt
+showtext_auto()
 
 ```
 
@@ -290,7 +251,6 @@ plot = monitor_df %>%
 :::
 
 ::: column
-
 :::
 :::
 
@@ -380,7 +340,7 @@ plot
 ::: column
 `r monitor_df %>% maak_vergelijking(var_inhoud = 'FIIKA401', variabele_label = 'moeite heeft om alles te betalen wat moet', var_crossing = 'AGLFA401')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'FIIKA401', variabele_label = 'moeite heeft om alles te betalen wat moet', var_crossing = 'AGOJB401')`
 
-<br> 
+<br>
 
 [Het Nibud](https://www.nibud.nl/) (Nationaal Instituut voor Budgetvoorlichting) geeft advies over onder andere rondkomen, sparen en geldproblemen.
 :::
@@ -574,7 +534,6 @@ monitor_df %>% maak_percentage(var_inhoud = 'LVPKS403', niveau = "regio") %>%
 :::
 
 ::: column
-
 :::
 :::
 
@@ -771,7 +730,9 @@ plot = monitor_df %>%
     var_inhoud_waarde = 1,
     titel = "Voelt zich (heel) vaak gestrest",
     niveaus = c("gemeente", "regio")
-  )
+  ) +
+  theme(axis.text = element_blank())  #Om te zorgen dat deze grafiek mooi uitlijnt met staafdiagram_vergelijking hiernaast verwijderen we het as-label 
+  #ggplot theme: https://ggplot2.tidyverse.org/reference/theme.html
 
 plot
 
@@ -898,7 +859,6 @@ plot
 
 ::: {layout="[[100]]"}
 ::: column
-
 Hoe jongvolwassenen omgaan met de uitdagingen van het leven wordt mede bepaald door hun veerkracht en weerbaarheid.
 
 <br>
@@ -996,7 +956,6 @@ plot
 :::
 
 ::: column
-
 :::
 :::
 
@@ -1013,7 +972,6 @@ Ondanks de uitdagingen die zij in hun leven tegenkomen, heeft een groot deel van
 :::
 
 ::: {layout="[50,50]"}
-
 ::: column
 ```{r Vertrouwen in de toekomst, fig.alt = ggplot2::get_alt_text(plot)}
 
@@ -1037,8 +995,6 @@ Maatschappelijke thema's waar jongvolwassenen in uw gemeente zich het meest zorg
 -   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 2)`
 -   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA404", "LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410"), top = 3)`
 :::
-
-
 :::
 
 # Bewegen en sporten
@@ -1286,7 +1242,6 @@ plot
 
 ```
 :::
-
 :::
 
 ::: {layout="[100]"}
@@ -1548,7 +1503,6 @@ monitor_df %>%
 
 ::: {layout="[100]"}
 ::: column
-
 **Post-covid**
 
 `r monitor_df %>% maak_percentage(var_inhoud = 'LFDGS404')` van de jongvolwassenen in uw gemeente heeft 3 maanden of langer klachten van het coronavirus. Bij `r monitor_df %>% maak_percentage(var_inhoud = 'LFDGS404')` is post-covid vastgesteld door een arts.
@@ -1816,15 +1770,13 @@ De meest gebruikte anticonceptiemethodes bij de laatste keer seks zijn:
 
 <br>
 
-In uw gemeente gaf `r monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente")` aan geen of alleen een onbetrouwbare methode van anticonceptie gebruikt te hebben tijdens de laatste keer dat zij seks hadden. Een voorbeeld van een onbetrouwbare methode van anticonceptie is voortijdig terugtrekken of het bijhouden van de cyclus. 
+In uw gemeente gaf `r monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente")` aan geen of alleen een onbetrouwbare methode van anticonceptie gebruikt te hebben tijdens de laatste keer dat zij seks hadden. Een voorbeeld van een onbetrouwbare methode van anticonceptie is voortijdig terugtrekken of het bijhouden van de cyclus.
 
 <br>
 
-In uw gemeente heeft `r monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente")` in het afgelopen half jaar seks gehad met verschillende partners en gaf aan soms of nooit een condoom of beflapje te gebruiken. Het hebben van verschillende sekspartners en niet altijd gebruiken van een condoom of beflapje is een risico voor SOA.  
+In uw gemeente heeft `r monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente")` in het afgelopen half jaar seks gehad met verschillende partners en gaf aan soms of nooit een condoom of beflapje te gebruiken. Het hebben van verschillende sekspartners en niet altijd gebruiken van een condoom of beflapje is een risico voor SOA.
 :::
 :::
-
-
 
 ::: {layout="[100]"}
 ::: column

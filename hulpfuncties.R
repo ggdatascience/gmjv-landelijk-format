@@ -24,8 +24,36 @@ library(glue) #om strings aangenaam aan elkaar te plakken
 library(plotly)
 library(forcats)
 library(openxlsx)#om cbs populatiebestand te kunnen lezen
+library(showtext)
 #library(cowplot) #alleen gebruikt voor spacing legenda staafdiagram vergelijking.
 #voorlopig uit omdat het alt-text overhoop gooit. 
+
+
+# fonts grafieken --------------------------------------------------------
+#voor gemak; 1 plek waar we alle font dingen voor ggplot kunnen aanpassen
+
+#alle ggplot grafieken hebben overal dezelfde font-family. kunnen we nog aanpasen. 
+font_family = "Open Sans"
+
+
+#Titels
+titel_size <- 30
+
+#Algemeen
+font_size <- 30
+
+#percentages die boven/naast of in balken staan
+#LET OP size is hierbij op een een andere schaal
+geom_text_percentage <- 10
+
+#Labels op de X-as (waar die relevant zijn)
+as_label_size <- 20
+
+#legend keys
+legend_text_size <- 20
+
+#caption
+caption_size <- 20
 
 # utility ----------------------------------------------------------------
 
@@ -781,14 +809,15 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
                                                    var_crossing_kleur = NULL,
                                                    titel = "",
                                                    kleuren = params$default_kleuren_grafiek,
-                                                   nvar = params$default_nvar, ncel = params$default_ncel,
+                                                   nvar = params$default_nvar,
+                                                   ncel = params$default_ncel,
                                                    alt_text = NULL,
                                                    caption = "",
                                                    huidig_jaar = 2024,
                                                    jaarvar = "AGOJB401",
                                                    niveaus = "regio",
                                                    tabel_en_grafiek = FALSE,
-                                                   toon_y = TRUE
+                                                   toon_y = FALSE
                                                    ){
   
   if(!labelled::is.labelled(data[[var_inhoud]])){
@@ -936,7 +965,7 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
                   label = paste0(percentage,"%"),
                   vjust = -1),
               position = position_dodge2(width = 0.8),
-              size = 7, # Hier grootte van percentages aanpassen
+              size = geom_text_percentage, # Hier grootte van percentages aanpassen
               na.rm = T
     ) +
     #sterretje invoegen bij weggestreepte data omdat nvar of ncel niet gehaald wordt
@@ -972,9 +1001,13 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
           legend.title = element_blank(),
           legend.spacing.x = unit(.1,"cm"),
           legend.position = "bottom",
-          plot.title = element_text(hjust = .5, size = 20), # Hier grootte van titel aanpassen
-          text = element_text(size = 17), # Hier grootte labels etc aanpassen
-          axis.line.x.bottom = element_line(linewidth = 1)
+          axis.line.x.bottom = element_line(linewidth = 1),
+          #Grootte tekst (behalve annotatie boven balken):
+          text = element_text(family = font_family), 
+          plot.title = element_text(hjust = .5, size = titel_size),
+          axis.text = element_text(size = as_label_size),
+          legend.text = element_text(size = legend_text_size),
+          plot.caption = element_text(size = caption_size)
     )
   
   #toon y: laat Y as zien met rechte lijn + ticklabels
@@ -1059,7 +1092,7 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
                                            jaarvar = "AGOJB401",
                                            niveaus = "regio",
                                            tabel_en_grafiek = FALSE,
-                                           toon_y = TRUE
+                                           toon_y = FALSE
                                              ){
   
   if(!labelled::is.labelled(data[[var_inhoud]])){
@@ -1159,7 +1192,7 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
                    label = paste0(percentage,"%"),
                    vjust = -1),
                position = position_dodge2(width = 0.8),
-               size = 7, # Hier grootte van percentages aanpassen
+               size = geom_text_percentage, # Hier grootte van percentages aanpassen
                na.rm = T
      ) +
      #sterretje invoegen bij weggestreepte data omdat nvar of ncel niet gehaald wordt
@@ -1193,9 +1226,13 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
            legend.title = element_blank(),
            legend.spacing.x = unit(.1, 'cm'),
            legend.position = "bottom",
-           plot.title = element_text(hjust = .5, size = 20), # Hier grootte van titel aanpassen
-           text = element_text(size = 17), # Hier grootte labels etc aanpassen
-           axis.line.x.bottom = element_line(linewidth = 1, colour = "black")
+           axis.line.x.bottom = element_line(linewidth = 1, colour = "black"),
+           #Grootte tekst (behalve annotatie boven balken):
+           text = element_text(family = font_family), 
+           plot.title = element_text(hjust = .5, size = titel_size),
+           axis.text = element_text(size = as_label_size),
+           legend.text = element_text(size = legend_text_size),
+           plot.caption = element_text(size = caption_size)
      )
 
    
@@ -1330,7 +1367,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
                                               niveaus = "regio",
                                               var_inhoud_waarde = NULL,
                                               tabel_en_grafiek = FALSE,
-                                              toon_y = TRUE
+                                              toon_y = FALSE
                                               ){
   
   #Keuzes die we gebruikers willen bieden mbt niveau:
@@ -1358,11 +1395,21 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
   #TODO Optie om het correcter te doen dan gebruikelijk
   # regio zonder gemeente vs gemeente. 
   
-  remove_legend = F
+  remove_legend = F #Legenda alleen nodig als er crossings zijn. Gaat op TRUE als er geen crossings zijn.
 
+  #annotatie balken met percentages moet een beetje bijgesteld worden. bijstelling is afh.
+  #van orientatie grafiek
   v_just_text = ifelse(flip,0.5,-1)
   h_just_text = ifelse(flip,-1,0.5)
- 
+  
+  #Lange val_labels lopen zonder regeleeinden in elkaar over,
+  #of nemen een te groot stuk van de 'plot-area' over. stringr::str_wrap() voegt
+  #regeleinden in waar woorden gesplitst kunnen worden. 
+  #bij normnale orientatie moet er snel geknipt worden (weinig horizontale ruimte)
+  #bij flip moet er minder snel geknipt worden (Weinig verticale ruimte)
+  n_characters_str_wrap = ifelse(flip,40,20)
+
+  
   #Checken of crossvar is ingevoerd en in dat geval jaarvar is
   crossing_is_jaar <- ifelse(is.null(var_crossing), FALSE,
                              ifelse(var_crossing != jaarvar, FALSE, TRUE))
@@ -1527,7 +1574,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
                   vjust = v_just_text,
                   hjust = h_just_text),
               position = position_dodge2(width = 0.8),
-              size = 7, # Hier grootte van percentages aanpassen
+              size = geom_text_percentage, # Hier grootte van percentages aanpassen
               na.rm = T) +
     
     #sterretje invoegen bij weggestreepte data omdat nvar of ncel niet gehaald wordt
@@ -1556,7 +1603,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
                        expand = expansion(mult = c(0, 0.05))
     ) +
     #lange labels opsplitsen
-    scale_x_discrete(labels = function(x) str_wrap(x, width = 20)) + 
+    scale_x_discrete(labels = function(x) str_wrap(x, width = n_characters_str_wrap)) + 
     
     theme(axis.title = element_blank(),
           panel.background = element_blank(),
@@ -1565,9 +1612,13 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
           legend.title = element_blank(),
           legend.spacing.x = unit(.1,"cm"),
           legend.position = "bottom",
-          plot.title = element_text(hjust = .5, size = 20), # Hier grootte van titel aanpassen
-          text = element_text(size = 17), # Hier grootte labels etc aanpassen
-          axis.line.x.bottom = element_line(linewidth = 1)
+          axis.line.x.bottom = element_line(linewidth = 1),
+          #Grootte tekst (behalve annotatie boven balken):
+          text = element_text(family = font_family), 
+          plot.title = element_text(hjust = .5, size = titel_size),
+          axis.text = element_text(size = as_label_size),
+          legend.text = element_text(size = legend_text_size),
+          plot.caption = element_text(size = caption_size)
     )
   
   
@@ -1627,7 +1678,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
   }
   plot <- plot + labs(alt = alt_text,
                       caption = caption)
-  
+  #Legenda verwijderen als er geen crossings zijn.
   if(remove_legend){
     plot <- plot + theme(legend.position = "none")
   }
@@ -1704,14 +1755,16 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
 maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_crossings, titel = "",
                                                         kleuren = params$default_kleuren_grafiek,
                                                         kleuren_per_crossing = F, fade_kleuren = F,
-                                                        flip = FALSE, nvar = params$default_nvar,
+                                                        flip = FALSE, 
+                                                        nvar = params$default_nvar,
                                                         ncel = params$default_ncel,
                                                         alt_text = NULL,
                                                         caption = "",
                                                         huidig_jaar = 2024,
                                                         jaarvar = "AGOJB401",
                                                         niveaus = "regio",
-                                                        tabel_en_grafiek = FALSE
+                                                        tabel_en_grafiek = FALSE,
+                                                        toon_y = FALSE
                                                         ){
   
   if(!labelled::is.labelled(data[[var_inhoud]])){
@@ -1847,7 +1900,7 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
                   hjust = h_just_text),
               color = "black",
               position = position_dodge2(width = 0.8),
-              size = 7, # Hier grootte van percentages aanpassen
+              size = geom_text_percentage, # Hier grootte van percentages aanpassen
               na.rm = T
               ) +
     #sterretje invoegen bij weggestreepte data omdat nvar of ncel niet gehaald wordt
@@ -1868,9 +1921,13 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
     ggtitle(str_wrap(titel, 50)) +
     theme(panel.background = element_blank(),
           legend.position = "none",
-          plot.title = element_text(hjust = .5, size = 20), # Hier grootte van titel aanpassen
-          text = element_text(size = 17), # Hier grootte labels etc aanpassen
-          axis.line.y.left = element_line(linewidth = 1)
+          axis.line.y.left = element_line(linewidth = 1),
+          #Grootte tekst (behalve annotatie boven balken):
+          text = element_text(family = font_family), 
+          plot.title = element_text(hjust = .5, size = titel_size),
+          axis.text = element_text(size = as_label_size),
+          legend.text = element_text(size = legend_text_size),
+          plot.caption = element_text(size = caption_size)
     )
   
   
@@ -1890,15 +1947,27 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
       theme(axis.line.x.bottom = (element_line(linewidth = 1))) +
       scale_y_continuous(limits = c(0,100),
                          expand = expansion(mult = c(0, 0))) +
-      scale_x_discrete(labels = function(x) str_wrap(x, width = 5)) +
+      scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
       theme(
-        #axis.text.x = element_text(angle = 90, hjust = .95, vjust = .2),
         strip.background = element_blank(),
         
       ) + xlab("")
       
   }
   
+  #bij flip is er al geen as met percentages meer
+  #alleen bij !flip de aslijn & tekst verwijderen wanner !toon_y
+  if(!toon_y & !flip){
+    plot <- plot + 
+      theme(
+        axis.line.y.left = element_blank(),
+        axis.text.y.left = element_blank(),
+        axis.ticks.y.left = element_blank(),
+        axis.title.y.left = element_blank()
+      )
+    
+  }
+
   
   #Alt text maken o.b.v. data als geen eigen tekst is ingegeven
   if(is.null(alt_text)){
@@ -1959,7 +2028,7 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
                                         jaarvar = "AGOJB401",
                                         niveaus = "regio",
                                         tabel_en_grafiek = FALSE,
-                                        toon_y = TRUE
+                                        toon_y = FALSE
                                         
                                         ){
   
@@ -2098,7 +2167,7 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
       label = paste0(round(percentage),"%")),
       color = "#FFFFFF",
       position = position_stack(vjust = 0.5),
-      size = 7) + # Hier grootte van percentages aanpassen
+      size = geom_text_percentage) + # Hier grootte van percentages aanpassen
     
     scale_fill_manual(values= kleuren,
                       labels = function(x) str_wrap(x, width = 20)
@@ -2112,16 +2181,20 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
     ylab(x_label) + 
       theme(
         axis.title = element_blank(),
-          panel.background = element_blank(),
-          axis.ticks.x = element_blank(),
-          axis.ticks.y = element_blank(),
-          legend.title = element_blank(),
-          legend.spacing.x = unit(.1,"cm"),
-          legend.position = "bottom",
-          plot.title = element_text(hjust = .5, size = 20), # Hier grootte van titel aanpassen
-          text = element_text(size = 17), # Hier grootte labels etc aanpassen
-  #        axis.line.x.bottom = element_line(linewidth = 1),
-          axis.line.y.left = element_line(linewidth = 1,)
+        panel.background = element_blank(),
+        axis.ticks.x = element_blank(),
+        axis.ticks.y = element_blank(),
+        legend.title = element_blank(),
+        legend.spacing.x = unit(.1,"cm"),
+        legend.position = "bottom",
+        axis.line.y.left = element_line(linewidth = 1),
+        
+        #Grootte tekst (behalve annotatie boven balken):
+        text = element_text(family = font_family), 
+        plot.title = element_text(hjust = .5, size = titel_size),
+        axis.text = element_text(size = as_label_size),
+        legend.text = element_text(size = legend_text_size),
+        plot.caption = element_text(size = caption_size)
         ) +
     guides(fill = guide_legend(reverse = TRUE))
   
@@ -2307,14 +2380,23 @@ maak_cirkeldiagram <- function(data, var_inhoud, titel = "", kleuren = params$de
     geom_text(aes(label = percentage),
               position = position_stack(vjust = 0.5),
               color = "#FFFFFF",
-              size = 8) +
+              size = geom_text_percentage) +
     coord_polar(theta = "y") +
     ggtitle(str_wrap(titel, 50)) +
     scale_fill_manual(
       str_wrap(var_label(data[[var_inhoud]]),30),
       label = str_wrap(namen_kleuren,30),
                       values = kleuren) +
-    theme_void()
+    theme_void() +
+    theme(
+      #Grootte tekst (behalve annotatie boven balken):
+      text = element_text(family = font_family),
+      plot.title = element_text(hjust = .5, size = titel_size),
+      #We willen geen axis tekst bij een cirkeldiagram
+      #axis.text = element_text(size = as_label_size),
+      legend.text = element_text(size = legend_text_size),
+      plot.caption = element_text(size = caption_size)
+      )
 
   
   #TODO Alt text logica updaten omdat we nu niet meer ploty maar ggplot2 gebruiken
@@ -2474,7 +2556,7 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
                                        alt_text = NULL,
                                        caption = "",
                                        tabel_en_grafiek = FALSE,
-                                       toon_y = TRUE
+                                       toon_y = FALSE
                                        ){
 
   #leeftijd en geslacht aan varnamen uit monitor koppelen
@@ -2595,7 +2677,7 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
       label = paste0(round(percentage),"%")),
       color = "#FFFFFF",
       position = position_stack(vjust = 0.5),
-      size = 3) + #Hier grootte percentages aanpassen
+      size = geom_text_percentage) + #Hier grootte percentages aanpassen
     
     scale_fill_manual(values= kleuren,
                       labels = function(x) str_wrap(x, width = 40)
@@ -2615,9 +2697,13 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
       legend.title = element_blank(),
       legend.spacing.x = unit(.1,"cm"),
       legend.position = "bottom",
-      plot.title = element_text(hjust = .5, size = 20), # Hier grootte van titel aanpassen
-      text = element_text(size = 17), # Hier grootte labels etc aanpassen
-      axis.line.y.left = element_line(linewidth = 1,)
+      axis.line.y.left = element_line(linewidth = 1),
+      #Grootte tekst (behalve annotatie boven balken):
+      text = element_text(family = font_family), 
+      plot.title = element_text(hjust = .5, size = titel_size),
+      axis.text = element_text(size = as_label_size),
+      legend.text = element_text(size = legend_text_size),
+      plot.caption = element_text(size = caption_size)
     ) +
     guides(fill = guide_legend(reverse = TRUE))
   
