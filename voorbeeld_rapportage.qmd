@@ -803,10 +803,10 @@ plot = monitor_df %>%
     var_inhoud = "LVSTA415",
     var_inhoud_waarde = 1,
     titel = "Voelt zich (heel) vaak gestrest",
-    niveaus = c("gemeente", "regio")
-  ) +
-  theme(axis.text = element_blank())  #Om te zorgen dat deze grafiek mooi uitlijnt met staafdiagram_vergelijking hiernaast verwijderen we het as-label 
-  #ggplot theme: https://ggplot2.tidyverse.org/reference/theme.html
+    niveaus = c("gemeente", "regio"),
+    toon_aslabel = FALSE  #Om te zorgen dat deze grafiek mooi uitlijnt met staafdiagram_vergelijking hiernaast verwijderen we het as-label 
+  )
+
 
 plot
 

@@ -1414,7 +1414,8 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
                                               niveaus = "regio",
                                               var_inhoud_waarde = NULL,
                                               tabel_en_grafiek = FALSE,
-                                              toon_y = FALSE
+                                              toon_y = FALSE,
+                                              toon_aslabel = TRUE
                                               ){
   
   #Keuzes die we gebruikers willen bieden mbt niveau:
@@ -1669,6 +1670,11 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
           plot.caption = element_text(size = caption_size)
     )
   
+  
+  #Aslabel verwijderen als als dat is aangegeven.
+  if(!toon_aslabel){
+    plot <- plot +  theme(axis.text = element_blank()) 
+  }
   
   #toon y: laat Y as zien met rechte lijn + ticklabels
   if(toon_y){
