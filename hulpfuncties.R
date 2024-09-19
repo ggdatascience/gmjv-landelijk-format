@@ -648,6 +648,38 @@ maak_panel_tabset <- function(grafiek, tabel){
 }
 
 
+#Functie om regeleinden te maken voor x-as labels
+#Aslabels moeten niet in elkaar overlopen. Hiervoor wordt de parameter X_as_label_wrap gebruikt om regeleinden in te voegen
+#str_wrap = voeg linebreak in bij eerstvolgende woordeind na x aantal characters.
+maak_regeleinden <- function(label_vector, x_as_label_wrap, x_as_regels_toevoegen = 0){
+  
+  #pas str_wrap toe
+  label_vector <-  str_wrap(label_vector, x_as_label_wrap)
+  
+  #tbv uitlijnen van grafieken die naast elkaar staan met een ongelijke hoeveelheid regels in de x-aslables kunnen witregels toegevoegd
+  #worden aan aslasbels. Het aantal witregels dat toegevoegd moet worden is afh. van hoeveel regels een aslabel al heeft.
+  
+  #tel het aantal regels voor ieder aslabel; tel alle regeleinden + 1
+  n_regels_label <- label_vector %>% str_count("\n") + 1
+  
+  #voeg nu extra regeleinden toe aan alle aslabels (zou ook slechts aan het langste label toegevoegd kunnen worden, maar dit is simpeler).
+  #De waarde van x_as_regels_toevoegen moet opgeteld worden bij labels met de meeste regels
+  
+  #Maximale hoeveelheid regels = de grootste hoeveelheid regels die nu in labels bestaat + toegevoegde regels door x_als_regels_toevoegen 
+  max_regels <- max(n_regels_label) + x_as_regels_toevoegen
+  
+  #Aantal regels dat voor ieder label moet toegevoegd is het maximum - hoeveel regels er al zijn
+  n_regels_toevoegen <- max_regels - n_regels_label 
+  
+  #Vector maken met regeleinden die toegevoegd moeten worden
+  regeleinden <- lapply(n_regels_toevoegen, function(x){rep("\n",x) %>% str_c(collapse = "")}) %>% unlist()
+  
+  #Voeg regeleinden aan labels toe
+  label_vector <- label_vector %>% paste0(regeleinden)
+  
+  return(label_vector)
+}
+
 # Tabelfuncties -------------------------------------------------------
 maak_responstabel <- function(data, crossings, missing_label = "Onbekend",
                               kleuren = params$default_kleuren_responstabel,
@@ -818,7 +850,9 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
                                                    jaarvar = "AGOJB401",
                                                    niveaus = "regio",
                                                    tabel_en_grafiek = FALSE,
-                                                   toon_y = FALSE
+                                                   toon_y = FALSE,
+                                                   x_as_label_wrap = 20,
+                                                   x_as_regels_toevoegen = 0
                                                    ){
   
   if(!labelled::is.labelled(data[[var_inhoud]])){
@@ -837,8 +871,6 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
   
   #Als beide crossing typpen zijn ingevuld mag er maar 1 niveau zijn en wordt op dat niveau gefilterd.
   #anders error
-  
-
 
   if(
     !( #Als 1 van onderstaande niet waar is dan mag het niet
@@ -944,8 +976,16 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
     
     
     })  %>% do.call(rbind,.)
+
   
 
+
+  #voeg regeleinden toe als nodig:
+  #x_as_label_wrap bepaald wanneer labels te lang zijn om naast elkaar te passen
+  #x_as_regels_toeveogen bepaald of er regels toegevoegd moeten worden om plots die naast elkaar staan
+  #uit te lijnen
+  df_plot[[var_crossing_groep]] <- maak_regeleinden(df_plot[[var_crossing_groep]], x_as_label_wrap, x_as_regels_toevoegen)
+  
   #data & design temp verwijderen uit global Env
   rm(data_temp, design_temp, envir = .GlobalEnv)
   
@@ -1416,7 +1456,6 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
   #bij flip moet er minder snel geknipt worden (Weinig verticale ruimte)
   n_characters_str_wrap = ifelse(flip,40,20)
 
-  
   #Checken of crossvar is ingevoerd en in dat geval jaarvar is
   crossing_is_jaar <- ifelse(is.null(var_crossing), FALSE,
                              ifelse(var_crossing != jaarvar, FALSE, TRUE))
