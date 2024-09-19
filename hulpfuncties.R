@@ -648,6 +648,38 @@ maak_panel_tabset <- function(grafiek, tabel){
 }
 
 
+#Functie om regeleinden te maken voor x-as labels
+#Aslabels moeten niet in elkaar overlopen. Hiervoor wordt de parameter X_as_label_wrap gebruikt om regeleinden in te voegen
+#str_wrap = voeg linebreak in bij eerstvolgende woordeind na x aantal characters.
+maak_regeleinden <- function(label_vector, x_as_label_wrap, x_as_regels_toevoegen = 0){
+  
+  #pas str_wrap toe
+  label_vector <-  str_wrap(label_vector, x_as_label_wrap)
+  
+  #tbv uitlijnen van grafieken die naast elkaar staan met een ongelijke hoeveelheid regels in de x-aslables kunnen witregels toegevoegd
+  #worden aan aslasbels. Het aantal witregels dat toegevoegd moet worden is afh. van hoeveel regels een aslabel al heeft.
+  
+  #tel het aantal regels voor ieder aslabel; tel alle regeleinden + 1
+  n_regels_label <- label_vector %>% str_count("\n") + 1
+  
+  #voeg nu extra regeleinden toe aan alle aslabels (zou ook slechts aan het langste label toegevoegd kunnen worden, maar dit is simpeler).
+  #De waarde van x_as_regels_toevoegen moet opgeteld worden bij labels met de meeste regels
+  
+  #Maximale hoeveelheid regels = de grootste hoeveelheid regels die nu in labels bestaat + toegevoegde regels door x_als_regels_toevoegen 
+  max_regels <- max(n_regels_label) + x_as_regels_toevoegen
+  
+  #Aantal regels dat voor ieder label moet toegevoegd is het maximum - hoeveel regels er al zijn
+  n_regels_toevoegen <- max_regels - n_regels_label 
+  
+  #Vector maken met regeleinden die toegevoegd moeten worden
+  regeleinden <- lapply(n_regels_toevoegen, function(x){rep("\n",x) %>% str_c(collapse = "")}) %>% unlist()
+  
+  #Voeg regeleinden aan labels toe
+  label_vector <- label_vector %>% paste0(regeleinden)
+  
+  return(label_vector)
+}
+
 # Tabelfuncties -------------------------------------------------------
 maak_responstabel <- function(data, crossings, missing_label = "Onbekend",
                               kleuren = params$default_kleuren_responstabel,
@@ -818,7 +850,9 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
                                                    jaarvar = "AGOJB401",
                                                    niveaus = "regio",
                                                    tabel_en_grafiek = FALSE,
-                                                   toon_y = FALSE
+                                                   toon_y = FALSE,
+                                                   x_as_label_wrap = 20,
+                                                   x_as_regels_toevoegen = 0
                                                    ){
   
   if(!labelled::is.labelled(data[[var_inhoud]])){
@@ -837,8 +871,6 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
   
   #Als beide crossing typpen zijn ingevuld mag er maar 1 niveau zijn en wordt op dat niveau gefilterd.
   #anders error
-  
-
 
   if(
     !( #Als 1 van onderstaande niet waar is dan mag het niet
@@ -944,25 +976,34 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
     
     
     })  %>% do.call(rbind,.)
-  
 
-  #data & design temp verwijderen uit global Env
+  
+  
+  #opruimen; data & design temp verwijderen uit global Env
   rm(data_temp, design_temp, envir = .GlobalEnv)
+
+  #voeg regeleinden toe als nodig:
+  #x_as_label_wrap bepaald wanneer labels te lang zijn om naast elkaar te passen
+  #x_as_regels_toeveogen bepaald of er regels toegevoegd moeten worden om plots die naast elkaar staan
+  #uit te lijnen
+  df_plot[[var_crossing_groep]] <- maak_regeleinden(df_plot[[var_crossing_groep]], x_as_label_wrap, x_as_regels_toevoegen)
   
   #als er meerdere niveaus zijn geselecteerd moet "niveau" ingevuld worden bij de lege crossing
   var_crossing_groep = ifelse(is.null(var_crossing_groep), "niveau", var_crossing_groep)
   var_crossing_kleur = ifelse(is.null(var_crossing_kleur), "niveau", var_crossing_kleur)
 
+  #Kleuren toewijzen 
   namen_kleuren <- unique(df_plot[[var_crossing_kleur]])
   kleuren <- kleuren[1:length(namen_kleuren)]
 
-  
+  #Plot maken
   plot = ggplot(df_plot) +
+    #staven
     geom_col(aes(x = !!sym(var_crossing_groep), y = percentage, fill = !!sym(var_crossing_kleur)),
              position = position_dodge(width = 0.8), width = 0.8,
              na.rm = T
              ) +
-    
+    #tekst 
     geom_text(aes(x = !!sym(var_crossing_groep),
                   y = percentage,
                   label = paste0(percentage,"%"),
@@ -981,22 +1022,23 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
                show.legend = FALSE,
                na.rm = T
                ) +
-    #TODO toelichting op sterretje in grafiek?
+    #titel met str_wrap zodat lange titels niet buiten het plotgebied lopen
     ggtitle(str_wrap(titel, 50)) +
-    #Hier worden de kleuren en volgorde bepaald.
-    #Voor de fill van de balken
+    #Hier worden de kleuren en volgorde bepaald Voor de fill van de balken
     scale_fill_manual(values= kleuren,
                       guide = guide_legend(nrow = 1, byrow = TRUE,
                                            label.position = "right", title.position = "top")) +
-    #voor de kleur van de sterretjes
+    #zelfde voor de kleur van de sterretjes
     scale_color_manual(values= kleuren) +
     
+    #Y-as axis ticks definiëren en met expand zorgen dat die netjes aansluit op 0.
     scale_y_continuous(
       limits = c(0,100),
       breaks = seq(0,100, by = 10),
       labels = paste0(seq(0,100, by = 10),"%"),
       expand = expansion(mult = c(0, 0.05))) + 
 
+    #Opmaak plot
     theme(axis.title = element_blank(),
           panel.background = element_blank(),
           axis.ticks.x = element_blank(),
@@ -1013,6 +1055,7 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
           plot.caption = element_text(size = caption_size)
     )
   
+  #Plot verder opmaken o.b.v. instellingen
   #toon y: laat Y as zien met rechte lijn + ticklabels
   if(toon_y){
     
@@ -1042,10 +1085,12 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
                               )
     }
   
+  #Alt text en caption toevoegen
   plot <- plot + labs(alt = alt_text,
                       caption = caption)
   
   
+  #default: alleen plot uitspugen
   if(!tabel_en_grafiek){
     
     return(plot)
@@ -1374,7 +1419,11 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
                                               niveaus = "regio",
                                               var_inhoud_waarde = NULL,
                                               tabel_en_grafiek = FALSE,
-                                              toon_y = FALSE
+                                              toon_y = FALSE,
+                                              toon_aslabel = TRUE,
+                                              x_as_label_wrap = NULL,
+                                              x_as_regels_toevoegen = 0
+                                              
                                               ){
   
   #Keuzes die we gebruikers willen bieden mbt niveau:
@@ -1408,15 +1457,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
   #van orientatie grafiek
   v_just_text = ifelse(flip,0.5,-1)
   h_just_text = ifelse(flip,-1,0.5)
-  
-  #Lange val_labels lopen zonder regeleeinden in elkaar over,
-  #of nemen een te groot stuk van de 'plot-area' over. stringr::str_wrap() voegt
-  #regeleinden in waar woorden gesplitst kunnen worden. 
-  #bij normnale orientatie moet er snel geknipt worden (weinig horizontale ruimte)
-  #bij flip moet er minder snel geknipt worden (Weinig verticale ruimte)
-  n_characters_str_wrap = ifelse(flip,40,20)
 
-  
   #Checken of crossvar is ingevoerd en in dat geval jaarvar is
   crossing_is_jaar <- ifelse(is.null(var_crossing), FALSE,
                              ifelse(var_crossing != jaarvar, FALSE, TRUE))
@@ -1558,18 +1599,40 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
       }
     }
 
-  namen_kleuren <- unique(df_plot[[var_crossing]])
+  #voeg regeleinden toe als nodig:
+  #x_as_label_wrap bepaald wanneer labels te lang zijn om naast elkaar te passen
+  #x_as_regels_toeveogen bepaald of er regels toegevoegd moeten worden om plots die naast elkaar staan
+  #uit te lijnen
   
+  #als er geen waarde voor X_as_label_wrap is opgegeven, default instellen
+  #obv flip
+  #bij normnale orientatie moet er snel geknipt worden (weinig horizontale ruimte)
+  #bij flip moet er minder snel geknipt worden (Weinig verticale ruimte)
+  if(is.null(x_as_label_wrap)){
+    x_as_label_wrap = ifelse(flip,40,20)
+  }
+
+  #Bepalen welke variabele in df_plot aangesproken moet worden om regeleinden in te voegen.
+  #'var_label' als er meerdere variabelen bij var_inhoud zijn ingevoerd
+  #'Var inhoud bij als er 1 variabele bij var_inhoud is ingevoerd.
+  x_as_label <- ifelse(length(var_inhoud) > 1, "var_label",var_inhoud)
+  
+  #regeleinden invoegen
+  df_plot[[x_as_label]] <- maak_regeleinden(df_plot[[x_as_label]], x_as_label_wrap, x_as_regels_toevoegen)
+  
+  #kleuren aan labels koppelen
+  namen_kleuren <- unique(df_plot[[var_crossing]])
   kleuren <- kleuren[1:length(namen_kleuren)]
   
   #volgorde var_inhoud_plot vastzetten obv waarde
+  #tenzij er meerdere var_inhoud zijn ingevoerd
   if(length(var_inhoud) == 1){
-  df_plot <- df_plot %>% 
-    mutate(!!sym(var_inhoud_plot) := fct_reorder(!!sym(var_inhoud_plot),
+    df_plot <- df_plot %>%
+      mutate(!!sym(var_inhoud_plot) := fct_reorder(!!sym(var_inhoud_plot),
                                                  as.numeric(waarde),
-                                                 .desc = TRUE
-                                                 ))
-  }
+                                                 .desc = TRUE)
+             )
+    }
   
   plot =
     ggplot(df_plot) +
@@ -1612,7 +1675,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
                        expand = expansion(mult = c(0, 0.05))
     ) +
     #lange labels opsplitsen
-    scale_x_discrete(labels = function(x) str_wrap(x, width = n_characters_str_wrap)) + 
+ #   scale_x_discrete(labels = function(x) str_wrap(x, width = n_characters_str_wrap)) + 
     
     theme(axis.title = element_blank(),
           panel.background = element_blank(),
@@ -1630,6 +1693,11 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
           plot.caption = element_text(size = caption_size)
     )
   
+  
+  #Aslabel verwijderen als als dat is aangegeven.
+  if(!toon_aslabel){
+    plot <- plot +  theme(axis.text = element_blank()) 
+  }
   
   #toon y: laat Y as zien met rechte lijn + ticklabels
   if(toon_y){
@@ -1773,7 +1841,9 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
                                                         jaarvar = "AGOJB401",
                                                         niveaus = "regio",
                                                         tabel_en_grafiek = FALSE,
-                                                        toon_y = FALSE
+                                                        toon_y = FALSE,
+                                                        x_as_label_wrap = NULL,
+                                                        x_as_regels_toevoegen = 0
                                                         ){
   
   if(!labelled::is.labelled(data[[var_inhoud]])){
@@ -1883,6 +1953,23 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
   #temp dataframe & design verwijderen uit globalEnv.
   rm(data_jaar, design_jaar, envir = .GlobalEnv)
 
+  #voeg regeleinden toe als nodig:
+  #x_as_label_wrap bepaald wanneer labels te lang zijn om naast elkaar te passen
+  #x_as_regels_toeveogen bepaald of er regels toegevoegd moeten worden om plots die naast elkaar staan
+  #uit te lijnen
+  
+  #als er geen waarde voor X_as_label_wrap is opgegeven, default instellen
+  #obv flip
+  #bij normnale orientatie moet er snel geknipt worden (weinig horizontale ruimte)
+  #bij flip moet er minder snel geknipt worden (Weinig verticale ruimte)
+  if(is.null(x_as_label_wrap)){
+    x_as_label_wrap = ifelse(flip,50,10)
+  }
+
+  #regeleinden invoegen
+  df_plot$onderdeel <- maak_regeleinden(df_plot$onderdeel, x_as_label_wrap, x_as_regels_toevoegen)
+  
+  
   if(kleuren_per_crossing){
     
     namen = df_plot$onderdeel
@@ -1949,7 +2036,7 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
     plot <- plot + 
       scale_y_continuous(limits = c(0,100),
                          expand = expansion(mult = c(0, 0.05))) +
-      scale_x_discrete(labels = function(x) str_wrap(x,width = 50)) +
+    # scale_x_discrete(labels = function(x) str_wrap(x,width = 50)) +
       coord_flip() +
       theme(axis.title = element_blank(),
             axis.ticks.x = element_blank(),
@@ -1961,7 +2048,7 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
       theme(axis.line.x.bottom = (element_line(linewidth = 1))) +
       scale_y_continuous(limits = c(0,100),
                          expand = expansion(mult = c(0, 0))) +
-      scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
+    #  scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
       theme(
         strip.background = element_blank(),
         
