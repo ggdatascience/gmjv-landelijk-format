@@ -1,24 +1,11 @@
 #maak_rapport_gemeenten
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-
 library(dplyr)
 
-#bestandsnaam
-file_path = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
-regiocode = 23
-#lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
-monitor_df = haven::read_spss(file_path,user_na =T) %>%
-  labelled::user_na_to_na()
+#vector met numerieke waarden gemeentecodes in regio
+gemeentecodes_in_regio = c(2,3,4,5,6) #codes nepgemeenten voorbeeldrapportage
 
-gemeentecodes_in_regio = monitor_df$Gemeentecode[monitor_df$GGDregio == regiocode] %>% 
-  unique() %>% 
-  as.numeric() %>% 
-  sort()
-
-#print codes
-gemeentecodes_in_regio
-
-# HTML uitdraai -----------------------------------------------------------
+# HTML uitdraai per gemeente -----------------------------------------------------------
 for(gemeentecode in gemeentecodes_in_regio){
 
   quarto::quarto_render(
