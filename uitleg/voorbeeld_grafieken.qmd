@@ -3,7 +3,7 @@ params:
   gemeentecode: 2 
   regiocode: 23
   regionaam: 'GGD Limburg-Noord'
-  path_monitor_data: "../nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
+  path_nepdata: "../nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
   path_hulpfuncties: "../hulpfuncties.R"
   path_cbs_data: "../voorbeeld_JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx"
   default_nvar: 100
@@ -15,71 +15,68 @@ params:
 # Grafiekfuncties
 
 ```{r, echo=F, message=F, warning=F}
-
+#Libraries inladen
+# Het script maakt gebruik van een aantal packages
+# Deze moeten bij de eerste keer lokaal worden geinstalleerd
+# Hieronder worden de benodige packages geladen
 library(gt)
 library(dplyr)
 library(ggplot2)
 library(tidyr)
 library(haven)
-library(stringr) # Voor str_replace
+library(stringr) # Voor str_replace & str_wrap
 library(labelled) # Package om te werken met datalabels, o.a. voor to_character()
 library(survey) # Package om te werken met gewogen gemiddelds incl. betrouwbaarheidsintervallen
 library(glue) #om strings aangenaam aan elkaar te plakken
 library(plotly)
 library(forcats)
-library(openxlsx)#om cbs populatiebestand te kunnen lezen
-library(showtext)
-
+library(openxlsx) #om cbs populatiebestand te kunnen lezen
+library(showtext) #om andere lettertypen te kunnen gebruiken
+ 
 options(dplyr.summarise.inform = FALSE)
-
-#hulpfuncties laden.
 source(params$path_hulpfuncties)
 
-# Standaard minima voor groep & cel
-default_Nvar = 100 # Minimum aantal invullers per vraag.
-default_Ncel = 10 # Minimum aantal invullers oper antwoordoptie.
-
-# Standaard regio
-# Pas onderstaande naam en code aan naar de naam en code van je eigen regio.
+#SPSS data inlezen
+## OPTIE 1: Nepdata
 #Lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
-#monitor_df = haven::read_spss(file_path_regio, user_na =T) %>%
- # labelled::user_na_to_na()
-
-#1 landelijk bestand inlezen
-monitor_df = haven::read_spss(params$path_monitor_data,user_na =T) %>%
+monitor_df = haven::read_spss(params$path_nepdata, user_na =T) %>%
+  rename(Standaardisatiefactor_regio = Standaardisatiefactor,
+         Stratum_regio = Stratum) %>%
+  mutate(Standaardisatiefactor_gemeente = Standaardisatiefactor_regio,
+         Stratum_gemeente = Stratum_regio) %>%
   labelled::user_na_to_na()
 
-#TODO verwijderen bij echte data. tijdelijk varlabel voor jaarvariabele
-var_label(monitor_df$AGOJB401) <- "Jaar"
+# Label toevoegen aan ongelabelde jaarindicator
+#TODO verwijderen wanneer dit in syntaxen gedaan is
+val_label(monitor_df$AGOJB401, 2024) <- '2024'
+val_label(monitor_df$AGOJB401, 2022) <- '2022'
+
 
 #Maak survey designs
-# Regionaal 2022 en 2024
-#TODO bij echte data standaardisatiefactor en stratum aanpassen per niveau
-
-# Het landelijk en regionaal design hebben dezelfde weegfactoren. Daarom maken we een Een landelijk design obv landelijke dataset en een regionaal design obv een subset van het landelijk design.
+# Het landelijk en regionaal design hebben dezelfde weegfactoren. Daarom maken we een landelijk design obv landelijke dataset en een regionaal design obv een subset van het landelijk design.
 # Landelijk 2022 en 2024
 design_land <- survey_design_maken(
-                         strata = 'Stratum',
-                         gewichten = 'Standaardisatiefactor',
+                         strata = 'Stratum_regio', 
+                         gewichten = 'Standaardisatiefactor_regio',
                          data = monitor_df)
 
-
 #design regio is een subset van design land met ggdregio overgehouden.
-#subset data
+# Regionaal 2022 en 2024
 design_regio <- subset(design_land, GGDregio == params$regiocode)
 
 
 #Het gemeentelijk design heeft andere weegfactoren. De gehele dataset waar het gem. design over geld is de GGDregio. Daarom maken we eerst een regionaal design o.b.v. de hele ggdregio en subsetten we daarna het gemeentedesign.
 design_gem_regio <- survey_design_maken(
-                          strata = 'Stratum', #hier komen andere parameters
-                          gewichten = 'Standaardisatiefactor',  #hier ook
+                          strata = 'Stratum_gemeente', #hier komen andere parameters
+                          gewichten = 'Standaardisatiefactor_gemeente',  #hier ook
                           data = monitor_df %>% 
-                            filter(GGDregio == params$regiocode))
+                            filter(!is.na(Standaardisatiefactor_gemeente)) # alleen deelnemers met Standaardisatiefactor_gemeente
+                          )
 
+# Gemeentelijk 2022 en 2024
 design_gem <- subset(design_gem_regio, Gemeentecode == params$gemeentecode)
 
 rm(design_gem_regio) #temp regiodesign voor gemdesign verwijderen niet meer nodig
-
 
 #Er is niet goed aangegeven wat missing is in SPSS.
 #tijdelijke functie om 9 Onbekend te verwijderen & naar NA te zetten
@@ -90,12 +87,10 @@ for(var in names(monitor_df)){
 
 }
 
-
-#Lettertypen/Fonts ophalen met showtext
-#Dit is nodig voor ggplot. lettertypen voor html tekst kan in custom.css opgehaald & toegewezen worden.
+#Lettertypen/Fonts ophalen met showtext 
 font_add_google("Open Sans")
-showtext_auto() #showtext graphics device bij renderen ggplot; standaard werkt niet met andere fonts dan windows
-
+#showtext_auto om te zorgen dat juist graphicsdevice wordt gebruikt
+showtext_auto()
 
 ```
 
@@ -139,13 +134,23 @@ De functie **maak_staafdiagram_dubbele_uitsplitsing()** maakt een staafdiagram v
 
 -   **kleuren:** Een character vector met alternatieve kleuren voor de grafiek
 
--   **alt_text:** Een character met de 'alt-text' voor de grafiek. Als deze waarde leeg is, wordt er automatisch gegenereerde alt-text meegegeven die alle waarden in de grafiek bevat. Let op; De verteerbaarheid van automatisch gegenereerde tekst neemt af wanneer de grafieken erg complex zijn, of variabellabels erg lang zijn.
-
 -   **nvar:** Een numeric met het minimum aantal observaties per vraag. Als deze waarde leeg is, wordt de standaardwaarde voor nvar aangehouden.
 
 -   **ncel:** Een numeric met het minimum aantal observaties per antwoord. Als deze waarde leeg is, wordt de standaardwaarde voor ncel aangehouden.
 
+-   **alt_text:** Een character met de 'alt-text' voor de grafiek. Als deze waarde leeg is, wordt er automatisch gegenereerde alt-text meegegeven die alle waarden in de grafiek bevat. Let op; De verteerbaarheid van automatisch gegenereerde tekst neemt af wanneer de grafieken erg complex zijn, of variabellabels erg lang zijn.
+
+-   **caption:** Een character met een caption voor de grafiek. Wordt standaard linksonder de grafiek geplaatst.
+
 -   **niveaus:** Een character vector met de niveaus c("nl","regio","gemeente"). Standaard op GGD-regio "regio" ingesteld. Kan meerdere niveaus hebben voor niveauvergelijking. Dit kan alleen als var_crossing_kleur OF var_crossing_groep leeg is. De regio-vergelijking neemt de lege plek dan over.
+
+-   **tabel_en_grafiek:** TRUE of FALSE. Standaard FALSE. Als TRUE wordt er naast de grafiek ook code voor een tabel gegenereerd die d.m.v. een tabblad in te zien valt. LET OP: Hiervoor moeten codeblokken anders aangeroepen worden. Zie [Tabel en grafiek](text-en-layout.qmd#tabel-en-grafiek-layout-t.b.v-digitoegankelijkheid)
+
+-   **toon_y:** TRUE of FALSE. Standaard FALSE. Als TRUE wordt een Y-as met percentages getoond. 
+
+-   **x_as_label_wrap:** Numerieke waarde. Er worden automatisch regeleinden ingevoegd in langere labels. Deze waarde bepaald na hoeveel tekens er een regeleinde ingevoegd moet worden. Het eerstvolgende 'woord' verschijnt dan op de volgende regel.
+
+-   **x_as_regels_toevoegen:** Numerieke waarde. Standaard op nul. Kan gebruikt worden om de x-as van twee grafieken naast elkaar uit te lijnen. Zie [X-assen. uitlijnen](tekst-en-layout.qmd#x-assen-uitlijnen-bij-verschillende-lengte-labels)
 
 ### Standaard staafdiagram met dubbele uitsplitsing
 
@@ -223,14 +228,14 @@ Alternatief kan de functie gebruikt worden om meerdere indicatoren naast elkaar 
 -   **var_inhoud:** Een character met de naam van een dichotome variabele
 
 ### Optionele argumenten:
-
+Naast dezelfde optionele argumenten als in [**maak_staafdiagram_dubbele_uitsplitsing():**](#optionele-argumenten-1):
 -   **var_crossing:** Een character met de naam van één kruisvariabele
 -   **niveaus:** Een character vector met de niveaus c("nl","regio","gemeente"). Standaard op GGD-regio "regio" ingesteld. Kan meerdere niveaus hebben voor niveauvergelijking. Dit kan alleen als var_crossing leeg is.
 -   **var_inhoud_waarde:** Een numeric waar de numerieke waarde voor een antwoord ingevuld kan worden. Als deze waarde leeg is worden alle antwoorden getoond. Anders alleen het  antwoorden dat is. 
 Let op: als je een waarde invult die niet bestaat gebeurd er niks.
--   **flip:** TRUE of FALSE. Als TRUE wordt de grafiek horizontaal weergeven
+-   **flip:** TRUE of FALSE. Standaard FALSE. Als TRUE wordt de grafiek horizontaal weergeven
+-   **toon_aslabel:** TRUE of FALSE. Standaard TRUE. Als FALSE worden er geen aslabels op de x-as getoond.
 
-Naast dezelfde optionele argumenten als in [**maak_staafdiagram_dubbele_uitsplitsing():**](#optionele-argumenten-1):
 
 
 
@@ -421,9 +426,7 @@ plot
 
 -   **titel**: character variabele. Als argument leeg is wordt het variabellabel van var_inhoud gebruikt.
 
-```{r}
-
-#LET OP: ITT tot andere grafiekfuncties moet je géén get_alt_text() gebruiken in de chunk-options. Cirkeldiagrammen worden met plotly gemaakt en de alt-text wordt in door de functie maak_cirkeldiagram() al correct toegevoegd.
+```{r, fig.alt = ggplot2::get_alt_text(plot)}
 
 #Standaard cirkeldiagram staafdiagram
 plot = monitor_df %>% 
