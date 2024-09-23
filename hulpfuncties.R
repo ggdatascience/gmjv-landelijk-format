@@ -647,7 +647,6 @@ maak_panel_tabset <- function(grafiek, tabel){
   
 }
 
-
 #Functie om regeleinden te maken voor x-as labels
 #Aslabels moeten niet in elkaar overlopen. Hiervoor wordt de parameter X_as_label_wrap gebruikt om regeleinden in te voegen
 #str_wrap = voeg linebreak in bij eerstvolgende woordeind na x aantal characters.
@@ -662,20 +661,14 @@ maak_regeleinden <- function(label_vector, x_as_label_wrap, x_as_regels_toevoege
   #tel het aantal regels voor ieder aslabel; tel alle regeleinden + 1
   n_regels_label <- label_vector %>% str_count("\n") + 1
   
-  #voeg nu extra regeleinden toe aan alle aslabels (zou ook slechts aan het langste label toegevoegd kunnen worden, maar dit is simpeler).
-  #De waarde van x_as_regels_toevoegen moet opgeteld worden bij labels met de meeste regels
+  #welke index van de label_vector heeft de meeste regels? daar willen we eventueel regels aan toevoegen 
+  index_meeste_regels <- which(n_regels_label == max(n_regels_label)) 
+
+  #maak een character met het aantal gevraagde regeleinden uit x_as_regels_toevoegen
+  extra_regeleinden <- rep("\n",x_as_regels_toevoegen) %>% str_c(collapse = "")
   
-  #Maximale hoeveelheid regels = de grootste hoeveelheid regels die nu in labels bestaat + toegevoegde regels door x_als_regels_toevoegen 
-  max_regels <- max(n_regels_label) + x_as_regels_toevoegen
-  
-  #Aantal regels dat voor ieder label moet toegevoegd is het maximum - hoeveel regels er al zijn
-  n_regels_toevoegen <- max_regels - n_regels_label 
-  
-  #Vector maken met regeleinden die toegevoegd moeten worden
-  regeleinden <- lapply(n_regels_toevoegen, function(x){rep("\n",x) %>% str_c(collapse = "")}) %>% unlist()
-  
-  #Voeg regeleinden aan labels toe
-  label_vector <- label_vector %>% paste0(regeleinden)
+  #Voeg regeleinden toe aan het label met de meeste regels
+  label_vector[index_meeste_regels] <- paste0(label_vector[index_meeste_regels], extra_regeleinden)
   
   return(label_vector)
 }
