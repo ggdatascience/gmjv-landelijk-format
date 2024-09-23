@@ -35,7 +35,6 @@ library(showtext)
 #alle ggplot grafieken hebben overal dezelfde font-family. kunnen we nog aanpasen. 
 font_family = "Open Sans"
 
-
 #Titels
 titel_size <- 30
 
@@ -49,8 +48,14 @@ geom_text_percentage <- 10
 #Labels op de X-as (waar die relevant zijn)
 as_label_size <- 20
 
+#legend titles
+#algemeen:default
+legend_title_size_cirkel <- 20
+
 #legend keys
 legend_text_size <- 20
+legend_text_size_cirkel <- 15
+
 
 #caption
 caption_size <- 20
@@ -2122,8 +2127,9 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
                                         jaarvar = "AGOJB401",
                                         niveaus = "regio",
                                         tabel_en_grafiek = FALSE,
-                                        toon_y = FALSE
-                                        
+                                        toon_y = FALSE,
+                                        x_as_label_wrap = 20,
+                                        x_as_regels_toevoegen = 0
                                         ){
   
   #TODO
@@ -2214,6 +2220,10 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
   rm(design_temp, data_temp, envir = .GlobalEnv)
   
   
+  #regeleinden invoegen
+  df_plot[[var_inhoud]] <- maak_regeleinden(df_plot[[var_inhoud]],x_as_label_wrap, x_as_regels_toevoegen)
+  
+  
   #als meerde niveaus zijn var_crossing = niveau
   if(length(niveaus) > 1){
     
@@ -2265,9 +2275,7 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
       position = position_stack(vjust = 0.5),
       size = geom_text_percentage) + # Hier grootte van percentages aanpassen
     
-    scale_fill_manual(values= kleuren,
-                      labels = function(x) str_wrap(x, width = 20)
-                      ) +
+    scale_fill_manual(values= kleuren) +
     scale_x_continuous(
       limits = c(0,101),
       breaks = seq(0,101, by = 10),
@@ -2381,7 +2389,8 @@ maak_cirkeldiagram <- function(data, var_inhoud, titel = "", kleuren = params$de
                                niveaus = "regio", huidig_jaar = 2024, jaarvar = "AGOJB401",
                                caption = "",
                                desc = FALSE,
-                               tabel_en_grafiek = FALSE
+                               tabel_en_grafiek = FALSE,
+                               x_as_label_wrap = 50
                                ) {
 
   if(!labelled::is.labelled(data[[var_inhoud]])){
@@ -2438,7 +2447,7 @@ maak_cirkeldiagram <- function(data, var_inhoud, titel = "", kleuren = params$de
   
   #regeleinden IN val-labels toevoegen zodat ze niet te lang op 1 regel lopen ze
   df_plot <- df_plot %>% mutate(
-    !!sym(var_inhoud) := str_wrap(!!sym(var_inhoud),30) 
+    !!sym(var_inhoud) := str_wrap(!!sym(var_inhoud),x_as_label_wrap) 
   )
 
   
@@ -2467,8 +2476,7 @@ maak_cirkeldiagram <- function(data, var_inhoud, titel = "", kleuren = params$de
     mutate(!!sym(var_inhoud) := fct_reorder(!!sym(var_inhoud),
                                             as.numeric(waarde),
                                             .desc = desc))
-  
-  
+
   #kleuren labelen o.b.v. levels var_inhoud
   namen_kleuren <- levels(df_plot[[var_inhoud]])
   
@@ -2484,9 +2492,9 @@ maak_cirkeldiagram <- function(data, var_inhoud, titel = "", kleuren = params$de
     coord_polar(theta = "y") +
     ggtitle(str_wrap(titel, 50)) +
     scale_fill_manual(
-      str_wrap(var_label(data[[var_inhoud]]),30),
-      label = str_wrap(namen_kleuren,30),
-                      values = kleuren) +
+      str_wrap(var_label(data[[var_inhoud]]),50), #var_label is naam legend
+      label = str_wrap(namen_kleuren,x_as_label_wrap), #legend key labels; val_labels
+                      values = kleuren) + 
     theme_void() +
     theme(
       #Grootte tekst (behalve annotatie boven balken):
@@ -2494,7 +2502,8 @@ maak_cirkeldiagram <- function(data, var_inhoud, titel = "", kleuren = params$de
       plot.title = element_text(hjust = .5, size = titel_size),
       #We willen geen axis tekst bij een cirkeldiagram
       #axis.text = element_text(size = as_label_size),
-      legend.text = element_text(size = legend_text_size),
+      legend.text = element_text(size = legend_text_size_cirkel),
+      legend.title = element_text(size = legend_title_size_cirkel),
       plot.caption = element_text(size = caption_size)
       )
 
