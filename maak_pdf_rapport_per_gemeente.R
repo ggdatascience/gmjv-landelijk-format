@@ -2,19 +2,9 @@
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 library(dplyr)
 
-# Hier bestandsnaam invullen ----------------------------------------------
-file_path = "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
-regiocode = 23
-#SPSS data inlezen
-#lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
-monitor_df = haven::read_spss(file_path,user_na =T) %>%
-  labelled::user_na_to_na()
-
-gemeentecodes_in_regio = monitor_df$Gemeentecode[monitor_df$GGDregio == regiocode] %>% 
-  unique() %>% 
-  as.numeric() %>% 
-  sort()
-
+#vector met numerieke waarden gemeentecodes in regio
+gemeentecodes_in_regio = c(2,3,4,5,6) #codes nepgemeenten voorbeeldrapportage
+  
 # PDF uitdraai ------------------------------------------------------------
 
 for(gemeentecode in gemeentecodes_in_regio){
