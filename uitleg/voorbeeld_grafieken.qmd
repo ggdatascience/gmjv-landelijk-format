@@ -144,9 +144,13 @@ De functie **maak_staafdiagram_dubbele_uitsplitsing()** maakt een staafdiagram v
 
 -   **niveaus:** Een character vector met de niveaus c("nl","regio","gemeente"). Standaard op GGD-regio "regio" ingesteld. Kan meerdere niveaus hebben voor niveauvergelijking. Dit kan alleen als var_crossing_kleur OF var_crossing_groep leeg is. De regio-vergelijking neemt de lege plek dan over.
 
--   **tabel_en_grafiek:** TRUE of FALSE. Als TRUE wordt er naast de grafiek ook code voor een tabel gegenereerd die d.m.v. een tabblad in te zien valt. LET OP: Hiervoor moeten codeblokken anders aangeroepen worden. Zie [Tabel en grafiek](text-en-layout.qmd#tabel-en-grafiek)
+-   **tabel_en_grafiek:** TRUE of FALSE. Standaard FALSE. Als TRUE wordt er naast de grafiek ook code voor een tabel gegenereerd die d.m.v. een tabblad in te zien valt. LET OP: Hiervoor moeten codeblokken anders aangeroepen worden. Zie [Tabel en grafiek](text-en-layout.qmd#tabel-en-grafiek-layout-t.b.v-digitoegankelijkheid)
 
+-   **toon_y:** TRUE of FALSE. Standaard FALSE. Als TRUE wordt een Y-as met percentages getoond. 
 
+-   **x_as_label_wrap:** Numerieke waarde. Er worden automatisch regeleinden ingevoegd in langere labels. Deze waarde bepaald na hoeveel tekens er een regeleinde ingevoegd moet worden. Het eerstvolgende 'woord' verschijnt dan op de volgende regel.
+
+-   **x_as_regels_toevoegen:** Numerieke waarde. Standaard op nul. Kan gebruikt worden om de x-as van twee grafieken naast elkaar uit te lijnen. Zie [X-assen. uitlijnen](tekst-en-layout.qmd#x-assen-uitlijnen-bij-verschillende-lengte-labels)
 
 ### Standaard staafdiagram met dubbele uitsplitsing
 
@@ -224,14 +228,14 @@ Alternatief kan de functie gebruikt worden om meerdere indicatoren naast elkaar 
 -   **var_inhoud:** Een character met de naam van een dichotome variabele
 
 ### Optionele argumenten:
-
+Naast dezelfde optionele argumenten als in [**maak_staafdiagram_dubbele_uitsplitsing():**](#optionele-argumenten-1):
 -   **var_crossing:** Een character met de naam van één kruisvariabele
 -   **niveaus:** Een character vector met de niveaus c("nl","regio","gemeente"). Standaard op GGD-regio "regio" ingesteld. Kan meerdere niveaus hebben voor niveauvergelijking. Dit kan alleen als var_crossing leeg is.
 -   **var_inhoud_waarde:** Een numeric waar de numerieke waarde voor een antwoord ingevuld kan worden. Als deze waarde leeg is worden alle antwoorden getoond. Anders alleen het  antwoorden dat is. 
 Let op: als je een waarde invult die niet bestaat gebeurd er niks.
--   **flip:** TRUE of FALSE. Als TRUE wordt de grafiek horizontaal weergeven
+-   **flip:** TRUE of FALSE. Standaard FALSE. Als TRUE wordt de grafiek horizontaal weergeven
+-   **toon_aslabel:** TRUE of FALSE. Standaard TRUE. Als FALSE worden er geen aslabels op de x-as getoond.
 
-Naast dezelfde optionele argumenten als in [**maak_staafdiagram_dubbele_uitsplitsing():**](#optionele-argumenten-1):
 
 
 

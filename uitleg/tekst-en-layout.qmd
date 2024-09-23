@@ -207,7 +207,7 @@ Dit is tekst in de rechterkolom
 
 ### X-assen uitlijnen bij verschillende lengte labels
 
-Als je twee grafieken naast elkaar plaatst kan het zijn dat de x-assen niet op dezelfde staan. Dit heeft dan te maken met het aantal regels dat verschillende aslabels innemen. De x-as wordt omhoog geduwd door de aslabels. Als je de x-assen in dit geval gelijk wilt trekken kan dat met het argument **x_as_regels_toevoegen**.
+Als je twee grafieken naast elkaar plaatst kan het zijn dat de x-assen niet op dezelfde hoogte staan. Dit heeft dan te maken met het aantal regels dat verschillende aslabels innemen. De x-as wordt omhoog geduwd door de aslabels. Als je de x-assen in dit geval gelijk wilt trekken kan dat met het argument **x_as_regels_toevoegen**.
 
 ::: {layout="[50,50]"}
 
@@ -277,6 +277,46 @@ plot
 :::
 
 :::
+
+## Tussenlijn
+In de standaard rapportage worden horizontale lijnen gebruikt om tussen verschillende secties. Dit kan je zelf op de volgende manier doen:
+
+> \:\:\: tussenlijn
+> 
+> \:\:\: 
+
+::: tussenlijn
+:::
+
+Door deze syntax te gebruiken maak je een 'div' met de class 'tussenlijn'. De definitie van tussenlijn wordt gegeven in het css-bestand custom.css. Hier kan je dus ook de eigenschappen van de lijn veranderen, zoals kleur of dikte.
+
+```{css}
+/*Lijntje dat tussen tekstblokken geplaatst kan worden*/
+.tussenlijn {
+  border-bottom: 1px solid #86B443;
+}
+
+```
+
+## Achtergrondkleur
+In de standaard rapportage worden tekstvakken soms voorzien van een achtergrondkleur. Dit kan je zelf op de volgende manier doen:
+
+> \:\:\: achtergrondkleur
+> Hier tekst
+> \:\:\: 
+
+::: achtergrondkleur
+De css voor de 'achtergrondkleur' kan je in custom.css vinden. Hier kan je dus ook de eigenschappen van de class veranderen.
+```{css}
+/* achtergrond-kleur*/
+.achtergrondkleur {
+  background-color: #F7F7DB;
+  color: #012C17;
+  padding: 20px;
+}
+```
+:::
+
 
 
 ## Tabel en Grafiek layout t.b.v digitoegankelijkheid
