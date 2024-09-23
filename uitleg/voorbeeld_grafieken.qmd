@@ -134,13 +134,19 @@ De functie **maak_staafdiagram_dubbele_uitsplitsing()** maakt een staafdiagram v
 
 -   **kleuren:** Een character vector met alternatieve kleuren voor de grafiek
 
--   **alt_text:** Een character met de 'alt-text' voor de grafiek. Als deze waarde leeg is, wordt er automatisch gegenereerde alt-text meegegeven die alle waarden in de grafiek bevat. Let op; De verteerbaarheid van automatisch gegenereerde tekst neemt af wanneer de grafieken erg complex zijn, of variabellabels erg lang zijn.
-
 -   **nvar:** Een numeric met het minimum aantal observaties per vraag. Als deze waarde leeg is, wordt de standaardwaarde voor nvar aangehouden.
 
 -   **ncel:** Een numeric met het minimum aantal observaties per antwoord. Als deze waarde leeg is, wordt de standaardwaarde voor ncel aangehouden.
 
+-   **alt_text:** Een character met de 'alt-text' voor de grafiek. Als deze waarde leeg is, wordt er automatisch gegenereerde alt-text meegegeven die alle waarden in de grafiek bevat. Let op; De verteerbaarheid van automatisch gegenereerde tekst neemt af wanneer de grafieken erg complex zijn, of variabellabels erg lang zijn.
+
+-   **caption:** Een character met een caption voor de grafiek. Wordt standaard linksonder de grafiek geplaatst.
+
 -   **niveaus:** Een character vector met de niveaus c("nl","regio","gemeente"). Standaard op GGD-regio "regio" ingesteld. Kan meerdere niveaus hebben voor niveauvergelijking. Dit kan alleen als var_crossing_kleur OF var_crossing_groep leeg is. De regio-vergelijking neemt de lege plek dan over.
+
+-   **tabel_en_grafiek:** TRUE of FALSE. Als TRUE wordt er naast de grafiek ook code voor een tabel gegenereerd die d.m.v. een tabblad in te zien valt. LET OP: Hiervoor moeten codeblokken anders aangeroepen worden. Zie [Tabel en grafiek](text-en-layout.qmd#tabel-en-grafiek)
+
+
 
 ### Standaard staafdiagram met dubbele uitsplitsing
 
@@ -421,8 +427,7 @@ plot
 #Standaard cirkeldiagram staafdiagram
 plot = monitor_df %>% 
   maak_cirkeldiagram(
-    var_inhoud = "LVVTA404",
-    x_as_label_wrap = 300
+    var_inhoud = "LVVTA404"
   )
 
 plot
