@@ -79,7 +79,7 @@ monitor_df = haven::read_spss(params$path_nepdata, user_na =T) %>%
 # if (sum(df_regio$Standaardisatiefactor_regio != 0, na.rm = T) != nrow(df %>% filter(GGDregio == params$regiocode))) {
 #   print("Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data.")
 # }
-# 
+
 # # Filter regio uit landelijk databestand
 # df <- df %>%
 #   filter(GGDregio != params$regiocode)
