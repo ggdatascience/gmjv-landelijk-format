@@ -102,24 +102,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
-
-<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
-
-<script src="site_libs/plotly-binding-4.10.2/plotly.js"></script>
-
-<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
-
-<script src="site_libs/jquery-3.5.1/jquery.min.js"></script>
-
-<link href="site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet">
-
-<script src="site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
-
-<link href="site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
-
-<script src="site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
-
 
 
 </head>
@@ -361,8 +343,7 @@ Caution
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_crossing_groep =</span> <span class="st">"AGGSA402"</span>,</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_crossing_kleur =</span> <span class="st">"AGLFA401"</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -671,7 +652,7 @@ Tip
 <h3 data-number="6.6.4" class="anchored" data-anchor-id="aangepast-gestapeld-staafdiagram"><span class="header-section-number">6.6.4</span> Aangepast gestapeld staafdiagram</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Standaard gestapeld staafdiagram</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">=</span> monitor_df <span class="sc">%&gt;%</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">=</span> monitor_df <span class="sc">%&gt;%</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">maak_staafdiagram_gestapeld</span>(</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_inhoud =</span> <span class="st">"LVVTA404"</span>,</span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_crossing =</span> <span class="st">"AGGSA402"</span></span>
@@ -713,8 +694,11 @@ Tip
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="plotly html-widget html-fill-item" id="htmlwidget-bbe39912073cd60afc7f" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-bbe39912073cd60afc7f">{"x":{"visdat":{"47246064178d":["function () ","plotlyVisDat"]},"cur_data":"47246064178d","attrs":{"47246064178d":{"labels":{},"textinfo":"percent","values":{},"hoverinfo":"text","text":"","marker":{"colors":["#012C17","#76B82A","#007E48"],"line":{"color":"#FFFFFF","width":1}},"insidetextfont":{"color":"#FFFFFF","size":15},"outsidetextfont":{"color":"#000000","size":15},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"pie"}},"layout":{"margin":{"b":40,"l":60,"t":100,"r":10},"title":{"text":"Vertrouwen in zijn/haar eigen toekomst in 3<br />categorieën","font":{"size":15}},"legend":{"orientation":"h","x":0.5,"y":-0.20000000000000001,"xanchor":"center","yanchor":"top","font":{"size":12}},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false,"staticPlot":true},"data":[{"labels":["Weinig tot geen vertrouwen<br />in zijn/haar eigen toekomst<br />(cijfer 5 of lager)","Matig tot redelijk vertrouwen<br />in zijn/haar eigen toekomst<br />(cijfer 6 of 7)","(Heel) veel vertrouwen in<br />zijn/haar eigen toekomst<br />(cijfer 8 of hoger)"],"textinfo":"percent","values":[16,40,44],"hoverinfo":["text","text","text"],"text":["","",""],"marker":{"color":"rgba(31,119,180,1)","colors":["#012C17","#76B82A","#007E48"],"line":{"color":"#FFFFFF","width":1}},"insidetextfont":{"color":"#FFFFFF","size":15},"outsidetextfont":{"color":"#000000","size":15},"type":"pie","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":{"render":[{"code":"function(el, x) {\n  el.setAttribute('alt', 'Cirkeldiagram voor de indicator 'Vertrouwen in zijn/haar eigen toekomst in 3 categorieën' bij jongvolwassenen: Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 16%, Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 40%, (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 44%');\n}","data":null}]}}</script>
+<div>
+<figure class="figure">
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>

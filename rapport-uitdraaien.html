@@ -211,7 +211,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#data-klaarzetten-en-samenvoegen" id="toc-data-klaarzetten-en-samenvoegen" class="nav-link active" data-scroll-target="#data-klaarzetten-en-samenvoegen"><span class="header-section-number">3.1</span> Data klaarzetten en samenvoegen</a></li>
-  <li><a href="#configuratie-in-frontmatter" id="toc-configuratie-in-frontmatter" class="nav-link" data-scroll-target="#configuratie-in-frontmatter"><span class="header-section-number">3.2</span> Configuratie in frontmatter</a></li>
+  <li><a href="#configuratie-in-frontmatter" id="toc-configuratie-in-frontmatter" class="nav-link" data-scroll-target="#configuratie-in-frontmatter"><span class="header-section-number">3.2</span> Configuratie in frontmatter</a>
+  <ul class="collapse">
+  <li><a href="#parameters-onder-params" id="toc-parameters-onder-params" class="nav-link" data-scroll-target="#parameters-onder-params"><span class="header-section-number">3.2.1</span> Parameters onder ‘Params’</a></li>
+  <li><a href="#overige-frontmatter-instellingen" id="toc-overige-frontmatter-instellingen" class="nav-link" data-scroll-target="#overige-frontmatter-instellingen"><span class="header-section-number">3.2.2</span> Overige frontmatter instellingen</a></li>
+  </ul></li>
   <li><a href="#rapporten-per-gemeente-uitdraaien" id="toc-rapporten-per-gemeente-uitdraaien" class="nav-link" data-scroll-target="#rapporten-per-gemeente-uitdraaien"><span class="header-section-number">3.3</span> Rapporten per gemeente uitdraaien</a></li>
   <li><a href="#pdf-uitdraai-en-printbaarheid" id="toc-pdf-uitdraai-en-printbaarheid" class="nav-link" data-scroll-target="#pdf-uitdraai-en-printbaarheid"><span class="header-section-number">3.4</span> PDF uitdraai en Printbaarheid</a>
   <ul class="collapse">
@@ -302,7 +306,9 @@ Data 2024 nog niet binnen of verwerkt
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">default_kleuren_responstabel</span><span class="kw">:</span><span class="at"> !expr c("header" = "</span><span class="co">#012C17", "kleur_1" = "#007E48", "kleur_2" = "#76B82A","kleur_tekst" = "#FFFFFF")</span></span>
 <span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="fu">format-links</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
 <span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>De meeste instellingen kan je laten staan. Het volgende moet aangepast of gecontroleerd worden:</p>
+<p>De meeste instellingen kan je laten staan. Het volgende moet aangepast of gecontroleerd worden.:</p>
+<section id="parameters-onder-params" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="parameters-onder-params"><span class="header-section-number">3.2.1</span> Parameters onder ‘Params’</h3>
 <ul>
 <li><strong>gemeentecode:</strong> Voer hier een gemeentecode in die bestaat in je data. Dit is als het ware je voorbeeldgemeente. Als je het rapport uitdraait via de “Render” knop zal een rapport voor die gemeente gemaakt worden.</li>
 <li><strong>regiocode:</strong> voer hier de CBS code van je GGD-regio in.</li>
@@ -313,6 +319,29 @@ Data 2024 nog niet binnen of verwerkt
 <li><strong>default_kleuren_grafiek:</strong> Voer hier een vector in met de standaard kleurcodes voor grafieken.</li>
 <li><strong>default_kleuren_responstabel:</strong> Voer hier een named vector in met 4 kleurcodes als standaard voor responstabellen. Zie het voorbeeld voor de namen.</li>
 </ul>
+</section>
+<section id="overige-frontmatter-instellingen" class="level3" data-number="3.2.2">
+<h3 data-number="3.2.2" class="anchored" data-anchor-id="overige-frontmatter-instellingen"><span class="header-section-number">3.2.2</span> Overige frontmatter instellingen</h3>
+<ul>
+<li><strong>warning:</strong> Deze parameter staat in het voorbeeldrapport op false. Als de parameter op true staat worden mogelijke problemen / ‘warnings’ getoond in het rapport. Dit is meestal niet wenselijk voor het eindproduct, maar nuttig tijdens ontwikkeling.</li>
+</ul>
+<div class="callout callout-style-default callout-warning callout-titled" title="Let op">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Let op
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Wees je ervan bewust dat eventuele problemen met het verwerken van de data NIET getoond worden als warning op false staat. Zorg ervoor dat deze parameter bij het ontwikkelen van het rapport op ‘true’ staat, zodat je op de hoogte bent van de warnings.</p>
+</div>
+</div>
+<ul>
+<li><strong>echo:</strong> Standaard op false. Als deze parameter op true staat worden codeblokjes in het rapport getoond.</li>
+</ul>
+</section>
 </section>
 <section id="rapporten-per-gemeente-uitdraaien" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="rapporten-per-gemeente-uitdraaien"><span class="header-section-number">3.3</span> Rapporten per gemeente uitdraaien</h2>
@@ -350,7 +379,7 @@ Warning
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled" title="Aangepaste eigenschappen Header 1">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -359,7 +388,7 @@ Aangepaste eigenschappen Header 1
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Headers van niveau 1 krijgen voor de GMJV rapportage standaard een gekleurde achtergrond en beginnen (bij conversie naar pdf) altijd op een nieuwe pagina.</p>
 <p>Dit zijn aangepaste eigenschappen die worden bepaald in het CSS-bestand “custom.css”. Je kan deze eigenschappen in dat bestand uitzetten of wijzigen. Zie ook het hoofdstuk <a href="css.qmd">CSS</a></p>
