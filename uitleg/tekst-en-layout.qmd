@@ -26,6 +26,45 @@ Linksboven in een quarto document kan je kiezen tussen twee manieren van bewerke
 
     -   [Lees hier meer over Markdown Basics](https://quarto.org/docs/authoring/markdown-basics.html)
 
+## Stijlelementen in tekst
+
+In de tekst kunnen verschillende stijlelementen toegevoegd worden, zoals een tussenlijn, een blok met gele achtergrondkleur en een extra witregel. 
+
+### Witregel toevoegen
+
+Een witregel kan toegevoegd worden door \<br>\ in de tekst toe te voegen. 
+
+### Tussenlijn
+
+De opmaak van de tussenlijn wordt bepaald in het custom.css bestand. Daar staat de div .tussenlijn die aangeeft hoe deze lijn eruit ziet. De tussenlijn ziet er standaard zo uit:
+
+::: tussenlijn
+:::
+
+Een tussenlijn kan toegevoegd worden door het volgende toe te voegen:
+
+> \:\:\: tussenlijn
+>
+> \:\:\:
+
+### Blok met gele achtergrond
+
+Ook de opmaak van dit blok wordt bepaald in het custom.css bestand. Daar staat de div .achtergrondkleur die aangeeft hoe deze lijn eruit ziet. Het blok ziet er standaard zo uit:
+
+::: achtergrondkleur
+Hier tekst die in het blok komt.
+:::
+
+Het blok kan zo toegevoegd worden:
+
+> \:\:\: achtergrondkleur
+>
+> Hier tekst die in het blok komt.
+>
+> \:\:\:
+
+
+
 ## R code in code-blokken
 
 Om te zorgen dat tabellen en grafieken met een dynamische inhoud in de rapportage geplaatst kunnen worden maken we gebruik van code-blokken met R code. Een code-blok kan je tijdens het bewerken van je rapport draaien door rechtsbovenin het code-blok op de groene pijl te klikken. De uitvoer van de code zal dan onder het blok verschijnen.
@@ -109,3 +148,4 @@ Dit is tekst in de rechterkolom
 -   Tussen het buitenste setje ':::' worden setjes geplaatst voor de alle kolommen.
     -   Achter de eerste ':::' van de kolom komt het woordt 'column' te staan
     -   Tussen de eerte en laatste ':::' van de kolom kan je ieder soort inhoud plaatsen. Een afbeelding, tekst of een code-blok waar een grafiek uitkomt.
+
