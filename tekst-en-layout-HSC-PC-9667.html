@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882"><head>
 
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.4.555">
@@ -104,6 +104,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
+
+<!--[if gte mso 9]><xml>
+<mso:CustomDocumentProperties>
+<mso:_dlc_DocId msdt:dt="string">HVBDOC-2105918694-140765</mso:_dlc_DocId>
+<mso:_dlc_DocIdItemGuid msdt:dt="string">9676f8c9-6141-49f0-b4be-4361a3c0d321</mso:_dlc_DocIdItemGuid>
+<mso:_dlc_DocIdUrl msdt:dt="string">https://hetservicecentrum.sharepoint.com/sites/hvbtonderzoek/_layouts/15/DocIdRedir.aspx?ID=HVBDOC-2105918694-140765, HVBDOC-2105918694-140765</mso:_dlc_DocIdUrl>
+</mso:CustomDocumentProperties>
+</xml><![endif]-->
 </head>
 
 <body class="nav-sidebar floating">
@@ -200,12 +208,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">handige-bronnen.html</span></span></a>
   </div>
 </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./css.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Aangepaste CSS</span></span></a>
-  </div>
-</li>
     </ul>
     </div>
 </nav>
@@ -227,7 +229,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#x-assen-uitlijnen-bij-verschillende-lengte-labels" id="toc-x-assen-uitlijnen-bij-verschillende-lengte-labels" class="nav-link" data-scroll-target="#x-assen-uitlijnen-bij-verschillende-lengte-labels"><span class="header-section-number">4.4.4</span> X-assen uitlijnen bij verschillende lengte labels</a></li>
   </ul></li>
   <li><a href="#tussenlijn" id="toc-tussenlijn" class="nav-link" data-scroll-target="#tussenlijn"><span class="header-section-number">4.5</span> Tussenlijn</a></li>
-  <li><a href="#achtergrondkleur" id="toc-achtergrondkleur" class="nav-link" data-scroll-target="#achtergrondkleur"><span class="header-section-number">4.6</span> Achtergrondkleur</a></li>
+  <li><a href="#plaatjes-in-headers-invoegen" id="toc-plaatjes-in-headers-invoegen" class="nav-link" data-scroll-target="#plaatjes-in-headers-invoegen"><span class="header-section-number">4.6</span> Plaatjes in Headers invoegen</a></li>
   <li><a href="#tabel-en-grafiek-layout-t.b.v-digitoegankelijkheid" id="toc-tabel-en-grafiek-layout-t.b.v-digitoegankelijkheid" class="nav-link" data-scroll-target="#tabel-en-grafiek-layout-t.b.v-digitoegankelijkheid"><span class="header-section-number">4.7</span> Tabel en Grafiek layout t.b.v digitoegankelijkheid</a></li>
   </ul>
 </nav>
@@ -377,7 +379,7 @@ Warning
 </section>
 <section id="x-assen-uitlijnen-bij-verschillende-lengte-labels" class="level3" data-number="4.4.4">
 <h3 data-number="4.4.4" class="anchored" data-anchor-id="x-assen-uitlijnen-bij-verschillende-lengte-labels"><span class="header-section-number">4.4.4</span> X-assen uitlijnen bij verschillende lengte labels</h3>
-<p>Als je twee grafieken naast elkaar plaatst kan het zijn dat de x-assen niet op dezelfde hoogte staan. Dit heeft dan te maken met het aantal regels dat verschillende aslabels innemen. De x-as wordt omhoog geduwd door de aslabels. Als je de x-assen in dit geval gelijk wilt trekken kan dat met het argument <strong>x_as_regels_toevoegen</strong>.</p>
+<p>Als je twee grafieken naast elkaar plaatst kan het zijn dat de x-assen niet op dezelfde staan. Dit heeft dan te maken met het aantal regels dat verschillende aslabels innemen. De x-as wordt omhoog geduwd door de aslabels. Als je de x-assen in dit geval gelijk wilt trekken kan dat met het argument <strong>x_as_regels_toevoegen</strong>.</p>
 <div>
 
 </div>
@@ -443,52 +445,19 @@ Warning
 <h2 data-number="4.5" class="anchored" data-anchor-id="tussenlijn"><span class="header-section-number">4.5</span> Tussenlijn</h2>
 <p>In de standaard rapportage worden horizontale lijnen gebruikt om tussen verschillende secties. Dit kan je zelf op de volgende manier doen:</p>
 <blockquote class="blockquote">
-<p>::: tussenlijn</p>
-<p>:::</p>
-</blockquote>
 <div class="tussenlijn">
 
 </div>
-<p>Door deze syntax te gebruiken maak je een ‘div’ met de class ‘tussenlijn’. De definitie van tussenlijn wordt gegeven in het css-bestand custom.css. Hier kan je dus ook de eigenschappen van de lijn veranderen, zoals kleur of dikte.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode css code-with-copy"><code class="sourceCode css"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">/*Lijntje dat tussen tekstblokken geplaatst kan worden*/</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">.tussenlijn</span> {</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">border-bottom</span><span class="ch">:</span> <span class="dv">1</span><span class="dt">px</span> <span class="dv">solid</span> <span class="cn">#86B443</span><span class="op">;</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<style type="text/css">
-/*Lijntje dat tussen tekstblokken geplaatst kan worden*/
-.tussenlijn {
-  border-bottom: 1px solid #86B443;
-}
-
-</style>
-</div>
-</section>
-<section id="achtergrondkleur" class="level2" data-number="4.6">
-<h2 data-number="4.6" class="anchored" data-anchor-id="achtergrondkleur"><span class="header-section-number">4.6</span> Achtergrondkleur</h2>
-<p>In de standaard rapportage worden tekstvakken soms voorzien van een achtergrondkleur. Dit kan je zelf op de volgende manier doen:</p>
-<blockquote class="blockquote">
-<p>::: achtergrondkleur Hier tekst :::</p>
 </blockquote>
-<div class="achtergrondkleur">
-<p>De css voor de ‘achtergrondkleur’ kan je in custom.css vinden. Hier kan je dus ook de eigenschappen van de class veranderen.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode css code-with-copy"><code class="sourceCode css"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* achtergrond-kleur*/</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">.achtergrondkleur</span> {</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">background-color</span><span class="ch">:</span> <span class="cn">#F7F7DB</span><span class="op">;</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">color</span><span class="ch">:</span> <span class="cn">#012C17</span><span class="op">;</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">padding</span><span class="ch">:</span> <span class="dv">20</span><span class="dt">px</span><span class="op">;</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<style type="text/css">
-/* achtergrond-kleur*/
-.achtergrondkleur {
-  background-color: #F7F7DB;
-  color: #012C17;
-  padding: 20px;
-}
-</style>
+<p>Dit is boven de lijn</p>
+<div class="tussenlijn">
+
 </div>
-</div>
+<p>En dit daaronder</p>
+</section>
+<section id="plaatjes-in-headers-invoegen" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="plaatjes-in-headers-invoegen"><span class="header-section-number">4.6</span> Plaatjes in Headers invoegen</h2>
+<p>In de standaard rapportage zijn er headers waar</p>
 </section>
 <section id="tabel-en-grafiek-layout-t.b.v-digitoegankelijkheid" class="level2" data-number="4.7">
 <h2 data-number="4.7" class="anchored" data-anchor-id="tabel-en-grafiek-layout-t.b.v-digitoegankelijkheid"><span class="header-section-number">4.7</span> Tabel en Grafiek layout t.b.v digitoegankelijkheid</h2>
@@ -499,39 +468,39 @@ Warning
 <li>gebruik results = ‘asis’</li>
 <li>geen ‘plot = monitor_df’ maar direct aanroepen (resulteert anders in ongewenste ‘NULL’ onder plot).</li>
 </ul>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#|echo: fenced</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>monitor_df <span class="sc">%&gt;%</span> </span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">maak_staafdiagram_dubbele_uitsplitsing</span>(</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_inhoud =</span> <span class="st">"LVEES404"</span>,</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_crossing_groep =</span> <span class="st">"AGGSA402"</span>,</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_crossing_kleur =</span> <span class="st">"AGLFA401"</span>,</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">tabel_en_grafiek =</span> <span class="cn">TRUE</span> <span class="co">#tabel_en grafiek staat aan</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#|echo: fenced</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>monitor_df <span class="sc">%&gt;%</span> </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">maak_staafdiagram_dubbele_uitsplitsing</span>(</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_inhoud =</span> <span class="st">"LVEES404"</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_crossing_groep =</span> <span class="st">"AGGSA402"</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_crossing_kleur =</span> <span class="st">"AGLFA401"</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">tabel_en_grafiek =</span> <span class="cn">TRUE</span> <span class="co">#tabel_en grafiek staat aan</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Grafiek</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Tabel</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<p><img src="tekst-en-layout_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+<p><img src="tekst-en-layout_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<div id="phbctzrovt" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#phbctzrovt table {
+<div id="grzlpagvqb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#grzlpagvqb table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#phbctzrovt thead, #phbctzrovt tbody, #phbctzrovt tfoot, #phbctzrovt tr, #phbctzrovt td, #phbctzrovt th {
+#grzlpagvqb thead, #grzlpagvqb tbody, #grzlpagvqb tfoot, #grzlpagvqb tr, #grzlpagvqb td, #grzlpagvqb th {
   border-style: none;
 }
 
-#phbctzrovt p {
+#grzlpagvqb p {
   margin: 0;
   padding: 0;
 }
 
-#phbctzrovt .gt_table {
+#grzlpagvqb .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -557,12 +526,12 @@ Warning
   border-left-color: #D3D3D3;
 }
 
-#phbctzrovt .gt_caption {
+#grzlpagvqb .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#phbctzrovt .gt_title {
+#grzlpagvqb .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -574,7 +543,7 @@ Warning
   border-bottom-width: 0;
 }
 
-#phbctzrovt .gt_subtitle {
+#grzlpagvqb .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -586,7 +555,7 @@ Warning
   border-top-width: 0;
 }
 
-#phbctzrovt .gt_heading {
+#grzlpagvqb .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -598,13 +567,13 @@ Warning
   border-right-color: #D3D3D3;
 }
 
-#phbctzrovt .gt_bottom_border {
+#grzlpagvqb .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#phbctzrovt .gt_col_headings {
+#grzlpagvqb .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -619,7 +588,7 @@ Warning
   border-right-color: #D3D3D3;
 }
 
-#phbctzrovt .gt_col_heading {
+#grzlpagvqb .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -639,7 +608,7 @@ Warning
   overflow-x: hidden;
 }
 
-#phbctzrovt .gt_column_spanner_outer {
+#grzlpagvqb .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -651,15 +620,15 @@ Warning
   padding-right: 4px;
 }
 
-#phbctzrovt .gt_column_spanner_outer:first-child {
+#grzlpagvqb .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#phbctzrovt .gt_column_spanner_outer:last-child {
+#grzlpagvqb .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#phbctzrovt .gt_column_spanner {
+#grzlpagvqb .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -671,11 +640,11 @@ Warning
   width: 100%;
 }
 
-#phbctzrovt .gt_spanner_row {
+#grzlpagvqb .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#phbctzrovt .gt_group_heading {
+#grzlpagvqb .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -701,7 +670,7 @@ Warning
   text-align: left;
 }
 
-#phbctzrovt .gt_empty_group_heading {
+#grzlpagvqb .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -716,15 +685,15 @@ Warning
   vertical-align: middle;
 }
 
-#phbctzrovt .gt_from_md > :first-child {
+#grzlpagvqb .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#phbctzrovt .gt_from_md > :last-child {
+#grzlpagvqb .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#phbctzrovt .gt_row {
+#grzlpagvqb .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -743,7 +712,7 @@ Warning
   overflow-x: hidden;
 }
 
-#phbctzrovt .gt_stub {
+#grzlpagvqb .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -756,7 +725,7 @@ Warning
   padding-right: 5px;
 }
 
-#phbctzrovt .gt_stub_row_group {
+#grzlpagvqb .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -770,15 +739,15 @@ Warning
   vertical-align: top;
 }
 
-#phbctzrovt .gt_row_group_first td {
+#grzlpagvqb .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#phbctzrovt .gt_row_group_first th {
+#grzlpagvqb .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#phbctzrovt .gt_summary_row {
+#grzlpagvqb .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -788,16 +757,16 @@ Warning
   padding-right: 5px;
 }
 
-#phbctzrovt .gt_first_summary_row {
+#grzlpagvqb .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#phbctzrovt .gt_first_summary_row.thick {
+#grzlpagvqb .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#phbctzrovt .gt_last_summary_row {
+#grzlpagvqb .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -807,7 +776,7 @@ Warning
   border-bottom-color: #D3D3D3;
 }
 
-#phbctzrovt .gt_grand_summary_row {
+#grzlpagvqb .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -817,7 +786,7 @@ Warning
   padding-right: 5px;
 }
 
-#phbctzrovt .gt_first_grand_summary_row {
+#grzlpagvqb .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -827,7 +796,7 @@ Warning
   border-top-color: #D3D3D3;
 }
 
-#phbctzrovt .gt_last_grand_summary_row_top {
+#grzlpagvqb .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -837,11 +806,11 @@ Warning
   border-bottom-color: #D3D3D3;
 }
 
-#phbctzrovt .gt_striped {
+#grzlpagvqb .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#phbctzrovt .gt_table_body {
+#grzlpagvqb .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -850,7 +819,7 @@ Warning
   border-bottom-color: #D3D3D3;
 }
 
-#phbctzrovt .gt_footnotes {
+#grzlpagvqb .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -864,7 +833,7 @@ Warning
   border-right-color: #D3D3D3;
 }
 
-#phbctzrovt .gt_footnote {
+#grzlpagvqb .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -873,7 +842,7 @@ Warning
   padding-right: 5px;
 }
 
-#phbctzrovt .gt_sourcenotes {
+#grzlpagvqb .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -887,7 +856,7 @@ Warning
   border-right-color: #D3D3D3;
 }
 
-#phbctzrovt .gt_sourcenote {
+#grzlpagvqb .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -895,63 +864,63 @@ Warning
   padding-right: 5px;
 }
 
-#phbctzrovt .gt_left {
+#grzlpagvqb .gt_left {
   text-align: left;
 }
 
-#phbctzrovt .gt_center {
+#grzlpagvqb .gt_center {
   text-align: center;
 }
 
-#phbctzrovt .gt_right {
+#grzlpagvqb .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#phbctzrovt .gt_font_normal {
+#grzlpagvqb .gt_font_normal {
   font-weight: normal;
 }
 
-#phbctzrovt .gt_font_bold {
+#grzlpagvqb .gt_font_bold {
   font-weight: bold;
 }
 
-#phbctzrovt .gt_font_italic {
+#grzlpagvqb .gt_font_italic {
   font-style: italic;
 }
 
-#phbctzrovt .gt_super {
+#grzlpagvqb .gt_super {
   font-size: 65%;
 }
 
-#phbctzrovt .gt_footnote_marks {
+#grzlpagvqb .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#phbctzrovt .gt_asterisk {
+#grzlpagvqb .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#phbctzrovt .gt_indent_1 {
+#grzlpagvqb .gt_indent_1 {
   text-indent: 5px;
 }
 
-#phbctzrovt .gt_indent_2 {
+#grzlpagvqb .gt_indent_2 {
   text-indent: 10px;
 }
 
-#phbctzrovt .gt_indent_3 {
+#grzlpagvqb .gt_indent_3 {
   text-indent: 15px;
 }
 
-#phbctzrovt .gt_indent_4 {
+#grzlpagvqb .gt_indent_4 {
   text-indent: 20px;
 }
 
-#phbctzrovt .gt_indent_5 {
+#grzlpagvqb .gt_indent_5 {
   text-indent: 25px;
 }
 </style>

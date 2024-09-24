@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Uitleg GMJV rapportage in Quarto - 3&nbsp; Standaard rapportage uitdraaien</title>
+<title>Uitleg GMJV rapportage in Quarto - 11&nbsp; Aangepaste CSS</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -64,8 +64,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./tekst-en-layout.html" rel="next">
-<link href="./beginnen.html" rel="prev">
+<link href="./handige-bronnen.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -115,7 +114,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./rapport-uitdraaien.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Standaard rapportage uitdraaien</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./css.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Aangepaste CSS</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -154,7 +153,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./rapport-uitdraaien.html" class="sidebar-item-text sidebar-link active">
+  <a href="./rapport-uitdraaien.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Standaard rapportage uitdraaien</span></span></a>
   </div>
 </li>
@@ -202,7 +201,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./css.html" class="sidebar-item-text sidebar-link">
+  <a href="./css.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Aangepaste CSS</span></span></a>
   </div>
 </li>
@@ -212,32 +211,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-  <li><a href="#data-klaarzetten-en-samenvoegen" id="toc-data-klaarzetten-en-samenvoegen" class="nav-link active" data-scroll-target="#data-klaarzetten-en-samenvoegen"><span class="header-section-number">3.1</span> Data klaarzetten en samenvoegen</a></li>
-  <li><a href="#configuratie-in-frontmatter" id="toc-configuratie-in-frontmatter" class="nav-link" data-scroll-target="#configuratie-in-frontmatter"><span class="header-section-number">3.2</span> Configuratie in frontmatter</a>
-  <ul class="collapse">
-  <li><a href="#parameters-onder-params" id="toc-parameters-onder-params" class="nav-link" data-scroll-target="#parameters-onder-params"><span class="header-section-number">3.2.1</span> Parameters onder ‘Params’</a></li>
-  <li><a href="#overige-frontmatter-instellingen" id="toc-overige-frontmatter-instellingen" class="nav-link" data-scroll-target="#overige-frontmatter-instellingen"><span class="header-section-number">3.2.2</span> Overige frontmatter instellingen</a></li>
-  </ul></li>
-  <li><a href="#rapporten-per-gemeente-uitdraaien" id="toc-rapporten-per-gemeente-uitdraaien" class="nav-link" data-scroll-target="#rapporten-per-gemeente-uitdraaien"><span class="header-section-number">3.3</span> Rapporten per gemeente uitdraaien</a></li>
-  <li><a href="#pdf-uitdraai-en-printbaarheid" id="toc-pdf-uitdraai-en-printbaarheid" class="nav-link" data-scroll-target="#pdf-uitdraai-en-printbaarheid"><span class="header-section-number">3.4</span> PDF uitdraai en Printbaarheid</a>
-  <ul class="collapse">
-  <li><a href="#pagina-einden-bepalen-d.m.v.-header-1" id="toc-pagina-einden-bepalen-d.m.v.-header-1" class="nav-link" data-scroll-target="#pagina-einden-bepalen-d.m.v.-header-1"><span class="header-section-number">3.4.1</span> Pagina-einden bepalen d.m.v. “Header 1”</a></li>
-  <li><a href="#pdf-uitdraaien" id="toc-pdf-uitdraaien" class="nav-link" data-scroll-target="#pdf-uitdraaien"><span class="header-section-number">3.4.2</span> PDF uitdraaien</a></li>
-  </ul></li>
-  <li><a href="#html-rapporten-uploaden-naar-swing" id="toc-html-rapporten-uploaden-naar-swing" class="nav-link" data-scroll-target="#html-rapporten-uploaden-naar-swing"><span class="header-section-number">3.5</span> HTML-rapporten uploaden naar Swing</a></li>
-  </ul>
-</nav>
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Standaard rapportage uitdraaien</span></h1>
+<h1 class="title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Aangepaste CSS</span></h1>
 </div>
 
 
@@ -254,176 +235,212 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div class="callout callout-style-default callout-important callout-titled" title="Data 2024 nog niet binnen of verwerkt">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Data 2024 nog niet binnen of verwerkt
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>De data voor 2024 is nog niet beschikbaar. De stappen op deze pagina zijn daarom nog niet volledig uit te voeren. Nadat de data beschikbaar is zal deze pagina geupdated worden.</p>
-<p>Je kan de pagina doornemen a.d.h.v. de voorbeeldrapportage in het bestand <strong>voorbeeld_rapportage.qmd</strong>. Hierbij zullen aanpassingen van de regio- of gemeentecodes echter niet werken.</p>
-</div>
-</div>
-<section id="data-klaarzetten-en-samenvoegen" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="data-klaarzetten-en-samenvoegen"><span class="header-section-number">3.1</span> Data klaarzetten en samenvoegen</h2>
-<p>TODO.</p>
-<blockquote class="blockquote">
-<p>Zodra data 2024 binnen is procedure beschrijven om data in map te zetten en samen te voegen.</p>
-</blockquote>
-</section>
-<section id="configuratie-in-frontmatter" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="configuratie-in-frontmatter"><span class="header-section-number">3.2</span> Configuratie in frontmatter</h2>
-<p>De eigenschappen van Quarto documenten kunnen bovenaan in de <em>YAML</em> <em>frontmatter</em> ingesteld worden. In het voorbeeld hieronder wordt een inhoudsopgave ingesteld met de titel “Inhoudsopgave” en aan de rechterkant van het document geplaatst.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">toc</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">toc-location</span><span class="kw">:</span><span class="at"> right</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">toc-title</span><span class="kw">:</span><span class="at"> </span><span class="st">"Inhoudsopgave"</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Om de standaardrapportage met eigen data uit te draaien moeten enkele aanpassingen gedaan worden in de frontmatter.</p>
-<p>TODO</p>
-<blockquote class="blockquote">
-<p>Zodra data 2024 binnen is naam bestand rapprotage qmd aanpassen &amp; voorbeeld frontmatter bijwerken Voorlopig met voorbeeld_rapportage.qmd</p>
-</blockquote>
-<p>Open <strong>voorbeeld_rapportage.qmd</strong>. Daar zie je de volgende frontmatter staan:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span><span class="kw">:</span><span class="at"> </span><span class="st">""</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">author</span><span class="kw">:</span><span class="at"> </span><span class="st">""</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">format</span><span class="kw">:</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">html</span><span class="kw">:</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">page-layout</span><span class="kw">:</span><span class="at"> full</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">css</span><span class="kw">:</span><span class="at"> custom.css</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">toc</span><span class="kw">:</span><span class="at"> </span><span class="ch">TRUE</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">toc-location</span><span class="kw">:</span><span class="at"> left</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">embed-resources</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">params</span><span class="kw">:</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">gemeentecode</span><span class="kw">:</span><span class="at"> </span><span class="dv">2</span><span class="at"> </span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">regiocode</span><span class="kw">:</span><span class="at"> </span><span class="dv">23</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">regionaam</span><span class="kw">:</span><span class="at"> </span><span class="st">'GGD Limburg-Noord'</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">path_monitor_data</span><span class="kw">:</span><span class="at"> </span><span class="st">"../nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">path_hulpfuncties</span><span class="kw">:</span><span class="at"> </span><span class="st">"../hulpfuncties.R"</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">path_cbs_data</span><span class="kw">:</span><span class="at"> </span><span class="st">"../JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx"</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">default_nvar</span><span class="kw">:</span><span class="at"> </span><span class="dv">100</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">default_ncel</span><span class="kw">:</span><span class="at"> </span><span class="dv">10</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">default_kleuren_grafiek</span><span class="kw">:</span><span class="at"> !expr c("</span><span class="co">#012C17","#76B82A","#007E48")</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">default_kleuren_responstabel</span><span class="kw">:</span><span class="at"> !expr c("header" = "</span><span class="co">#012C17", "kleur_1" = "#007E48", "kleur_2" = "#76B82A","kleur_tekst" = "#FFFFFF")</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="fu">format-links</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>De meeste instellingen kan je laten staan. Het volgende moet aangepast of gecontroleerd worden.:</p>
-<section id="parameters-onder-params" class="level3" data-number="3.2.1">
-<h3 data-number="3.2.1" class="anchored" data-anchor-id="parameters-onder-params"><span class="header-section-number">3.2.1</span> Parameters onder ‘Params’</h3>
-<ul>
-<li><strong>gemeentecode:</strong> Voer hier een gemeentecode in die bestaat in je data. Dit is als het ware je voorbeeldgemeente. Als je het rapport uitdraait via de “Render” knop zal een rapport voor die gemeente gemaakt worden.</li>
-<li><strong>regiocode:</strong> voer hier de CBS code van je GGD-regio in.</li>
-<li><strong>regionaam:</strong> voer hier de Naam van je GGD-regio in.</li>
-<li><strong>path_..:</strong> voer hier de bestandsnamen van alle databestanden in</li>
-<li><strong>default_nvar:</strong> voer hier het algemene minimum aantal respondenten per vraag in</li>
-<li><strong>default_ncel:</strong> voer hier het algemene minimum aantal respondenten per antwoord in</li>
-<li><strong>default_kleuren_grafiek:</strong> Voer hier een vector in met de standaard kleurcodes voor grafieken.</li>
-<li><strong>default_kleuren_responstabel:</strong> Voer hier een named vector in met 4 kleurcodes als standaard voor responstabellen. Zie het voorbeeld voor de namen.</li>
-</ul>
-</section>
-<section id="overige-frontmatter-instellingen" class="level3" data-number="3.2.2">
-<h3 data-number="3.2.2" class="anchored" data-anchor-id="overige-frontmatter-instellingen"><span class="header-section-number">3.2.2</span> Overige frontmatter instellingen</h3>
-<ul>
-<li><strong>warning:</strong> Deze parameter staat in het voorbeeldrapport op false. Als de parameter op true staat worden mogelijke problemen / ‘warnings’ getoond in het rapport. Dit is meestal niet wenselijk voor het eindproduct, maar nuttig tijdens ontwikkeling.</li>
-</ul>
-<div class="callout callout-style-default callout-warning callout-titled" title="Let op">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Let op
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Wees je ervan bewust dat eventuele problemen met het verwerken van de data NIET getoond worden als warning op false staat. Zorg ervoor dat deze parameter bij het ontwikkelen van het rapport op ‘true’ staat, zodat je op de hoogte bent van de warnings.</p>
-</div>
-</div>
-<ul>
-<li><strong>echo:</strong> Standaard op false. Als deze parameter op true staat worden codeblokjes in het rapport getoond.</li>
-</ul>
-</section>
-</section>
-<section id="rapporten-per-gemeente-uitdraaien" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="rapporten-per-gemeente-uitdraaien"><span class="header-section-number">3.3</span> Rapporten per gemeente uitdraaien</h2>
-<p>Als je het rapport uitdraait door op de “Render” knop te drukken wordt er één rapport gemaakt dat is ingesteld op de gemeentecode in de <em>frontmatter</em>. Dit is handig om eventuele wijzigingen in het rapport te testen. Als je rapporten voor alle gemeenten wilt uitdraaien volg je de volgende stappen</p>
-<p>TODO</p>
-<blockquote class="blockquote">
-<p>Zodra data 2024 binnen is stappen aanpassen Voorlopig met voorbeeld_rapportage.qmd</p>
-</blockquote>
-<ul>
-<li>Open <strong>maak_rapport_per_gemeente.R</strong></li>
-<li>Controleer of de variabelen <strong>file_path</strong> en <strong>regiocode</strong> goed staan ingesteld</li>
-<li>Draai de rest van de code.</li>
-</ul>
-<p>Het script gaat met een <em>loop</em> langs alle gemeentecodes en maakt voor iedere gemeente een rapport.</p>
-</section>
-<section id="pdf-uitdraai-en-printbaarheid" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="pdf-uitdraai-en-printbaarheid"><span class="header-section-number">3.4</span> PDF uitdraai en Printbaarheid</h2>
-<p>Op verzoek is het mogelijk gemaakt de rapportage als PDF op te slaan en te zorgen dat deze printbaar is. De eerste stap hiervoor is bedenken of het wel nodig is om het rapport te printen. Meestal is dat niet zo. Als het toch nodig blijkt volg je de onderstaande stappen.</p>
-<section id="pagina-einden-bepalen-d.m.v.-header-1" class="level3" data-number="3.4.1">
-<h3 data-number="3.4.1" class="anchored" data-anchor-id="pagina-einden-bepalen-d.m.v.-header-1"><span class="header-section-number">3.4.1</span> Pagina-einden bepalen d.m.v. “Header 1”</h3>
-<p>In een browser bestaan pagina’s niet echt. De standaard html-uitvoer van het rapport heeft dan ook geen pagina’s. Wanneer je een rapport gaat printen zijn pagina-einden wel belangrijk. Daarom is voor deze rapportage ingesteld dat pagina-einden altijd vóór een kop van niveau 1 vallen.</p>
-<p>Let daarom goed op dat je alleen een kop van niveau 1 maakt als je een nieuwe pagina wilt beginnen.</p>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Warning
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Controleer altijd de pdf-uitvoer op het mooi overlopen van pagina’s</p>
-<p>Er zijn grenzen aan hoe veel er op één pagina past. Als je te veel grafieken of tekst onder een header van niveau 1 plaatst, zal alles wat niet past naar de volgende pagina gaan. Te veel inhoud onder één header kan dus alsnog voor een arbitraire overgang van paginas zorgen.</p>
-</div>
-</div>
-<div class="callout callout-style-default callout-tip callout-titled" title="Aangepaste eigenschappen Header 1">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Aangepaste eigenschappen Header 1
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Headers van niveau 1 krijgen voor de GMJV rapportage standaard een gekleurde achtergrond en beginnen (bij conversie naar pdf) altijd op een nieuwe pagina.</p>
-<p>Dit zijn aangepaste eigenschappen die worden bepaald in het CSS-bestand “custom.css”. Je kan deze eigenschappen in dat bestand uitzetten of wijzigen. Zie ook het hoofdstuk <a href="./css.html">CSS</a></p>
-</div>
-</div>
-</div>
-</section>
-<section id="pdf-uitdraaien" class="level3" data-number="3.4.2">
-<h3 data-number="3.4.2" class="anchored" data-anchor-id="pdf-uitdraaien"><span class="header-section-number">3.4.2</span> PDF uitdraaien</h3>
-<p>Als de pagina-einden goed ingesteld staan kan je de rapportage als PDF bestand uitdraaien. Let hierbij op dat je ten minste Google Chrome 128 hebt. Zie daarvoor <a href="./beginnen.html#voor-pdf-uitdraai">‘PDF-uitdraai’ in het hoofdstuk ‘Beginnen’</a></p>
-<ul>
-<li>Open het bestand <strong>maak_pdf_rapport.R</strong></li>
-<li>Controleer of de variabelen <strong>file_path</strong>, <strong>regiocode</strong> goed staan ingesteld.</li>
-<li>Draai het hele script.</li>
-<li>Controleer de uitvoer.</li>
-</ul>
-</section>
-</section>
-<section id="html-rapporten-uploaden-naar-swing" class="level2" data-number="3.5">
-<h2 data-number="3.5" class="anchored" data-anchor-id="html-rapporten-uploaden-naar-swing"><span class="header-section-number">3.5</span> HTML-rapporten uploaden naar Swing</h2>
-<p>Als je een html-bestand naar Swing upload en in de Viewer plaatst gaat dat niet automatisch goed. De layout van het bestand overhoop raken. Dit komt omdat de opmaak (CSS) van Swing zelf ook doorwerkt op het html-document. Dit kan je oplossen door raporten standaard in een ‘iframe’ te plaatsen. Dit is relatief makkelijk in te stellen in Swing.</p>
-<ul>
-<li>Log in bij Swing Studio als Admin</li>
-<li>Kies Viewer &gt; Settings &gt; Viewer Settings</li>
-<li>Zoek de optie “Show report in an iframe” en vink deze optie aan</li>
-</ul>
+<p>Dit is de css die gebruikt wordt voor het standaard format GMJV. Zie het bestand custom.css.<br>
+</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode css code-with-copy"><code class="sourceCode css"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">/*Open Sans importeren */</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">@import</span> <span class="fu">url(</span><span class="st">'https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&amp;display=swap'</span><span class="fu">)</span><span class="op">;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">/*</span><span class="al">TODO</span><span class="co"> input ontwerper mbt lettertypen &amp; kleuren verwerken*/</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>body {</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">font-family</span><span class="ch">:</span> <span class="st">'Open Sans'</span><span class="op">,</span> <span class="dv">sans-serif</span><span class="op">;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">/*CSS om te zorgen dat divs met plaatjes over elkaar heen kunnen </span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">Bijvoorbeeld:</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">De div's voorblad_gemeentenaam en voorblad_datum zitten IN de div voorblad_achtergrond </span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">CSS bij de elementen IN de overkoepelende div bepaald de positie van die elementen relatief aan het het grotere plaatje.</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">Positie kan aangepast worden dmv "top" &amp; "left".</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">*/</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">.voorblad_achtergrond</span><span class="op">,</span> <span class="fu">.pagina_header_img</span>{</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">position</span><span class="ch">:</span> <span class="dv">relative</span><span class="op">;</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">.voorblad_gemeentenaam</span>{</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="kw">position</span><span class="ch">:</span> <span class="dv">absolute</span><span class="op">;</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="kw">top</span><span class="ch">:</span> <span class="dv">60</span><span class="dt">%</span><span class="op">;</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="kw">left</span><span class="ch">:</span> <span class="dv">25</span><span class="dt">%</span><span class="op">;</span>l</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="kw">z-index</span><span class="ch">:</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">font-family</span><span class="ch">:</span> <span class="st">"Century Gothic"</span><span class="op">;</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="kw">font-size</span><span class="ch">:</span> <span class="dv">50</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="kw">font-weight</span><span class="ch">:</span> <span class="dv">bold</span><span class="op">;</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    <span class="kw">color</span><span class="ch">:</span> <span class="cn">#012C17</span><span class="op">;</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">.voorblad_datum</span>{</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    <span class="kw">position</span><span class="ch">:</span> <span class="dv">absolute</span><span class="op">;</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    <span class="kw">top</span><span class="ch">:</span> <span class="dv">80</span><span class="dt">%</span><span class="op">;</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    <span class="kw">left</span><span class="ch">:</span> <span class="dv">40</span><span class="dt">%</span><span class="op">;</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    <span class="kw">z-index</span><span class="ch">:</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    <span class="kw">font-family</span><span class="ch">:</span> <span class="st">"Century Gothic"</span><span class="op">;</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    <span class="kw">font-size</span><span class="ch">:</span> <span class="dv">30</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    <span class="kw">color</span><span class="ch">:</span> <span class="cn">#012C17</span><span class="op">;</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">.pagina_header_titel</span>{</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    <span class="kw">width</span><span class="ch">:</span> <span class="dv">100</span><span class="dt">%</span><span class="op">;</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    <span class="kw">height</span><span class="ch">:</span> <span class="dv">100</span><span class="dt">%</span><span class="op">;</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    <span class="kw">position</span><span class="ch">:</span> <span class="dv">absolute</span><span class="op">;</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>    <span class="kw">top</span><span class="ch">:</span> <span class="dv">5</span><span class="dt">%</span><span class="op">;</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>    <span class="kw">left</span><span class="ch">:</span> <span class="dv">2</span><span class="dt">%</span><span class="op">;</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>    <span class="kw">z-index</span><span class="ch">:</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>    <span class="kw">font-family</span><span class="ch">:</span> <span class="st">"Century Gothic"</span><span class="op">;</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>    <span class="kw">font-size</span><span class="ch">:</span> <span class="dv">24</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>    <span class="kw">color</span><span class="ch">:</span> <span class="cn">white</span><span class="op">;</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="co">/*H1 eigenschappen*/</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>  h1 {</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>    <span class="kw">page-break-before</span><span class="ch">:</span> <span class="dv">always</span><span class="op">;</span> <span class="co">/* Iedere H1 maakt een pagebreak. relevant voor pdf uitdraai */</span></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>    <span class="kw">font-family</span><span class="ch">:</span> <span class="st">"Century Gothic"</span><span class="op">;</span></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>    <span class="kw">font-size</span><span class="ch">:</span> <span class="dv">24</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>    <span class="kw">color</span><span class="ch">:</span> <span class="cn">white</span><span class="op">;</span></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>    <span class="kw">background-color</span><span class="ch">:</span> <span class="cn">#007E48</span><span class="op">;</span></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>    <span class="kw">padding</span><span class="ch">:</span> <span class="dv">20</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a><span class="co">/*css om het mogelijk te maken icoontjes aan headers toe te voegen*/</span></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>  <span class="fu">.h1-icoon</span> h1 {</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* om te zorgen dat er plaatje met relatieve positie overheen geprojecteerd kan worden</span></span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a><span class="co">    position: relative;</span></span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a><span class="co">    /* moet ook een offest vanaf links zijn zodat de plaatjes ruimte krijgen*/</span></span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>    <span class="kw">position</span><span class="ch">:</span> <span class="dv">relative</span><span class="op">;</span></span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>    <span class="kw">text-indent</span><span class="ch">:</span> <span class="dv">80</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>  <span class="co">/*Plaatsing van header icons*/</span></span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>  h1 <span class="fu">.img-fluid</span> {</span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>    <span class="kw">height</span><span class="ch">:</span> <span class="dv">100</span><span class="dt">%</span><span class="op">;</span></span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>    <span class="kw">position</span><span class="ch">:</span> <span class="dv">absolute</span><span class="op">;</span></span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>    <span class="kw">top</span><span class="ch">:</span> <span class="dv">5</span><span class="dt">%</span><span class="op">;</span></span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>    <span class="kw">left</span><span class="ch">:</span> <span class="dv">2</span><span class="dt">%</span><span class="op">;</span></span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>    <span class="kw">z-index</span><span class="ch">:</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a>  <span class="co">/*Plaatje niet laten zien in table of contents*/</span></span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a>  <span class="pp">#TOC</span> <span class="fu">.img-fluid</span> {</span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>    <span class="kw">display</span><span class="ch">:</span> <span class="dv">none</span><span class="op">;</span> </span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a>  <span class="co">/*Lijntje dat tussen tekstblokken geplaatst kan worden*/</span></span>
+<span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a>  <span class="fu">.tussenlijn</span> {</span>
+<span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a>    <span class="kw">border-bottom</span><span class="ch">:</span> <span class="dv">1</span><span class="dt">px</span> <span class="dv">solid</span> <span class="cn">#86B443</span><span class="op">;</span></span>
+<span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* achtergrondkleur class voor tekstvelden*/</span></span>
+<span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a>  <span class="fu">.achtergrondkleur</span> {</span>
+<span id="cb1-96"><a href="#cb1-96" aria-hidden="true" tabindex="-1"></a>    <span class="kw">background-color</span><span class="ch">:</span> <span class="cn">#F7F7DB</span><span class="op">;</span></span>
+<span id="cb1-97"><a href="#cb1-97" aria-hidden="true" tabindex="-1"></a>    <span class="kw">color</span><span class="ch">:</span> <span class="cn">#012C17</span><span class="op">;</span></span>
+<span id="cb1-98"><a href="#cb1-98" aria-hidden="true" tabindex="-1"></a>    <span class="kw">padding</span><span class="ch">:</span> <span class="dv">20</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb1-99"><a href="#cb1-99" aria-hidden="true" tabindex="-1"></a>  }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<style type="text/css">
+
+/*Open Sans importeren */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
+/*TODO input ontwerper mbt lettertypen & kleuren verwerken*/
+
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+
+/*CSS om te zorgen dat divs met plaatjes over elkaar heen kunnen 
+
+Bijvoorbeeld:
+De div's voorblad_gemeentenaam en voorblad_datum zitten IN de div voorblad_achtergrond 
+CSS bij de elementen IN de overkoepelende div bepaald de positie van die elementen relatief aan het het grotere plaatje.
+Positie kan aangepast worden dmv "top" & "left".
+*/
+  .voorblad_achtergrond, .pagina_header_img{
+    position: relative;
+  }
+  
+  .voorblad_gemeentenaam{
+    position: absolute;
+    top: 60%;
+    left: 25%;l
+    z-index: 10;
+    font-family: "Century Gothic";
+    font-size: 50px;
+    font-weight: bold;
+    color: #012C17;
+  }
+  
+  .voorblad_datum{
+    position: absolute;
+    top: 80%;
+    left: 40%;
+    z-index: 10;
+    font-family: "Century Gothic";
+    font-size: 30px;
+    color: #012C17;
+  }
+  
+  .pagina_header_titel{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 5%;
+    left: 2%;
+    z-index: 10;
+    font-family: "Century Gothic";
+    font-size: 24px;
+    color: white;
+  }
+
+/*H1 eigenschappen*/
+  h1 {
+    page-break-before: always; /* Iedere H1 maakt een pagebreak. relevant voor pdf uitdraai */
+    font-family: "Century Gothic";
+    font-size: 24px;
+    color: white;
+    background-color: #007E48;
+    padding: 20px;
+  }
+
+/*css om het mogelijk te maken icoontjes aan headers toe te voegen*/
+  .h1-icoon h1 {
+    /* om te zorgen dat er plaatje met relatieve positie overheen geprojecteerd kan worden
+    position: relative;
+    /* moet ook een offest vanaf links zijn zodat de plaatjes ruimte krijgen*/
+    position: relative;
+    text-indent: 80px;
+  }
+  
+  /*Plaatsing van header icons*/
+  h1 .img-fluid {
+    height: 100%;
+    position: absolute;
+    top: 5%;
+    left: 2%;
+    z-index: 10;
+  
+  }
+  
+  /*Plaatje niet laten zien in table of contents*/
+  #TOC .img-fluid {
+    display: none; 
+  }
 
 
-</section>
+  /*Lijntje dat tussen tekstblokken geplaatst kan worden*/
+  .tussenlijn {
+    border-bottom: 1px solid #86B443;
+  }
+
+  /* achtergrondkleur class voor tekstvelden*/
+  .achtergrondkleur {
+    background-color: #F7F7DB;
+    color: #012C17;
+    padding: 20px;
+  }
+</style>
+</div>
+
+
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -837,14 +854,11 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./beginnen.html" class="pagination-link" aria-label="Beginnen">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Beginnen</span></span>
+      <a href="./handige-bronnen.html" class="pagination-link" aria-label="handige-bronnen.html">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">handige-bronnen.html</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./tekst-en-layout.html" class="pagination-link" aria-label="Het script maakt gebruik van een aantal packages">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Het script maakt gebruik van een aantal packages</span></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->

@@ -161,7 +161,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./tekst-en-layout.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Tekst, Code invoegen en layout aanpassen</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Het script maakt gebruik van een aantal packages</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -198,6 +198,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="./handige-bronnen.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">handige-bronnen.html</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./css.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Aangepaste CSS</span></span></a>
   </div>
 </li>
     </ul>
@@ -327,10 +333,15 @@ Caution
 <ul>
 <li><p><strong>titel:</strong> Een character met een titel voor het plot</p></li>
 <li><p><strong>kleuren:</strong> Een character vector met alternatieve kleuren voor de grafiek</p></li>
-<li><p><strong>alt_text:</strong> Een character met de ‘alt-text’ voor de grafiek. Als deze waarde leeg is, wordt er automatisch gegenereerde alt-text meegegeven die alle waarden in de grafiek bevat. Let op; De verteerbaarheid van automatisch gegenereerde tekst neemt af wanneer de grafieken erg complex zijn, of variabellabels erg lang zijn.</p></li>
 <li><p><strong>nvar:</strong> Een numeric met het minimum aantal observaties per vraag. Als deze waarde leeg is, wordt de standaardwaarde voor nvar aangehouden.</p></li>
 <li><p><strong>ncel:</strong> Een numeric met het minimum aantal observaties per antwoord. Als deze waarde leeg is, wordt de standaardwaarde voor ncel aangehouden.</p></li>
+<li><p><strong>alt_text:</strong> Een character met de ‘alt-text’ voor de grafiek. Als deze waarde leeg is, wordt er automatisch gegenereerde alt-text meegegeven die alle waarden in de grafiek bevat. Let op; De verteerbaarheid van automatisch gegenereerde tekst neemt af wanneer de grafieken erg complex zijn, of variabellabels erg lang zijn.</p></li>
+<li><p><strong>caption:</strong> Een character met een caption voor de grafiek. Wordt standaard linksonder de grafiek geplaatst.</p></li>
 <li><p><strong>niveaus:</strong> Een character vector met de niveaus c(“nl”,“regio”,“gemeente”). Standaard op GGD-regio “regio” ingesteld. Kan meerdere niveaus hebben voor niveauvergelijking. Dit kan alleen als var_crossing_kleur OF var_crossing_groep leeg is. De regio-vergelijking neemt de lege plek dan over.</p></li>
+<li><p><strong>tabel_en_grafiek:</strong> TRUE of FALSE. Standaard FALSE. Als TRUE wordt er naast de grafiek ook code voor een tabel gegenereerd die d.m.v. een tabblad in te zien valt. LET OP: Hiervoor moeten codeblokken anders aangeroepen worden. Zie <a href="text-en-layout.qmd#tabel-en-grafiek-layout-t.b.v-digitoegankelijkheid">Tabel en grafiek</a></p></li>
+<li><p><strong>toon_y:</strong> TRUE of FALSE. Standaard FALSE. Als TRUE wordt een Y-as met percentages getoond.</p></li>
+<li><p><strong>x_as_label_wrap:</strong> Numerieke waarde. Er worden automatisch regeleinden ingevoegd in langere labels. Deze waarde bepaald na hoeveel tekens er een regeleinde ingevoegd moet worden. Het eerstvolgende ‘woord’ verschijnt dan op de volgende regel.</p></li>
+<li><p><strong>x_as_regels_toevoegen:</strong> Numerieke waarde. Standaard op nul. Kan gebruikt worden om de x-as van twee grafieken naast elkaar uit te lijnen. Zie <a href="./tekst-en-layout.html#x-assen-uitlijnen-bij-verschillende-lengte-labels">X-assen. uitlijnen</a></p></li>
 </ul>
 </section>
 <section id="standaard-staafdiagram-met-dubbele-uitsplitsing" class="level3" data-number="6.2.3">
@@ -431,13 +442,7 @@ Caution
 </section>
 <section id="optionele-argumenten-2" class="level3" data-number="6.4.2">
 <h3 data-number="6.4.2" class="anchored" data-anchor-id="optionele-argumenten-2"><span class="header-section-number">6.4.2</span> Optionele argumenten:</h3>
-<ul>
-<li><strong>var_crossing:</strong> Een character met de naam van één kruisvariabele</li>
-<li><strong>niveaus:</strong> Een character vector met de niveaus c(“nl”,“regio”,“gemeente”). Standaard op GGD-regio “regio” ingesteld. Kan meerdere niveaus hebben voor niveauvergelijking. Dit kan alleen als var_crossing leeg is.</li>
-<li><strong>var_inhoud_waarde:</strong> Een numeric waar de numerieke waarde voor een antwoord ingevuld kan worden. Als deze waarde leeg is worden alle antwoorden getoond. Anders alleen het antwoorden dat is. Let op: als je een waarde invult die niet bestaat gebeurd er niks.</li>
-<li><strong>flip:</strong> TRUE of FALSE. Als TRUE wordt de grafiek horizontaal weergeven</li>
-</ul>
-<p>Naast dezelfde optionele argumenten als in <a href="#optionele-argumenten-1"><strong>maak_staafdiagram_dubbele_uitsplitsing():</strong></a>:</p>
+<p>Naast dezelfde optionele argumenten als in <a href="#optionele-argumenten-1"><strong>maak_staafdiagram_dubbele_uitsplitsing():</strong></a>: - <strong>var_crossing:</strong> Een character met de naam van één kruisvariabele - <strong>niveaus:</strong> Een character vector met de niveaus c(“nl”,“regio”,“gemeente”). Standaard op GGD-regio “regio” ingesteld. Kan meerdere niveaus hebben voor niveauvergelijking. Dit kan alleen als var_crossing leeg is. - <strong>var_inhoud_waarde:</strong> Een numeric waar de numerieke waarde voor een antwoord ingevuld kan worden. Als deze waarde leeg is worden alle antwoorden getoond. Anders alleen het antwoorden dat is. Let op: als je een waarde invult die niet bestaat gebeurd er niks. - <strong>flip:</strong> TRUE of FALSE. Standaard FALSE. Als TRUE wordt de grafiek horizontaal weergeven - <strong>toon_aslabel:</strong> TRUE of FALSE. Standaard TRUE. Als FALSE worden er geen aslabels op de x-as getoond.</p>
 </section>
 <section id="standaard-staafdiagram-met-meerdere-staven" class="level3" data-number="6.4.3">
 <h3 data-number="6.4.3" class="anchored" data-anchor-id="standaard-staafdiagram-met-meerdere-staven"><span class="header-section-number">6.4.3</span> Standaard staafdiagram met meerdere staven</h3>
@@ -453,7 +458,7 @@ Caution
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" alt="staafdiagram met percentages voor de indicator 'Vertrouwen in zijn/haar eigen toekomst in 3 categorieën' bij jongvolwassenen in Nederland en NepgemeenteB:  Nederland Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 15%, Nederland Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 40%, Nederland (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 44%, NepgemeenteB Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 16%, NepgemeenteB Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 40%, NepgemeenteB (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 45%" width="672"></p>
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" alt="staafdiagram met percentages voor de indicator 'Vertrouwen in zijn/haar eigen toekomst in 3 categorieën' bij jongvolwassenen in Nederland en NepgemeenteB:  Nederland Weinig tot geenvertrouwen inzijn/haar eigentoekomst (cijfer 5of lager): 15%, Nederland Matig tot redelijkvertrouwen inzijn/haar eigentoekomst (cijfer 6of 7): 40%, Nederland (Heel) veelvertrouwen inzijn/haar eigentoekomst (cijfer 8of hoger): 44%, NepgemeenteB Weinig tot geenvertrouwen inzijn/haar eigentoekomst (cijfer 5of lager): 16%, NepgemeenteB Matig tot redelijkvertrouwen inzijn/haar eigentoekomst (cijfer 6of 7): 40%, NepgemeenteB (Heel) veelvertrouwen inzijn/haar eigentoekomst (cijfer 8of hoger): 45%" width="672"></p>
 </figure>
 </div>
 </div>
@@ -475,7 +480,7 @@ Caution
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" alt="staafdiagram met percentages voor de indicator 'Vertrouwen in zijn/haar eigen toekomst in 3 categorieën' bij jongvolwassenen per Gender in twee categorieën in GGD Limburg-Noord: Man Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 16%, Man Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 39%, Man (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 45%, Vrouw Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 16%, Vrouw Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 40%, Vrouw (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 44%" width="672"></p>
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" alt="staafdiagram met percentages voor de indicator 'Vertrouwen in zijn/haar eigen toekomst in 3 categorieën' bij jongvolwassenen per Gender in twee categorieën in GGD Limburg-Noord: Man Weinig tot geen vertrouwen in zijn/haareigen toekomst (cijfer 5 of lager): 16%, Man Matig tot redelijk vertrouwen inzijn/haar eigen toekomst (cijfer 6 of 7): 39%, Man (Heel) veel vertrouwen in zijn/haareigen toekomst (cijfer 8 of hoger): 45%, Vrouw Weinig tot geen vertrouwen in zijn/haareigen toekomst (cijfer 5 of lager): 16%, Vrouw Matig tot redelijk vertrouwen inzijn/haar eigen toekomst (cijfer 6 of 7): 40%, Vrouw (Heel) veel vertrouwen in zijn/haareigen toekomst (cijfer 8 of hoger): 44%" width="672"></p>
 </figure>
 </div>
 </div>
@@ -498,7 +503,7 @@ Caution
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" alt="staafdiagram met percentages voor verschillende indicatoren bij jongvolwassenen per Gender in twee categorieën in GGD Limburg-Noord: Heeft (heel) veel zorgen over de werkgelegenheid Man: 11%, Heeft (heel) veel zorgen over de werkgelegenheid Vrouw: 11%, Heeft (heel) veel zorgen over de woningmarkt Man: 63%, Heeft (heel) veel zorgen over de woningmarkt Vrouw: 66%, Heeft (heel) veel zorgen over het klimaat Man: 41%, Heeft (heel) veel zorgen over het klimaat Vrouw: 42%" width="672"></p>
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" alt="staafdiagram met percentages voor verschillende indicatoren bij jongvolwassenen per Gender in twee categorieën in GGD Limburg-Noord: Heeft (heel) veel zorgen over dewerkgelegenheid Man: 11%, Heeft (heel) veel zorgen over dewerkgelegenheid Vrouw: 11%, Heeft (heel) veel zorgen over dewoningmarkt Man: 63%, Heeft (heel) veel zorgen over dewoningmarkt Vrouw: 66%, Heeft (heel) veel zorgen over hetklimaat Man: 41%, Heeft (heel) veel zorgen over hetklimaat Vrouw: 42%" width="672"></p>
 </figure>
 </div>
 </div>
@@ -564,7 +569,7 @@ Caution
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" alt="staafdiagram met percentages voor de indicator 'Is sterk eenzaam' bij jongvolwassenen per Gender in twee categorieën en Leeftijd in 3 categorieën (16-17 jaar; 18-20 jaar; 21-25 jaar) en Hoogste opleiding (huidig of afgerond, in 2 categorieën) in GGD Limburg-Noord: Man: 31%, Vrouw: 26%, 16-17 jaar: 27%, 18-20 jaar: 30%, 21-25 jaar: 27%, Laag/midden (Geen opleiding, vso, praktijkonderwijs, vmbo, havo, vwo, mbo): 29%, Hoog (hbo, wo): 27%" width="672"></p>
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" alt="staafdiagram met percentages voor de indicator 'Is sterk eenzaam' bij jongvolwassenen per Gender in twee categorieën en Leeftijd in 3 categorieën (16-17 jaar; 18-20 jaar; 21-25 jaar) en Hoogste opleiding (huidig of afgerond, in 2 categorieën) in GGD Limburg-Noord: Man: 31%, Vrouw: 26%, 16-17 jaar: 27%, 18-20 jaar: 30%, 21-25 jaar: 27%, Laag/midden(Geenopleiding,vso,praktijkonderwijs,vmbo,havo, vwo,mbo): 29%, Hoog (hbo,wo): 27%" width="672"></p>
 </figure>
 </div>
 </div>
@@ -587,7 +592,7 @@ Caution
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" alt="staafdiagram met percentages voor de indicator 'Is sterk eenzaam' bij jongvolwassenen per Gender in twee categorieën en Leeftijd in 3 categorieën (16-17 jaar; 18-20 jaar; 21-25 jaar) en Hoogste opleiding (huidig of afgerond, in 2 categorieën) in GGD Limburg-Noord: Man: 31%, Vrouw: 26%, 16-17 jaar: 27%, 18-20 jaar: 30%, 21-25 jaar: 27%, Laag/midden (Geen opleiding, vso, praktijkonderwijs, vmbo, havo, vwo, mbo): 29%, Hoog (hbo, wo): 27%" width="672"></p>
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" alt="staafdiagram met percentages voor de indicator 'Is sterk eenzaam' bij jongvolwassenen per Gender in twee categorieën en Leeftijd in 3 categorieën (16-17 jaar; 18-20 jaar; 21-25 jaar) en Hoogste opleiding (huidig of afgerond, in 2 categorieën) in GGD Limburg-Noord: Man: 31%, Vrouw: 26%, 16-17 jaar: 27%, 18-20 jaar: 30%, 21-25 jaar: 27%, Laag/midden (Geen opleiding, vso,praktijkonderwijs, vmbo, havo, vwo, mbo): 29%, Hoog (hbo, wo): 27%" width="672"></p>
 </figure>
 </div>
 </div>
@@ -642,7 +647,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" alt="gestapeld staafdiagram met percentages voor de indicator 'Vertrouwen in zijn/haar eigen toekomst in 3 categorieën' bij jongvolwassenen in GGD Limburg-Noord:   Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 16%,  Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 40%,  (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 44%" width="1152"></p>
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" alt="gestapeld staafdiagram met percentages voor de indicator 'Vertrouwen in zijn/haar eigen toekomst in 3 categorieën' bij jongvolwassenen in GGD Limburg-Noord:   Weinig tot geenvertrouwen inzijn/haar eigentoekomst (cijfer 5of lager): 16%,  Matig tot redelijkvertrouwen inzijn/haar eigentoekomst (cijfer 6of 7): 40%,  (Heel) veelvertrouwen inzijn/haar eigentoekomst (cijfer 8of hoger): 44%" width="1152"></p>
 </figure>
 </div>
 </div>
@@ -662,7 +667,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" alt="gestapeld staafdiagram met percentages voor de indicator 'Vertrouwen in zijn/haar eigen toekomst in 3 categorieën' bij jongvolwassenen per Gender in twee categorieën in GGD Limburg-Noord: Man Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 16%, Man Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 39%, Man (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 45%, Vrouw Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 16%, Vrouw Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 40%, Vrouw (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 44%" width="1152"></p>
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" alt="gestapeld staafdiagram met percentages voor de indicator 'Vertrouwen in zijn/haar eigen toekomst in 3 categorieën' bij jongvolwassenen per Gender in twee categorieën in GGD Limburg-Noord: Man Weinig tot geenvertrouwen inzijn/haar eigentoekomst (cijfer 5of lager): 16%, Man Matig tot redelijkvertrouwen inzijn/haar eigentoekomst (cijfer 6of 7): 39%, Man (Heel) veelvertrouwen inzijn/haar eigentoekomst (cijfer 8of hoger): 45%, Vrouw Weinig tot geenvertrouwen inzijn/haar eigentoekomst (cijfer 5of lager): 16%, Vrouw Matig tot redelijkvertrouwen inzijn/haar eigentoekomst (cijfer 6of 7): 40%, Vrouw (Heel) veelvertrouwen inzijn/haar eigentoekomst (cijfer 8of hoger): 44%" width="1152"></p>
 </figure>
 </div>
 </div>
@@ -684,19 +689,17 @@ Tip
 <li><p><strong>titel</strong>: character variabele. Als argument leeg is wordt het variabellabel van var_inhoud gebruikt.</p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#LET OP: ITT tot andere grafiekfuncties moet je géén get_alt_text() gebruiken in de chunk-options. Cirkeldiagrammen worden met plotly gemaakt en de alt-text wordt in door de functie maak_cirkeldiagram() al correct toegevoegd.</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Standaard cirkeldiagram staafdiagram</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">=</span> monitor_df <span class="sc">%&gt;%</span> </span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">maak_cirkeldiagram</span>(</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_inhoud =</span> <span class="st">"LVVTA404"</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Standaard cirkeldiagram staafdiagram</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>plot <span class="ot">=</span> monitor_df <span class="sc">%&gt;%</span> </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">maak_cirkeldiagram</span>(</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_inhoud =</span> <span class="st">"LVVTA404"</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>plot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" alt="Cirkeldiagram voor de indicator 'Vertrouwen in zijn/haar eigen toekomst in 3 categorieën' bij jongvolwassenen: Weinig tot geen vertrouwen in zijn/haar eigen toekomst (cijfer 5 of lager): 16%, Matig tot redelijk vertrouwen in zijn/haar eigen toekomst (cijfer 6 of 7): 40%, (Heel) veel vertrouwen in zijn/haar eigen toekomst (cijfer 8 of hoger): 44%" width="672"></p>
 </figure>
 </div>
 </div>

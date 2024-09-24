@@ -161,7 +161,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./tekst-en-layout.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Tekst, Code invoegen en layout aanpassen</span></span></a>
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Het script maakt gebruik van een aantal packages</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -198,6 +198,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="./handige-bronnen.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">handige-bronnen.html</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./css.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Aangepaste CSS</span></span></a>
   </div>
 </li>
     </ul>
@@ -280,23 +286,23 @@ Een character variabele met een alternatief label voor missing waarden (standaar
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>monitor_df <span class="sc">%&gt;%</span> <span class="fu">maak_responstabel</span>(</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">crossings =</span> <span class="fu">c</span>(<span class="st">"AGGSA402"</span>,<span class="st">"AGLFA401"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="fvifcbzzjq" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#fvifcbzzjq table {
+<div id="qpfvpmsfwo" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#qpfvpmsfwo table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#fvifcbzzjq thead, #fvifcbzzjq tbody, #fvifcbzzjq tfoot, #fvifcbzzjq tr, #fvifcbzzjq td, #fvifcbzzjq th {
+#qpfvpmsfwo thead, #qpfvpmsfwo tbody, #qpfvpmsfwo tfoot, #qpfvpmsfwo tr, #qpfvpmsfwo td, #qpfvpmsfwo th {
   border-style: none;
 }
 
-#fvifcbzzjq p {
+#qpfvpmsfwo p {
   margin: 0;
   padding: 0;
 }
 
-#fvifcbzzjq .gt_table {
+#qpfvpmsfwo .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -322,12 +328,12 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-left-color: #D3D3D3;
 }
 
-#fvifcbzzjq .gt_caption {
+#qpfvpmsfwo .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#fvifcbzzjq .gt_title {
+#qpfvpmsfwo .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -339,7 +345,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-bottom-width: 0;
 }
 
-#fvifcbzzjq .gt_subtitle {
+#qpfvpmsfwo .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -351,7 +357,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-top-width: 0;
 }
 
-#fvifcbzzjq .gt_heading {
+#qpfvpmsfwo .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -363,13 +369,13 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-right-color: #D3D3D3;
 }
 
-#fvifcbzzjq .gt_bottom_border {
+#qpfvpmsfwo .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#fvifcbzzjq .gt_col_headings {
+#qpfvpmsfwo .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -384,7 +390,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-right-color: #D3D3D3;
 }
 
-#fvifcbzzjq .gt_col_heading {
+#qpfvpmsfwo .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -404,7 +410,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   overflow-x: hidden;
 }
 
-#fvifcbzzjq .gt_column_spanner_outer {
+#qpfvpmsfwo .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -416,15 +422,15 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   padding-right: 4px;
 }
 
-#fvifcbzzjq .gt_column_spanner_outer:first-child {
+#qpfvpmsfwo .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#fvifcbzzjq .gt_column_spanner_outer:last-child {
+#qpfvpmsfwo .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#fvifcbzzjq .gt_column_spanner {
+#qpfvpmsfwo .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -436,11 +442,11 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   width: 100%;
 }
 
-#fvifcbzzjq .gt_spanner_row {
+#qpfvpmsfwo .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#fvifcbzzjq .gt_group_heading {
+#qpfvpmsfwo .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -466,7 +472,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   text-align: left;
 }
 
-#fvifcbzzjq .gt_empty_group_heading {
+#qpfvpmsfwo .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -481,15 +487,15 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   vertical-align: middle;
 }
 
-#fvifcbzzjq .gt_from_md > :first-child {
+#qpfvpmsfwo .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#fvifcbzzjq .gt_from_md > :last-child {
+#qpfvpmsfwo .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#fvifcbzzjq .gt_row {
+#qpfvpmsfwo .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -508,7 +514,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   overflow-x: hidden;
 }
 
-#fvifcbzzjq .gt_stub {
+#qpfvpmsfwo .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -521,7 +527,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   padding-right: 5px;
 }
 
-#fvifcbzzjq .gt_stub_row_group {
+#qpfvpmsfwo .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -535,15 +541,15 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   vertical-align: top;
 }
 
-#fvifcbzzjq .gt_row_group_first td {
+#qpfvpmsfwo .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#fvifcbzzjq .gt_row_group_first th {
+#qpfvpmsfwo .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#fvifcbzzjq .gt_summary_row {
+#qpfvpmsfwo .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -553,16 +559,16 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   padding-right: 5px;
 }
 
-#fvifcbzzjq .gt_first_summary_row {
+#qpfvpmsfwo .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#fvifcbzzjq .gt_first_summary_row.thick {
+#qpfvpmsfwo .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#fvifcbzzjq .gt_last_summary_row {
+#qpfvpmsfwo .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -572,7 +578,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-bottom-color: #D3D3D3;
 }
 
-#fvifcbzzjq .gt_grand_summary_row {
+#qpfvpmsfwo .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -582,7 +588,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   padding-right: 5px;
 }
 
-#fvifcbzzjq .gt_first_grand_summary_row {
+#qpfvpmsfwo .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -592,7 +598,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-top-color: #D3D3D3;
 }
 
-#fvifcbzzjq .gt_last_grand_summary_row_top {
+#qpfvpmsfwo .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -602,11 +608,11 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-bottom-color: #D3D3D3;
 }
 
-#fvifcbzzjq .gt_striped {
+#qpfvpmsfwo .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#fvifcbzzjq .gt_table_body {
+#qpfvpmsfwo .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -615,7 +621,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-bottom-color: #D3D3D3;
 }
 
-#fvifcbzzjq .gt_footnotes {
+#qpfvpmsfwo .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -629,7 +635,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-right-color: #D3D3D3;
 }
 
-#fvifcbzzjq .gt_footnote {
+#qpfvpmsfwo .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -638,7 +644,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   padding-right: 5px;
 }
 
-#fvifcbzzjq .gt_sourcenotes {
+#qpfvpmsfwo .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -652,7 +658,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-right-color: #D3D3D3;
 }
 
-#fvifcbzzjq .gt_sourcenote {
+#qpfvpmsfwo .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -660,63 +666,63 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   padding-right: 5px;
 }
 
-#fvifcbzzjq .gt_left {
+#qpfvpmsfwo .gt_left {
   text-align: left;
 }
 
-#fvifcbzzjq .gt_center {
+#qpfvpmsfwo .gt_center {
   text-align: center;
 }
 
-#fvifcbzzjq .gt_right {
+#qpfvpmsfwo .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#fvifcbzzjq .gt_font_normal {
+#qpfvpmsfwo .gt_font_normal {
   font-weight: normal;
 }
 
-#fvifcbzzjq .gt_font_bold {
+#qpfvpmsfwo .gt_font_bold {
   font-weight: bold;
 }
 
-#fvifcbzzjq .gt_font_italic {
+#qpfvpmsfwo .gt_font_italic {
   font-style: italic;
 }
 
-#fvifcbzzjq .gt_super {
+#qpfvpmsfwo .gt_super {
   font-size: 65%;
 }
 
-#fvifcbzzjq .gt_footnote_marks {
+#qpfvpmsfwo .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#fvifcbzzjq .gt_asterisk {
+#qpfvpmsfwo .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#fvifcbzzjq .gt_indent_1 {
+#qpfvpmsfwo .gt_indent_1 {
   text-indent: 5px;
 }
 
-#fvifcbzzjq .gt_indent_2 {
+#qpfvpmsfwo .gt_indent_2 {
   text-indent: 10px;
 }
 
-#fvifcbzzjq .gt_indent_3 {
+#qpfvpmsfwo .gt_indent_3 {
   text-indent: 15px;
 }
 
-#fvifcbzzjq .gt_indent_4 {
+#qpfvpmsfwo .gt_indent_4 {
   text-indent: 20px;
 }
 
-#fvifcbzzjq .gt_indent_5 {
+#qpfvpmsfwo .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -778,23 +784,23 @@ Een character variabele met een alternatief label voor missing waarden (standaar
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>              )</span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="rmgmgkzadq" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#rmgmgkzadq table {
+<div id="vblwclossx" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#vblwclossx table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#rmgmgkzadq thead, #rmgmgkzadq tbody, #rmgmgkzadq tfoot, #rmgmgkzadq tr, #rmgmgkzadq td, #rmgmgkzadq th {
+#vblwclossx thead, #vblwclossx tbody, #vblwclossx tfoot, #vblwclossx tr, #vblwclossx td, #vblwclossx th {
   border-style: none;
 }
 
-#rmgmgkzadq p {
+#vblwclossx p {
   margin: 0;
   padding: 0;
 }
 
-#rmgmgkzadq .gt_table {
+#vblwclossx .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -820,12 +826,12 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-left-color: #D3D3D3;
 }
 
-#rmgmgkzadq .gt_caption {
+#vblwclossx .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#rmgmgkzadq .gt_title {
+#vblwclossx .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -837,7 +843,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-bottom-width: 0;
 }
 
-#rmgmgkzadq .gt_subtitle {
+#vblwclossx .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -849,7 +855,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-top-width: 0;
 }
 
-#rmgmgkzadq .gt_heading {
+#vblwclossx .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -861,13 +867,13 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-right-color: #D3D3D3;
 }
 
-#rmgmgkzadq .gt_bottom_border {
+#vblwclossx .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#rmgmgkzadq .gt_col_headings {
+#vblwclossx .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -882,7 +888,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-right-color: #D3D3D3;
 }
 
-#rmgmgkzadq .gt_col_heading {
+#vblwclossx .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -902,7 +908,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   overflow-x: hidden;
 }
 
-#rmgmgkzadq .gt_column_spanner_outer {
+#vblwclossx .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -914,15 +920,15 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   padding-right: 4px;
 }
 
-#rmgmgkzadq .gt_column_spanner_outer:first-child {
+#vblwclossx .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#rmgmgkzadq .gt_column_spanner_outer:last-child {
+#vblwclossx .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#rmgmgkzadq .gt_column_spanner {
+#vblwclossx .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -934,11 +940,11 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   width: 100%;
 }
 
-#rmgmgkzadq .gt_spanner_row {
+#vblwclossx .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#rmgmgkzadq .gt_group_heading {
+#vblwclossx .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -964,7 +970,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   text-align: left;
 }
 
-#rmgmgkzadq .gt_empty_group_heading {
+#vblwclossx .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -979,15 +985,15 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   vertical-align: middle;
 }
 
-#rmgmgkzadq .gt_from_md > :first-child {
+#vblwclossx .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#rmgmgkzadq .gt_from_md > :last-child {
+#vblwclossx .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#rmgmgkzadq .gt_row {
+#vblwclossx .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1006,7 +1012,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   overflow-x: hidden;
 }
 
-#rmgmgkzadq .gt_stub {
+#vblwclossx .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1019,7 +1025,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   padding-right: 5px;
 }
 
-#rmgmgkzadq .gt_stub_row_group {
+#vblwclossx .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1033,15 +1039,15 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   vertical-align: top;
 }
 
-#rmgmgkzadq .gt_row_group_first td {
+#vblwclossx .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#rmgmgkzadq .gt_row_group_first th {
+#vblwclossx .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#rmgmgkzadq .gt_summary_row {
+#vblwclossx .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1051,16 +1057,16 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   padding-right: 5px;
 }
 
-#rmgmgkzadq .gt_first_summary_row {
+#vblwclossx .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#rmgmgkzadq .gt_first_summary_row.thick {
+#vblwclossx .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#rmgmgkzadq .gt_last_summary_row {
+#vblwclossx .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1070,7 +1076,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-bottom-color: #D3D3D3;
 }
 
-#rmgmgkzadq .gt_grand_summary_row {
+#vblwclossx .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1080,7 +1086,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   padding-right: 5px;
 }
 
-#rmgmgkzadq .gt_first_grand_summary_row {
+#vblwclossx .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1090,7 +1096,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-top-color: #D3D3D3;
 }
 
-#rmgmgkzadq .gt_last_grand_summary_row_top {
+#vblwclossx .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1100,11 +1106,11 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-bottom-color: #D3D3D3;
 }
 
-#rmgmgkzadq .gt_striped {
+#vblwclossx .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#rmgmgkzadq .gt_table_body {
+#vblwclossx .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1113,7 +1119,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-bottom-color: #D3D3D3;
 }
 
-#rmgmgkzadq .gt_footnotes {
+#vblwclossx .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1127,7 +1133,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-right-color: #D3D3D3;
 }
 
-#rmgmgkzadq .gt_footnote {
+#vblwclossx .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1136,7 +1142,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   padding-right: 5px;
 }
 
-#rmgmgkzadq .gt_sourcenotes {
+#vblwclossx .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1150,7 +1156,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-right-color: #D3D3D3;
 }
 
-#rmgmgkzadq .gt_sourcenote {
+#vblwclossx .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1158,63 +1164,63 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   padding-right: 5px;
 }
 
-#rmgmgkzadq .gt_left {
+#vblwclossx .gt_left {
   text-align: left;
 }
 
-#rmgmgkzadq .gt_center {
+#vblwclossx .gt_center {
   text-align: center;
 }
 
-#rmgmgkzadq .gt_right {
+#vblwclossx .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#rmgmgkzadq .gt_font_normal {
+#vblwclossx .gt_font_normal {
   font-weight: normal;
 }
 
-#rmgmgkzadq .gt_font_bold {
+#vblwclossx .gt_font_bold {
   font-weight: bold;
 }
 
-#rmgmgkzadq .gt_font_italic {
+#vblwclossx .gt_font_italic {
   font-style: italic;
 }
 
-#rmgmgkzadq .gt_super {
+#vblwclossx .gt_super {
   font-size: 65%;
 }
 
-#rmgmgkzadq .gt_footnote_marks {
+#vblwclossx .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#rmgmgkzadq .gt_asterisk {
+#vblwclossx .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#rmgmgkzadq .gt_indent_1 {
+#vblwclossx .gt_indent_1 {
   text-indent: 5px;
 }
 
-#rmgmgkzadq .gt_indent_2 {
+#vblwclossx .gt_indent_2 {
   text-indent: 10px;
 }
 
-#rmgmgkzadq .gt_indent_3 {
+#vblwclossx .gt_indent_3 {
   text-indent: 15px;
 }
 
-#rmgmgkzadq .gt_indent_4 {
+#vblwclossx .gt_indent_4 {
   text-indent: 20px;
 }
 
-#rmgmgkzadq .gt_indent_5 {
+#vblwclossx .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
