@@ -3,8 +3,6 @@
 
 #nieuwe grafiek maken die uitsplitsing naast elkaar kan zetten
 
-#maak_grafiek_cbs_bevolking: Aanpassen zodat landelijke cijfers ook uit monitordata zichtbaar zijn
-
 # Het script maakt gebruik van een aantal packages
 # Deze moeten bij de eerste keer lokaal worden geinstalleerd. 
 # Dat doe je met behulp van de functie: install.packages() 
@@ -1052,7 +1050,7 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
           plot.title = element_text(hjust = .5, size = titel_size),
           axis.text = element_text(size = as_label_size),
           legend.text = element_text(size = legend_text_size),
-          plot.caption = element_text(size = caption_size)
+          plot.caption = element_text(size = caption_size, hjust = 0.5)
     )
   
   #Plot verder opmaken o.b.v. instellingen
@@ -1284,7 +1282,7 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
           plot.title = element_text(hjust = .5, size = titel_size),
           axis.text = element_text(size = as_label_size),
           legend.text = element_text(size = legend_text_size),
-          plot.caption = element_text(size = caption_size)
+          plot.caption = element_text(size = caption_size, hjust = 0.5)
     )
   
   
@@ -1690,7 +1688,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
           plot.title = element_text(hjust = .5, size = titel_size),
           axis.text = element_text(size = as_label_size),
           legend.text = element_text(size = legend_text_size),
-          plot.caption = element_text(size = caption_size)
+          plot.caption = element_text(size = caption_size, hjust = 0.5)
     )
   
   
@@ -2028,7 +2026,7 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
           plot.title = element_text(hjust = .5, size = titel_size),
           axis.text = element_text(size = as_label_size),
           legend.text = element_text(size = legend_text_size),
-          plot.caption = element_text(size = caption_size)
+          plot.caption = element_text(size = caption_size, hjust = 0.5)
     )
   
   
@@ -2300,7 +2298,7 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
       plot.title = element_text(hjust = .5, size = titel_size),
       axis.text = element_text(size = as_label_size),
       legend.text = element_text(size = legend_text_size),
-      plot.caption = element_text(size = caption_size)
+      plot.caption = element_text(size = caption_size, hjust = 0.5)
     ) +
     guides(fill = guide_legend(reverse = TRUE))
   
@@ -2487,7 +2485,7 @@ maak_cirkeldiagram <- function(data, var_inhoud, titel = "", kleuren = params$de
   # GGPLOT PIE CHART
   plot <- ggplot(df_plot, aes(x = "", y = percentage, fill = !!sym(var_inhoud))) +
     geom_col(color = "black") +
-    geom_text(aes(label = percentage),
+    geom_text(aes(label = paste0(percentage,"%")),
               position = position_stack(vjust = 0.5),
               color = "#FFFFFF",
               size = geom_text_percentage) +
@@ -2506,7 +2504,7 @@ maak_cirkeldiagram <- function(data, var_inhoud, titel = "", kleuren = params$de
       #axis.text = element_text(size = as_label_size),
       legend.text = element_text(size = legend_text_size_cirkel),
       legend.title = element_text(size = legend_title_size_cirkel),
-      plot.caption = element_text(size = caption_size)
+      plot.caption = element_text(size = caption_size, hjust = 0.5)
     )
   
   
@@ -2564,8 +2562,7 @@ maak_cirkeldiagram <- function(data, var_inhoud, titel = "", kleuren = params$de
     maak_panel_tabset(plot,tabel)    
     
   }
-  
-  
+
 }
 
 bol_met_cijfer <- function(getal, omschrijving = NA, omschrijving2 = NA, niveau = NA,
@@ -2781,6 +2778,10 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
   #factorvariabele maken van df_plot$label
   df_plot$label <- factor(df_plot$label, levels = rev(levels_factor)) 
   
+  #volgorde crossings ook vastzetten
+  df_plot$crossing <- factor(df_plot$crossing,
+                             levels = df_plot$crossing %>% unique() %>% rev() #factor van maken en omdraaien.
+                             )
   
   plot <-  ggplot(df_plot, aes(x = percentage, y = label, fill = crossing)) + 
     geom_bar(stat = "identity", position = "stack") +
@@ -2814,7 +2815,7 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
       plot.title = element_text(hjust = .5, size = titel_size),
       axis.text = element_text(size = as_label_size),
       legend.text = element_text(size = legend_text_size),
-      plot.caption = element_text(size = caption_size)
+      plot.caption = element_text(size = caption_size, hjust = 0.5)
     ) +
     guides(fill = guide_legend(reverse = TRUE))
   
@@ -2981,7 +2982,7 @@ maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL,
                          variabele = var_inhoud, 
                          crossing = var_crossing) %>%
         mutate(niveau = x) %>% 
-        filter(waarde == value) # Filter de gegevens voor value eruit. Standaard is dit 1.
+        filter(waarde %in% value) # Filter de gegevens voor value eruit. Standaard is dit 1.
       
       #Anders moet voor elk niveau in de lapply een kruistabel zonder crossing uitgerekend worden
     } else {
@@ -2991,7 +2992,7 @@ maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL,
                          survey_design = design_temp, 
                          variabele = var_inhoud) %>%
         mutate(niveau = x) %>% 
-        filter(waarde == value) # Filter de gegevens voor value eruit. Standaard is dit 1.
+        filter(waarde %in% value) # Filter de gegevens voor value eruit. Standaard is dit 1.
       
     }
   })  %>% do.call(rbind,.)
@@ -3197,7 +3198,7 @@ maak_top <- function(data, var_inhoud, toon_label = T, value = 1, niveau = "regi
   # Selecteer relevante rijen en voeg dataframes samen
   if (length(var_inhoud) == 1) {
     
-    list <- purrr::map(list, function(x) { x %>% select(varcode, waarde, percentage, var_inhoud) })
+    list <- purrr::map(list, function(x) { x %>% select(varcode, waarde, percentage, all_of(var_inhoud)) })
     
   } else {
     
@@ -3212,7 +3213,7 @@ maak_top <- function(data, var_inhoud, toon_label = T, value = 1, niveau = "regi
   
   # Filter en sorteer
   list <- list %>%
-    filter(waarde == value) %>% # Filter de gegevens voor value eruit. Standaard is dit 1.
+    filter(waarde %in% value) %>% # Filter de gegevens voor value eruit. Standaard is dit 1.
     arrange(desc(percentage)) # Sorteer op hoogte van estimate (percentage)
   
   # Print top
@@ -3291,7 +3292,7 @@ maak_percentage <- function(data, var_inhoud, value = 1, niveau = "regio",
   result <- bereken_kruistabel(data = data_temp,
                                survey_design = design_temp, 
                                variabele = var_inhoud) %>%
-    filter(waarde == value) #%>% # Filter de gegevens voor value eruit. Standaard is dit 1.
+    filter(waarde %in% value) #%>% # Filter de gegevens voor value eruit. Standaard is dit 1.
   
   #temp design verwijderen uit globalEnv.
   rm(data_temp, design_temp, envir = .GlobalEnv)
