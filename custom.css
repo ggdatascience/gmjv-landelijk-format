@@ -40,7 +40,6 @@ body {
   top: 60%;
   left: 25%;
   z-index: 10;
-  font-family: "Century Gothic";
   font-size: 50px;
   font-weight: bold;
   color: #012C17;
@@ -51,7 +50,6 @@ body {
   top: 80%;
   left: 40%;
   z-index: 10;
-  font-family: "Century Gothic";
   font-size: 30px;
   color: #012C17;
 }
@@ -63,14 +61,12 @@ body {
   top: 5%;
   left: 2%;
   z-index: 10;
-  font-family: "Century Gothic";
   font-size: 24px;
   color: white;
 }
 
 h1 {
   page-break-before: always; /* Iedere H1 maakt een pagebreak. relevant voor pdf uitdraai */
-  font-family: "Century Gothic";
   font-size: 24px;
   color: white;
   background-color: #007E48;

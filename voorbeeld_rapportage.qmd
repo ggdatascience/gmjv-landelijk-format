@@ -1105,7 +1105,7 @@ Ondanks de uitdagingen die zij in hun leven tegenkomen, heeft een groot deel van
 plot = monitor_df %>% 
   maak_staafdiagram_gestapeld(
     var_inhoud = "LVVTA404",
-    niveaus = c("gemeente", "regio"),
+    niveaus = c("regio", "gemeente"),
     titel = "Vertrouwen in de toekomst"
   )
 
