@@ -2780,6 +2780,10 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
   #factorvariabele maken van df_plot$label
   df_plot$label <- factor(df_plot$label, levels = rev(levels_factor)) 
   
+  #volgorde crossings ook vastzetten
+  df_plot$crossing <- factor(df_plot$crossing,
+                             levels = df_plot$crossing %>% unique() %>% rev() #factor van maken en omdraaien.
+                             )
   
   plot <-  ggplot(df_plot, aes(x = percentage, y = label, fill = crossing)) + 
     geom_bar(stat = "identity", position = "stack") +
