@@ -1052,7 +1052,7 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
           plot.title = element_text(hjust = .5, size = titel_size),
           axis.text = element_text(size = as_label_size),
           legend.text = element_text(size = legend_text_size),
-          plot.caption = element_text(size = caption_size)
+          plot.caption = element_text(size = caption_size, hjust = 0.5)
     )
   
   #Plot verder opmaken o.b.v. instellingen
@@ -1284,7 +1284,7 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
           plot.title = element_text(hjust = .5, size = titel_size),
           axis.text = element_text(size = as_label_size),
           legend.text = element_text(size = legend_text_size),
-          plot.caption = element_text(size = caption_size)
+          plot.caption = element_text(size = caption_size, hjust = 0.5)
     )
   
   
@@ -1690,7 +1690,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
           plot.title = element_text(hjust = .5, size = titel_size),
           axis.text = element_text(size = as_label_size),
           legend.text = element_text(size = legend_text_size),
-          plot.caption = element_text(size = caption_size)
+          plot.caption = element_text(size = caption_size, hjust = 0.5)
     )
   
   
@@ -2028,7 +2028,7 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
           plot.title = element_text(hjust = .5, size = titel_size),
           axis.text = element_text(size = as_label_size),
           legend.text = element_text(size = legend_text_size),
-          plot.caption = element_text(size = caption_size)
+          plot.caption = element_text(size = caption_size, hjust = 0.5)
     )
   
   
@@ -2300,7 +2300,7 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
       plot.title = element_text(hjust = .5, size = titel_size),
       axis.text = element_text(size = as_label_size),
       legend.text = element_text(size = legend_text_size),
-      plot.caption = element_text(size = caption_size)
+      plot.caption = element_text(size = caption_size, hjust = 0.5)
     ) +
     guides(fill = guide_legend(reverse = TRUE))
   
@@ -2487,7 +2487,7 @@ maak_cirkeldiagram <- function(data, var_inhoud, titel = "", kleuren = params$de
   # GGPLOT PIE CHART
   plot <- ggplot(df_plot, aes(x = "", y = percentage, fill = !!sym(var_inhoud))) +
     geom_col(color = "black") +
-    geom_text(aes(label = percentage),
+    geom_text(aes(label = paste0(percentage,"%")),
               position = position_stack(vjust = 0.5),
               color = "#FFFFFF",
               size = geom_text_percentage) +
@@ -2506,7 +2506,7 @@ maak_cirkeldiagram <- function(data, var_inhoud, titel = "", kleuren = params$de
       #axis.text = element_text(size = as_label_size),
       legend.text = element_text(size = legend_text_size_cirkel),
       legend.title = element_text(size = legend_title_size_cirkel),
-      plot.caption = element_text(size = caption_size)
+      plot.caption = element_text(size = caption_size, hjust = 0.5)
     )
   
   
@@ -2564,8 +2564,7 @@ maak_cirkeldiagram <- function(data, var_inhoud, titel = "", kleuren = params$de
     maak_panel_tabset(plot,tabel)    
     
   }
-  
-  
+
 }
 
 bol_met_cijfer <- function(getal, omschrijving = NA, omschrijving2 = NA, niveau = NA,
@@ -2814,7 +2813,7 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
       plot.title = element_text(hjust = .5, size = titel_size),
       axis.text = element_text(size = as_label_size),
       legend.text = element_text(size = legend_text_size),
-      plot.caption = element_text(size = caption_size)
+      plot.caption = element_text(size = caption_size, hjust = 0.5)
     ) +
     guides(fill = guide_legend(reverse = TRUE))
   
