@@ -3,8 +3,6 @@
 
 #nieuwe grafiek maken die uitsplitsing naast elkaar kan zetten
 
-#maak_grafiek_cbs_bevolking: Aanpassen zodat landelijke cijfers ook uit monitordata zichtbaar zijn
-
 # Het script maakt gebruik van een aantal packages
 # Deze moeten bij de eerste keer lokaal worden geinstalleerd. 
 # Dat doe je met behulp van de functie: install.packages() 
@@ -2984,7 +2982,7 @@ maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL,
                          variabele = var_inhoud, 
                          crossing = var_crossing) %>%
         mutate(niveau = x) %>% 
-        filter(waarde == value) # Filter de gegevens voor value eruit. Standaard is dit 1.
+        filter(waarde %in% value) # Filter de gegevens voor value eruit. Standaard is dit 1.
       
       #Anders moet voor elk niveau in de lapply een kruistabel zonder crossing uitgerekend worden
     } else {
@@ -2994,7 +2992,7 @@ maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL,
                          survey_design = design_temp, 
                          variabele = var_inhoud) %>%
         mutate(niveau = x) %>% 
-        filter(waarde == value) # Filter de gegevens voor value eruit. Standaard is dit 1.
+        filter(waarde %in% value) # Filter de gegevens voor value eruit. Standaard is dit 1.
       
     }
   })  %>% do.call(rbind,.)
@@ -3200,7 +3198,7 @@ maak_top <- function(data, var_inhoud, toon_label = T, value = 1, niveau = "regi
   # Selecteer relevante rijen en voeg dataframes samen
   if (length(var_inhoud) == 1) {
     
-    list <- purrr::map(list, function(x) { x %>% select(varcode, waarde, percentage, var_inhoud) })
+    list <- purrr::map(list, function(x) { x %>% select(varcode, waarde, percentage, all_of(var_inhoud)) })
     
   } else {
     
@@ -3215,7 +3213,7 @@ maak_top <- function(data, var_inhoud, toon_label = T, value = 1, niveau = "regi
   
   # Filter en sorteer
   list <- list %>%
-    filter(waarde == value) %>% # Filter de gegevens voor value eruit. Standaard is dit 1.
+    filter(waarde %in% value) %>% # Filter de gegevens voor value eruit. Standaard is dit 1.
     arrange(desc(percentage)) # Sorteer op hoogte van estimate (percentage)
   
   # Print top
@@ -3294,7 +3292,7 @@ maak_percentage <- function(data, var_inhoud, value = 1, niveau = "regio",
   result <- bereken_kruistabel(data = data_temp,
                                survey_design = design_temp, 
                                variabele = var_inhoud) %>%
-    filter(waarde == value) #%>% # Filter de gegevens voor value eruit. Standaard is dit 1.
+    filter(waarde %in% value) #%>% # Filter de gegevens voor value eruit. Standaard is dit 1.
   
   #temp design verwijderen uit globalEnv.
   rm(data_temp, design_temp, envir = .GlobalEnv)
