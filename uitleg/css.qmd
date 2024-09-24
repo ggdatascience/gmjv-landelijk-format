@@ -1,0 +1,105 @@
+# Aangepaste CSS 
+
+Dit is de css die gebruikt wordt voor het standaard format GMJV. Zie het bestand custom.css.\
+
+```{css}
+
+/*Open Sans importeren */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
+/*TODO input ontwerper mbt lettertypen & kleuren verwerken*/
+
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+
+/*CSS om te zorgen dat divs met plaatjes over elkaar heen kunnen 
+
+Bijvoorbeeld:
+De div's voorblad_gemeentenaam en voorblad_datum zitten IN de div voorblad_achtergrond 
+CSS bij de elementen IN de overkoepelende div bepaald de positie van die elementen relatief aan het het grotere plaatje.
+Positie kan aangepast worden dmv "top" & "left".
+*/
+  .voorblad_achtergrond, .pagina_header_img{
+    position: relative;
+  }
+  
+  .voorblad_gemeentenaam{
+    position: absolute;
+    top: 60%;
+    left: 25%;l
+    z-index: 10;
+    font-family: "Century Gothic";
+    font-size: 50px;
+    font-weight: bold;
+    color: #012C17;
+  }
+  
+  .voorblad_datum{
+    position: absolute;
+    top: 80%;
+    left: 40%;
+    z-index: 10;
+    font-family: "Century Gothic";
+    font-size: 30px;
+    color: #012C17;
+  }
+  
+  .pagina_header_titel{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 5%;
+    left: 2%;
+    z-index: 10;
+    font-family: "Century Gothic";
+    font-size: 24px;
+    color: white;
+  }
+
+/*H1 eigenschappen*/
+  h1 {
+    page-break-before: always; /* Iedere H1 maakt een pagebreak. relevant voor pdf uitdraai */
+    font-family: "Century Gothic";
+    font-size: 24px;
+    color: white;
+    background-color: #007E48;
+    padding: 20px;
+  }
+
+/*css om het mogelijk te maken icoontjes aan headers toe te voegen*/
+  .h1-icoon h1 {
+    /* om te zorgen dat er plaatje met relatieve positie overheen geprojecteerd kan worden
+    position: relative;
+    /* moet ook een offest vanaf links zijn zodat de plaatjes ruimte krijgen*/
+    position: relative;
+    text-indent: 80px;
+  }
+  
+  /*Plaatsing van header icons*/
+  h1 .img-fluid {
+    height: 100%;
+    position: absolute;
+    top: 5%;
+    left: 2%;
+    z-index: 10;
+  
+  }
+  
+  /*Plaatje niet laten zien in table of contents*/
+  #TOC .img-fluid {
+    display: none; 
+  }
+
+
+  /*Lijntje dat tussen tekstblokken geplaatst kan worden*/
+  .tussenlijn {
+    border-bottom: 1px solid #86B443;
+  }
+
+  /* achtergrondkleur class voor tekstvelden*/
+  .achtergrondkleur {
+    background-color: #F7F7DB;
+    color: #012C17;
+    padding: 20px;
+  }
+```

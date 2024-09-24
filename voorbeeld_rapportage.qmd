@@ -27,9 +27,10 @@ params:
 format-links: false
 echo: false
 warning: false
+message: false
 ---
 
-```{r Instellingen, echo=F, message=F, warning=F}
+```{r Instellingen}
 #Libraries inladen
 # Het script maakt gebruik van een aantal packages
 # Deze moeten bij de eerste keer lokaal worden geinstalleerd

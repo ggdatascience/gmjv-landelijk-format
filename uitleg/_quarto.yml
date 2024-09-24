@@ -21,6 +21,7 @@ book:
     - voorbeeld_overige_functies.qmd
     - uploaden-swing.qmd
     - handige-bronnen.qmd
+    - css.qmd
     
 warning: false
     

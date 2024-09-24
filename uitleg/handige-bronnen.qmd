@@ -1,0 +1,15 @@
+#Handige bronnen
+
+Hier staan links naar bronnen om Quarto, R en aanverwante technieken mee te leren. 
+
+-   Beginnen met Quarto: https://quarto.org/docs/get-started/hello/rstudio.html
+-   R
+  -   Cheatsheets: https://posit.co/resources/cheatsheets/ 
+  -   R for Data Science: https://r4ds.had.co.nz/
+  -   Advanced R: https://adv-r.hadley.nz/ 
+  -   Efficient R: https://csgillespie.github.io/efficientR/ 
+  -   R en databases: https://db.rstudio.com/ 
+  -   Grote verzameling R boeken: https://bookdown.org/
+  -   Visualisaties:  https://r-graphics.org/ 
+-  CSS & HTML https://www.w3schools.com/
+  
