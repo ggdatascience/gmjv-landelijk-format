@@ -80,7 +80,7 @@ monitor_df = haven::read_spss(params$path_nepdata, user_na =T) %>%
 # if (sum(df_regio$Standaardisatiefactor_regio != 0, na.rm = T) != nrow(df %>% filter(GGDregio == params$regiocode))) {
 #   print("Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data.")
 # }
-# 
+
 # # Filter regio uit landelijk databestand
 # df <- df %>%
 #   filter(GGDregio != params$regiocode)
@@ -261,6 +261,9 @@ plot
 :::
 :::
 
+::: tussenlijn
+:::
+
 ::: {layout="[100]"}
 ::: column
 Van de respondenten in uw gemeente is `r monitor_df %>% maak_percentage(var_inhoud = 'AGLFA401', value = 1, niveau = "gemeente")` 16 of 17 jaar, `r monitor_df %>% maak_percentage(var_inhoud = 'AGLFA401', value = 2, niveau = "gemeente")` tussen de 18 en 20 jaar en `r monitor_df %>% maak_percentage(var_inhoud = 'AGLFA401', value = 3, niveau = "gemeente")` tussen de 21 en 25 jaar.
@@ -299,9 +302,12 @@ plot
 
 ::: {layout="[100]"}
 ::: column
-De woon-, werk- en financiële situatie kan veel invloed hebben op het welzijn en de mentale en fysieke gezondheid van jongvolwassenen. In een tijd waarin er sprake is van een woningcrisis en een onzekere financiële situatie is het van belang om deze aspecten goed te monitoren.
+**De woon-, werk- en financiële situatie kan veel invloed hebben op het welzijn en de mentale en fysieke gezondheid van jongvolwassenen. In een tijd waarin er sprake is van een woningcrisis en een onzekere financiële situatie is het van belang om deze aspecten goed te monitoren.**
 
 <br>
+
+::: tussenlijn
+:::
 
 **Woonsituatie**
 
@@ -326,6 +332,9 @@ plot = monitor_df %>%
 
 ::: column
 :::
+:::
+
+::: tussenlijn
 :::
 
 ::: {layout="[100]"}
@@ -417,7 +426,10 @@ plot
 
 <br>
 
+::: achtergrondkleur
 [Het Nibud](https://www.nibud.nl/) (Nationaal Instituut voor Budgetvoorlichting) geeft advies over onder andere rondkomen, sparen en geldproblemen.
+:::
+
 :::
 :::
 
@@ -444,7 +456,9 @@ plot
 
 ::: {layout="[100]"}
 ::: column
-**Ervaren gezondheid en geluk** Gezondheid is meer dan de afwezigheid van lichamelijke en mentale klachten. Iedereen geeft zijn eigen betekenis aan gezondheid en jongvolwassenen kunnen zelf het beste aangeven hoe zij hun eigen gezondheid ervaren, dit is een betrouwbare indicator voor de algehele gezondheidstoestand.
+**Ervaren gezondheid en geluk** 
+
+Gezondheid is meer dan de afwezigheid van lichamelijke en mentale klachten. Iedereen geeft zijn eigen betekenis aan gezondheid en jongvolwassenen kunnen zelf het beste aangeven hoe zij hun eigen gezondheid ervaren, dit is een betrouwbare indicator voor de algehele gezondheidstoestand.
 
 <br>
 
@@ -488,6 +502,9 @@ plot
 
 ```
 :::
+:::
+
+::: tussenlijn
 :::
 
 ::: {layout="[100]"}
@@ -542,6 +559,9 @@ monitor_df %>%
 
 ```
 :::
+:::
+
+::: tussenlijn
 :::
 
 ::: {layout="[100]"}
@@ -622,7 +642,10 @@ monitor_df %>% maak_percentage(var_inhoud = 'LVPKS403', niveau = "regio") %>%
 
 <br>
 
+::: achtergrondkleur
 [Happyles](https://www.trimbos.nl/aanbod/programmas/happyles-depressiepreventie-bij-jongeren/) is een klassikale interventie ter bevordering van welbevinden en geluk en ter preventie van depressieklachten bij jongvolwassenen.
+:::
+
 :::
 :::
 
@@ -655,6 +678,9 @@ plot = monitor_df %>%
 plot
 ```
 :::
+:::
+
+::: tussenlijn
 :::
 
 ::: {layout="[100]"}
@@ -721,8 +747,14 @@ monitor_df %>%
 
 <br>
 
+::: achtergrondkleur
 [113 Zelfmoordpreventie](https://www.113.nl/) is er voor inwoners en professionals. Ze geven informatie en trainingen over het herkennen van suïcidaliteit en het bieden van hulp.
 :::
+
+:::
+:::
+
+::: tussenlijn
 :::
 
 ::: {layout="[100]"}
@@ -737,7 +769,10 @@ Van de jongvolwassenen in uw gemeente voelt `r monitor_df %>% maak_percentage(va
 
 <br>
 
+::: achtergrondkleur
 [Aanpakeenzaamheid.nl](https://aanpakeenzaamheid.nl/jongeren/) bundelt hulpmiddelen die door gemeenten en organisaties in te zetten zijn tegen eenzaamheid.
+:::
+
 :::
 :::
 
@@ -831,6 +866,9 @@ plot
 
 ```
 :::
+:::
+
+::: tussenlijn
 :::
 
 ::: {layout="[100]"}
@@ -934,9 +972,12 @@ plot
 
 ::: {layout="[[100]]"}
 ::: column
-Hoe jongvolwassenen omgaan met de uitdagingen van het leven wordt mede bepaald door hun veerkracht en weerbaarheid.
+**Hoe jongvolwassenen omgaan met de uitdagingen van het leven wordt mede bepaald door hun veerkracht en weerbaarheid.**
 
 <br>
+
+::: tussenlijn
+:::
 
 **Veerkracht**
 :::
@@ -993,8 +1034,14 @@ monitor_df %>%
 
 <br>
 
+::: achtergrondkleur
 [Institute for positive health](https://www.iph.nl/) zet in op positieve gezondheid. Door in gesprek te gaan met jongvolwassenen wordt duidelijk waar hun kracht zit en wat hen helpt om sterker uit een stressvolle of moeilijke periode te komen. Het concept van positieve gezondheid biedt daarvoor aanknopingspunten.
 :::
+
+:::
+:::
+
+::: tussenlijn
 :::
 
 ::: {layout="[100]"}
@@ -1009,7 +1056,10 @@ Weerbaarheid is de basis voor een goede psychische gezondheid. Weerbare jongvolw
 
 <br>
 
+::: achtergrondkleur
 [Movisie](https://www.movisie.nl/publicatie/wat-werkt-versterken-weerbaarheid-jongeren) legt uit wat werkt voor het versterken van weerbaarheid bij jongvolwassenen.
+:::
+
 :::
 :::
 
@@ -1034,6 +1084,9 @@ plot
 :::
 :::
 
+::: tussenlijn
+:::
+
 ::: {layout="[[100]]"}
 ::: column
 **Vertrouwen in de toekomst**
@@ -1053,7 +1106,7 @@ Ondanks de uitdagingen die zij in hun leven tegenkomen, heeft een groot deel van
 plot = monitor_df %>% 
   maak_staafdiagram_gestapeld(
     var_inhoud = "LVVTA404",
-    niveaus = c("gemeente", "regio"),
+    niveaus = c("regio", "gemeente"),
     titel = "Vertrouwen in de toekomst"
   )
 
@@ -1271,6 +1324,9 @@ plot
 :::
 :::
 
+::: tussenlijn
+:::
+
 ::: {layout="[100]"}
 ::: column
 **Roken, vapen en snus**
@@ -1399,6 +1455,9 @@ monitor_df %>%
 
 ::: column
 :::
+:::
+
+::: tussenlijn
 :::
 
 ::: {layout="[100]"}
@@ -1576,6 +1635,9 @@ monitor_df %>%
 :::
 :::
 
+::: tussenlijn
+:::
+
 ::: {layout="[100]"}
 ::: column
 **Post-covid**
@@ -1584,7 +1646,10 @@ monitor_df %>%
 
 <br>
 
+::: achtergrondkleur
 Meer informatie over post-covid en (financiële) hulp bij post-covid is te vinden op de website van de [rijksoverheid](https://www.rijksoverheid.nl/onderwerpen/coronavirus-covid-19/luchtwegvirussen-zoals-griep-en-corona/post-covid).
+:::
+
 :::
 :::
 
@@ -1692,6 +1757,9 @@ monitor_df %>%
 :::
 :::
 
+::: tussenlijn
+:::
+
 ::: {layout="[100]"}
 ::: column
 **Online gokken en beleggen**
@@ -1773,9 +1841,12 @@ plot
 
 ::: {layout="[100]"}
 ::: column
-Seksualiteit is een onderdeel van gezondheid, net zoals gezond eten, bewegen, slapen en hoe je je mentaal voelt. Onder seksualiteit verstaan we diversiteit in gender, sekse en seksuele oriëntatie, maar ook veilige seks en seksueel risicogedrag.
+**Seksualiteit is een onderdeel van gezondheid, net zoals gezond eten, bewegen, slapen en hoe je je mentaal voelt. Onder seksualiteit verstaan we diversiteit in gender, sekse en seksuele oriëntatie, maar ook veilige seks en seksueel risicogedrag.**
 
 <br>
+
+::: tussenlijn
+:::
 
 **LHBTQIA+**
 
@@ -1829,6 +1900,9 @@ monitor_df %>%
 :::
 :::
 
+::: tussenlijn
+:::
+
 ::: {layout="[100]"}
 ::: column
 **Seksualiteit en risicogedrag**
@@ -1855,7 +1929,9 @@ In uw gemeente heeft `r monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', 
 
 ::: {layout="[100]"}
 ::: column
+::: achtergrondkleur
 [Sense](https://sense.info/nl) is een voorlichtingswebsite met betrouwbare informatie over relaties en seksualiteit voor jongvolwassenen. Sense maakt gebruik van video’s, podcasts, games en andere technieken om betrouwbare informatie te delen over onder andere seksueel plezier, veilige seks en wensen en grenzen. Jongvolwassenen kunnen via chat, Whatsapp, telefoon, etc. contact leggen met een hulpverlener of een afspraak maken voor een jongvolwassenenspreekuur. Ook kunnen jongvolwassenen contact zoeken met de regionale [Sense afdeling]().
+:::
 :::
 :::
 
@@ -1928,8 +2004,10 @@ Heeft u nog vragen over het onderzoek?
 
 Neem dan contact op met Team Onderzoek via [mail\@organisatie.nl](mailto:mail@organisatie.nl).
 
+::: achtergrondkleur
 **Meer weten?**
 
 In ons digitale dashboard vindt u meer cijfers over de gezondheid van inwoners in de regio. Hier vindt u ook de tabellenboeken van dit onderzoek.
 
 Deze en meer informatie vindt u op: [www.websitevanggd.nl](www.websitevanggd.nl)
+:::
