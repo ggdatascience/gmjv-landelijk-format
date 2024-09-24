@@ -1,3 +1,6 @@
+---
+engine: knitr
+---
 # Aangepaste CSS 
 
 Dit is de css die gebruikt wordt voor het standaard format GMJV. Zie het bestand custom.css.\
