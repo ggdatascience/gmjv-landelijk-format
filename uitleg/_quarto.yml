@@ -7,7 +7,7 @@ book:
   author:
       - name: "Pieter Seinen"
         affiliation: "GGD Hart voor Brabant"
-      - name: "Sjane van der Stappen"
+      - name: "Sjanne van der Stappen"
         affiliation: "GGD Limburg-Noord"
     
   chapters:
@@ -19,7 +19,6 @@ book:
     - voorbeeld_grafieken.qmd
     - voorbeeld_tekstfuncties.qmd
     - voorbeeld_overige_functies.qmd
-    - uploaden-swing.qmd
     - handige-bronnen.qmd
     - css.qmd
     

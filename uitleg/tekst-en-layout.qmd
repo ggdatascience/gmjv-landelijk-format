@@ -12,6 +12,8 @@ params:
   default_kleuren_responstabel: !expr c("header" = "#012C17", "kleur_1" = "#007E48", "kleur_2" = "#76B82A","kleur_tekst" = "#FFFFFF")
 ---
 
+# Tekst, Code invoegen en layout aanpassen
+
 ```{r, echo=F, message=F, warning=F}
 #Libraries inladen
 # Het script maakt gebruik van een aantal packages
@@ -92,7 +94,6 @@ showtext_auto()
 
 ```
 
-# Tekst, Code invoegen en layout aanpassen
 
 De standaardrapportage GMJV is (net als dit boek) gemaakt met Quarto. Met Quarto kunnen opgemaakte tekst en afbeeldingen gecombineerd worden met code. In dit hoofdstuk worden de enkele technieken behandeld waarmee je een quarto document kan bewerken.
 
