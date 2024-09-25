@@ -319,14 +319,16 @@ plot
 
 ::: {layout="[100]"}
 ::: column
-**De woon-, werk- en financiële situatie kan veel invloed hebben op het welzijn en de mentale en fysieke gezondheid van jongvolwassenen. In een tijd waarin er sprake is van een woningcrisis en een onzekere financiële situatie is het van belang om deze aspecten goed te monitoren.**
-
-<br>
+::: inleiding
+De woon-, werk- en financiële situatie kan veel invloed hebben op het welzijn en de mentale en fysieke gezondheid van jongvolwassenen. In een tijd waarin er sprake is van een woningcrisis en een onzekere financiële situatie is het van belang om deze aspecten goed te monitoren.
+:::
 
 ::: tussenlijn
 :::
 
-**Woonsituatie**
+::: titel
+Woonsituatie
+:::
 
 De meeste jongvolwassenen in uw gemeente wonen `r monitor_df %>% maak_top(var_inhoud = 'AGHHA403', value = 1:8, top = 1, niveau = "gemeente")`. `r monitor_df %>% maak_vergelijking(var_inhoud = 'AGHHA401', variabele_label = 'bij ouders/verzorgers woont', var_crossing = 'AGOJB401', niveau = "regio")`
 :::
@@ -364,7 +366,9 @@ plot = monitor_df %>%
 
 ::: {layout="[100]"}
 ::: column
-**Werk- en financiële situatie**
+::: titel
+Werk- en financiële situatie
+:::
 
 De meeste werkende jongvolwassenen in uw gemeente werken `r monitor_df %>% maak_top(var_inhoud = 'AGHHA403', value = 1:5, top = 1)`. `r monitor_df %>% maak_vergelijking(var_inhoud = 'FIIKA401', variabele_label = 'tenminste 32 uur per week werkt', var_crossing = 'AGOJB401')`
 :::
@@ -481,7 +485,9 @@ plot
 
 ::: {layout="[100]"}
 ::: column
-**Ervaren gezondheid en geluk**
+::: titel
+Ervaren gezondheid en geluk
+:::
 
 Gezondheid is meer dan de afwezigheid van lichamelijke en mentale klachten. Iedereen geeft zijn eigen betekenis aan gezondheid en jongvolwassenen kunnen zelf het beste aangeven hoe zij hun eigen gezondheid ervaren, dit is een betrouwbare indicator voor de algehele gezondheidstoestand.
 
@@ -534,7 +540,9 @@ plot
 
 ::: {layout="[100]"}
 ::: column
-**Slaap**
+::: titel
+Slaap
+:::
 
 Slaap is belangrijk voor het ‘schoonmaken’ van de hersenen, het onthouden van belangrijke dingen en het verwerken van emoties. Slapen is daarom net zo belangrijk als voeding en beweging om gezond te blijven.
 :::
@@ -591,7 +599,9 @@ monitor_df %>%
 
 ::: {layout="[100]"}
 ::: column
-**Tevredenheid met jezelf, je lichaam en je leven**
+::: titel
+Tevredenheid met jezelf, je lichaam en je leven
+:::
 
 `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVTEA406', variabele_label = "(zeer) tevreden is met hun leven", var_crossing = 'AGOJB401')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVTEA406', variabele_label = "(zeer) tevreden is met hun leven", var_crossing = 'AGGSA402')`
 :::
@@ -620,7 +630,9 @@ plot
 
 ::: {layout="[100]"}
 ::: column
-**Mentale gezondheid**
+::: titel
+Mentale gezondheid
+:::
 
 Mentale gezondheid en weerbaarheid zijn belangrijke voorwaarden om gezond te leven en gezond op te groeien. Psychische klachten vinden vaak hun oorsprong op jonge leeftijd. Uit [internationaal onderzoek](https://www.trimbos.nl/kennis/geluk-onder-druk-onderzoek-naar-mentaal-welzijn-jongeren/kennisagenda/) blijkt dat driekwart van de psychische klachten begint voor de leeftijd van 24 jaar en de helft van de psychische klachten voor de leeftijd van 14 jaar.
 
@@ -712,7 +724,9 @@ plot
 
 ::: {layout="[100]"}
 ::: column
-**Suicidegedachten**
+::: titel
+Suicidegedachten
+:::
 
 Als gevoelens zoals angst, paniek, somberheid, leegte, zelfverwijt, boosheid, schaamte, vernedering of schuld bezit van iemand nemen en gedachten gaan beheersen, kan de dood een oplossing lijken om van deze gedachten af te zijn. Het denken aan het beëindigen van het leven kan een manier van zelfbescherming zijn om de pijn en uitzichtloosheid iets te verzachten.
 :::
@@ -785,7 +799,9 @@ monitor_df %>%
 
 ::: {layout="[100]"}
 ::: column
-**Eenzaamheid**
+::: titel
+Eenzaamheid
+:::
 
 Eenzaamheid is één van de belangrijkste risicofactoren voor het ontwikkelen van mentale klachten. Daarnaast kan eenzaamheid zorgen voor gedragsproblemen (middelengebruik), lichamelijke problemen (stress) of maatschappelijke problemen (vroegtijdig schoolverlaten).
 
@@ -835,7 +851,9 @@ plot
 
 ::: {layout="[100]"}
 ::: column
-**Stress**
+::: titel
+Stress
+:::
 
 Wanneer (ongezonde) stress te lang duurt, is er meer tijd nodig om te herstellen. Bij te veel stress is er te weinig tijd om tussendoor te herstellen en kan dit leiden tot spanningsklachten en een burn-out.
 
@@ -898,7 +916,9 @@ plot
 
 ::: {layout="[100]"}
 ::: column
-**Prestatiedruk**
+::: titel
+Prestatiedruk
+:::
 
 Sommige jongvolwassenen voelen druk om aan verwachtingen te voldoen. Ze hebben vaak het gevoel dat ze iets goed of beter moeten doen. Ze willen hoge cijfers halen, een goede baan hebben of voldoen aan het perfecte plaatje.
 
@@ -998,14 +1018,16 @@ plot
 
 ::: {layout="[[100]]"}
 ::: column
-**Hoe jongvolwassenen omgaan met de uitdagingen van het leven wordt mede bepaald door hun veerkracht en weerbaarheid.**
-
-<br>
+::: inleiding
+Hoe jongvolwassenen omgaan met de uitdagingen van het leven wordt mede bepaald door hun veerkracht en weerbaarheid.**
+:::
 
 ::: tussenlijn
 :::
 
-**Veerkracht**
+::: titel
+Veerkracht
+:::
 :::
 :::
 
@@ -1071,7 +1093,9 @@ monitor_df %>%
 
 ::: {layout="[100]"}
 ::: column
-**Opkomen voor jezelf**
+::: titel
+Opkomen voor jezelf
+:::
 
 Weerbaarheid is de basis voor een goede psychische gezondheid. Weerbare jongvolwassenen hebben zelfvertrouwen en kunnen goed voor zichzelf opkomen, met respect voor anderen. Zij kunnen ook, al dan niet na een periode van experimenteren, gezonde keuzes maken ten aanzien van de eigen leefstijl.
 
@@ -1113,7 +1137,9 @@ plot
 
 ::: {layout="[[100]]"}
 ::: column
-**Vertrouwen in de toekomst**
+::: titel
+Vertrouwen in de toekomst
+:::
 
 Ondanks de uitdagingen die zij in hun leven tegenkomen, heeft een groot deel van de jongvolwassenen in uw gemeente (`r monitor_df %>% maak_percentage(var_inhoud = 'LVVTA404', value = 3, niveau = "gemeente")`) (heel) veel vertrouwen in hun toekomst. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVVTA404', value = 3, variabele_label = '(heel) veel vertrouwen in de toekomst heeft', var_crossing = 'AGOJB401')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVVTA404', value = 3, variabele_label = '(heel) veel vertrouwen in de toekomst heeft', var_crossing = 'AGGSA402')`
 
@@ -1255,7 +1281,9 @@ plot
 
 ::: {layout="[100]"}
 ::: column
-**Alcohol**
+::: titel
+Alcohol
+:::
 
 De hersenen van jongvolwassenen zijn tot het 25e levensjaar volop in ontwikkeling. Het drinken van alcohol kan op langere termijn de kans op het krijgen van overgewicht, hart- en vaatziekten, leverziektes, hersenziektes en kanker verhogen.
 
@@ -1335,7 +1363,9 @@ plot
 
 ::: {layout="[100]"}
 ::: column
-**Roken, vapen en snus**
+::: titel
+Roken, vapen en snus
+:::
 
 Roken is een belangrijke oorzaak van ziekte en sterfte in Nederland. Hoe jonger iemand start met roken, hoe groter de kans is op een rookverslaving. Vapen is een vorm van roken, waarbij vloeistof opgewarmd wordt en niet verbrand. Net als bij roken, zitten in vapes veel stoffen die slecht zijn voor de gezondheid. De nicotinezouten die in sommige vapes zitten, zijn vele malen sterker dan nicotine in een sigaret.
 :::
@@ -1459,7 +1489,9 @@ monitor_df %>%
 
 ::: {layout="[100]"}
 ::: column
-**Drugs**
+::: titel
+Drugs
+:::
 
 Het gebruik van drugs leidt bij langdurig en regelmatig gebruik tot (geestelijke) afhankelijkheid, psychische stoornissen en andere gezondheidsrisico’s.
 
@@ -1641,7 +1673,9 @@ monitor_df %>%
 
 ::: {layout="[100]"}
 ::: column
-**Post-covid**
+::: titel
+Post-covid
+:::
 
 `r monitor_df %>% maak_percentage(var_inhoud = 'LFDGS404', niveau = "gemeente")` van de jongvolwassenen in uw gemeente heeft 3 maanden of langer klachten van het coronavirus. Bij `r monitor_df %>% maak_percentage(var_inhoud = 'LFDGS404', niveau = "gemeente")` is post-covid vastgesteld door een arts.
 
@@ -1704,7 +1738,9 @@ monitor_df %>%
 
 ::: {layout="[100]"}
 ::: column
-**Sociale media en gamen**
+::: titel
+Sociale media en gamen
+:::
 
 Als jongvolwassenen het gebruik van sociale media en/of gamen niet meer onder controle hebben, kunnen er problemen ontstaan in het dagelijks functioneren (bijvoorbeeld sociale conflicten, onthoudingsverschijnselen en vluchtgedrag). Dit kan negatieve effecten hebben op verschillende aspecten van gezondheid, zoals mentaal welbevinden, eenzaamheid en slaap.
 :::
@@ -1762,7 +1798,9 @@ monitor_df %>%
 
 ::: {layout="[100]"}
 ::: column
-**Online gokken en beleggen**
+::: titel
+Online gokken en beleggen
+:::
 
 Online gokken gaat over het spelen van online gokspellen (bijvoorbeeld fruitautomaat/slots, sportweddenschappen zoals Toto of casinogames zoals roulette, kaartspellen of Rad van Fortuin).
 
@@ -1840,14 +1878,16 @@ plot
 
 ::: {layout="[100]"}
 ::: column
-**Seksualiteit is een onderdeel van gezondheid, net zoals gezond eten, bewegen, slapen en hoe je je mentaal voelt. Onder seksualiteit verstaan we diversiteit in gender, sekse en seksuele oriëntatie, maar ook veilige seks en seksueel risicogedrag.**
-
-<br>
+::: inleiding
+Seksualiteit is een onderdeel van gezondheid, net zoals gezond eten, bewegen, slapen en hoe je je mentaal voelt. Onder seksualiteit verstaan we diversiteit in gender, sekse en seksuele oriëntatie, maar ook veilige seks en seksueel risicogedrag.**
+:::
 
 ::: tussenlijn
 :::
 
-**LHBTQIA+**
+::: titel
+LHBTQIA+
+:::
 
 LHBTQIA+ staat voor lesbisch, homoseksueel, biseksueel, transgender, queer, intersekse en aseksueel. De + staat voor alle andere vormen die niet heteroseksueel en cisgender zijn [NJI](https://www.nji.nl/seksualiteit-en-gender/wat-betekent-lhbtiqa?gad_source=1&gclid=EAIaIQobChMIi4jA4vjihwMVJRUGAB1RWw0NEAAYASAAEgLGhfD_BwE). Uit de [rapportage van Corona Gezondheidsmonitor Jongvolwassenen 2022](https://ggdghor.nl/wp-content/uploads/2024/07/Verdiepend-rapport-CGM-Jongvolwassenen-2022-GGD-GHOR-Nederland.pdf) “(On)gezonde start van volwassen leven: inzicht in gezondheidsverschillen van jongvolwassenen in de nasleep van de coronapandemie” bleek dat jongvolwassenen die zichzelf identificeren als LHBTQIA+ vaker een slechtere gezondheid ervaren.
 :::
@@ -1904,7 +1944,9 @@ monitor_df %>%
 
 ::: {layout="[100]"}
 ::: column
-**Seksualiteit en risicogedrag**
+::: titel
+Seksualiteit en risicogedrag
+:::
 
 In uw gemeente heeft `r monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente")` van de jongvolwassenen wel eens seks gehad en heeft `r monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente")` seks gehad met verschillende personen in het laatste halfjaar.
 :::
@@ -1993,7 +2035,9 @@ Heeft u nog vragen over het onderzoek?
 Neem dan contact op met Team Onderzoek via [mail\@organisatie.nl](mailto:mail@organisatie.nl).
 
 ::: achtergrondkleur
-**Meer weten?**
+::: titel
+Meer weten?
+:::
 
 In ons digitale dashboard vindt u meer cijfers over de gezondheid van inwoners in de regio. Hier vindt u ook de tabellenboeken van dit onderzoek.
 

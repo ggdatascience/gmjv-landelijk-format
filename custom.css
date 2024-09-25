@@ -6,6 +6,7 @@
 
 body {
   font-family: 'Open Sans', sans-serif;
+  font-size: 18px;
 }
 
 /*
@@ -102,9 +103,9 @@ Positie kan aangepast worden dmv "top" & "left".
   
 /*Plaatsing van header icons*/
   h1 .img-fluid {
-    height: 140%;
+    height: 150%;
     position: absolute;
-    top: 0%;
+    top: -25%;
     left: -24%;
     z-index: 10;
   }
@@ -137,4 +138,18 @@ Positie kan aangepast worden dmv "top" & "left".
     background-color: #F7F7DB;
     color: #012C17;
     padding: 20px;
+  }
+  
+/* class voor titels*/
+  .titel {
+    color: #002c17;
+    font-size: 21px;
+    font-weight: bold;
+  }
+  
+/* class voor inleiding*/
+  .inleiding {
+    color: #002c17;
+    font-size: 19px;
+    font-weight: bold;
   }
