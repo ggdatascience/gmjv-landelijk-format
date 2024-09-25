@@ -21,23 +21,54 @@ Positie kan aangepast worden dmv "top" & "left".
     position: relative;
   
   }
-  
-  .voorblad_gemeentenaam{
+
+  .voorblad_resultaten{
     position: absolute;
     top: 60%;
     left: 25%;
     z-index: 10;
-    font-size: 50px;
+    font-size: 42px;
+    font-weight: 800;
+    color: #012C17;
+  }
+  
+  .voorblad_campagne{
+    position: absolute;
+    top: 75%;
+    left: 5%;
+    z-index: 10;
+    font-size: 28px;
+    font-weight: bold;
+    color: #012C17;
+  }
+  
+  .voorblad_monitor{
+    position: absolute;
+    top: 80%;
+    left: 5%;
+    z-index: 10;
+    font-size: 28px;
+    font-weight: bold;
+    color: #007E48;
+  }
+  
+  .voorblad_gemeentenaam{
+    position: absolute;
+    top: 90%;
+    left: 5%;
+    z-index: 10;
+    font-size: 23px;
     font-weight: bold;
     color: #012C17;
   }
   
   .voorblad_datum{
     position: absolute;
-    top: 80%;
-    left: 40%;
+    top: 90%;
+    left: 75%;
     z-index: 10;
-    font-size: 30px;
+    font-size: 23px;
+    font-weight: bold;
     color: #012C17;
   }
   
@@ -54,10 +85,10 @@ Positie kan aangepast worden dmv "top" & "left".
 /*H1 eigenschappen*/
   h1 {
     page-break-before: always; /* Iedere H1 maakt een pagebreak. relevant voor pdf uitdraai */
-    font-size: 24px;
+    font-size: 32px;
     color: white;
     background-color: #007E48;
-    padding: 20px;
+    padding: 15px;
   }
   
 /*css om het mogelijk te maken icoontjes aan headers toe te voegen*/
@@ -69,21 +100,20 @@ Positie kan aangepast worden dmv "top" & "left".
     text-indent: 80px;
   }
   
-  /*Plaatsing van header icons*/
+/*Plaatsing van header icons*/
   h1 .img-fluid {
-    height: 100%;
+    height: 140%;
     position: absolute;
-    top: 5%;
-    left: 2%;
+    top: 0%;
+    left: -24%;
     z-index: 10;
-  
   }
   
 /*Plaatje niet laten zien in table of contents*/
   #TOC .img-fluid {
     display: none; 
   }
-
+  
 /* Layout inhoudsopgave titel aanpassen*/
   #toc-title {
     color: #007E48;
@@ -94,8 +124,9 @@ Positie kan aangepast worden dmv "top" & "left".
 /* Layout inhoudsopgave aanpassen*/
   .sidebar {
     color: #012C17;
+    font-size: 14px;
   }
-
+  
 /*Lijntje dat tussen tekstblokken geplaatst kan worden*/
   .tussenlijn {
     border-bottom: 1px solid #86B443;

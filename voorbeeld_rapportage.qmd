@@ -34,6 +34,17 @@ message: false
 #Libraries inladen
 # Het script maakt gebruik van een aantal packages
 # Deze moeten bij de eerste keer lokaal worden geinstalleerd
+
+# benodigde packages installeren als deze afwezig zijn
+pkg_nodig = c("gt", "dplyr", "ggplot2", "tidyr", "haven", "stringr", "labelled", 
+              "survey", "glue", "plotly", "forcats", "openxlsx", "showtext")
+
+for (pkg in pkg_nodig) {
+  if (system.file(package = pkg) == "") {
+    install.packages(pkg)
+  }
+}
+
 # Hieronder worden de benodige packages geladen
 library(gt)
 library(dplyr)
@@ -203,12 +214,24 @@ if(params$is_pdf){
 ::: voorblad_achtergrond
 ![](Voorbeeld%20voorblad.png)
 
+::: voorblad_resultaten
+RESULTATEN
+:::
+
+::: voorblad_campagne
+Campagne Gezondheidsmonitor
+:::
+
+::: voorblad_monitor
+Jongvolwassenen 2024
+:::
+
 ::: voorblad_gemeentenaam
 `r monitor_df %>% filter(Gemeentecode == params$gemeentecode) %>% labelled_naar_character("Gemeentecode") %>% unique()`
 :::
 
 ::: voorblad_datum
-`r Sys.Date() %>% format(format = "%d %m %Y")`
+`r Sys.Date() %>% format(format = "%d %b %Y") %>% str_replace_all(c("jan" = "Januari", "feb" = "Februari", "mrt" = "Maart", "apr" = "April", "mei" = "Mei", "jun" = "Juni", "jul" = "Juli", "aug" = "Augustus", "sep" = "September", "okt" = "Oktober", "nov" = "November", "dec" = "December"))`
 :::
 :::
 
@@ -228,7 +251,7 @@ Vanwege de betrouwbaarheid van de resultaten en de privacy van de respondenten h
 
 De cijfers die hier worden gepresenteerd zijn gestandaardiseerd naar GGD-regio, leeftijd (16-17 jaar, 18-20 jaar en 21-25 jaar) en gender (in twee groepen: mannen en vrouwen). Op deze manier geven de cijfers een zo representatief mogelijk beeld van alle jongvolwassenen in uw gemeente en de regio. Ten behoeve van de standaardisatie zijn mensen met gender "non-binair" of "anders” willekeurig toegevoegd als man of vrouw (landelijk 0,9%). Dit is alleen gebruikt voor het berekenen van standaardisatiefactoren en is niet gebruikt voor de cijfers uitgesplitst naar mannen en vrouwen in deze rapportage.
 
-# Achtergrondkenmerken
+# ![afbeelding](iconen/achtergrondkenmerken.svg) Achtergrondkenmerken {.h1-icoon}
 
 ::: {layout="[100]"}
 ::: column
@@ -292,7 +315,7 @@ plot
 :::
 :::
 
-# Woon- en werksituatie en financiën
+# ![afbeelding](iconen/Woon-werk.svg) Woon- en werksituatie en financiën {.h1-icoon}
 
 ::: {layout="[100]"}
 ::: column
@@ -454,7 +477,7 @@ plot
 :::
 :::
 
-# Gezondheid en geluk
+# ![afbeelding](iconen/Gezondheid-geluk.svg) Gezondheid en geluk {.h1-icoon}
 
 ::: {layout="[100]"}
 ::: column
@@ -593,7 +616,7 @@ plot
 :::
 :::
 
-# Mentaal welbevinden
+# ![afbeelding](iconen/Mentaal.svg) Mentaal welbevinden {.h1-icoon}
 
 ::: {layout="[100]"}
 ::: column
@@ -808,7 +831,7 @@ plot
 :::
 :::
 
-# Stress en prestatiedruk
+# ![afbeelding](iconen/Stress-prestatiedruk.svg) Stress en prestatiedruk {.h1-icoon}
 
 ::: {layout="[100]"}
 ::: column
@@ -970,7 +993,8 @@ plot
 :::
 :::
 
-# Beschermende factoren en vertrouwen in de toekomst
+# ![afbeelding](iconen/Vertrouwen.svg) Beschermende factoren en vertrouwen in de toekomst {.h1-icoon}
+
 
 ::: {layout="[[100]]"}
 ::: column
@@ -1131,7 +1155,7 @@ Maatschappelijke thema's waar jongvolwassenen in uw gemeente zich het meest zorg
 :::
 :::
 
-# Bewegen en sporten
+# ![afbeelding](iconen/Bewegen-sporten.svg) Bewegen en sporten {.h1-icoon}
 
 ::: {layout="[100]"}
 ::: column
@@ -1227,7 +1251,7 @@ plot
 :::
 :::
 
-# Middelengebruik
+# ![afbeelding](iconen/Middelengebruik.svg) Middelengebruik {.h1-icoon}
 
 ::: {layout="[100]"}
 ::: column
@@ -1533,7 +1557,7 @@ plot
 :::
 :::
 
-# De coronaperiode
+# ![afbeelding](iconen/Corona.svg) De coronaperiode {.h1-icoon}
 
 ::: {layout="[100]"}
 ::: column
@@ -1676,7 +1700,7 @@ monitor_df %>%
 :::
 :::
 
-# Digitale leefomgeving
+# ![afbeelding](iconen/VSlogoDigitale-leefomgevin.svg) Digitale leefomgeving {.h1-icoon}
 
 ::: {layout="[100]"}
 ::: column
@@ -1812,7 +1836,7 @@ plot
 :::
 :::
 
-# Seksualiteit
+# ![afbeelding](iconen/Seksualiteit.svg) Seksualiteit {.h1-icoon}
 
 ::: {layout="[100]"}
 ::: column
@@ -1886,7 +1910,7 @@ In uw gemeente heeft `r monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', 
 :::
 :::
 
-::: {layout="[50,50]"} 
+::: {layout="[50,50]"}
 ::: column
 ```{r Seks 1, fig.alt=ggplot2::get_alt_text(plot)}
 
@@ -1958,11 +1982,11 @@ monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>%
 :::
 :::
 
-# Kernboodschappen
+# ![afbeelding](iconen/kernboodschappen.svg) Kernboodschappen {.h1-icoon}
 
 Op deze pagina kunnen GGD’en hun kernboodschappen toevoegen.
 
-# Contact
+# ![afbeelding](iconen/Contactpagina.svg) Contact {.h1-icoon}
 
 Heeft u nog vragen over het onderzoek?
 
@@ -1975,3 +1999,5 @@ In ons digitale dashboard vindt u meer cijfers over de gezondheid van inwoners i
 
 Deze en meer informatie vindt u op: [www.websitevanggd.nl](www.websitevanggd.nl)
 :::
+
+

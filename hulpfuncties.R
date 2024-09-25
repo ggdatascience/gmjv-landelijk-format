@@ -1,15 +1,22 @@
 # Script met helpfuncties voor GMJV 2024.
 # Packages ----------------------------------------------------------------
 
-#nieuwe grafiek maken die uitsplitsing naast elkaar kan zetten
-
-# Het script maakt gebruik van een aantal packages
-# Deze moeten bij de eerste keer lokaal worden geinstalleerd. 
-# Dat doe je met behulp van de functie: install.packages() 
-# (Verwijder de # aan het begin van onderstaande regel om de code te runnen en de benodigde packages te installeren.)
+# TODOnieuwe grafiek maken die uitsplitsing naast elkaar kan zetten
 # TODO alle alt-texten nakijken. Door recente aanpassingen mogelijk niet meer waterdicht
 # TODO code opschonen; dataverwerking voor grafiek in eigen functies stoppen om complexiteit / lengte van functies te verkleinen.
 
+# Het script maakt gebruik van een aantal packages
+# Deze moeten bij de eerste keer lokaal worden geinstalleerd. 
+
+# benodigde packages installeren als deze afwezig zijn
+pkg_nodig = c("gt", "dplyr", "ggplot2", "tidyr", "stringr", "labelled", 
+              "survey", "glue", "plotly", "forcats", "openxlsx", "showtext")
+
+for (pkg in pkg_nodig) {
+  if (system.file(package = pkg) == "") {
+    install.packages(pkg)
+  }
+}
 # Hieronder worden de benodige packages geladen
 library(gt)
 library(dplyr)
