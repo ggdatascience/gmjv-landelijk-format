@@ -136,7 +136,7 @@
     "section": "",
     "text": "4.1 ‘Source’ en ‘Visual’ editor\nLinksboven in een quarto document kan je kiezen tussen twee manieren van bewerken: Source en Visual. Als je niet zo thuis bent in programmeren of markdown zal je waarschijnlijk gebruik willen maken van de visual-editor. Dit lijkt het meest op andere tekstverwerkers. Desalnietttemin is het goed om bewust te zijn van beide mogelijkheden, al is het slechts om terug te wisselen wanneer je perongeluk op source hebt geklikt.",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Het script maakt gebruik van een aantal packages</span>"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Tekst, Code invoegen en layout aanpassen</span>"
     ]
   },
   {
@@ -146,67 +146,57 @@
     "section": "",
     "text": "In de visual-editor worden opgemaakte tekst en afbeeldingen getoond. Ook krijg je bovenaan een werkbalk te zien zoals in Word & andere tekstverwerkers. Met deze werkbalk kan je o.a.\n\nTekst opmaken.\nEen type Kop / Header selecteren.\nLijsten maken\nLinks, plaatjes , codeblokken of tabellen invoegen.\nLees hier meer over de Visual Editor\n\nIn de source-editor wordt de ‘markdown-syntax’ van je document weergeven. Dit is de onderliggende logica van je document. In de source-editor ontbreekt de werkbalk. Toch kan je alle dingen doen die ook in de visual editor kunnen. Hiervoor kan je gebruik maken van markdown-syntax. Bijvoorbeeld:\n\nEen regel die met een hashtag begint wordt een kop. De hoeveelheid hashtags geeft het niveau van de kop aan. Dus: “# Kop 1” “## Kop 2” etc.\n**woord** maakt ‘woord’ vetgedrukt, *woord* maakt ‘woord’ schuingedrukt.\nLees hier meer over Markdown Basics",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Het script maakt gebruik van een aantal packages</span>"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Tekst, Code invoegen en layout aanpassen</span>"
+    ]
+  },
+  {
+    "objectID": "tekst-en-layout.html#stijlelementen-in-tekst",
+    "href": "tekst-en-layout.html#stijlelementen-in-tekst",
+    "title": "4  Tekst, Code invoegen en layout aanpassen",
+    "section": "4.2 Stijlelementen in tekst",
+    "text": "4.2 Stijlelementen in tekst\nIn de tekst kunnen verschillende stijlelementen toegevoegd worden, zoals een tussenlijn, een blok met gele achtergrondkleur en een extra witregel.\n\n4.2.1 Witregel toevoegen\nEen witregel kan toegevoegd worden door &lt;br&gt; in de tekst toe te voegen.\n\n\n4.2.2 Tussenlijn\nIn de standaard rapportage worden horizontale lijnen gebruikt om tussen verschillende secties. De opmaak van de tussenlijn wordt bepaald in het custom.css bestand. Daar staat de div .tussenlijn die aangeeft hoe deze lijn eruit ziet. Hier kan je dus ook de eigenschappen van de lijn veranderen, zoals kleur of dikte. De ‘div’ met de class ‘tussenlijn’ ziet er zo uit:\n\n/*Lijntje dat tussen tekstblokken geplaatst kan worden*/\n.tussenlijn {\n  border-bottom: 1px solid #86B443;\n}\n\n\nDe tussenlijn zelf ziet er standaard zo uit:\n\n\n\nEen tussenlijn kan toegevoegd worden in de rapportage door het volgende toe te voegen:\n\n::: tussenlijn\n:::\n\n\n\n4.2.3 Achtergrondkleur\nIn de standaard rapportage worden tekstvakken soms voorzien van een achtergrondkleur. Ook de opmaak van dit blok wordt bepaald in het custom.css bestand. Daar staat de div .achtergrondkleur die aangeeft hoe deze lijn eruit ziet. Hier kan je dus ook de eigenschappen van de class veranderen. Het blok ziet er standaard zo uit:\n\n/* achtergrond-kleur*/\n.achtergrondkleur {\n  background-color: #F7F7DB;\n  color: #012C17;\n  padding: 20px;\n}\n\n\nDit ziet er zo uit:\n\nHier tekst die in het blok komt.\n\nEen blok met achtergrondkleur kan je zelf op de volgende manier toevoegen:\n\n::: achtergrondkleur\nHier tekst\n:::",
+    "crumbs": [
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Tekst, Code invoegen en layout aanpassen</span>"
     ]
   },
   {
     "objectID": "tekst-en-layout.html#r-code-in-code-blokken",
     "href": "tekst-en-layout.html#r-code-in-code-blokken",
     "title": "4  Tekst, Code invoegen en layout aanpassen",
-    "section": "4.2 R code in code-blokken",
-    "text": "4.2 R code in code-blokken\nOm te zorgen dat tabellen en grafieken met een dynamische inhoud in de rapportage geplaatst kunnen worden maken we gebruik van code-blokken met R code. Een code-blok kan je tijdens het bewerken van je rapport draaien door rechtsbovenin het code-blok op de groene pijl te klikken. De uitvoer van de code zal dan onder het blok verschijnen.\nEen nieuw code-blok kan je als volgt aanmaken:\n\nIn de visual editor: Insert &gt; Executable Cell &gt; R\nIn de source editor: Zoals hieronder. Type drie backticks ‘```’ gevolgd door ‘{r}’ Sluit het blok af met drie backticks.\n\n\n```{r naam-blokje, echo=FALSE}\n#Hier R code\n```\n\nStandaard worden codeblokjes ook in de rapportage getoond. Dat is meestal niet de bedoeling. Daarom is hierboven de chunk-option ‘echo=FALSE’ opgegeven. Optioneel kan je het code-blok een naam geven zoals naam-blokje hierboven. Een naam kan helpen met overzicht en het opsporen van fouten.",
+    "section": "4.3 R code in code-blokken",
+    "text": "4.3 R code in code-blokken\nOm te zorgen dat tabellen en grafieken met een dynamische inhoud in de rapportage geplaatst kunnen worden maken we gebruik van code-blokken met R code. Een code-blok kan je tijdens het bewerken van je rapport draaien door rechtsbovenin het code-blok op de groene pijl te klikken. De uitvoer van de code zal dan onder het blok verschijnen.\nEen nieuw code-blok kan je als volgt aanmaken:\n\nIn de visual editor: Insert &gt; Executable Cell &gt; R\nIn de source editor: Zoals hieronder. Type drie backticks ‘```’ gevolgd door ‘{r}’ Sluit het blok af met drie backticks.\n\n\n```{r naam-blokje, echo=FALSE}\n#Hier R code\n```\n\nStandaard worden codeblokjes ook in de rapportage getoond. Dat is meestal niet de bedoeling. Daarom is hierboven de chunk-option ‘echo=FALSE’ opgegeven. Optioneel kan je het code-blok een naam geven zoals naam-blokje hierboven. Een naam kan helpen met overzicht en het opsporen van fouten.",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Het script maakt gebruik van een aantal packages</span>"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Tekst, Code invoegen en layout aanpassen</span>"
     ]
   },
   {
     "objectID": "tekst-en-layout.html#r-code-in-lopende-tekst",
     "href": "tekst-en-layout.html#r-code-in-lopende-tekst",
     "title": "4  Tekst, Code invoegen en layout aanpassen",
-    "section": "4.3 R code in lopende tekst",
-    "text": "4.3 R code in lopende tekst\nHet is ook mogelijk om R code in lopende tekst te plaatsen. Op de plek waar je de code aanroept toont de rapportage dan het resultaat van de code. Bijvoorbeeld een percentage, of een gemeentenaam. De syntax is als volgt:\n\n` r #hier code `\n\nDeze syntax kan je overal gebruiken in de lopende tekst bijvoorbeeld:\n\nEen Header 1 met een dynamische gemeentenaam:\n\n\n# ` r params$gemeentenaam`\n\n\nInline berekeningen:\n\n\nEr waren ` r totaal_deelnemers ` deelnemers. Daarvan was ` r deelnemers_geslaagd / totaal_deelnemers * 100` % geslaagd.",
+    "section": "4.4 R code in lopende tekst",
+    "text": "4.4 R code in lopende tekst\nHet is ook mogelijk om R code in lopende tekst te plaatsen. Op de plek waar je de code aanroept toont de rapportage dan het resultaat van de code. Bijvoorbeeld een percentage, of een gemeentenaam. De syntax is als volgt:\n\n` r #hier code `\n\nDeze syntax kan je overal gebruiken in de lopende tekst bijvoorbeeld:\n\nEen Header 1 met een dynamische gemeentenaam:\n\n\n# ` r params$gemeentenaam`\n\n\nInline berekeningen:\n\n\nEr waren ` r totaal_deelnemers ` deelnemers. Daarvan was ` r deelnemers_geslaagd / totaal_deelnemers * 100` % geslaagd.",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Het script maakt gebruik van een aantal packages</span>"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Tekst, Code invoegen en layout aanpassen</span>"
     ]
   },
   {
     "objectID": "tekst-en-layout.html#kolomlayout",
     "href": "tekst-en-layout.html#kolomlayout",
     "title": "4  Tekst, Code invoegen en layout aanpassen",
-    "section": "4.4 Kolomlayout",
-    "text": "4.4 Kolomlayout\nJe kan onderdelen van je rapportage naast elkaar presenteren in Quarto. Hier wordt een van de manieren om dit te doen uitgelegd. Hierbij wordt steeds gebruik gemaakt van twee setjes van drie dubbele punten naast elkaar. Voor mensen die thuis zijn in html is het handig te weten dat dit de markdown syntax is voor een ‘div’.\n\n\n\n\n\n\nWarning\n\n\n\nLet op. Om deze werkwijze toe te passen het nodig om de editor op ‘Source’ in te stellen.\n\n\nZie ook het Quarto boek over Custom layouts\n\n4.4.1 Syntax voor twee kolommen van gelijke grote:\n\n::: {layout=“[50,50]”}\n::: column\nDit is tekst in de linkerkolom\n:::\nDit is tekst in de rechterkolom\n::: column\n:::\n\n\n\n4.4.2 Het resultaat:\n\n\n\n\n\n\nDit is tekst in de linkerkolom\n\n\nDit is tekst in de rechterkolom\n\n\n\n\n\n4.4.3 Toelichting\n\nHet buitenste setje van ‘:::’ bepaald de layout.\n\nAchter de eerste ‘:::’ komt ‘{layout=“[50,50]”}’ te staan\nHet maakt alleen uit hoe de getallen zich tot elkaar verhouden.\n\n[5,5] geeft hetzelfde resultaat als [50,50].\n[3,7] maakt twee kolommen waarvan de linker kolom 30% van de ruimte opneemt en de rechterkolom 70%.\nHet mogelijk meer dan twee kolommen te definieren.\n\n\nTussen het buitenste setje ‘:::’ worden setjes geplaatst voor de alle kolommen.\n\nAchter de eerste ‘:::’ van de kolom komt het woordt ‘column’ te staan\nTussen de eerte en laatste ‘:::’ van de kolom kan je ieder soort inhoud plaatsen. Een afbeelding, tekst of een code-blok waar een grafiek uitkomt.\n\n\n\n\n4.4.4 X-assen uitlijnen bij verschillende lengte labels\nAls je twee grafieken naast elkaar plaatst kan het zijn dat de x-assen niet op dezelfde hoogte staan. Dit heeft dan te maken met het aantal regels dat verschillende aslabels innemen. De x-as wordt omhoog geduwd door de aslabels. Als je de x-assen in dit geval gelijk wilt trekken kan dat met het argument x_as_regels_toevoegen.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nIn het bovenstaande voorbeeld heeft de linkergrafiek maximaal 4 regels in de aslabels, terwijl de rechtergrafiek er slechts 2 heeft. Dit kunnen we dus uitlijnen door twee lege regels toe te voegen aan de aslabels van de rechtergrafiek.",
+    "section": "4.5 Kolomlayout",
+    "text": "4.5 Kolomlayout\nJe kan onderdelen van je rapportage naast elkaar presenteren in Quarto. Hier wordt een van de manieren om dit te doen uitgelegd. Hierbij wordt steeds gebruik gemaakt van twee setjes van drie dubbele punten naast elkaar. Voor mensen die thuis zijn in html is het handig te weten dat dit de markdown syntax is voor een ‘div’.\n\n\n\n\n\n\nWarning\n\n\n\nLet op. Om deze werkwijze toe te passen het nodig om de editor op ‘Source’ in te stellen.\n\n\nZie ook het Quarto boek over Custom layouts\n\n4.5.1 Syntax voor twee kolommen van gelijke grote:\n\n::: {layout=“[50,50]”}\n::: column\nDit is tekst in de linkerkolom\n:::\nDit is tekst in de rechterkolom\n::: column\n:::\n\n\n\n4.5.2 Het resultaat:\n\n\n\n\n\n\nDit is tekst in de linkerkolom\n\n\nDit is tekst in de rechterkolom\n\n\n\n\n\n4.5.3 Toelichting\n\nHet buitenste setje van ‘:::’ bepaald de layout.\n\nAchter de eerste ‘:::’ komt ‘{layout=“[50,50]”}’ te staan\nHet maakt alleen uit hoe de getallen zich tot elkaar verhouden.\n\n[5,5] geeft hetzelfde resultaat als [50,50].\n[3,7] maakt twee kolommen waarvan de linker kolom 30% van de ruimte opneemt en de rechterkolom 70%.\nHet mogelijk meer dan twee kolommen te definieren.\n\n\nTussen het buitenste setje ‘:::’ worden setjes geplaatst voor de alle kolommen.\n\nAchter de eerste ‘:::’ van de kolom komt het woordt ‘column’ te staan\nTussen de eerte en laatste ‘:::’ van de kolom kan je ieder soort inhoud plaatsen. Een afbeelding, tekst of een code-blok waar een grafiek uitkomt.\n\n\n\n\n4.5.4 X-assen uitlijnen bij verschillende lengte labels\nAls je twee grafieken naast elkaar plaatst kan het zijn dat de x-assen niet op dezelfde hoogte staan. Dit heeft dan te maken met het aantal regels dat verschillende aslabels innemen. De x-as wordt omhoog geduwd door de aslabels. Als je de x-assen in dit geval gelijk wilt trekken kan dat met het argument x_as_regels_toevoegen.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nIn het bovenstaande voorbeeld heeft de linkergrafiek maximaal 4 regels in de aslabels, terwijl de rechtergrafiek er slechts 2 heeft. Dit kunnen we dus uitlijnen door twee lege regels toe te voegen aan de aslabels van de rechtergrafiek.",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Het script maakt gebruik van een aantal packages</span>"
-    ]
-  },
-  {
-    "objectID": "tekst-en-layout.html#tussenlijn",
-    "href": "tekst-en-layout.html#tussenlijn",
-    "title": "4  Tekst, Code invoegen en layout aanpassen",
-    "section": "4.5 Tussenlijn",
-    "text": "4.5 Tussenlijn\nIn de standaard rapportage worden horizontale lijnen gebruikt om tussen verschillende secties. Dit kan je zelf op de volgende manier doen:\n\n::: tussenlijn\n:::\n\n\n\n\nDoor deze syntax te gebruiken maak je een ‘div’ met de class ‘tussenlijn’. De definitie van tussenlijn wordt gegeven in het css-bestand custom.css. Hier kan je dus ook de eigenschappen van de lijn veranderen, zoals kleur of dikte.\n\n/*Lijntje dat tussen tekstblokken geplaatst kan worden*/\n.tussenlijn {\n  border-bottom: 1px solid #86B443;\n}",
-    "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Het script maakt gebruik van een aantal packages</span>"
-    ]
-  },
-  {
-    "objectID": "tekst-en-layout.html#achtergrondkleur",
-    "href": "tekst-en-layout.html#achtergrondkleur",
-    "title": "4  Tekst, Code invoegen en layout aanpassen",
-    "section": "4.6 Achtergrondkleur",
-    "text": "4.6 Achtergrondkleur\nIn de standaard rapportage worden tekstvakken soms voorzien van een achtergrondkleur. Dit kan je zelf op de volgende manier doen:\n\n::: achtergrondkleur Hier tekst :::\n\n\nDe css voor de ‘achtergrondkleur’ kan je in custom.css vinden. Hier kan je dus ook de eigenschappen van de class veranderen.\n\n/* achtergrond-kleur*/\n.achtergrondkleur {\n  background-color: #F7F7DB;\n  color: #012C17;\n  padding: 20px;\n}",
-    "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Het script maakt gebruik van een aantal packages</span>"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Tekst, Code invoegen en layout aanpassen</span>"
     ]
   },
   {
     "objectID": "tekst-en-layout.html#tabel-en-grafiek-layout-t.b.v-digitoegankelijkheid",
     "href": "tekst-en-layout.html#tabel-en-grafiek-layout-t.b.v-digitoegankelijkheid",
     "title": "4  Tekst, Code invoegen en layout aanpassen",
-    "section": "4.7 Tabel en Grafiek layout t.b.v digitoegankelijkheid",
-    "text": "4.7 Tabel en Grafiek layout t.b.v digitoegankelijkheid\nStandaard maken grafiekfuncties automatisch alt-text o.b.v. de data in de grafiek. Alt-text is één van de manieren om ervoor te zorgen dat de informatie die een grafiek overbrengt digitoegankelijk is. De automatisch gegenereerde alt-text is een opsomming van alle labels in de grafiek en de percentages die daarbij horen. Zo een opsomming kan (zeker bij grafieken met veel groepen en percentages) het nadeel hebben dat er overzicht verloren gaat.\nEen alternatieve benadering is om de grafiek van een digitoegankelijke tabel met de equivalente informatie te voorzien. In alle grafiekfuncties kan dit met de parameter tabel_en_grafiek. Wanneer deze optie aantstaat worden er op de plaats van de grafiek twee tabbladen gemaakt: “Tabel en Grafiek”. Hiervoor moeten kleine aanpassingen aan aanroep van codeblokjes gedaan worden.\n\nget_alt_text() is niet meer nodig\ngebruik results = ‘asis’\ngeen ‘plot = monitor_df’ maar direct aanroepen (resulteert anders in ongewenste ‘NULL’ onder plot).\n\n#|echo: fenced\n\nmonitor_df %&gt;% \n  maak_staafdiagram_dubbele_uitsplitsing(\n    var_inhoud = \"LVEES404\",\n    var_crossing_groep = \"AGGSA402\",\n    var_crossing_kleur = \"AGLFA401\",\n    tabel_en_grafiek = TRUE #tabel_en grafiek staat aan\n    )\n\nGrafiekTabel\n\n\n\n\n\n\n\n\n\n\n\n\n\nIs sterk eenzaam\n\n\n\n\n\n\nVrouw\n\n\nMan\n\n\n\n\n\n\n16-17 jaar\n\n\n25%\n\n\n*\n\n\n\n\n18-20 jaar\n\n\n30%\n\n\n28%\n\n\n\n\n21-25 jaar\n\n\n25%\n\n\n33%\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTabset panel in Quarto\n\n\n\n\n\nAls tabel_en_grafiek = TRUE, wordt er aan de achterkant markdown syntax gegenereerd om de layout met tabbladen te maken.\nDit kan je ook zelf handmatig doen: Quarto Tabset-Panels",
+    "section": "4.6 Tabel en Grafiek layout t.b.v digitoegankelijkheid",
+    "text": "4.6 Tabel en Grafiek layout t.b.v digitoegankelijkheid\nStandaard maken grafiekfuncties automatisch alt-text o.b.v. de data in de grafiek. Alt-text is één van de manieren om ervoor te zorgen dat de informatie die een grafiek overbrengt digitoegankelijk is. De automatisch gegenereerde alt-text is een opsomming van alle labels in de grafiek en de percentages die daarbij horen. Zo een opsomming kan (zeker bij grafieken met veel groepen en percentages) het nadeel hebben dat er overzicht verloren gaat.\nEen alternatieve benadering is om de grafiek van een digitoegankelijke tabel met de equivalente informatie te voorzien. In alle grafiekfuncties kan dit met de parameter tabel_en_grafiek. Wanneer deze optie aantstaat worden er op de plaats van de grafiek twee tabbladen gemaakt: “Tabel en Grafiek”. Hiervoor moeten kleine aanpassingen aan aanroep van codeblokjes gedaan worden.\n\nget_alt_text() is niet meer nodig\ngebruik results = ‘asis’\ngeen ‘plot = monitor_df’ maar direct aanroepen (resulteert anders in ongewenste ‘NULL’ onder plot).\n\n#|echo: fenced\n\nmonitor_df %&gt;% \n  maak_staafdiagram_dubbele_uitsplitsing(\n    var_inhoud = \"LVEES404\",\n    var_crossing_groep = \"AGGSA402\",\n    var_crossing_kleur = \"AGLFA401\",\n    tabel_en_grafiek = TRUE #tabel_en grafiek staat aan\n    )\n\nGrafiekTabel\n\n\n\n\n\n\n\n\n\n\n\n\n\nIs sterk eenzaam\n\n\n\n\n\n\nVrouw\n\n\nMan\n\n\n\n\n\n\n16-17 jaar\n\n\n25%\n\n\n*\n\n\n\n\n18-20 jaar\n\n\n30%\n\n\n28%\n\n\n\n\n21-25 jaar\n\n\n25%\n\n\n33%\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nTabset panel in Quarto\n\n\n\n\n\nAls tabel_en_grafiek = TRUE, wordt er aan de achterkant markdown syntax gegenereerd om de layout met tabbladen te maken.\nDit kan je ook zelf handmatig doen: Quarto Tabset-Panels",
     "crumbs": [
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Het script maakt gebruik van een aantal packages</span>"
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Tekst, Code invoegen en layout aanpassen</span>"
     ]
   },
   {
@@ -412,21 +402,21 @@
   {
     "objectID": "handige-bronnen.html",
     "href": "handige-bronnen.html",
-    "title": "Uitleg GMJV rapportage in Quarto",
+    "title": "9  Handige bronnen",
     "section": "",
-    "text": "#Handige bronnen\nHier staan links naar bronnen om Quarto, R en aanverwante technieken mee te leren.\n\nBeginnen met Quarto: https://quarto.org/docs/get-started/hello/rstudio.html\nR\nCheatsheets: https://posit.co/resources/cheatsheets/\nR for Data Science: https://r4ds.had.co.nz/\nAdvanced R: https://adv-r.hadley.nz/\nEfficient R: https://csgillespie.github.io/efficientR/\nR en databases: https://db.rstudio.com/\nGrote verzameling R boeken: https://bookdown.org/\nVisualisaties: https://r-graphics.org/\nCSS & HTML https://www.w3schools.com/",
+    "text": "Hier staan links naar bronnen om Quarto, R en aanverwante technieken mee te leren.\n\nQuarto\n\nBeginnen met Quarto\nHart voor Brabant quarto handleidingen\n\nR\n\nCheatsheets\nR for Data Science\nAdvanced R\nEfficient R\nR en databases\nGrote verzameling R boeken\nVisualisaties\n\nW3schools (voor o.a. css en html)",
     "crumbs": [
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>handige-bronnen.html</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Handige bronnen</span>"
     ]
   },
   {
     "objectID": "css.html",
     "href": "css.html",
-    "title": "11  Aangepaste CSS",
+    "title": "10  Aangepaste CSS",
     "section": "",
     "text": "Dit is de css die gebruikt wordt voor het standaard format GMJV. Zie het bestand custom.css.\n\n\n\n/*Open Sans importeren */\n@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');\n/*TODO input ontwerper mbt lettertypen & kleuren verwerken*/\n\nbody {\n  font-family: 'Open Sans', sans-serif;\n}\n\n/*CSS om te zorgen dat divs met plaatjes over elkaar heen kunnen \n\nBijvoorbeeld:\nDe div's voorblad_gemeentenaam en voorblad_datum zitten IN de div voorblad_achtergrond \nCSS bij de elementen IN de overkoepelende div bepaald de positie van die elementen relatief aan het het grotere plaatje.\nPositie kan aangepast worden dmv \"top\" & \"left\".\n*/\n  .voorblad_achtergrond, .pagina_header_img{\n    position: relative;\n  }\n  \n  .voorblad_gemeentenaam{\n    position: absolute;\n    top: 60%;\n    left: 25%;l\n    z-index: 10;\n    font-family: \"Century Gothic\";\n    font-size: 50px;\n    font-weight: bold;\n    color: #012C17;\n  }\n  \n  .voorblad_datum{\n    position: absolute;\n    top: 80%;\n    left: 40%;\n    z-index: 10;\n    font-family: \"Century Gothic\";\n    font-size: 30px;\n    color: #012C17;\n  }\n  \n  .pagina_header_titel{\n    width: 100%;\n    height: 100%;\n    position: absolute;\n    top: 5%;\n    left: 2%;\n    z-index: 10;\n    font-family: \"Century Gothic\";\n    font-size: 24px;\n    color: white;\n  }\n\n/*H1 eigenschappen*/\n  h1 {\n    page-break-before: always; /* Iedere H1 maakt een pagebreak. relevant voor pdf uitdraai */\n    font-family: \"Century Gothic\";\n    font-size: 24px;\n    color: white;\n    background-color: #007E48;\n    padding: 20px;\n  }\n\n/*css om het mogelijk te maken icoontjes aan headers toe te voegen*/\n  .h1-icoon h1 {\n    /* om te zorgen dat er plaatje met relatieve positie overheen geprojecteerd kan worden\n    position: relative;\n    /* moet ook een offest vanaf links zijn zodat de plaatjes ruimte krijgen*/\n    position: relative;\n    text-indent: 80px;\n  }\n  \n  /*Plaatsing van header icons*/\n  h1 .img-fluid {\n    height: 100%;\n    position: absolute;\n    top: 5%;\n    left: 2%;\n    z-index: 10;\n  \n  }\n  \n  /*Plaatje niet laten zien in table of contents*/\n  #TOC .img-fluid {\n    display: none; \n  }\n\n\n  /*Lijntje dat tussen tekstblokken geplaatst kan worden*/\n  .tussenlijn {\n    border-bottom: 1px solid #86B443;\n  }\n\n  /* achtergrondkleur class voor tekstvelden*/\n  .achtergrondkleur {\n    background-color: #F7F7DB;\n    color: #012C17;\n    padding: 20px;\n  }",
     "crumbs": [
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Aangepaste CSS</span>"
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Aangepaste CSS</span>"
     ]
   }
 ]
