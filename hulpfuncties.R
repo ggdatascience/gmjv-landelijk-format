@@ -2249,10 +2249,8 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
     return(
       ggplot() +
         annotate("text", x = 0.5, y = 0.5,
-                 label =  glue("Onvoldoende observaties in {niveaus}
-            Voor grafiek: {str_wrap(titel,40)}  \n 
-                        Min observaties per vraag: {nvar} \n
-                        Min observaties per antwoord: {ncel}"),
+                 label =  glue("Onvoldoende respondenten in {niveaus}
+                                voor grafiek: {str_wrap(titel, 40)}"),
                  size = 6, hjust = 0.5, vjust = 0.5) +
         theme_void() +
         theme(plot.margin = margin(50, 50, 50, 50)) # Add margin to take up space)
@@ -2462,10 +2460,8 @@ maak_cirkeldiagram <- function(data, var_inhoud, titel = "", kleuren = params$de
     return(
       ggplot() +
         annotate("text", x = 0.5, y = 0.5,
-                 label =  glue("Onvoldoende observaties in {niveaus}
-            Voor grafiek: {str_wrap(titel,40)}  \n 
-                        Min observaties per vraag: {nvar} \n
-                        Min observaties per antwoord: {ncel}"),
+                 label =  gglue("Onvoldoende respondenten in {niveaus}
+                                voor grafiek: {str_wrap(titel, 40)}"),
                  size = 6, hjust = 0.5, vjust = 0.5) +
         theme_void() +
         theme(plot.margin = margin(50, 50, 50, 50)) # Add margin to take up space)
@@ -3101,12 +3097,12 @@ maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL,
     
     if (resultaat_vergelijking == " gelijk gebleven ") {
       
-      return(paste0("In ", label_niveau, " is het percentage dat ", label, resultaat_vergelijking, 
+      return(paste0("In ", label_niveau, " is het percentage jongvolwassenen dat ", label, resultaat_vergelijking, 
                     "t.o.v. ", crossings[1], "."))
       
     } else {
       
-      return(paste0("In ", label_niveau, " is het percentage dat ", label, resultaat_vergelijking, 
+      return(paste0("In ", label_niveau, " is het percentage jongvolwassenen dat ", label, resultaat_vergelijking, 
                     "t.o.v. ", crossings[1], " (", result$percentage[1], "%)."))
       
     } 
