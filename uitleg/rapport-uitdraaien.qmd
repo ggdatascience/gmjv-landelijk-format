@@ -1,19 +1,6 @@
 # Standaard rapportage uitdraaien
 
-::: {.callout-important title="Data 2024 nog niet binnen of verwerkt"}
-De data voor 2024 is nog niet beschikbaar. De stappen op deze pagina zijn daarom nog niet volledig uit te voeren.
-Nadat de data beschikbaar is zal deze pagina geupdated worden.
-
-Je kan de pagina doornemen a.d.h.v. de voorbeeldrapportage in het bestand **voorbeeld_rapportage.qmd**.
-Hierbij zullen aanpassingen van de regio- of gemeentecodes echter niet werken.
-
-:::
-
-## Data klaarzetten en samenvoegen
-
-TODO. 
-  
-> Zodra data 2024 binnen is procedure beschrijven om data in map te zetten en samen te voegen.
+Standaard staat het format zo ingesteld dat de voorbeeldrapportage uitgedraaid wordt met nepdata. Hieronder worden een aantal standaard instellingen uitgelegd. Ook wordt uitgelegd hoe je je eigen data in kan laden en hoe je meerdere gemeenterapportages en PDF versies hiervan kunt uitdraaien.
 
 ## Configuratie in frontmatter
 
@@ -28,13 +15,6 @@ toc-title: "Inhoudsopgave"
 ---
 ```
 
-Om de standaardrapportage met eigen data uit te draaien moeten enkele aanpassingen gedaan worden in de frontmatter.
-
-TODO
-
-> Zodra data 2024 binnen is naam bestand rapprotage qmd aanpassen & voorbeeld frontmatter bijwerken
-> Voorlopig met voorbeeld_rapportage.qmd
-
 Open **voorbeeld_rapportage.qmd**. Daar zie je de volgende frontmatter staan:
 
 ```yaml
@@ -46,35 +26,45 @@ format:
     page-layout: full
     css: custom.css
     toc: TRUE
-    toc-location: left
+    toc-title: "Inhoud"
     embed-resources: true
 params:
-  gemeentecode: 2 
+  gemeentecode: 1
   regiocode: 23
-  regionaam: 'GGD Limburg-Noord'
-  path_monitor_data: "../nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
-  path_hulpfuncties: "../hulpfuncties.R"
-  path_cbs_data: "../JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx"
-  default_nvar: 100
-  default_ncel: 10
+  regionaam: 'GGD Limburg-Noord' # Vul naam zoals in data CBS
+  path_nepdata: "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
+  path_cbs_data: "voorbeeld_JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx"
+  path_monitor_data_2022: "C:/Users/...." # Vul padnaam naar data 2022 in
+  naam_monitor_data_2022_regionaal: "Regiobestand_CGMJV2022_REGIO_versie 4.sav" # Vul naam regionaal bestand 2022 in
+  path_monitor_data_2024: "C:/Users/...." # Vul padnaam naar data 2024 in
+  naam_monitor_data_2024_regionaal: "Regiobestand_GMJV2024_REGIO_versie 1.sav" # Vul naam regionaal bestand 2024 in
+  path_hulpfuncties: "hulpfuncties.R"
+  default_nvar: 100 # Minimum aantal invullers per vraag
+  default_ncel: 10  # Minimum aantal invullers oper antwoordoptie
   default_kleuren_grafiek: !expr c("#012C17","#76B82A","#007E48")
   default_kleuren_responstabel: !expr c("header" = "#012C17", "kleur_1" = "#007E48", "kleur_2" = "#76B82A","kleur_tekst" = "#FFFFFF")
+  is_pdf: false
 format-links: false
+echo: false
+warning: false
+message: false
 ---
 ```
 
-De meeste instellingen kan je laten staan. Het volgende moet aangepast of gecontroleerd worden.:
+De meeste instellingen kan je laten staan. Het volgende moet aangepast of gecontroleerd worden:
 
 ### Parameters onder 'Params'
 
--   **gemeentecode:** Voer hier een gemeentecode in die bestaat in je data. Dit is als het ware je voorbeeldgemeente. Als je het rapport uitdraait via de "Render" knop zal een rapport voor die gemeente gemaakt worden.
--   **regiocode:** voer hier de CBS code van je GGD-regio in.
--   **regionaam:** voer hier de Naam van je GGD-regio in.
--   **path_..:** voer hier de bestandsnamen van alle databestanden in
--   **default_nvar:** voer hier het algemene minimum aantal respondenten per vraag in
--   **default_ncel:** voer hier het algemene minimum aantal respondenten per antwoord in
+-   **gemeentecode:** Voer hier een gemeentecode in die bestaat in je data. Dit is als het ware je voorbeeldgemeente. Als je het rapport uitdraait via de "Render" knop zal een rapport voor die gemeente gemaakt worden. 
+-   **regiocode:** voer hier de CBS code van je GGD-regio in. Bij de nepdata staat dit op 23.
+-   **regionaam:** voer hier de Naam van je GGD-regio in. Zorg er voor dat deze naam overeenkomt met de naam van je regio in het bestand "voorbeeld_JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx".  Bij de nepdata is dit GGD Limburg-Noord.
+-   **path_..:** voer hier de padnaam naar de map met bestanden in. path_nepdata, path_cbs_data en path_helpfuncties hoeven **niet** aangepast te worden.
+-   **naam_..:** voer hier de bestandsnaam van het regionale bestand in.
+-   **default_nvar:** voer hier het algemene minimum aantal respondenten per vraag in.
+-   **default_ncel:** voer hier het algemene minimum aantal respondenten per antwoord in.
 -   **default_kleuren_grafiek:** Voer hier een vector in met de standaard kleurcodes voor grafieken. 
 -   **default_kleuren_responstabel:** Voer hier een named vector in met 4 kleurcodes als standaard voor responstabellen. Zie het voorbeeld voor de namen.
+-   **is_pdf:** dit staat standaard op false, zodat standaard geen pdfs uitgedraaid worden. Zie onderwerp 'PDF uitdraai en Printbaarheid' hieronder voor hoe je PDFs van de rapportage uitdraait.
 
 ### Overige frontmatter instellingen
 -   **warning:** Deze parameter staat in het voorbeeldrapport op false. Als de parameter op true staat worden mogelijke problemen / 'warnings' getoond in het rapport. Dit is meestal niet wenselijk voor het eindproduct, maar nuttig tijdens ontwikkeling.
@@ -83,8 +73,141 @@ De meeste instellingen kan je laten staan. Het volgende moet aangepast of gecont
 Wees je ervan bewust dat eventuele problemen met het verwerken van de data NIET getoond worden als warning op false staat. Zorg ervoor dat deze parameter bij het  ontwikkelen van het rapport op 'true' staat, zodat je op de hoogte bent van de warnings. 
 :::
 
-
 -   **echo:** Standaard op false. Als deze parameter op true staat worden codeblokjes in het rapport getoond.
+-   **message:** Standaard op false. Als deze parameter op true staat worden berichten van packages getoond.
+
+
+### Rapportage uitdraaien met eigen data
+Om de standaardrapportage met eigen data uit te draaien moeten enkele aanpassingen gedaan worden in de frontmatter. Standaard wordt namelijk nepdata ingeladen. Dit is data die lijkt op de data van de Gezondheidsmonitor Jongvolwassenen, maar geen echte deelnemers bevat. Het nepdata bestand bevat data op landelijk, regio en gemeentelijk niveau en van onderzoeksjaren 2022 en 2024 (en is daarmee en trendbestand). De nepdata staat op github en wordt standaard meegedownload wanneer je de 'repository' [gmjv-landelijk-format](https://github.com/ggdatascience/gmjv-landelijk-format) download. Het bestand heet nep 'testdata GMJV - Regionaal trendbestand 2022-2024.sav'.
+
+Om je eigen data te gebruiken i.p.v. de nepdata, moeten er 2 dingen gedaan worden:
+
+-   Frontmatter aanpassen
+-   Codeblok Instellingen aanpassen
+
+#### Frontmatter aanpassen
+
+In de frontmatter moet aangepast worden:
+
+-   **gemeentecode:** Voer hier een gemeentecode in die bestaat in je data. Dit is als het ware je voorbeeldgemeente. Als je het rapport uitdraait via de "Render" knop zal een rapport voor die gemeente gemaakt worden.
+-   **regiocode:** voer hier de CBS code van je GGD-regio in.
+-   **regionaam:** voer hier de Naam van je GGD-regio in.
+
+#### Codeblok Instellingen aanpassen
+
+Scroll in de voorbeeldrapportage naar beneden tot je bij het eerste codeblok komt. Deze heet Instellingen en start met:
+
+```yaml
+#Libraries inladen
+# Het script maakt gebruik van een aantal packages
+# Deze moeten bij de eerste keer lokaal worden geinstalleerd
+library(gt)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(haven)
+#etc...
+```
+
+Iets verder in dit blok wordt de data ingeladen. Hier zijn 2 opties: nepdata inladen of eigen data inladen.
+
+De nepdata wordt standaard ingeladen. Dit gebeurt met deze code:
+
+```yaml
+## OPTIE 1: Nepdata
+#Lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
+monitor_df = haven::read_spss(params$path_nepdata, user_na =T) %>%
+  rename(Standaardisatiefactor_regio = Standaardisatiefactor,
+         Stratum_regio = Stratum) %>%
+  mutate(Standaardisatiefactor_gemeente = Standaardisatiefactor_regio,
+         Stratum_gemeente = Stratum_regio) %>%
+  labelled::user_na_to_na()
+```
+
+Als je je eigen, echte data wil inladen, moet dit stuk code in comments (#) gezet worden. R ziet dit dan als tekst en niet meer als code. De makkelijkste manier om dit te doen, is om alle regels te selecteren en dan CTRL + Shift + R in te drukken. Op deze manier worden alle regels in één keer een comment. Het ziet er dan zo uit: 
+
+```yaml
+# ## OPTIE 1: Nepdata
+# #Lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
+# monitor_df = haven::read_spss(params$path_nepdata, user_na =T) %>%
+#   rename(Standaardisatiefactor_regio = Standaardisatiefactor,
+#          Stratum_regio = Stratum) %>%
+#   mutate(Standaardisatiefactor_gemeente = Standaardisatiefactor_regio,
+#          Stratum_gemeente = Stratum_regio) %>%
+#   labelled::user_na_to_na()
+```
+
+Vervolgens moeten we zorgen dat optie 2, de optie om eigen data in te laden, aan staat. Hiervoor moeten we alle comments weghalen van dit stuk. Ook daarvoor kun je alle code selecteren en op CTRL + Shift + R in drukken. Alle onderstaande code moet dan **niet** meer in comments staan: 
+
+```yaml
+## OPTIE 2: Eigen data invoeren (landelijk + regionaal)
+#Data 2024
+#Landelijk bestand inladen
+df <- haven::read_spss(paste0(params$path_monitor_data_2024, "Totaalbestand_GMJV2024_GGD_versie 1 (N = 135.666).sav"),
+                       user_na =T) %>%
+  labelled::user_na_to_na()
+
+# Regionaal bestand inladen
+df_regio <- haven::read_spss(paste0(params$path_monitor_data_2024, params$naam_monitor_data_2024_regionaal),
+                             user_na =T) %>%
+  labelled::user_na_to_na()
+
+# Check of aantallen gelijk zijn.
+# NB. Alleen deelnemers met landelijke weegfactor zitten in landelijk bestand.
+if (sum(df_regio$Standaardisatiefactor_regio != 0, na.rm = T) != nrow(df %>% filter(GGDregio == params$regiocode))) {
+  print("Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data.")
+}
+
+# Filter regio uit landelijk databestand
+df <- df %>%
+  filter(GGDregio != params$regiocode)
+
+# Voeg regiobestand toe aan landelijk bestand
+monitor_df <- df %>%
+  full_join(df_regio)
+
+# Opschonen
+rm(df_regio, df)
+
+#Data 2022
+#Landelijk bestand inladen
+df <- haven::read_spss(paste0(params$path_monitor_data_2022, "Totaalbestand_CGMJV2022_GGD_versie 3 (N = 69.750).sav"),
+                       user_na =T) %>%
+  rename(Standaardisatiefactor_regio = Standaardisatiefactor,
+         Stratum_regio = Stratum) %>% # Standaardidatiefactor en andere indicatoren hernoemen. TODO weghalen na trendsyntax?
+  labelled::user_na_to_na()
+
+# Regionaal bestand inladen
+df_regio <- haven::read_spss(paste0(params$path_monitor_data_2022, params$naam_monitor_data_2022_regionaal),
+                             user_na =T) %>%
+  rename(Standaardisatiefactor_regio = Standaardisatiefactor,
+         Stratum_regio = Stratum,
+         Invulduur = duur) %>% # Standaardidatiefactor en andere indicatoren hernoemen. TODO weghalen na trendsyntax?
+  labelled::user_na_to_na()
+
+# Check of aantallen gelijk zijn.
+# NB. Alleen deelnemers met landelijke weegfactor zitten in landelijk bestand.
+if (sum(df_regio$Standaardisatiefactor_regio != 0, na.rm = T) != nrow(df %>% filter(GGDregio == params$regiocode))) {
+  print("Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data.")
+}
+
+# Filter regio uit landelijk databestand
+df <- df %>%
+  filter(GGDregio != params$regiocode)
+
+# Voeg regiobestand toe aan landelijk bestand
+df <- df %>%
+  full_join(df_regio) %>%
+  select(-colnames(df)[!(colnames(df) %in% colnames(monitor_df))]) # selecteer alleen kolommen die ook in 2024 data zitten
+
+# Voeg bestand van 2022 toe aan bestand van 2024
+monitor_df <- monitor_df %>%
+  full_join(df)
+
+# Opschonen
+rm(df_regio, df)
+```
+
 
 
 ## Rapporten per gemeente uitdraaien
