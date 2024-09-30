@@ -138,20 +138,20 @@ monitor_df %>% maak_responstabel(
 
 # Bol met cijfer
 
-Hieronder volgt uitleg voor de Bol met cijfers-functie. De functie **bol_met_cijfer()** maakt een cirkel met een cijfer daarin, een tekst onder de bol die het niveau aangeeft en een tekst naast de bol die de indicator aangeeft. De functie genereert automatisch alt-text.
+Hieronder volgt uitleg voor de Bol met cijfers-functie. De functie **bol_met_cijfer()** maakt een cirkel met een cijfer daarin, een tekst onder de bol die het niveau aangeeft en daaronder een tekst die de indicator aangeeft. De functie genereert automatisch alt-text.
 
 ## Nodige argumenten:
 
 -   **getal:**\
-    Een vector met 1 getal of 1 percentage (bv. 1 of 1%).
+    Een vector met 1 of 2 getal(len) of percentage(s) (bv. 1 of 1%).
 
 ## Optionele argumenten:
 
 -   **omschrijving:**\
-    Een character variabele met een tekst die naast de bol komt te staan, bijvoorbeeld een omschrijving van de indicator.
+    Een character variabele met een tekst die onder de bol(len) komt te staan, bijvoorbeeld een omschrijving van de indicator.
 
 -   **omschrijving2:**\
-    Een character variabele met een tekst die naast de bol komt te staan, bijvoorbeeld een omschrijving van de indicator. Dit is het vervolg van *omschrijving* wanneer deze niet op één regel past.
+    Een character variabele met een tekst die onder de bol(len) komt te staan, bijvoorbeeld een omschrijving van de indicator. Dit is het vervolg van *omschrijving* wanneer deze niet op één regel past.
 
 -   **niveau:**\
     Een character variabele met een tekst die onder de bol komt te staan, bijvoorbeeld het gebiedsniveau van de indicator (zoals Gemeente of Nederland).
@@ -166,13 +166,25 @@ Hieronder volgt uitleg voor de Bol met cijfers-functie. De functie **bol_met_cij
     Een kleur die gebruikt wordt voor het *getal* in de bol. Default is wit.
 
 -   **kleur_omschrijving:**\
-    Een kleur die gebruikt wordt voor de *omschrijving* (en eventueel *omschrijving2*) naast de bol. Default is zwart.
+    Een kleur die gebruikt wordt voor de *omschrijving* (en eventueel *omschrijving2*) naast de bol. Default is #305A5B.
 
 ### Standaard bol met cijfer
 
 ```{r}
 
-bol_met_cijfer(getal = "4%", omschrijving = "die aan indicator voldoen.", niveau = "Gemeente")
+bol_met_cijfer(getal = "4%", 
+               omschrijving = "die aan indicator voldoen.", 
+               niveau = "Gemeente")
+
+```
+
+### Standaard bol met twee cijfers
+
+```{r}
+
+bol_met_cijfer(getal = c("4%", "10%"), 
+                         omschrijving = "die aan indicator voldoen.", 
+                         niveau = c("Gemeente", "Regio"))
 
 ```
 

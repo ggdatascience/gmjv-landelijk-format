@@ -25,8 +25,8 @@ Positie kan aangepast worden dmv "top" & "left".
 
   .voorblad_resultaten{
     position: absolute;
-    top: 60%;
-    left: 25%;
+    top: 52%;
+    left: 20%;
     z-index: 10;
     font-size: 42px;
     font-weight: 800;
@@ -35,7 +35,7 @@ Positie kan aangepast worden dmv "top" & "left".
   
   .voorblad_campagne{
     position: absolute;
-    top: 75%;
+    top: 72%;
     left: 5%;
     z-index: 10;
     font-size: 28px;
@@ -45,7 +45,7 @@ Positie kan aangepast worden dmv "top" & "left".
   
   .voorblad_monitor{
     position: absolute;
-    top: 80%;
+    top: 78%;
     left: 5%;
     z-index: 10;
     font-size: 28px;
@@ -66,7 +66,7 @@ Positie kan aangepast worden dmv "top" & "left".
   .voorblad_datum{
     position: absolute;
     top: 90%;
-    left: 75%;
+    left: 70%;
     z-index: 10;
     font-size: 23px;
     font-weight: bold;
