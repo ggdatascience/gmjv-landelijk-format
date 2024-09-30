@@ -2569,8 +2569,18 @@ maak_cirkeldiagram <- function(data, var_inhoud, titel = "", kleuren = params$de
 }
 
 bol_met_cijfer <- function(getal, omschrijving = NA, omschrijving2 = NA, niveau = NA,
-                           kleur = params$default_kleuren_grafiek[3], kleur_outline = "#FFFFFF", 
-                           kleur_getal = "#FFFFFF", kleur_omschrijving = "#000000"){
+                           kleur = params$default_kleuren_grafiek[c(6, 4, 11)], kleur_outline = "#FFFFFF", 
+                           kleur_getal = "#FFFFFF", kleur_omschrijving = "#305A5B"){
+  
+  # Check input
+  if(length(getal) < 1 | length(getal) > 2 ) {
+    
+    stop(glue("
+    Er is geen getal of meer dan 2 getallen ingevoerd. Dit kan niet.
+    Vul 1 of 2 getallen in als input.
+    niveaus: {paste(getal, collapse = ',')}"))
+    
+  }
   
   alt_tekst <- getal
   
@@ -2583,75 +2593,140 @@ bol_met_cijfer <- function(getal, omschrijving = NA, omschrijving2 = NA, niveau 
       alt_tekst <- paste(alt_tekst, regel)
       
       if(length(tekst) == 0){
+        
         tekst <- paste0('<tspan>', regel, '</tspan>')
         
-      }
-      else if (length(tekst) > 0){
-        tekst <- paste0(tekst, '<tspan x=50 dy="1em">', regel, '</tspan>')
+      } else if (length(tekst) > 0){
+        
+        tekst <- paste0(tekst, '<tspan x=112 text-anchor="middle" dy="1em">', regel, '</tspan>')
+        
       }
     } else {
       
       # Als geen omschrijving meegegeven is, voer dan spatie in
       if(length(tekst) == 0){
+        
         tekst <- paste0('<tspan>', " ", '</tspan>')
         
-      }
-      else if (length(tekst) > 0){
-        tekst <- paste0(tekst, '<tspan x=50 dy="1em">', " ", '</tspan>')
+      } else if (length(tekst) > 0){
+        
+        tekst <- paste0(tekst, '<tspan x=112 text-anchor="middle" dy="1em">', " ", '</tspan>')
+        
       }
     }
   }
   
-  if (is.na(omschrijving) & is.na(omschrijving) & is.na(niveau)) {
-    # Als geen omschrijvingen en niveau getoond worden, maak dan de afbeelding kleiner.
-    
-    viewbox = "0 0 50 50"
-    
-  } else if (is.na(omschrijving) & is.na(omschrijving)) {
-    # Als alleen niveau getoond worrdt, maak afbeelding ook kleiner
-    
-    viewbox = "0 0 50 75"
-    
-  } else {
-    
-    viewbox = "0 0 225 75"
-    
-  }
-  
-  # Voeg niveau toe aan alt_tekst
-  if(!is.na(niveau)) {
+  # Voeg niveau toe aan alt_tekst en bepaal kleur
+  if(any(!is.na(niveau))) {
     
     alt_tekst <- paste(alt_tekst, "in de", niveau)
     
+    kleur <- ifelse(niveau == "Gemeente", kleur[1],
+                    ifelse(niveau == "Regio", kleur[2],
+                           kleur[3]))
+    
   } else {
     
-    # Als geen omschrijving meegegeven is, voer dan spatie in
+    # Als geen niveau meegegeven is, voer dan spatie in
     niveau = " "
+    
+    kleur <- kleur[3]
     
   }
   
-  # Voeg de ingevoerde informatie op de juiste plekken in de svg code met behulp van glue
-  svg_code <- glue::glue('<svg role="img" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality;"
+  if (is.na(omschrijving) & is.na(omschrijving) & length(getal) == 1) {
+    # Als geen omschrijvingen en 1 getal, maak dan de afbeelding kleiner.
+    
+    viewbox = "0 0 50 75"
+    
+    # Voeg de ingevoerde informatie op de juiste plekken in de svg code met behulp van glue
+    svg_code <- glue::glue('<svg role="img" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality;"
                 viewBox="{viewbox}"> # Origineel 0 0 225 75
                 <title>{alt_tekst}</title>
                 
                 <g id="circle">
-                    <circle style="fill:{kleur};" cx="25" cy="25" r="20" stroke = "{kleur_outline}">
+                    <circle style="fill:{kleur};" cx="25" cy="25" r="25" stroke = "{kleur_outline}">
                     </circle>
                     <text x=25 y="25" text-anchor="middle" fill="{kleur_getal}" stroke="{kleur_getal}" stroke-width="1px" dy=".3em" font-size="1em">{getal}</text>
                 </g>
-                    
-                <g id="tekst">
-                <text x=50 y="25" fill="{kleur_omschrijving}" stroke="{kleur_omschrijving}" stroke-width="0.01px" dy=".3em" font-size="0.5em">{tekst}</text>
-                </g>
                 
                 <g id="niveau">
-                <text x=25 y="50" text-anchor="middle" fill="{kleur}" stroke="{kleur}" stroke-width="0.01px" dy=".3em" font-size="0.5em">{niveau}</text>
+                <text x=25 y="60" text-anchor="middle" fill="{kleur}" stroke="{kleur}" stroke-width="0.01px" dy=".3em" font-size="0.5em" font-weight = "bold">{niveau}</text>
                 </g>
                 
                 </svg>')
+    
+  } else {
+    # Grotere viewbox bij omschrijving of 2 getallen en geen omschrijving
+    
+    viewbox = "0 0 225 100"
+    
+    # svg-code afhankelijk van 1 of 2 getallen als input
+    if (length(getal) == 1) {
+      # svg_code voor 1 getal
+      # Voeg de ingevoerde informatie op de juiste plekken in de svg code met behulp van glue
+      svg_code <- glue::glue('<svg role="img" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality;"
+                viewBox="{viewbox}"> # Origineel 0 0 225 75
+                <title>{alt_tekst}</title>
+                
+                <g id="circle">
+                    <circle style="fill:{kleur};" cx="112" cy="25" r="25" stroke = "{kleur_outline}">
+                    </circle>
+                    <text x=112 y="25" text-anchor="middle" fill="{kleur_getal}" stroke="{kleur_getal}" stroke-width="1px" dy=".3em" font-size="1em">{getal}</text>
+                </g>
+                
+                <g id="niveau">
+                <text x=112 y="60" text-anchor="middle" fill="{kleur}" stroke="{kleur}" stroke-width="0.01px" dy=".3em" font-size="0.5em" font-weight = "bold">{niveau}</text>
+                </g>
+                
+                <g id="tekst">
+                <text x=112 y="80" text-anchor="middle" fill="{kleur_omschrijving}" stroke="{kleur_omschrijving}" stroke-width="0.01px" dy=".3em" font-size="0.5em" font-style = "italic">{tekst}</text>
+                </g>
+                
+                </svg>')
+      
+    } else {
+      # alt_tekst in één zin zetten
+      alt_tekst = paste0(alt_tekst[1], ". ", alt_tekst[2])
+      
+      # svg_code voor 2 getallen
+      # Voeg de ingevoerde informatie op de juiste plekken in de svg code met behulp van glue
+      svg_code <- glue::glue('<svg role="img" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality;"
+                viewBox="{viewbox}"> # Origineel 0 0 225 75
+                <title>{alt_tekst}</title>
+                
+                <g id="circle">
+                    <circle style="fill:{kleur[1]};" cx="75" cy="25" r="25" stroke = "{kleur_outline}">
+                    </circle>
+                    <text x=75 y="25" text-anchor="middle" fill="{kleur_getal}" stroke="{kleur_getal}" stroke-width="1px" dy=".3em" font-size="1em">{getal[1]}</text>
+                </g>
+                
+                <g id="niveau">
+                <text x=75 y="60" text-anchor="middle" fill="{kleur[1]}" stroke="{kleur[1]}" stroke-width="0.01px" dy=".3em" font-size="0.5em" font-weight = "bold">{niveau[1]}</text>
+                </g>
+                
+                <g id="circle">
+                    <circle style="fill:{kleur[2]};" cx="150" cy="25" r="25" stroke = "{kleur_outline}">
+                    </circle>
+                    <text x=150 y="25" text-anchor="middle" fill="{kleur_getal}" stroke="{kleur_getal}" stroke-width="1px" dy=".3em" font-size="1em">{getal[2]}</text>
+                </g>
+                
+                <g id="niveau">
+                <text x=150 y="60" text-anchor="middle" fill="{kleur[2]}" stroke="{kleur[2]}" stroke-width="0.01px" dy=".3em" font-size="0.5em" font-weight = "bold">{niveau[2]}</text>
+                </g>
+                
+                <g id="tekst">
+                <text x=112 y="80" text-anchor="middle" fill="{kleur_omschrijving}" stroke="{kleur_omschrijving}" stroke-width="0.01px" dy=".3em" font-size="0.5em" font-style = "italic">{tekst}</text>
+                </g>
+                
+                </svg>')
+      
+    }
+    
+  }
   
   return(svg_code %>% knitr::raw_html())
+  
 }
 
 
@@ -3008,7 +3083,7 @@ maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL,
     
     warning("Indicator heeft geen waarde voor een of meerdere crossings. Daarom kan niet vergeleken worden.")
     
-    return(paste("NIKS TONEN IVM NAs")) # TODO dit nog aanpassen, hoe willen we dit tonen?
+    return(paste("Onvoldoende respondenten voor vergelijking van", var_label(var_inhoud))) # TODO dit nog aanpassen, hoe willen we dit tonen?
     
   }
   
@@ -3226,21 +3301,21 @@ maak_top <- function(data, var_inhoud, toon_label = T, value = 1, niveau = "regi
       
       return(paste0(tolower(var_label(data[list$varcode[top]])), 
                     " (", 
-                    ifelse(is.na(list$percentage[top]), "-", list$percentage[top]),
+                    ifelse(is.na(list$percentage[top]), "*", list$percentage[top]),
                     "%)"))
       
     } else { # Bij één indicator als input
       
       return(paste0(tolower(labelled_naar_character(list, var_inhoud))[top], 
                     " (", 
-                    ifelse(is.na(list$percentage[top]), "-", list$percentage[top]),
+                    ifelse(is.na(list$percentage[top]), "*", list$percentage[top]),
                     "%)")) 
       
     }
     
   } else { # Wanneer geen label getoond moet worden
     
-    return(paste0(ifelse(is.na(list$percentage[top]), "-", list$percentage[top]), "%")) 
+    return(paste0(ifelse(is.na(list$percentage[top]), "*", list$percentage[top]), "%")) 
     
   }
 }
@@ -3301,7 +3376,7 @@ maak_percentage <- function(data, var_inhoud, value = 1, niveau = "regio",
   rm(data_temp, design_temp, envir = .GlobalEnv)
   
   # Output van functie maken
-  return(paste0(ifelse(is.na(result$percentage), "-", result$percentage), "%"))
+  return(paste0(ifelse(is.na(result$percentage), "*", result$percentage), "%"))
   
 }
 
