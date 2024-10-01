@@ -1172,6 +1172,18 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
               Voer maximaal 1 niveau in of kies een ander grafiektype.
               niveaus: {paste(niveaus, collapse = ',')}"))
   }
+  
+  # Kleuren toewijzen
+  if (var_crossings == "AGGSA402") {
+    if (niveaus == "gemeente") {
+      kleuren <- kleuren[c(6,7)]
+    } else if (niveaus == "regio") {
+      kleuren <- kleuren[c(1,4)]
+    } else {
+      kleuren <- kleuren[c(9,10)]
+    }
+  }
+  
   #design en dataset bepalen o.b.v. regio
   if(niveaus == "nl"){
     
@@ -1452,6 +1464,16 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
     }
   }
   
+  # Kleuren toewijzen
+  if (length(niveaus) > 1) {
+    kleur <- ifelse(niveaus == "gemeente", kleuren[6],
+                  ifelse(niveaus == "regio", kleuren[4],
+                         kleuren[11]))
+    
+      kleuren <- kleur
+  }
+  
+
   
   #TODO Optie om het correcter te doen dan gebruikelijk
   # regio zonder gemeente vs gemeente. 
@@ -3001,7 +3023,6 @@ maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL,
     crossing: NULL"))
   }
   
-  
   # Checken of var_crossing is ingevoerd en in dat geval var_jaar is
   crossing_is_jaar <- ifelse(is.null(var_crossing), FALSE,
                              ifelse(var_crossing != var_jaar, FALSE, TRUE))
@@ -3027,7 +3048,7 @@ maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL,
         filter(Gemeentecode == params$gemeentecode) %>%
         filter(!is.na(Standaardisatiefactor_gemeente))
       
-    } else{
+    } else {
       
       stop(glue("niveau bestaat niet
               niveau: {x}"))
@@ -3040,7 +3061,7 @@ maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL,
       data_x <<- subset_x
       design_temp <<- design_x 
       
-    } else{
+    } else {
       
       # Standaard alleen laatste jaar overhouden
       # Subset maken van design
@@ -3077,7 +3098,12 @@ maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL,
   
   #temp design verwijderen uit globalEnv.
   rm(design_temp, data_x, envir = .GlobalEnv)
-  
+
+  # Sorteer data van oudere data naar nieuwere data
+  if (crossing_is_jaar) {
+    result <- result %>% arrange(AGOJB401)
+  }
+
   # Check NAs in result$percentage. Stop als deze er zijn.
   if (any(is.na(result$percentage))) {
     

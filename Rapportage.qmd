@@ -538,13 +538,16 @@ Slaap is belangrijk voor het ‘schoonmaken’ van de hersenen, het onthouden va
 :::
 :::
 
-::: {layout="[50,225,50,225]"}
+::: {layout="[50,50]"}
 ::: column
 ```{r Slaap 1}
 
-monitor_df %>%
-  maak_percentage(var_inhoud = 'GZSLA401', niveau = "gemeente") %>% 
-  bol_met_cijfer(niveau = "Gemeente")
+getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'GZSLA401', niveau = "gemeente"),
+             monitor_df %>% maak_percentage(var_inhoud = 'GZSLA401', niveau = "regio"))
+
+getallen %>% 
+  bol_met_cijfer(niveau = c("Gemeente", "Regio"), 
+                 omschrijving = "slaapt meestal zeer slecht.")
 
 ```
 :::
@@ -552,31 +555,13 @@ monitor_df %>%
 ::: column
 ```{r Slaap 2}
 
-monitor_df %>% maak_percentage(var_inhoud = 'GZSLA401', niveau = "regio") %>%
-  bol_met_cijfer(niveau = "Regio", omschrijving = "slaapt meestal zeer slecht.")
+getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'GZSLA402', niveau = "gemeente"), 
+             monitor_df %>% maak_percentage(var_inhoud = 'GZSLA402', niveau = "regio"))
 
-
-```
-:::
-
-::: column
-```{r Slaap 3}
-
-monitor_df %>%
-  maak_percentage(var_inhoud = 'GZSLA402', niveau = "gemeente") %>% 
-  bol_met_cijfer(niveau = "Gemeente")
-
-```
-:::
-
-::: column
-```{r Slaap 4}
-
-monitor_df %>% 
-  maak_percentage(var_inhoud = 'GZSLA402', niveau = "regio") %>%
-  bol_met_cijfer(niveau = "Regio", omschrijving = "voelt zich bijna elke dag slaperig of moe", 
+getallen %>% 
+  bol_met_cijfer(niveau = c("Gemeente", "Regio"), 
+                 omschrijving = "voelt zich bijna elke dag slaperig of moe", 
                  omschrijving2 = "doordat ze niet goed slapen.")
-
 
 ```
 :::
@@ -630,23 +615,16 @@ De ‘Mental Health Inventory 5’ (MHI-5) is een korte vragenlijst met 5 vragen
 :::
 :::
 
-::: {layout="[50,225,275]"}
+::: {layout="[50,50]"}
 ::: column
 ```{r Psychische klachten 1}
 
-monitor_df %>%
-  maak_percentage(var_inhoud = 'LVPKS404', niveau = "gemeente") %>% 
-  bol_met_cijfer(niveau = "Gemeente")
+getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'LVPKS404', niveau = "gemeente"), 
+             monitor_df %>% maak_percentage(var_inhoud = 'LVPKS404', niveau = "regio"))
 
-```
-:::
-
-::: column
-```{r Psychische klachten 2}
-
-monitor_df %>% maak_percentage(var_inhoud = 'LVPKS404', niveau = "regio") %>%
-  bol_met_cijfer(niveau = "Regio", omschrijving = "heeft angst- of depressieve gevoelens.")
-
+getallen %>% 
+  bol_met_cijfer(niveau = c("Gemeente", "Regio"), 
+                 omschrijving = "heeft angst- of depressieve gevoelens.")
 
 ```
 :::
@@ -716,13 +694,16 @@ Als gevoelens zoals angst, paniek, somberheid, leegte, zelfverwijt, boosheid, sc
 :::
 :::
 
-::: {layout="[50,225,50,225]"}
+::: {layout="[50,50]"}
 ::: column
 ```{r Zelfmoord 1}
 
-monitor_df %>%
-  maak_percentage(var_inhoud = 'NGSGA401', niveau = "gemeente") %>% 
-  bol_met_cijfer(niveau = "Gemeente")
+getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'NGSGA401', niveau = "gemeente"), 
+             monitor_df %>% maak_percentage(var_inhoud = 'NGSGA401', niveau = "regio"))
+
+getallen %>% 
+  bol_met_cijfer(niveau = c("Gemeente", "Regio"), 
+                 omschrijving = "heeft wel eens serieus nagedacht over suïcide.")
 
 ```
 :::
@@ -730,31 +711,12 @@ monitor_df %>%
 ::: column
 ```{r Zelfmoord 2}
 
-monitor_df %>% maak_percentage(var_inhoud = 'NGSGA401', niveau = "regio") %>%
-  bol_met_cijfer(niveau = "Regio", omschrijving = "heeft wel eens serieus nagedacht over suïcide.")
+getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'NGSGA402', niveau = "gemeente"), 
+             monitor_df %>% maak_percentage(var_inhoud = 'NGSGA402', niveau = "regio"))
 
-
-```
-:::
-
-::: column
-```{r Zelfmoord 3}
-
-monitor_df %>%
-  maak_percentage(var_inhoud = 'NGSGA402', niveau = "gemeente") %>% 
-  bol_met_cijfer(niveau = "Gemeente")
-
-```
-:::
-
-::: column
-```{r Zelfmoord 4}
-
-monitor_df %>% 
-  maak_percentage(var_inhoud = 'NGSGA402', niveau = "regio") %>%
-  bol_met_cijfer(niveau = "Regio", omschrijving = "heeft (heel) vaak serieus nagedacht", 
-                 omschrijving2 = "over suïcide.")
-
+getallen %>% 
+  bol_met_cijfer(niveau = c("Gemeente", "Regio"), 
+                 omschrijving = "heeft (heel) vaak serieus nagedacht over suïcide")
 
 ```
 :::
@@ -918,13 +880,16 @@ Top 3 van anderen vanuit wie of wat druk wordt ervaren in uw gemeente:
 :::
 :::
 
-::: {layout="[50,225,50,225]"}
+::: {layout="[50,50]"}
 ::: column
 ```{r Prestatiedruk 1}
 
-monitor_df %>%
-  maak_percentage(var_inhoud = 'LVPDA413', niveau = "gemeente") %>% 
-  bol_met_cijfer(niveau = "Gemeente")
+getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'LVPDA413', niveau = "gemeente"), 
+             monitor_df %>% maak_percentage(var_inhoud = 'LVPDA413', niveau = "regio"))
+
+getallen %>% 
+  bol_met_cijfer(niveau = c("Gemeente", "Regio"), 
+                 omschrijving = "ervaart prestatiedruk vanuit zichzelf.")
 
 ```
 :::
@@ -932,30 +897,12 @@ monitor_df %>%
 ::: column
 ```{r Prestatiedruk 2}
 
-monitor_df %>% maak_percentage(var_inhoud = 'LVPDA413', niveau = "regio") %>%
-  bol_met_cijfer(niveau = "Regio", omschrijving = "ervaart prestatiedruk vanuit zichzelf.")
+getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'LVPDA414', niveau = "gemeente"), 
+             monitor_df %>% maak_percentage(var_inhoud = 'LVPDA414', niveau = "regio"))
 
-
-```
-:::
-
-::: column
-```{r Prestatiedruk 3}
-
-monitor_df %>%
-  maak_percentage(var_inhoud = 'LVPDA414', niveau = "gemeente") %>% 
-  bol_met_cijfer(niveau = "Gemeente")
-
-```
-:::
-
-::: column
-```{r Prestatiedruk 4}
-
-monitor_df %>% 
-  maak_percentage(var_inhoud = 'LVPDA414', niveau = "regio") %>%
-  bol_met_cijfer(niveau = "Regio", omschrijving = "ervaart prestatiedruk vanuit anderen.")
-
+getallen %>% 
+  bol_met_cijfer(niveau = c("Gemeente", "Regio"),
+                 omschrijving = "ervaart prestatiedruk vanuit anderen.")
 
 ```
 :::
@@ -963,7 +910,7 @@ monitor_df %>%
 
 ::: {layout="[50,50]"}
 ::: column
-```{r Prestatiedruk 5, fig.alt=ggplot2::get_alt_text(plot)}
+```{r Prestatiedruk 3, fig.alt=ggplot2::get_alt_text(plot)}
 
 plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
@@ -978,7 +925,7 @@ plot
 :::
 
 ::: column
-```{r Prestatiedruk 6, fig.alt=ggplot2::get_alt_text(plot)}
+```{r Prestatiedruk 4, fig.alt=ggplot2::get_alt_text(plot)}
 plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
     var_inhoud = "LVPDA414",
@@ -1011,13 +958,17 @@ Veerkracht
 :::
 :::
 
-::: {layout="[50,225,50,225]"}
+::: {layout="[50,50]"}
 ::: column
 ```{r Veerkracht 1}
 
-monitor_df %>%
-  maak_percentage(var_inhoud = 'LVVKA403', niveau = "gemeente") %>% 
-  bol_met_cijfer(niveau = "Gemeente")
+getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'LVVKA403', niveau = "gemeente"), 
+             monitor_df %>% maak_percentage(var_inhoud = 'LVVKA403', niveau = "regio"))
+
+getallen %>% 
+  bol_met_cijfer(niveau = c("Gemeente", "Regio"),
+                 omschrijving = "vindt het niet moeilijk om stressvolle",
+                 omschrijving2 = "gebeurtenissen te doorstaan.")
 
 ```
 :::
@@ -1025,31 +976,12 @@ monitor_df %>%
 ::: column
 ```{r Veerkracht 2}
 
-monitor_df %>% maak_percentage(var_inhoud = 'LVVKA403', niveau = "regio") %>%
-  bol_met_cijfer(niveau = "Regio", omschrijving = "vindt het niet moeilijk om stressvolle",
-                 omschrijving2 = "gebeurtenissen te doorstaan.")
+getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'LVVKA401', niveau = "gemeente"), 
+             monitor_df %>% maak_percentage(var_inhoud = 'LVVKA401', niveau = "regio"))
 
-
-```
-:::
-
-::: column
-```{r Veerkracht 3}
-
-monitor_df %>%
-  maak_percentage(var_inhoud = 'LVVKA401', niveau = "gemeente") %>% 
-  bol_met_cijfer(niveau = "Gemeente")
-
-```
-:::
-
-::: column
-```{r Veerkracht 4}
-
-monitor_df %>% 
-  maak_percentage(var_inhoud = 'LVVKA401', niveau = "regio") %>%
-  bol_met_cijfer(niveau = "Regio", omschrijving = "herstelt snel na een moeilijke periode.")
-
+getallen %>% 
+  bol_met_cijfer(niveau = c("Gemeente", "Regio"),
+                 omschrijving = "herstelt snel na een moeilijke periode.")
 
 ```
 :::
@@ -1168,13 +1100,16 @@ Sporten en bewegen is goed voor zowel fysieke als mentale gezondheid. Het vermin
 :::
 :::
 
-::: {layout="[50,225,50,225]"}
+::: {layout="[50,50]"}
 ::: column
 ```{r Sporten 1}
 
-monitor_df %>%
-  maak_percentage(var_inhoud = 'LFBWA401', niveau = "gemeente") %>% 
-  bol_met_cijfer(niveau = "Gemeente")
+getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'LFBWA401', niveau = "gemeente"), 
+             monitor_df %>% maak_percentage(var_inhoud = 'LFBWA401', niveau = "regio"))
+
+getallen %>% 
+  bol_met_cijfer(niveau = c("Gemeente", "Regio"), 
+                 omschrijving = "beweegt elke dag minimaal een half uur.")
 
 ```
 :::
@@ -1182,32 +1117,15 @@ monitor_df %>%
 ::: column
 ```{r Sporten 2}
 
-monitor_df %>% maak_percentage(var_inhoud = 'LFBWA401', niveau = "regio") %>%
-  bol_met_cijfer(niveau = "Regio", omschrijving = "beweegt elke dag minimaal een half uur.")
+getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'LFBWA405', niveau = "gemeente"), 
+             monitor_df %>% maak_percentage(var_inhoud = 'LFBWA405', niveau = "regio"))
 
-
-```
-:::
-
-::: column
-```{r Sporten 3}
-
-monitor_df %>%
-  maak_percentage(var_inhoud = 'LFBWA405', niveau = "gemeente") %>% 
-  bol_met_cijfer(niveau = "Gemeente")
-
-```
-:::
-
-::: column
-```{r Sporten 4}
-
-monitor_df %>% 
-  maak_percentage(var_inhoud = 'LFBWA405', niveau = "regio") %>%
-  bol_met_cijfer(niveau = "Regio", omschrijving = "is lid van een sportclub, sportschool,",
+getallen %>% 
+  bol_met_cijfer(niveau = c("Gemeente", "Regio"), 
+                 omschrijving = "is lid van een sportclub, sportschool,",
                  omschrijving2 = "of heeft een (online) sportabonnement.")
 
-
+                 
 ```
 :::
 :::
@@ -1274,28 +1192,19 @@ Het advies van de Gezondheidsraad is: Drink geen alcohol of in ieder geval niet 
 :::
 :::
 
-::: {layout="[50,225,50,225]"}
+::: {layout="[50,50]"}
 ::: column
 ```{r Alcohol 1}
 
-monitor_df %>%
-  maak_percentage(var_inhoud = 'LFALS402', niveau = "gemeente") %>% 
-  bol_met_cijfer(niveau = "Gemeente")
+getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'LFALS402', niveau = "gemeente"),
+             monitor_df %>% maak_percentage(var_inhoud = 'LFALS402', niveau = "regio"))
+
+getallen %>% 
+  bol_met_cijfer(niveau = c("Gemeente", "Regio"), 
+                 omschrijving = "is een zware drinker.")
+                 
 
 ```
-:::
-
-::: column
-```{r Alcohol 2}
-
-monitor_df %>% maak_percentage(var_inhoud = 'LFALS402', niveau = "regio") %>%
-  bol_met_cijfer(niveau = "Regio", omschrijving = "is een zware drinker.")
-
-
-```
-:::
-
-::: column
 :::
 
 ::: column
@@ -1347,13 +1256,16 @@ Roken is een belangrijke oorzaak van ziekte en sterfte in Nederland. Hoe jonger 
 :::
 :::
 
-::: {layout="[50,225,50,225]"}
+::: {layout="[50,50]"}
 ::: column
 ```{r Roken 1}
 
-monitor_df %>%
-  maak_percentage(var_inhoud = 'LFRKA403', niveau = "gemeente") %>% 
-  bol_met_cijfer(niveau = "Gemeente")
+getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'LFRKA403', niveau = "gemeente"),
+             monitor_df %>% maak_percentage(var_inhoud = 'LFRKA403', niveau = "regio"))
+
+getallen %>% 
+  bol_met_cijfer(niveau = c("Gemeente", "Regio"), 
+                 omschrijving = "rookt wel eens.")
 
 ```
 :::
@@ -1361,30 +1273,12 @@ monitor_df %>%
 ::: column
 ```{r Roken 2}
 
-monitor_df %>% maak_percentage(var_inhoud = 'LFRKA403', niveau = "regio") %>%
-  bol_met_cijfer(niveau = "Regio", omschrijving = "rookt wel eens.")
+getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'LFRKA410', niveau = "gemeente"),
+             monitor_df %>% maak_percentage(var_inhoud = 'LFRKA410', niveau = "regio"))
 
-
-```
-:::
-
-::: column
-```{r Roken 3}
-
-monitor_df %>%
-  maak_percentage(var_inhoud = 'LFRKA409', niveau = "gemeente") %>% 
-  bol_met_cijfer(niveau = "Gemeente")
-
-```
-:::
-
-::: column
-```{r Roken 4}
-
-monitor_df %>% 
-  maak_percentage(var_inhoud = 'LFRKA409', niveau = "regio") %>%
-  bol_met_cijfer(niveau = "Regio", omschrijving = "vapet wel eens.")
-
+getallen %>% 
+  bol_met_cijfer(niveau = c("Gemeente", "Regio"), 
+                 omschrijving = "vapet wel eens.")
 
 ```
 :::
@@ -1404,7 +1298,7 @@ Jongvolwassenen kunnen zowel roken als vapen tegelijk. `r monitor_df %>% maak_pe
 
 ::: {layout="[50,50]"}
 ::: column
-```{r Roken 6, fig.alt=ggplot2::get_alt_text(plot)}
+```{r Roken 3, fig.alt=ggplot2::get_alt_text(plot)}
 
 plot = monitor_df %>% 
   maak_staafdiagram_meerdere_staven(
@@ -1431,23 +1325,16 @@ Snus zijn nicotinezakjes die in de mond worden gestopt. Nicotinezakjes verhogen 
 :::
 :::
 
-::: {layout="[50,225,275]"}
+::: {layout="[50,50]"}
 ::: column
-```{r Roken 7}
+```{r Roken 5}
 
-monitor_df %>%
-  maak_percentage(var_inhoud = 'LFRKA415', niveau = "gemeente") %>% 
-  bol_met_cijfer(niveau = "Gemeente")
+getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'LFRKA415', niveau = "gemeente"),
+             monitor_df %>% maak_percentage(var_inhoud = 'LFRKA415', niveau = "regio"))
 
-```
-:::
-
-::: column
-```{r Roken 8}
-
-monitor_df %>% 
-  maak_percentage(var_inhoud = 'LFRKA415', niveau = "regio") %>%
-  bol_met_cijfer(niveau = "Regio", omschrijving = "gebruikt wel eens snus.")
+getallen %>% 
+  bol_met_cijfer(niveau = c("Gemeente", "Regio"),
+                 omschrijving = "gebruikt wel eens snus.")
 
 
 ```
@@ -1480,13 +1367,17 @@ Drugs anders dan cannabis die het vaakst ooit door jongvolwassenen in uw gemeent
 :::
 :::
 
-::: {layout="[50,225,50,225]"}
+::: {layout="[50,50]"}
 ::: column
 ```{r Drugs 1}
 
-monitor_df %>%
-  maak_percentage(var_inhoud = 'LFDGA427', niveau = "gemeente") %>% 
-  bol_met_cijfer(niveau = "Gemeente")
+getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'LFDGA427', niveau = "gemeente"),
+             monitor_df %>% maak_percentage(var_inhoud = 'LFDGA427', niveau = "regio"))
+
+getallen %>% 
+  bol_met_cijfer(niveau = c("Gemeente", "Regio"),
+                 omschrijving = "heeft cannabis gebruikt",
+                 omschrijving2 = "in laatste 4 weken.")
 
 ```
 :::
@@ -1494,30 +1385,12 @@ monitor_df %>%
 ::: column
 ```{r Drugs 2}
 
-monitor_df %>% maak_percentage(var_inhoud = 'LFDGA427', niveau = "regio") %>%
-  bol_met_cijfer(niveau = "Regio", omschrijving = "heeft cannabis gebruikt",
-                 omschrijving2 = "in laatste 4 weken.")
+getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'LFDGS404', niveau = "gemeente"),
+             monitor_df %>% maak_percentage(var_inhoud = 'LFDGS404', niveau = "regio"))
 
-
-```
-:::
-
-::: column
-```{r Drugs 3}
-
-monitor_df %>%
-  maak_percentage(var_inhoud = 'LFDGS404', niveau = "gemeente") %>% 
-  bol_met_cijfer(niveau = "Gemeente")
-
-```
-:::
-
-::: column
-```{r Drugs 4}
-
-monitor_df %>% 
-  maak_percentage(var_inhoud = 'LFDGS404', niveau = "regio") %>%
-  bol_met_cijfer(niveau = "Regio", omschrijving = "heeft andere drugs dan cannabis gebruikt",
+getallen %>% 
+  bol_met_cijfer(niveau = c("Gemeente", "Regio"), 
+                 omschrijving = "heeft andere drugs dan cannabis gebruikt",
                  omschrijving2 = "in laatste 4 weken.")
 
 
@@ -1594,13 +1467,16 @@ Top 3 positieve gevolgen:
 :::
 :::
 
-::: {layout="[50,225,50,225]"}
+::: {layout="[50,50]"}
 ::: column
 ```{r Corona 1}
 
-monitor_df %>%
-  maak_percentage(var_inhoud = 'CPICS403', niveau = "gemeente") %>% 
-  bol_met_cijfer(niveau = "Gemeente")
+getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'CPICS403', niveau = "gemeente"),
+             monitor_df %>% maak_percentage(var_inhoud = 'CPICS403', niveau = "regio"))
+
+getallen %>% 
+  bol_met_cijfer(niveau = c("Gemeente", "Regio"),
+                 omschrijving = "ervaart negatieve gevolgen van corona")
 
 ```
 :::
@@ -1608,29 +1484,12 @@ monitor_df %>%
 ::: column
 ```{r Corona 2}
 
-monitor_df %>% maak_percentage(var_inhoud = 'CPICS403', niveau = "regio") %>%
-  bol_met_cijfer(niveau = "Regio", omschrijving = "ervaart negatieve gevolgen van corona")
+getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'CPICS404', niveau = "gemeente"),
+             monitor_df %>% maak_percentage(var_inhoud = 'CPICS404', niveau = "regio"))
 
-
-```
-:::
-
-::: column
-```{r Corona 3}
-
-monitor_df %>%
-  maak_percentage(var_inhoud = 'CPICS404', niveau = "gemeente") %>% 
-  bol_met_cijfer(niveau = "Gemeente")
-
-```
-:::
-
-::: column
-```{r Corona 4}
-
-monitor_df %>% 
-  maak_percentage(var_inhoud = 'CPICS404', niveau = "regio") %>%
-  bol_met_cijfer(niveau = "Regio", omschrijving = "ervaart positieve gevolgen van corona")
+getallen %>% 
+  bol_met_cijfer(niveau = c("Gemeente", "Regio"),
+                 omschrijving = "ervaart positieve gevolgen van corona")
 
 
 ```
@@ -1656,46 +1515,31 @@ Meer informatie over post-covid en (financiële) hulp bij post-covid is te vinde
 :::
 :::
 
-::: {layout="[50,225,50,225]"}
+::: {layout="[50,50]"}
 ::: column
-```{r Corona 5}
+```{r Corona 3}
 
-monitor_df %>%
-  maak_percentage(var_inhoud = 'CPLCA405', niveau = "gemeente") %>% 
-  bol_met_cijfer(niveau = "Gemeente")
+getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'CPLCA405', niveau = "gemeente"),
+             monitor_df %>% maak_percentage(var_inhoud = 'CPLCA405', niveau = "regio"))
 
-```
-:::
-
-::: column
-```{r Corona 6}
-
-monitor_df %>% maak_percentage(var_inhoud = 'CPLCA405', niveau = "regio") %>%
-  bol_met_cijfer(niveau = "Regio", omschrijving = "heeft 3 maanden of langer",
+getallen %>% 
+  bol_met_cijfer(niveau = c("Gemeente", "Regio"),
+                 omschrijving = "heeft 3 maanden of langer",
                  omschrijving2 = "klachten van het coronavirus.")
 
-
 ```
 :::
 
 ::: column
-```{r Corona 7}
+```{r Corona 4}
 
-monitor_df %>%
-  maak_percentage(var_inhoud = 'CPLCA408', niveau = "gemeente") %>% 
-  bol_met_cijfer(niveau = "Gemeente")
+getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'CPLCA408', niveau = "gemeente"),
+             monitor_df %>% maak_percentage(var_inhoud = 'CPLCA408', niveau = "regio"))
 
-```
-:::
-
-::: column
-```{r Corona 8}
-
-monitor_df %>% 
-  maak_percentage(var_inhoud = 'CPLCA408', niveau = "regio") %>%
-  bol_met_cijfer(niveau = "Regio", omschrijving = "voelt zich beperkt in het dagelijkse leven",
+getallen %>% 
+  bol_met_cijfer(niveau = c("Gemeente", "Regio"),
+                 omschrijving = "voelt zich beperkt in het dagelijkse leven",
                  omschrijving2 = "door klachten.")
-
 
 ```
 :::
@@ -1713,13 +1557,17 @@ Als jongvolwassenen het gebruik van sociale media en/of gamen niet meer onder co
 :::
 :::
 
-::: {layout="[50,225,50,225]"}
+::: {layout="[50,50]"}
 ::: column
 ```{r Digitaal 1}
 
-monitor_df %>%
-  maak_percentage(var_inhoud = 'DISMS401', niveau = "gemeente") %>% 
-  bol_met_cijfer(niveau = "Gemeente")
+getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'DISMS401', niveau = "gemeente"),
+             monitor_df %>% maak_percentage(var_inhoud = 'DISMS401', niveau = "regio"))
+
+getallen %>% 
+  bol_met_cijfer(niveau = c("Gemeente", "Regio"),
+                 omschrijving = "heeft risico op problematisch",
+                 omschrijving2 = "socialemediagebruik.")
 
 ```
 :::
@@ -1727,32 +1575,13 @@ monitor_df %>%
 ::: column
 ```{r Digitaal 2}
 
-monitor_df %>% maak_percentage(var_inhoud = 'DISMS401', niveau = "regio") %>%
-  bol_met_cijfer(niveau = "Regio", omschrijving = "heeft risico op problematisch",
-                 omschrijving2 = "socialemediagebruik.")
+getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'DIGMS401', niveau = "gemeente"),
+             monitor_df %>% maak_percentage(var_inhoud = 'DIGMS401', niveau = "regio"))
 
-
-```
-:::
-
-::: column
-```{r Digitaal 3}
-
-monitor_df %>%
-  maak_percentage(var_inhoud = 'DIGMS401', niveau = "gemeente") %>% 
-  bol_met_cijfer(niveau = "Gemeente")
-
-```
-:::
-
-::: column
-```{r Digitaal 4}
-
-monitor_df %>% 
-  maak_percentage(var_inhoud = 'DIGMS401', niveau = "regio") %>%
-  bol_met_cijfer(niveau = "Regio", omschrijving = "heeft risico op problematisch",
+getallen %>% 
+  bol_met_cijfer(niveau = c("Gemeente", "Regio"),
+                 omschrijving = "heeft risico op problematisch",
                  omschrijving2 = "gamegedrag.")
-
 
 ```
 :::
@@ -1779,24 +1608,17 @@ Online gokken gaat over het spelen van online gokspellen (bijvoorbeeld fruitauto
 :::
 :::
 
-::: {layout="[50,225,275]"}
+::: {layout="[50,50]"}
 ::: column
-```{r Digitaal 5 1}
+```{r Digitaal 3}
 
-monitor_df %>%
-  maak_percentage(var_inhoud = 'DIGOA411', niveau = "gemeente") %>% 
-  bol_met_cijfer(niveau = "Gemeente")
+getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'DIGOA411', niveau = "gemeente"),
+             monitor_df %>% maak_percentage(var_inhoud = 'DIGOA411', niveau = "regio"))
 
-```
-:::
-
-::: column
-```{r Digitaal 6}
-
-monitor_df %>% maak_percentage(var_inhoud = 'DIGOA411', niveau = "regio") %>%
-  bol_met_cijfer(niveau = "Regio", omschrijving = "heeft één of meerdere keren geldproblemen ",
+getallen %>% 
+  bol_met_cijfer(niveau = c("Gemeente", "Regio"),
+                 omschrijving = "heeft één of meerdere keren geldproblemen ",
                  omschrijving2 = "gekregen door het online gokken in het laatste jaar.")
-
 
 ```
 :::
@@ -1857,13 +1679,16 @@ LHBTQIA+ staat voor lesbisch, homoseksueel, biseksueel, transgender, queer, inte
 :::
 :::
 
-::: {layout="[50,225,50,225]"}
+::: {layout="[50,50]"}
 ::: column
 ```{r LHBTQIA 1}
 
-monitor_df %>%
-  maak_percentage(var_inhoud = 'SERIA404', niveau = "gemeente") %>% 
-  bol_met_cijfer(niveau = "Gemeente")
+getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'SERIA404', niveau = "gemeente"),
+             monitor_df %>% maak_percentage(var_inhoud = 'SERIA404', niveau = "regio"))
+
+getallen %>% 
+  bol_met_cijfer(niveau = c("Gemeente", "Regio"),
+                 omschrijving = "identificeert zich als LHBTQIA+.")
 
 ```
 :::
@@ -1871,31 +1696,13 @@ monitor_df %>%
 ::: column
 ```{r LHBTQIA 2}
 
-monitor_df %>% maak_percentage(var_inhoud = 'SERIA404', niveau = "regio") %>%
-  bol_met_cijfer(niveau = "Regio", omschrijving = "identificeert zich als LHBTQIA+.")
+getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'SERIA411', niveau = "gemeente"),
+             monitor_df %>% maak_percentage(var_inhoud = 'SERIA411', niveau = "regio"))
 
-
-```
-:::
-
-::: column
-```{r LHBTQIA 3}
-
-monitor_df %>%
-  maak_percentage(var_inhoud = 'SERIA411', niveau = "gemeente") %>% 
-  bol_met_cijfer(niveau = "Gemeente")
-
-```
-:::
-
-::: column
-```{r LHBTQIA 4}
-
-monitor_df %>% 
-  maak_percentage(var_inhoud = 'SERIA411', niveau = "regio") %>%
-  bol_met_cijfer(niveau = "Regio", omschrijving = "heeft nooit of soms het gevoel als", 
+getallen %>% 
+  bol_met_cijfer(niveau = c("Gemeente", "Regio"),
+                 omschrijving = "heeft nooit of soms het gevoel als", 
                  omschrijving2 = "LHBTQIA+er zichzelf te mogen zijn bij anderen.")
-
 
 ```
 :::
@@ -1951,24 +1758,17 @@ In uw gemeente heeft `r monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', 
 :::
 :::
 
-::: {layout="[50,225,275]"}
+::: {layout="[50,50]"}
 ::: column
 ```{r Seks 2}
 
-monitor_df %>%
-  maak_percentage(var_inhoud = 'GZGGA402', niveau = "gemeente") %>% 
-  bol_met_cijfer(niveau = "Gemeente")
+getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'SESES401', niveau = "gemeente"),
+             monitor_df %>% maak_percentage(var_inhoud = 'SESES401', niveau = "regio"))
 
-```
-:::
-
-::: column
-```{r Seks 3}
-
-monitor_df %>% maak_percentage(var_inhoud = 'GZGGA402', niveau = "regio") %>%
-  bol_met_cijfer(niveau = "Regio", omschrijving = "het afgelopen half jaar seks gehad met verschillende partners",
+getallen %>% 
+  bol_met_cijfer(niveau = c("Gemeente", "Regio"),
+                 omschrijving = "het afgelopen half jaar seks gehad met verschillende partners",
                  omschrijving2 = " en gebruikte soms of nooit een condoom of beflapje.")
-
 
 ```
 :::
