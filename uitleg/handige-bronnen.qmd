@@ -14,3 +14,8 @@ Hier staan links naar bronnen om Quarto, R en aanverwante technieken mee te lere
     -   [Grote verzameling R boeken](https://bookdown.org/)
     -   [Visualisaties](https://r-graphics.org/)
 -   [W3schools (voor o.a. css en html)](https://www.w3schools.com/)
+
+Andere handige R-scripts:
+
+-   [Tabellenboeken script](https://github.com/ggdatascience/GGData_tabellenboek)
+-   [Script om data in te laden in Swing dashboards](https://github.com/ggdatascience/importbestanden_swing)

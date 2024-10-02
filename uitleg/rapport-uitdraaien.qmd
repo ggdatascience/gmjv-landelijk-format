@@ -1,13 +1,18 @@
 # Standaard rapportage uitdraaien
 
-Standaard staat het format zo ingesteld dat de voorbeeldrapportage uitgedraaid wordt met nepdata. Hieronder worden een aantal standaard instellingen uitgelegd. Ook wordt uitgelegd hoe je je eigen data in kan laden en hoe je meerdere gemeenterapportages en PDF versies hiervan kunt uitdraaien.
+Het is handig de volgende stappen te doorlopen wanneer je voor het eerst de rapportage gaat uitdraaien:
+
+-   Test eerst of het lukt om de voorbeeldrapportage uit te draaien. Onder [R project openen en voorbeeldrapport uitdraaien](beginnen.qmd#R-project-openen-en-voorbeeldrapport-uitdraaien) wordt uitgelegd hoe je dit doet.
+-   Lukt dit, render dan de voorbeeldrapportage uit met je eigen data. Hieronder staat uitgelegd hoe je dit doet.
+-   Lukt dit ook, dan kun je de definitieve rapportage uitdraaien. Open hiervoor rechtsonder in Rstudio bij "Files" het bestand **"Rapportage.qmd"**. Zorg dat je ook hier correct verwijst naar je eigen databestanden (zie uitleg hieronder: Rapportage uitdraaien met eigen data).
+
+Hieronder staat uitgelegd hoe de voorbeeldrapportage en de definitieve rapportage opgebouwd zijn. Een aantal standaard instellingen worden uitgelegd. Ook wordt uitgelegd hoe je je eigen data in kan laden en hoe je meerdere gemeenterapportages en PDF versies hiervan kunt uitdraaien. De voorbeeldrapportage en definitieve rapportage zijn grotendeels gelijk. Indien deze afwijken van elkaar, wordt dit genoemd.
 
 ## Configuratie in frontmatter
 
-De eigenschappen van Quarto documenten kunnen bovenaan in de *YAML* *frontmatter* ingesteld worden.
-In het voorbeeld hieronder wordt een inhoudsopgave ingesteld met de titel "Inhoudsopgave" en aan de rechterkant van het document geplaatst. 
+De eigenschappen van Quarto documenten kunnen bovenaan in de *YAML* *frontmatter* ingesteld worden. In het voorbeeld hieronder wordt een inhoudsopgave ingesteld met de titel "Inhoudsopgave" en aan de rechterkant van het document geplaatst.
 
-```yaml
+``` yaml
 ---
 toc: true
 toc-location: right
@@ -17,7 +22,7 @@ toc-title: "Inhoudsopgave"
 
 Open **voorbeeld_rapportage.qmd**. Daar zie je de volgende frontmatter staan:
 
-```yaml
+``` yaml
 ---
 title: ""
 author: ""
@@ -29,19 +34,19 @@ format:
     toc-title: "Inhoud"
     embed-resources: true
 params:
-  gemeentecode: 1
+  gemeentecode: 2
   regiocode: 23
   regionaam: 'GGD Limburg-Noord' # Vul naam zoals in data CBS
   path_nepdata: "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
   path_cbs_data: "voorbeeld_JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx"
-  path_monitor_data_2022: "C:/Users/...." # Vul padnaam naar data 2022 in
+  path_monitor_data_2022: "C:/Users/.../" # Vul padnaam naar data 2022 in
   naam_monitor_data_2022_regionaal: "Regiobestand_CGMJV2022_REGIO_versie 4.sav" # Vul naam regionaal bestand 2022 in
-  path_monitor_data_2024: "C:/Users/...." # Vul padnaam naar data 2024 in
+  path_monitor_data_2024: "C:/Users/.../" # Vul padnaam naar data 2024 in
   naam_monitor_data_2024_regionaal: "Regiobestand_GMJV2024_REGIO_versie 1.sav" # Vul naam regionaal bestand 2024 in
   path_hulpfuncties: "hulpfuncties.R"
   default_nvar: 100 # Minimum aantal invullers per vraag
   default_ncel: 10  # Minimum aantal invullers oper antwoordoptie
-  default_kleuren_grafiek: !expr c("#012C17","#76B82A","#007E48")
+  default_kleuren_grafiek: !expr c("#86B443", "#012C17", "#B2BE97", "#007E48", "#AAD3CC", "#739BD0", "#11265F", "#86848D", "#CB8EB9", "#401B65", "#86848D")
   default_kleuren_responstabel: !expr c("header" = "#012C17", "kleur_1" = "#007E48", "kleur_2" = "#76B82A","kleur_tekst" = "#FFFFFF")
   is_pdf: false
 format-links: false
@@ -55,66 +60,83 @@ De meeste instellingen kan je laten staan. Het volgende moet aangepast of gecont
 
 ### Parameters onder 'Params'
 
--   **gemeentecode:** Voer hier een gemeentecode in die bestaat in je data. Dit is als het ware je voorbeeldgemeente. Als je het rapport uitdraait via de "Render" knop zal een rapport voor die gemeente gemaakt worden. 
--   **regiocode:** voer hier de CBS code van je GGD-regio in. Bij de nepdata staat dit op 23.
--   **regionaam:** voer hier de Naam van je GGD-regio in. Zorg er voor dat deze naam overeenkomt met de naam van je regio in het bestand "voorbeeld_JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx".  Bij de nepdata is dit GGD Limburg-Noord.
--   **path_..:** voer hier de padnaam naar de map met bestanden in. path_nepdata, path_cbs_data en path_helpfuncties hoeven **niet** aangepast te worden.
--   **naam_..:** voer hier de bestandsnaam van het regionale bestand in.
--   **default_nvar:** voer hier het algemene minimum aantal respondenten per vraag in.
--   **default_ncel:** voer hier het algemene minimum aantal respondenten per antwoord in.
--   **default_kleuren_grafiek:** Voer hier een vector in met de standaard kleurcodes voor grafieken. 
--   **default_kleuren_responstabel:** Voer hier een named vector in met 4 kleurcodes als standaard voor responstabellen. Zie het voorbeeld voor de namen.
+-   **gemeentecode:** hier moet een gemeentecode ingevuld staan die bestaat in je data. Dit is als het ware je voorbeeldgemeente. Als je het rapport uitdraait via de "Render" knop zal een rapport voor die gemeente gemaakt worden.
+-   **regiocode:** hier moet de CBS code van je GGD-regio ingevoerd staan. Bij de nepdata staat dit op 23.
+-   **regionaam:** hier moet de naam van je GGD-regio ingevoerd staan. Zorg er voor dat deze naam overeenkomt met de naam van je regio in het bestand "JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx". Bij de nepdata is dit GGD Limburg-Noord.
+-   **path\_..:** voer hier de padnaam naar de map met bestanden in. Er kunnen 2 paths ingevuld worden: één voor de data van 2022 en één voor de data van 2024. path_nepdata, path_cbs_data en path_helpfuncties hoeven **niet** aangepast te worden.
+-   **naam\_..:** voer hier de bestandsnaam van het regionale bestand in. Er kunnen 2 namen ingevuld worden: één voor de data van 2022 en één voor de data van 2024.
+-   **default_nvar:** hier is het algemene minimum aantal respondenten per vraag ingevoerd.
+-   **default_ncel:** hier is het algemene minimum aantal respondenten per antwoordoptie ingevoerd.
+-   **default_kleuren_grafiek:** hier is een vector in met de standaard kleurcodes voor grafieken ingevoerd.
+-   **default_kleuren_responstabel:** hier is een named vector ingevoerd met 4 kleurcodes als standaard voor responstabellen. Zie het voorbeeld voor de namen.
 -   **is_pdf:** dit staat standaard op false, zodat standaard geen pdfs uitgedraaid worden. Zie onderwerp 'PDF uitdraai en Printbaarheid' hieronder voor hoe je PDFs van de rapportage uitdraait.
 
 ### Overige frontmatter instellingen
+
 -   **warning:** Deze parameter staat in het voorbeeldrapport op false. Als de parameter op true staat worden mogelijke problemen / 'warnings' getoond in het rapport. Dit is meestal niet wenselijk voor het eindproduct, maar nuttig tijdens ontwikkeling.
 
 ::: {.callout-warning title="Let op"}
-Wees je ervan bewust dat eventuele problemen met het verwerken van de data NIET getoond worden als warning op false staat. Zorg ervoor dat deze parameter bij het  ontwikkelen van het rapport op 'true' staat, zodat je op de hoogte bent van de warnings. 
+Wees je ervan bewust dat eventuele problemen met het verwerken van de data NIET getoond worden als warning op false staat. Zorg ervoor dat deze parameter bij het ontwikkelen van het rapport op 'true' staat, zodat je op de hoogte bent van de warnings.
 :::
 
 -   **echo:** Standaard op false. Als deze parameter op true staat worden codeblokjes in het rapport getoond.
 -   **message:** Standaard op false. Als deze parameter op true staat worden berichten van packages getoond.
 
+## Rapportage uitdraaien met eigen data
 
-### Rapportage uitdraaien met eigen data
-Om de standaardrapportage met eigen data uit te draaien moeten enkele aanpassingen gedaan worden in de frontmatter. Standaard wordt namelijk nepdata ingeladen. Dit is data die lijkt op de data van de Gezondheidsmonitor Jongvolwassenen, maar geen echte deelnemers bevat. Het nepdata bestand bevat data op landelijk, regio en gemeentelijk niveau en van onderzoeksjaren 2022 en 2024 (en is daarmee en trendbestand). De nepdata staat op github en wordt standaard meegedownload wanneer je de 'repository' [gmjv-landelijk-format](https://github.com/ggdatascience/gmjv-landelijk-format) download. Het bestand heet nep 'testdata GMJV - Regionaal trendbestand 2022-2024.sav'.
+Om de (voorbeeld)rapportage met eigen data uit te draaien moeten enkele aanpassingen gedaan worden in de frontmatter. Standaard wordt namelijk nepdata ingeladen. Dit is data die lijkt op de data van de Gezondheidsmonitor Jongvolwassenen, maar geen echte deelnemers bevat. Het nepdata bestand bevat data op landelijk, regio en gemeentelijk niveau en van onderzoeksjaren 2022 en 2024 (en is daarmee en trendbestand). De nepdata staat op github en wordt standaard meegedownload wanneer je de 'repository' [gmjv-landelijk-format](https://github.com/ggdatascience/gmjv-landelijk-format) download. Het bestand heet nep 'testdata GMJV - Regionaal trendbestand 2022-2024.sav'.
 
 Om je eigen data te gebruiken i.p.v. de nepdata, moeten er 2 dingen gedaan worden:
 
 -   Frontmatter aanpassen
 -   Codeblok Instellingen aanpassen
 
-#### Frontmatter aanpassen
+### Frontmatter aanpassen
 
 In de frontmatter moet aangepast worden:
 
 -   **gemeentecode:** Voer hier een gemeentecode in die bestaat in je data. Dit is als het ware je voorbeeldgemeente. Als je het rapport uitdraait via de "Render" knop zal een rapport voor die gemeente gemaakt worden.
 -   **regiocode:** voer hier de CBS code van je GGD-regio in.
--   **regionaam:** voer hier de Naam van je GGD-regio in.
+-   **regionaam:** voer hier de naam van je GGD-regio in. Zorg er voor dat deze naam overeenkomt met de naam van je regio in het bestand "JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx".
+-   **path_monitor_data_2022**: voer hier de padnaam naar de data van 2022 in en sluit af met een /.
+-   **naam_monitor_data_2022_regionaal:** voer hier de naam van het regionale databestand van 2022 in. Deze moet eindigen op .sav
+-   **path_monitor_data_2024**: voer hier de padnaam naar de data van 2024 in en sluit af met een /.
+-   **naam_monitor_data_2024_regionaal:** voer hier de naam van het regionale databestand van 2022 in. Deze moet eindigen op .sav
 
-#### Codeblok Instellingen aanpassen
+### Codeblok Instellingen aanpassen
 
-Scroll in de voorbeeldrapportage naar beneden tot je bij het eerste codeblok komt. Deze heet Instellingen en start met:
+Scroll in de (voorbeeld)rapportage naar beneden tot je bij het eerste codeblok komt. Deze heet Instellingen en start met:
 
-```yaml
+```{r Instellingen, eval = F}
 #Libraries inladen
 # Het script maakt gebruik van een aantal packages
 # Deze moeten bij de eerste keer lokaal worden geinstalleerd
+
+# benodigde packages installeren als deze afwezig zijn
+pkg_nodig = c("gt", "dplyr", "ggplot2", "tidyr", "haven", "stringr", "labelled", 
+              "survey", "glue", "plotly", "forcats", "openxlsx", "showtext")
+
+for (pkg in pkg_nodig) {
+  if (system.file(package = pkg) == "") {
+    install.packages(pkg)
+  }
+}
+
 # Hieronder worden de benodige packages geladen
 library(gt)
 library(dplyr)
 library(ggplot2)
 library(tidyr)
 library(haven)
-#etc...
+
+# etc...
 ```
 
 Iets verder in dit blok wordt de data ingeladen. Hier zijn 2 opties: nepdata inladen of eigen data inladen.
 
 De nepdata wordt standaard ingeladen. Dit gebeurt met deze code:
 
-```yaml
+```{r, eval = F}
 ## OPTIE 1: Nepdata
 #Lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
 monitor_df = haven::read_spss(params$path_nepdata, user_na =T) %>%
@@ -125,9 +147,9 @@ monitor_df = haven::read_spss(params$path_nepdata, user_na =T) %>%
   labelled::user_na_to_na()
 ```
 
-Als je je eigen, echte data wil inladen, moet dit stuk code in comments (#) gezet worden. R ziet dit dan als tekst en niet meer als code. De makkelijkste manier om dit te doen, is om alle regels te selecteren en dan CTRL + Shift + R in te drukken. Op deze manier worden alle regels in één keer een comment. Het ziet er dan zo uit: 
+Als je je eigen, echte data wil inladen, moet dit stuk code in comments (#) gezet worden. R ziet dit dan als tekst en niet meer als code. De makkelijkste manier om dit te doen, is om alle regels te selecteren en dan CTRL + Shift + R in te drukken. Op deze manier worden alle regels in één keer een comment. Het ziet er dan zo uit:
 
-```yaml
+```{r, eval = F}
 # ## OPTIE 1: Nepdata
 # #Lees SPSS bestand & converteer 'user-missing' naar missing in R (NA)
 # monitor_df = haven::read_spss(params$path_nepdata, user_na =T) %>%
@@ -138,9 +160,9 @@ Als je je eigen, echte data wil inladen, moet dit stuk code in comments (#) geze
 #   labelled::user_na_to_na()
 ```
 
-Vervolgens moeten we zorgen dat optie 2, de optie om eigen data in te laden, aan staat. Hiervoor moeten we alle comments weghalen van dit stuk. Ook daarvoor kun je alle code selecteren en op CTRL + Shift + R in drukken. Alle onderstaande code moet dan **niet** meer in comments staan: 
+Vervolgens moeten we zorgen dat optie 2, de optie om eigen data in te laden, aan staat. Hiervoor moeten we alle comments weghalen van dit stuk. Ook daarvoor kun je alle code selecteren en op CTRL + Shift + R in drukken. Alle onderstaande code moet dan **niet** meer in comments staan:
 
-```yaml
+```{r, eval = F}
 ## OPTIE 2: Eigen data invoeren (landelijk + regionaal)
 #Data 2024
 #Landelijk bestand inladen
@@ -209,26 +231,39 @@ monitor_df <- monitor_df %>%
 rm(df_regio, df)
 ```
 
+Om te testen of R de data goed inlaad, kun je het eerste codeblok los runnen. Dit doe je door in voorbeeld_rapportage.qmd naar het eerste codeblok ({r Instellingen}) toe te gaan en rechtsboven op de groene driehoek te klikken:
 
+![](images/clipboard-2050508892.png)
+
+R runt nu alleen dit codeblok. Controleer of je errors krijgt. Veel voorkomende fouten:
+
+-   **path_monitor_data_2022** en/of **path_monitor_data_2024** eindigt niet op een / waardoor het bestand niet gevonden kan worden. Verander path_monitor_data_2022 en/of path_monitor_data_2024 in de frontmatter.
+-   De naam van het landelijke databestand uit 2022 en/of 2024 is aangepast, waardoor het bestand niet gevonden kan worden. Verander de naam het bestand in het codeblok, zie naar Totaalbestand_GMJV2022\_(...) en Totaalbestand_GMJV2024\_(...).
+
+## Regionale en/of landelijke rapportage maken
+Standaard worden percentages in de (voorbeeld)rapportage getoond op regionaal en/of gemeentelijk niveau. Uitsplitsingen worden standaard op regionaal niveau getoond. Als je een regionale en/of landelijke rapportage wil maken, moet je dit aanpassen. Dit kan door het argument niveau of niveaus aan te passen in alle functies. Zie [GMJV Functies gebruiken](gmjv-functies-gebruiken.qmd), [Grafiekfuncties](voorbeeld_grafieken.qmd), [Tekstfuncties](voorbeeld_tekstfuncties.qmd) en [Overige functies](voorbeeld_overige_functies.qmd) voor meer informatie over functies en hun argumenten.
+
+::: callout-tip
+In Quarto bestanden werkt de CTRL + F shortkey ook. Hiermee kun je woorden zoeken en vervangen. Zoek bijvoorbeeld op "gemeente" om overal het niveau "gemeente" te vervangen.
+:::
 
 ## Rapporten per gemeente uitdraaien
+
 Als je het rapport uitdraait door op de "Render" knop te drukken wordt er één rapport gemaakt dat is ingesteld op de gemeentecode in de *frontmatter*. Dit is handig om eventuele wijzigingen in het rapport te testen. Als je rapporten voor alle gemeenten wilt uitdraaien volg je de volgende stappen
 
-TODO
-
-> Zodra data 2024 binnen is stappen aanpassen
-> Voorlopig met voorbeeld_rapportage.qmd
-
 -   Open **maak_rapport_per_gemeente.R**
--   Controleer of de variabelen **file_path** en **regiocode** goed staan ingesteld
+-   Controleer of de variabelen **file_path** en **gemeentecodes_in_regio** goed staan ingesteld
 -   Draai de rest van de code.
 
 Het script gaat met een *loop* langs alle gemeentecodes en maakt voor iedere gemeente een rapport.
 
-
 ## PDF uitdraai en Printbaarheid
 
 Op verzoek is het mogelijk gemaakt de rapportage als PDF op te slaan en te zorgen dat deze printbaar is. De eerste stap hiervoor is bedenken of het wel nodig is om het rapport te printen. Meestal is dat niet zo. Als het toch nodig blijkt volg je de onderstaande stappen.
+
+::: {.callout-tip title="Rapportages versturen" collapse="true"}
+Wil je de rapportages via de mail delen? Kies dan niet voor html bestanden in de bijlage. Dit zijn vrij grote bestanden en sommige spam-filters zien html bestanden als spam. In plaats daarvan kun je in de mail verwijzen naar de website met de html-rapportage. Wil je toch bestanden meesturen met de mail? Draai dan de bestanden als PDF uit en voeg ze als PDF toe als bijlage.
+:::
 
 ### Pagina-einden bepalen d.m.v. "Header 1"
 
@@ -245,23 +280,22 @@ Er zijn grenzen aan hoe veel er op één pagina past. Als je te veel grafieken o
 ::: {.callout-tip title="Aangepaste eigenschappen Header 1" collapse="true"}
 Headers van niveau 1 krijgen voor de GMJV rapportage standaard een gekleurde achtergrond en beginnen (bij conversie naar pdf) altijd op een nieuwe pagina.
 
-Dit zijn aangepaste eigenschappen die worden bepaald in het CSS-bestand "custom.css". Je kan deze eigenschappen in dat bestand uitzetten of wijzigen. Zie ook het hoofdstuk [CSS](css.qmd)
+Dit zijn aangepaste eigenschappen die worden bepaald in het CSS-bestand "custom.css". Je kan deze eigenschappen in dat bestand uitzetten of wijzigen. Zie ook het hoofdstuk [CSS](css.qmd).
 :::
 
 ### PDF uitdraaien
 
-Als de pagina-einden goed ingesteld staan kan je de rapportage als PDF bestand uitdraaien. Let hierbij op dat je ten minste Google Chrome 128 hebt. Zie daarvoor ['PDF-uitdraai' in het hoofdstuk 'Beginnen'](beginnen.qmd#voor-pdf-uitdraai)
+Als de pagina-einden goed ingesteld staan kan je de rapportage als PDF bestand uitdraaien. Let hierbij op dat je ten minste Google Chrome 128 hebt. Zie daarvoor ['PDF-uitdraai' in het hoofdstuk 'Beginnen'](beginnen.qmd#voor-pdf-uitdraai).
 
 -   Open het bestand **maak_pdf_rapport.R**
--   Controleer of de variabelen **file_path**, **regiocode** goed staan ingesteld.
+-   Controleer of de variabelen **file_path**, **gemeentecodes_in_regio** goed staan ingesteld.
 -   Draai het hele script.
 -   Controleer de uitvoer.
 
 ## HTML-rapporten uploaden naar Swing
 
-Als je een html-bestand naar Swing upload en in de Viewer plaatst gaat dat niet automatisch goed. De layout van het bestand overhoop raken. Dit komt omdat de opmaak (CSS) van Swing zelf ook doorwerkt op het html-document.
-Dit kan je oplossen door raporten standaard in een 'iframe' te plaatsen. Dit is relatief makkelijk in te stellen in Swing.
+Als je een html-bestand naar Swing upload en in de Viewer plaatst gaat dat niet automatisch goed. De layout van het bestand overhoop raken. Dit komt omdat de opmaak (CSS) van Swing zelf ook doorwerkt op het html-document. Dit kan je oplossen door raporten standaard in een 'iframe' te plaatsen. Dit is relatief makkelijk in te stellen in Swing.
 
 -   Log in bij Swing Studio als Admin
--   Kies Viewer > Settings > Viewer Settings
+-   Kies Viewer \> Settings \> Viewer Settings
 -   Zoek de optie "Show report in an iframe" en vink deze optie aan

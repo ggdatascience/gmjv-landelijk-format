@@ -35,7 +35,7 @@ Om achter je Chrome versie te komen klik je in google chrome rechtsboven op de d
 
 ## Bestanden rapportagescript downloaden van Github
 
--   Ga naar de 'repository' [gmjv-landelijk-format](https://github.com/ggdatascience/gmjv-landelijk-format) op de githubpagina van GGDAta
+-   Ga naar de 'repository' [gmjv-landelijk-format](https://github.com/ggdatascience/gmjv-landelijk-format) op de githubpagina van GGDAta.
 
 -   Klik op de groene knop **Code** en selecteer in het drop-down menu. "Download Zip".
 
@@ -45,9 +45,9 @@ Om achter je Chrome versie te komen klik je in google chrome rechtsboven op de d
 ## R project openen en voorbeeldrapport uitdraaien
 Er is een voorbeeldrapportage die gebruik maakt van fictieve data. Deze rapportage kan je als test uitdraaien. Als dit fout gaat is er waarschijnlijk iets verouderd aan je installatie van R, Rstudio of libraries.
 
--   Open het bestand "gmjv-landelijk-format.Rproj" in Rstudio. Door het project te openen, in plaats van een los bestand is de werkmap automatisch ingesteld.
+-   Open het bestand **"gmjv-landelijk-format.Rproj"** in Rstudio. Door het project te openen in plaats van een los bestand, is de werkmap automatisch ingesteld.
 
--   Zoek rechtsonder in Rstudio bij "files" het bestand "voorbeeld_rapportage.qmd" op.
+-   Zoek rechtsonder in Rstudio bij "Files" het bestand **"voorbeeld_rapportage.qmd"** op en open dit door er op te klikken.
 
 -   Als je dit bestand hebt geopend zal Rstudio het aangeven als er nog 'libraries' zijn die je moet installeren. Er verschijnt dan een gele balk bovenaan het scherm. Klik in dat geval op "install" en wacht tot de pakketjes zijn geinstalleerd.
 

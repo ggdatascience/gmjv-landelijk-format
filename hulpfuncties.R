@@ -41,7 +41,7 @@ library(showtext)
 font_family = "Open Sans"
 
 #Titels
-titel_size <- 30
+titel_size <- 40
 
 #Algemeen
 font_size <- 30
@@ -51,15 +51,15 @@ font_size <- 30
 geom_text_percentage <- 10
 
 #Labels op de X-as (waar die relevant zijn)
-as_label_size <- 20
+as_label_size <- 30
 
 #legend titles
 #algemeen:default
-legend_title_size_cirkel <- 20
+legend_title_size_cirkel <- 30
 
 #legend keys
-legend_text_size <- 20
-legend_text_size_cirkel <- 15
+legend_text_size <- 30
+legend_text_size_cirkel <- 25
 
 
 #caption
@@ -685,6 +685,30 @@ maak_regeleinden <- function(label_vector, x_as_label_wrap, x_as_regels_toevoege
   return(label_vector)
 }
 
+#Functie maken om kleuren te bepalen
+
+bepaal_kleuren <- function(kleuren = params$default_kleuren_grafiek, 
+                           niveaus = "regio") {
+  
+  # bepaal kleuren per niveau
+  bepaalde_kleuren <- lapply(niveaus, function(x){
+    
+    if (x == "gemeente") {
+      kleur <- kleuren[c(6:8)]
+    } else if (x == "regio") {
+      kleur <- kleuren[c(1:5)]
+    } else {
+      kleur <- kleuren[c(9,10,8)]
+    }
+    
+    kleur 
+    
+  }) %>% do.call(c,.)
+  
+  return(bepaalde_kleuren)
+  
+}
+
 # Tabelfuncties -------------------------------------------------------
 maak_responstabel <- function(data, crossings, missing_label = "Onbekend",
                               kleuren = params$default_kleuren_responstabel,
@@ -903,6 +927,9 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
       niveaus: {paste(niveaus,collapse = ',')}")
     )
   }
+  
+  # Bepaal kleuren
+  kleuren <- bepaal_kleuren(kleuren = kleuren, niveaus = niveaus)
   
   #Checken of crossvar is ingevoerd en in dat geval jaarvar is
   crossing_is_jaar <- ifelse(
@@ -1136,7 +1163,8 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
 }
 
 
-maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, titel = "",
+maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings = NULL, 
+                                           titel = "",
                                            kleuren = params$default_kleuren_grafiek,
                                            nvar = params$default_nvar, ncel = params$default_ncel,
                                            alt_text = NULL,
@@ -1173,16 +1201,8 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
               niveaus: {paste(niveaus, collapse = ',')}"))
   }
   
-  # Kleuren toewijzen
-  if (var_crossings == "AGGSA402") {
-    if (niveaus == "gemeente") {
-      kleuren <- kleuren[c(6,7)]
-    } else if (niveaus == "regio") {
-      kleuren <- kleuren[c(1,4)]
-    } else {
-      kleuren <- kleuren[c(9,10)]
-    }
-  }
+  # Bepaal kleuren
+  kleuren <- bepaal_kleuren(kleuren = kleuren, niveaus = niveaus)
   
   #design en dataset bepalen o.b.v. regio
   if(niveaus == "nl"){
@@ -1464,17 +1484,17 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
     }
   }
   
-  # Kleuren toewijzen
-  if (length(niveaus) > 1) {
+  # Bepaal kleuren
+  if (is.null(var_crossing)) {
     kleur <- ifelse(niveaus == "gemeente", kleuren[6],
-                  ifelse(niveaus == "regio", kleuren[4],
-                         kleuren[11]))
+                    ifelse(niveaus == "regio", kleuren[4],
+                           kleuren[11]))
     
-      kleuren <- kleur
+    kleuren <- kleur
+  } else {
+    kleuren <- bepaal_kleuren(kleuren = kleuren, niveaus = niveaus)
   }
-  
 
-  
   #TODO Optie om het correcter te doen dan gebruikelijk
   # regio zonder gemeente vs gemeente. 
   
@@ -1856,7 +1876,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
 
 
 #TODO Overal chekc inbouwen of een var wel een lbl+dbl is. Of niet afh. van maak_kruistabel() output.
-maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_crossings, titel = "",
+maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_crossings = NULL, titel = "",
                                                         kleuren = params$default_kleuren_grafiek,
                                                         kleuren_per_crossing = F, fade_kleuren = F,
                                                         flip = FALSE, 
@@ -1897,6 +1917,10 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
               Voer maximaal 1 niveau in of kies een ander grafiektype.
               niveaus: {paste(niveaus,collapse = ',')}"))
   }
+  
+  # Bepaal kleuren
+  kleuren <- bepaal_kleuren(kleuren = kleuren, niveaus = niveaus)
+  
   #o.b.v. de orientatie van de grafiek (flip = horizontaal)
   #De correctie van de geom_text aanpassen  zodat deze netjes in het midden v.e. balk komt 
   v_just_text = ifelse(flip,0.5,-1.5)
@@ -2188,6 +2212,14 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
               "))
   }
   
+  # Bepaal kleuren
+  if (length(niveaus > 1 )) {
+    kleuren
+  } else {
+    kleuren <- bepaal_kleuren(kleuren = kleuren, niveaus = niveaus)
+  }
+  
+  
   #Checken of crossvar is ingevoerd en in dat geval jaarvar is
   crossing_is_jaar <- ifelse(is.null(var_crossing), FALSE,
                              ifelse(var_crossing != jaarvar, FALSE, TRUE))
@@ -2424,13 +2456,16 @@ maak_cirkeldiagram <- function(data, var_inhoud, titel = "", kleuren = params$de
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
   }
   
-  
   #niveaus kan hier max length 1 hebben
   if(length(niveaus) > 1){
     stop(glue("Dit grafiektype kan op 1 niveau filteren. Er zijn meer niveaus ingevoerd.
               Voer maximaal 1 niveau in of kies een ander grafiektype.
               niveaus: {paste(niveaus,collapse = ',')}"))
   }
+  
+  # Bepaal kleuren
+  kleuren <- bepaal_kleuren(kleuren = kleuren, niveaus = niveaus)
+  
   #design en dataset bepalen o.b.v. regio
   if(niveaus == "nl"){
     
@@ -2784,7 +2819,11 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
     mutate(gemeentecode = str_extract(gemeentecode,"[:digit:]*") %>% as.numeric()) %>% 
     filter(gemeentecode == gem_code) %>% 
     select(-gemeentecode)
-  
+
+  # cbs_gemeente hernoemen als label van gemeente is aangepast
+  cbs_gemeente$regio <- case_when(str_detect(val_label(data$Gemeentecode,gem_code), cbs_gemeente$regio) ~ val_label(data$Gemeentecode,gem_code),
+                                  TRUE ~ cbs_gemeente$regio)
+    
   cbs_populatiedata <- rbind(cbs_regio, cbs_gemeente) %>% 
     mutate(aantal = as.numeric(aantal))
   
@@ -2995,8 +3034,7 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
     
     maak_panel_tabset(plot, tabel)
   }
-  
-  
+
 }
 
 
@@ -3455,3 +3493,6 @@ render_toc <- function(
   x <- x[x != ""]
   knitr::asis_output(paste(x, collapse = "\n"))
 }
+
+
+

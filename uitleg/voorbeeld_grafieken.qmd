@@ -229,11 +229,16 @@ Alternatief kan de functie gebruikt worden om meerdere indicatoren naast elkaar 
 
 ### Optionele argumenten:
 Naast dezelfde optionele argumenten als in [**maak_staafdiagram_dubbele_uitsplitsing():**](#optionele-argumenten-1):
+
 -   **var_crossing:** Een character met de naam van één kruisvariabele
+
 -   **niveaus:** Een character vector met de niveaus c("nl","regio","gemeente"). Standaard op GGD-regio "regio" ingesteld. Kan meerdere niveaus hebben voor niveauvergelijking. Dit kan alleen als var_crossing leeg is.
+
 -   **var_inhoud_waarde:** Een numeric waar de numerieke waarde voor een antwoord ingevuld kan worden. Als deze waarde leeg is worden alle antwoorden getoond. Anders alleen het  antwoorden dat is. 
 Let op: als je een waarde invult die niet bestaat gebeurd er niks.
+
 -   **flip:** TRUE of FALSE. Standaard FALSE. Als TRUE wordt de grafiek horizontaal weergeven
+
 -   **toon_aslabel:** TRUE of FALSE. Standaard TRUE. Als FALSE worden er geen aslabels op de x-as getoond.
 
 
@@ -386,7 +391,9 @@ plot
 
 ### Optionele argumenten
 
-Naast dezelfde optionele argumenten als in [**maak_staafdiagram_dubbele_uitsplitsing():**](#optionele-argumenten-1) - **var_crossing:** Een character met de naam van één kruisvariabele
+Naast dezelfde optionele argumenten als in [**maak_staafdiagram_dubbele_uitsplitsing():**](#optionele-argumenten-1) 
+
+- **var_crossing:** Een character met de naam van één kruisvariabele
 
 ### Standaard gestapeld staafdiagram
 
@@ -422,7 +429,7 @@ plot
 
 ### Optionele argumenten
 
--   Dezelfde argumenten als in [**maak_staafdiagram_dubbele_uitsplitsing():**](#optionele-argumenten-1)
+Dezelfde argumenten als in [**maak_staafdiagram_dubbele_uitsplitsing():**](#optionele-argumenten-1)
 
 -   **titel**: character variabele. Als argument leeg is wordt het variabellabel van var_inhoud gebruikt.
 
