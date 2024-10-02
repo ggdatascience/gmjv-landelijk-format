@@ -275,7 +275,7 @@ plot
 ::: column
 Van de respondenten in uw gemeente is `r monitor_df %>% maak_percentage(var_inhoud = 'AGLFA401', value = 1, niveau = "gemeente")` 16 of 17 jaar, `r monitor_df %>% maak_percentage(var_inhoud = 'AGLFA401', value = 2, niveau = "gemeente")` tussen de 18 en 20 jaar en `r monitor_df %>% maak_percentage(var_inhoud = 'AGLFA401', value = 3, niveau = "gemeente")` tussen de 21 en 25 jaar.
 
-`r #monitor_df %>% maak_percentage(var_inhoud = 'AGETS411', value = 1, niveau = "gemeente")` van de respondenten heeft een Nederlandse herkomst.
+`r monitor_df %>% maak_percentage(var_inhoud = 'AGETS411', value = 1, niveau = "gemeente")` van de respondenten heeft een Nederlandse herkomst.
 :::
 :::
 
@@ -360,23 +360,21 @@ plot = monitor_df %>%
 Werk- en financiële situatie
 :::
 
-De meeste werkende jongvolwassenen in uw gemeente werken `r monitor_df %>% maak_top(var_inhoud = 'AGWSA413', value = 1:5, top = 1)`. `r monitor_df %>% maak_vergelijking(var_inhoud = 'AGWSA409', variabele_label = 'tenminste 32 uur per week werkt', var_crossing = 'AGOJB401')`
+De meeste werkende jongvolwassenen in uw gemeente werken `r monitor_df %>% maak_top(var_inhoud = 'AGWSA413', value = 1:5, top = 1, niveau = "gemeente")`. `r monitor_df %>% maak_vergelijking(var_inhoud = 'AGWSA409', variabele_label = 'tenminste 32 uur per week werkt', var_crossing = 'AGOJB401', niveau = "regio")`
 :::
 :::
 
 ::: {layout="[50,50]"}
 ::: column
 ```{r Werksituatie, fig.alt=ggplot2::get_alt_text(plot)}
-plot = monitor_df %>% 
+plot = monitor_df %>%
    maak_staafdiagram_meerdere_staven(
      var_inhoud = "AGWSA413",
-     var_inhoud_waarde = 1,
      titel = "Aantal uren werk per week",
      niveaus = "regio",
      var_crossing = "AGLFA401")
- 
- plot
 
+ plot
 ```
 :::
 
@@ -386,7 +384,9 @@ plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
     var_inhoud = "AGWSA401",
     var_crossings = "AGLFA401",
-     titel = "Heeft betaald werk")
+    titel = "Heeft betaald werk",
+    niveaus = "regio")
+
 plot
 ```
 :::
@@ -399,7 +399,9 @@ plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
     var_inhoud = "AGOWA401",
     var_crossings = "AGLFA401",
-     titel = "Volgt een opleiding")
+    titel = "Volgt een opleiding",
+    niveaus = "regio")
+
 plot
 
 ```
@@ -425,7 +427,7 @@ plot
 ```{r Werksituatie 5, fig.alt=ggplot2::get_alt_text(plot)}
 plot = monitor_df %>% 
   maak_staafdiagram_meerdere_staven(
-    var_inhoud = c("AGWSA406", "AGWSA412", "AGWSA411", "AGWSA410"),
+    var_inhoud = c("AGWSA410", "AGWSA411", "AGWSA412", "AGWSA406"),
     titel = "Redenen waarom iemand niet werkt",
     niveaus = c("regio"),
     var_inhoud_waarde =  1
@@ -442,7 +444,7 @@ plot
 
 ::: {layout="[100]"}
 ::: column
-`r monitor_df %>% maak_vergelijking(var_inhoud = 'FIIKA401', variabele_label = 'moeite heeft om alles te betalen wat moet', var_crossing = 'AGLFA401')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'FIIKA401', variabele_label = 'moeite heeft om alles te betalen wat moet', var_crossing = 'AGOJB401')`
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'FIIKA401', variabele_label = 'moeite heeft om alles te betalen wat moet', var_crossing = 'AGLFA401', niveau = "regio")` `r monitor_df %>% maak_vergelijking(var_inhoud = 'FIIKA401', variabele_label = 'moeite heeft om alles te betalen wat moet', var_crossing = 'AGOJB401', niveau = "regio")`
 
 <br>
 
@@ -483,11 +485,11 @@ Gezondheid is meer dan de afwezigheid van lichamelijke en mentale klachten. Iede
 
 <br>
 
-`r monitor_df %>% maak_percentage(var_inhoud = "GZGGA402", niveau = "gemeente")` van de jongvolwassen in uw gemeente ervaart de eigen gezondheid als (zeer) goed. `r monitor_df %>% maak_vergelijking(var_inhoud = 'GZGGA402', variabele_label = "hun eigen gezondheid als (zeer) goed ervaart", var_crossing = 'AGOJB401')`
+`r monitor_df %>% maak_percentage(var_inhoud = "GZGGA402", niveau = "gemeente")` van de jongvolwassen in uw gemeente ervaart de eigen gezondheid als (zeer) goed. `r monitor_df %>% maak_vergelijking(var_inhoud = 'GZGGA402', variabele_label = "hun eigen gezondheid als (zeer) goed ervaart", var_crossing = 'AGOJB401', niveau = "regio")`
 
 <br>
 
-`r monitor_df %>% maak_percentage(var_inhoud = "LVPKA407", niveau = "gemeente")` van de jongvolwassenen in uw gemeente voelde zich in de laatste vier weken vaak tot voortdurend gelukkig. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVPKA407', variabele_label = "zich vaak tot voortdurend gelukkig voelt", var_crossing = 'AGOJB401')`
+`r monitor_df %>% maak_percentage(var_inhoud = "LVPKA407", niveau = "gemeente")` van de jongvolwassenen in uw gemeente voelde zich in de laatste vier weken vaak tot voortdurend gelukkig. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVPKA407', variabele_label = "zich vaak tot voortdurend gelukkig voelt", var_crossing = 'AGOJB401', niveau = 'regio')`
 :::
 :::
 
@@ -576,7 +578,7 @@ getallen %>%
 Tevredenheid met jezelf, je lichaam en je leven
 :::
 
-`r monitor_df %>% maak_vergelijking(var_inhoud = 'LVTEA406', variabele_label = "(zeer) tevreden is met hun leven", var_crossing = 'AGOJB401')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVTEA406', variabele_label = "(zeer) tevreden is met hun leven", var_crossing = 'AGGSA402')`
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'LVTEA406', variabele_label = "(zeer) tevreden is met hun leven", var_crossing = 'AGOJB401', niveau = "regio")` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVTEA406', variabele_label = "(zeer) tevreden is met hun leven", var_crossing = 'AGGSA402', niveau = "regio")`
 :::
 :::
 
@@ -635,11 +637,11 @@ getallen %>%
 
 ::: {layout="[100]"}
 ::: column
-`r monitor_df %>% maak_percentage(var_inhoud = 'LVPKA409', value = 1, niveau = "gemeente")` van de jongvolwassenen in uw gemeente beoordeelt hun eigen mentale gezondheid als goed. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVPKA409', variabele_label = 'de mentale gezondheid als goed beoordeelt', var_crossing = 'AGOJB401')`
+`r monitor_df %>% maak_percentage(var_inhoud = 'LVPKA409', value = 1, niveau = "gemeente")` van de jongvolwassenen in uw gemeente beoordeelt hun eigen mentale gezondheid als goed. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVPKA409', variabele_label = 'de mentale gezondheid als goed beoordeelt', var_crossing = 'AGGSA402', niveau = "regio")`
 
 <br>
 
-`r monitor_df %>% maak_percentage(var_inhoud = 'LVPKA406', value = 1, niveau = "gemeente")` van de jongvolwassenen in uw gemeente voelt zich in het dagelijks leven vaak tot voortdurend beperkt voelt door psychische klachten.  `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVPKA406', variabele_label = 'deze gevoelens had', var_crossing = 'AGGSA402')`
+`r monitor_df %>% maak_percentage(var_inhoud = 'LVPKA406', value = 1, niveau = "gemeente")` van de jongvolwassenen in uw gemeente voelt zich in het dagelijks leven vaak tot voortdurend beperkt voelt door psychische klachten.  `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVPKA406', variabele_label = 'deze gevoelens had', var_crossing = 'AGOJB401', niveau = "regio")`
 
 
 <br>
@@ -656,9 +658,10 @@ getallen %>%
 
 plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
-    var_inhoud = "LVPKS404",
+    var_inhoud = "LVPKA409",
     var_crossings = "AGLFA401",
-    titel = "Heeft angst- of depressieve gevoelens"
+    titel = "Beoordeelt eigen mentale gezondheid als goed",
+    niveaus = "regio"
   )
 
 plot
@@ -716,7 +719,7 @@ getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'NGSGA402', niveau = "g
 
 getallen %>% 
   bol_met_cijfer(niveau = c("Gemeente", "Regio"), 
-                 omschrijving = "heeft (heel) vaak serieus nagedacht over suïcide")
+                 omschrijving = "heeft (heel) vaak serieus nagedacht over suïcide.")
 
 ```
 :::
@@ -724,7 +727,7 @@ getallen %>%
 
 ::: {layout="[100]"}
 ::: column
-`r monitor_df %>% maak_vergelijking(var_inhoud = 'NGSGA401', variabele_label = 'wel eens serieus heeft nagedacht over suïcide', var_crossing = 'AGOJB401')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'NGSGA401', variabele_label = 'wel eens serieus heeft nagedacht over suïcide', var_crossing = 'AGGSA402')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'NGSGA401', variabele_label = 'wel eens serieus heeft nagedacht over suïcide', var_crossing = 'AGLFA401')`
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'NGSGA401', variabele_label = 'wel eens serieus heeft nagedacht over suïcide', var_crossing = 'AGOJB401', niveau = "regio")` `r monitor_df %>% maak_vergelijking(var_inhoud = 'NGSGA401', variabele_label = 'wel eens serieus heeft nagedacht over suïcide', var_crossing = 'AGGSA402', niveau = "regio")` `r monitor_df %>% maak_vergelijking(var_inhoud = 'NGSGA401', variabele_label = 'wel eens serieus heeft nagedacht over suïcide', var_crossing = 'AGLFA401', niveau = "regio")`
 
 <br>
 
@@ -751,7 +754,7 @@ Eenzaamheid is één van de belangrijkste risicofactoren voor het ontwikkelen va
 
 <br>
 
-Van de jongvolwassenen in uw gemeente voelt `r monitor_df %>% maak_percentage(var_inhoud = 'LVEES402', niveau = "gemeente")` zich enigszins eenzaam en `r monitor_df %>% maak_percentage(var_inhoud = 'LVEES402', value = 2, niveau = "gemeente")` voelt zich sterk eenzaam. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVEES402', value = 2, variabele_label = 'zich sterk eenzaam voelt,', var_crossing = 'AGOJB401')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVEES402', value = 2, variabele_label = 'zich sterk eenzaam voelt', var_crossing = 'AGLFA401')`
+Van de jongvolwassenen in uw gemeente voelt `r monitor_df %>% maak_percentage(var_inhoud = 'LVEES402', niveau = "gemeente")` zich enigszins eenzaam en `r monitor_df %>% maak_percentage(var_inhoud = 'LVEES402', value = 2, niveau = "gemeente")` voelt zich sterk eenzaam. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVEES402', value = 2, variabele_label = 'zich sterk eenzaam voelt,', var_crossing = 'AGOJB401', niveau = "regio")` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVEES402', value = 2, variabele_label = 'zich sterk eenzaam voelt', var_crossing = 'AGLFA401', niveau = "regio")`
 
 <br>
 
@@ -769,7 +772,8 @@ plot = monitor_df %>%
   maak_staafdiagram_gestapeld(
     var_inhoud = "LVEES407",
     var_crossing = "AGGSA402",
-    titel = "Sociale eenzaamheid"
+    titel = "Sociale eenzaamheid",
+    niveaus = "regio"
   )
 
 plot
@@ -783,7 +787,8 @@ plot = monitor_df %>%
   maak_staafdiagram_gestapeld(
     var_inhoud = "LVEES410",
     var_crossing = "AGGSA402",
-    titel = "Emotionele eenzaamheid"
+    titel = "Emotionele eenzaamheid",
+    niveaus = "regio"
   )
 
 plot
@@ -803,17 +808,17 @@ Wanneer (ongezonde) stress te lang duurt, is er meer tijd nodig om te herstellen
 
 <br>
 
-`r monitor_df %>% maak_vergelijking(var_inhoud = 'LVSTA415', variabele_label = 'zich (heel) vaak gestrest voelt', var_crossing = 'AGOJB401')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVSTA415', variabele_label = 'zich (heel) vaak gestrest voelt', var_crossing = 'AGGSA402')`
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'LVSTA415', variabele_label = 'zich (heel) vaak gestrest voelt', var_crossing = 'AGOJB401', niveau = "regio")` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVSTA415', variabele_label = 'zich (heel) vaak gestrest voelt', var_crossing = 'AGGSA402', niveau = "regio")`
 
 <br>
 
 Top 5 bronnen van stress in uw gemeente:
 
--   `r maak_top(data = monitor_df, var_inhoud = c("LVSTA420", "LVSTA421", "LVSTA422", "LVSTA423", "LVSTA424", "LVSTA425", "LVSTA426", "LVSTA427", "LVSTA428", "LVSTA429", "LVSTA430", "LVSTA431", "LVSTA432", "LVSTA432"), top = 1)`
--   `r maak_top(data = monitor_df, var_inhoud = c("LVSTA420", "LVSTA421", "LVSTA422", "LVSTA423", "LVSTA424", "LVSTA425", "LVSTA426", "LVSTA427", "LVSTA428", "LVSTA429", "LVSTA430", "LVSTA431", "LVSTA432", "LVSTA432"), top = 2)`
--   `r maak_top(data = monitor_df, var_inhoud = c("LVSTA420", "LVSTA421", "LVSTA422", "LVSTA423", "LVSTA424", "LVSTA425", "LVSTA426", "LVSTA427", "LVSTA428", "LVSTA429", "LVSTA430", "LVSTA431", "LVSTA432", "LVSTA432"), top = 3)`
--   `r maak_top(data = monitor_df, var_inhoud = c("LVSTA420", "LVSTA421", "LVSTA422", "LVSTA423", "LVSTA424", "LVSTA425", "LVSTA426", "LVSTA427", "LVSTA428", "LVSTA429", "LVSTA430", "LVSTA431", "LVSTA432", "LVSTA432"), top = 4)`
--   `r maak_top(data = monitor_df, var_inhoud = c("LVSTA420", "LVSTA421", "LVSTA422", "LVSTA423", "LVSTA424", "LVSTA425", "LVSTA426", "LVSTA427", "LVSTA428", "LVSTA429", "LVSTA430", "LVSTA431", "LVSTA432", "LVSTA432"), top = 5)`
+-   `r maak_top(data = monitor_df, top = 1, niveau = "gemeente", var_inhoud = c("LVSTA420", "LVSTA421", "LVSTA422", "LVSTA423", "LVSTA424", "LVSTA425", "LVSTA426", "LVSTA427", "LVSTA428", "LVSTA429", "LVSTA430", "LVSTA431", "LVSTA432", "LVSTA433"))`
+-   `r maak_top(data = monitor_df, top = 2, niveau = "gemeente", var_inhoud = c("LVSTA420", "LVSTA421", "LVSTA422", "LVSTA423", "LVSTA424", "LVSTA425", "LVSTA426", "LVSTA427", "LVSTA428", "LVSTA429", "LVSTA430", "LVSTA431", "LVSTA432", "LVSTA433"))`
+-   `r maak_top(data = monitor_df, top = 3, niveau = "gemeente", var_inhoud = c("LVSTA420", "LVSTA421", "LVSTA422", "LVSTA423", "LVSTA424", "LVSTA425", "LVSTA426", "LVSTA427", "LVSTA428", "LVSTA429", "LVSTA430", "LVSTA431", "LVSTA432", "LVSTA433"))`
+-   `r maak_top(data = monitor_df, top = 4, niveau = "gemeente", var_inhoud = c("LVSTA420", "LVSTA421", "LVSTA422", "LVSTA423", "LVSTA424", "LVSTA425", "LVSTA426", "LVSTA427", "LVSTA428", "LVSTA429", "LVSTA430", "LVSTA431", "LVSTA432", "LVSTA433"))`
+-   `r maak_top(data = monitor_df, top = 5, niveau = "gemeente", var_inhoud = c("LVSTA420", "LVSTA421", "LVSTA422", "LVSTA423", "LVSTA424", "LVSTA425", "LVSTA426", "LVSTA427", "LVSTA428", "LVSTA429", "LVSTA430", "LVSTA431", "LVSTA432", "LVSTA433"))`
 :::
 :::
 
@@ -868,15 +873,15 @@ Sommige jongvolwassenen voelen druk om aan verwachtingen te voldoen. Ze hebben v
 
 <br>
 
-`r monitor_df %>% maak_vergelijking(var_inhoud = 'LVPDS401', variabele_label = 'prestatiedruk ervaart vanuit zichzelf of vanuit anderen', var_crossing = 'AGGSA402')`
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'LVPDS401', variabele_label = 'prestatiedruk ervaart vanuit zichzelf of vanuit anderen', var_crossing = 'AGGSA402', niveau = "regio")`
 
 <br>
 
 Top 3 van anderen vanuit wie of wat druk wordt ervaren in uw gemeente:
 
--   `r maak_top(data = monitor_df, var_inhoud = c("LVPDA415", "LVPDA416", "LVPDA417", "LVPDA418", "LVPDA419", "LVPDA420", "LVPDA421", "LVPDA422", "LVPDA423", "LVPDA424"), top = 1)`
--   `r maak_top(data = monitor_df, var_inhoud = c("LVPDA415", "LVPDA416", "LVPDA417", "LVPDA418", "LVPDA419", "LVPDA420", "LVPDA421", "LVPDA422", "LVPDA423", "LVPDA424"), top = 2)`
--   `r maak_top(data = monitor_df, var_inhoud = c("LVPDA415", "LVPDA416", "LVPDA417", "LVPDA418", "LVPDA419", "LVPDA420", "LVPDA421", "LVPDA422", "LVPDA423", "LVPDA424"), top = 3)`
+-   `r maak_top(data = monitor_df, top = 1, niveau = "gemeente", var_inhoud = c("LVPDA415", "LVPDA416", "LVPDA417", "LVPDA418", "LVPDA419", "LVPDA420", "LVPDA421", "LVPDA422", "LVPDA423", "LVPDA424"))`
+-   `r maak_top(data = monitor_df, top = 2, niveau = "gemeente", var_inhoud = c("LVPDA415", "LVPDA416", "LVPDA417", "LVPDA418", "LVPDA419", "LVPDA420", "LVPDA421", "LVPDA422", "LVPDA423", "LVPDA424"))`
+-   `r maak_top(data = monitor_df, top = 3, niveau = "gemeente", var_inhoud = c("LVPDA415", "LVPDA416", "LVPDA417", "LVPDA418", "LVPDA419", "LVPDA420", "LVPDA421", "LVPDA422", "LVPDA423", "LVPDA424"))`
 :::
 :::
 
@@ -989,7 +994,7 @@ getallen %>%
 
 ::: {layout="[[100]]"}
 ::: column
-`r monitor_df %>% maak_vergelijking(var_inhoud = 'LVVKA403', variabele_label = 'het niet moeilijk vindt om stressvolle gebeurtenissen te doorstaan', var_crossing = 'AGGSA402')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVVKA401', variabele_label = 'stel herstelt na een moeilijke periode', var_crossing = 'AGGSA402')`
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'LVVKA403', variabele_label = 'het niet moeilijk vindt om stressvolle gebeurtenissen te doorstaan', var_crossing = 'AGGSA402',  niveau = "regio")` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVVKA401', variabele_label = 'stel herstelt na een moeilijke periode', var_crossing = 'AGGSA402',  niveau = "regio")`
 
 <br>
 
@@ -1012,7 +1017,7 @@ Weerbaarheid is de basis voor een goede psychische gezondheid. Weerbare jongvolw
 
 <br>
 
-`r monitor_df %>% maak_percentage(var_inhoud = 'OJWHS402', niveau = "gemeente")` van de jongvolwassenen in uw gemeente is voldoende weerbaar (kan goed voor zichzelf opkomen). `r monitor_df %>% maak_vergelijking(var_inhoud = 'OJWHS402', variabele_label = 'voldoende weerbaar is,', var_crossing = 'AGOJB401')`
+`r monitor_df %>% maak_percentage(var_inhoud = 'OJWHS402', niveau = "gemeente")` van de jongvolwassenen in uw gemeente is voldoende weerbaar (kan voldoende voor zichzelf opkomen). `r monitor_df %>% maak_vergelijking(var_inhoud = 'OJWHS402', variabele_label = 'voldoende weerbaar is,', var_crossing = 'AGOJB401', niveau = "regio")`
 
 <br>
 
@@ -1030,7 +1035,7 @@ plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
     var_inhoud = "OJWHS402",
     var_crossing = "AGGSA402",
-    titel = "Kan voor zichzelf voldoende opkomen",
+    titel = "Kan voldoende voor zichzelf opkomen",
     niveaus = "regio"
   )
 
@@ -1052,11 +1057,11 @@ plot
 Vertrouwen in de toekomst
 :::
 
-Ondanks de uitdagingen die zij in hun leven tegenkomen, heeft een groot deel van de jongvolwassenen in uw gemeente (`r monitor_df %>% maak_percentage(var_inhoud = 'LVVTA404', value = 3, niveau = "gemeente")`) (heel) veel vertrouwen in hun toekomst. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVVTA404', value = 3, variabele_label = '(heel) veel vertrouwen in de toekomst heeft', var_crossing = 'AGOJB401')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVVTA404', value = 3, variabele_label = '(heel) veel vertrouwen in de toekomst heeft', var_crossing = 'AGGSA402')`
+Ondanks de uitdagingen die zij in hun leven tegenkomen, heeft een groot deel van de jongvolwassenen in uw gemeente (`r monitor_df %>% maak_percentage(var_inhoud = 'LVVTA404', value = 3, niveau = "gemeente")`) (heel) veel vertrouwen in hun toekomst. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVVTA404', value = 3, variabele_label = '(heel) veel vertrouwen in de toekomst heeft', var_crossing = 'AGOJB401', niveau = "regio")` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVVTA404', value = 3, variabele_label = '(heel) veel vertrouwen in de toekomst heeft', var_crossing = 'AGGSA402', niveau = "regio")`
 
 <br>
 
-`r monitor_df %>% maak_percentage(var_inhoud = 'LVVTS402', value = 1, niveau = "gemeente")` van de jongvolwassenen in uw gemeente maakt zich zorgen om één of meer maatschappelijke thema’s. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVVTS402', variabele_label = 'zich zorgen maakt om maatschappelijke thema’s', var_crossing = 'AGGSA402')`
+`r monitor_df %>% maak_percentage(var_inhoud = 'LVVTS402', value = 1, niveau = "gemeente")` van de jongvolwassenen in uw gemeente maakt zich zorgen om één of meer maatschappelijke thema’s. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVVTS402', variabele_label = 'zich zorgen maakt om maatschappelijke thema’s', var_crossing = 'AGGSA402', niveau = "regio")`
 :::
 :::
 
@@ -1085,9 +1090,9 @@ plot
 ::: achtergrondkleur
 Maatschappelijke thema's waar jongvolwassenen in uw gemeente zich het meest zorgen om maken zijn:
 
--   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410", "LVVTA411"), top = 1)`
--   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410", "LVVTA411"), top = 2)`
--   `r maak_top(data = monitor_df, var_inhoud = c("LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410", "LVVTA411"), top = 3)`
+-   `r maak_top(data = monitor_df, top = 1, niveau = "gemeente", var_inhoud = c("LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410", "LVVTA411"))`
+-   `r maak_top(data = monitor_df, top = 2, niveau = "gemeente", var_inhoud = c("LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410", "LVVTA411"))`
+-   `r maak_top(data = monitor_df, top = 3, niveau = "gemeente", var_inhoud = c("LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410", "LVVTA411"))`
 :::
 :::
 :::
@@ -1132,8 +1137,7 @@ getallen %>%
 
 ::: {layout="[100]"}
 ::: column
-`r monitor_df %>% maak_vergelijking(var_inhoud = 'LFBWA401', variabele_label = 'elke dag minimaal een half uur beweegt', var_crossing = 'AGOJB401')` `r monitor_df %>% maak_percentage(var_inhoud = 'LFBWA403', niveau = "gemeente")` van de jongvolwassenen in uw gemeente sport minstens één keer per week. Regionaal sport `r monitor_df %>% maak_percentage(var_inhoud = 'LFBWA403', niveau = "regio")` wekelijks. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LFBWA403', variabele_label = 'elke dag minimaal een half uur beweegt', var_crossing = 'AGOJB401')`
-:::
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'LFBWA401', variabele_label = 'elke dag minimaal een half uur beweegt', var_crossing = 'AGOJB401', niveau = "regio")` `r monitor_df %>% maak_percentage(var_inhoud = 'LFBWA403', niveau = "gemeente")` van de jongvolwassenen in uw gemeente sport minstens één keer per week. Regionaal sport `r monitor_df %>% maak_percentage(var_inhoud = 'LFBWA403', niveau = "regio")` wekelijks. 
 :::
 
 ::: {layout="[50,50]"}
@@ -1147,7 +1151,8 @@ plot = monitor_df %>%
     kleuren_per_crossing = TRUE,
     fade_kleuren = TRUE,
     flip = TRUE, 
-    titel = "Beweegt minimaal een half uur per dag"
+    titel = "Beweegt minimaal een half uur per dag",
+    niveaus = "regio"
   )
 
 plot
@@ -1164,7 +1169,8 @@ plot = monitor_df %>%
     kleuren_per_crossing = TRUE,
     fade_kleuren = TRUE,
     flip = TRUE, 
-    titel = "Is lid van een sportclub, sportschool of heeft een (online) sportabonnement"
+    titel = "Is lid van een sportclub, sportschool of heeft een (online) sportabonnement",
+    niveaus = "regio"
   )
 
 plot
@@ -1184,11 +1190,11 @@ De hersenen van jongvolwassenen zijn tot het 25e levensjaar volop in ontwikkelin
 
 <br>
 
-Het advies van de Gezondheidsraad is: Drink geen alcohol of in ieder geval niet meer dan één glas per dag. `r monitor_df %>% maak_percentage(var_inhoud = 'LFALS401', niveau = "gemeente")` van de jongvolwassenen in uw gemeente voldoet aan dit advies. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LFALS401', variabele_label = 'maximaal 1 glas alcohol per dag drinkt', var_crossing = 'AGOJB401')`
+Het advies van de Gezondheidsraad is: Drink geen alcohol of in ieder geval niet meer dan één glas per dag. `r monitor_df %>% maak_percentage(var_inhoud = 'LFALS401', niveau = "gemeente")` van de jongvolwassenen in uw gemeente voldoet aan dit advies. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LFALS401', variabele_label = 'maximaal 1 glas alcohol per dag drinkt', var_crossing = 'AGOJB401', niveau = "regio")`
 
 <br>
 
-`r monitor_df %>% maak_percentage(var_inhoud = 'LFALA416', niveau = "gemeente")` van de jongvolwassenen in uw gemeente geeft aan dat vrienden het normaal vinden om 10 glazen alcohol op één dag of avond te drinken. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LFALA416', variabele_label = 'dit aangeeft', var_crossing = 'AGOJB401')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LFALA416', variabele_label = 'aangeeft dat vrienden het normaal vinden om 10 glazen alcohol op één gelegenheid te drinken', var_crossing = 'AGLFA401')`
+`r monitor_df %>% maak_percentage(var_inhoud = 'LFALA416', niveau = "gemeente")` van de jongvolwassenen in uw gemeente geeft aan dat vrienden het normaal vinden om 10 glazen alcohol op één dag of avond te drinken. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LFALA416', variabele_label = 'dit aangeeft', var_crossing = 'AGOJB401', niveau = "regio")` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LFALA416', variabele_label = 'aangeeft dat vrienden het normaal vinden om 10 glazen alcohol op één gelegenheid te drinken', var_crossing = 'AGLFA401')`
 :::
 :::
 
@@ -1219,7 +1225,8 @@ plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
     var_inhoud = "LFALA413",
     var_crossings = "AGLFA401",
-    titel = "Alcoholgebruik in het laatste jaar"
+    titel = "Alcoholgebruik in het laatste jaar",
+    niveaus = "regio"
   )
 
 plot
@@ -1234,7 +1241,8 @@ plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
     var_inhoud = "LFALA414",
     var_crossings = "AGLFA401",
-    titel = "Alcoholgebruik in de laatste 4 weken"
+    titel = "Alcoholgebruik in de laatste 4 weken",
+    niveaus = "regio"
   )
 
 plot
@@ -1286,13 +1294,13 @@ getallen %>%
 
 ::: {layout="[100]"}
 ::: column
-`r monitor_df %>% maak_vergelijking(var_inhoud = 'LFRKA403', variabele_label = 'wel eens rookt', var_crossing = 'AGOJB401')`
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'LFRKA403', variabele_label = 'wel eens rookt', var_crossing = 'AGOJB401', niveau = "regio")`
 
-`r monitor_df %>% maak_vergelijking(var_inhoud = 'LFRKA403', variabele_label = 'vapet', var_crossing = 'AGLFA401')`
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'LFRKA410', variabele_label = 'vapet', var_crossing = 'AGLFA401', niveau = "regio")`
 
 <br>
 
-Jongvolwassenen kunnen zowel roken als vapen tegelijk. `r monitor_df %>% maak_percentage(var_inhoud = 'LFDGS404', niveau = "gemeente")` van de jongvolwassenen in uw gemeente rookt en/of vapet wel eens.
+Jongvolwassenen kunnen zowel roken als vapen tegelijk. `r monitor_df %>% maak_percentage(var_inhoud = 'LFRKS401', niveau = "gemeente")` van de jongvolwassenen in uw gemeente rookt en/of vapet wel eens.
 :::
 :::
 
@@ -1302,7 +1310,7 @@ Jongvolwassenen kunnen zowel roken als vapen tegelijk. `r monitor_df %>% maak_pe
 
 plot = monitor_df %>% 
   maak_staafdiagram_meerdere_staven(
-    var_inhoud = c("LFRKA403", "LFRKA407", "LFRKA406"),
+    var_inhoud = c("LFRKA406", "LFRKA413", "LFRKS403"),
     titel = "Dagelijks roken, vapen en roken en/of vapen",
     niveaus = c("gemeente", "regio"),
     var_inhoud_waarde =  1
@@ -1321,7 +1329,7 @@ plot
 ::: column
 Snus zijn nicotinezakjes die in de mond worden gestopt. Nicotinezakjes verhogen het risico op bepaalde vormen van kanker, zoals kanker in de mondholte.
 
-`r monitor_df %>% maak_vergelijking(var_inhoud = 'LFRKA403', variabele_label = 'snus gebruikt', var_crossing = 'AGLFA401')`
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'LFRKA415', variabele_label = 'snus gebruikt', var_crossing = 'AGLFA401',  niveau = "regio")`
 :::
 :::
 
@@ -1476,7 +1484,7 @@ getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'CPICS403', niveau = "g
 
 getallen %>% 
   bol_met_cijfer(niveau = c("Gemeente", "Regio"),
-                 omschrijving = "ervaart negatieve gevolgen van corona")
+                 omschrijving = "ervaart negatieve gevolgen van corona.")
 
 ```
 :::
@@ -1489,7 +1497,7 @@ getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'CPICS404', niveau = "g
 
 getallen %>% 
   bol_met_cijfer(niveau = c("Gemeente", "Regio"),
-                 omschrijving = "ervaart positieve gevolgen van corona")
+                 omschrijving = "ervaart positieve gevolgen van corona.")
 
 
 ```
