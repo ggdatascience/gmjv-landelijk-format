@@ -20,7 +20,7 @@ params:
   naam_monitor_data_2024_regionaal: "Regiobestand_GMJV2024_GGD Limburg-Noord_versie 1.sav" # Vul naam regionaal bestand 2024 in
   default_nvar: 100 # Minimum aantal invullers per vraag
   default_ncel: 10  # Minimum aantal invullers oper antwoordoptie
-  default_kleuren_grafiek: !expr c("#86B443", "#012C17", "#B2BE97", "#007E48", "#AAD3CC", "#739BD0", "#11265F", "#86848D", "#CB8EB9", "#401B65", "#86848D")
+  default_kleuren_grafiek: !expr c("#86B443", "#012C17", "#B2BE97", "#007E48", "#AAD3CC", "#CB8EB9", "#401B65", "#86848D", "#739BD0", "#11265F", "#86848D")
   default_kleuren_responstabel: !expr c("header" = "#012C17", "kleur_1" = "#007E48", "kleur_2" = "#76B82A","kleur_tekst" = "#FFFFFF")
   is_pdf: false
 format-links: false
@@ -208,7 +208,7 @@ if(params$is_pdf){
 }
 ```
 
-::: voorblad_achtergrond
+:::::::: voorblad_achtergrond
 ![](Voorblad_GMJV2024.png)
 
 ::: voorblad_resultaten
@@ -230,7 +230,7 @@ Jongvolwassenen 2024
 ::: voorblad_datum
 `r Sys.Date() %>% format(format = "%d %b %Y") %>% str_replace_all(c("jan" = "Januari", "feb" = "Februari", "mrt" = "Maart", "apr" = "April", "mei" = "Mei", "jun" = "Juni", "jul" = "Juli", "aug" = "Augustus", "sep" = "September", "okt" = "Oktober", "nov" = "November", "dec" = "December"))`
 :::
-:::
+::::::::
 
 # Over de Gezondheidsmonitor Jongvolwassenen
 
@@ -242,21 +242,32 @@ In totaal hebben `r monitor_df %>% filter(GGDregio == params$regiocode) %>% nrow
 
 De resultaten kunnen helpen bij de invulling en ontwikkeling van het gezondheidsbeleid. Uit de resultaten kan bijvoorbeeld blijken dat het nodig is om meer hulp te bieden aan bepaalde groepen jongvolwassenen of extra voorzieningen op te zetten in de regio of in een gemeente.
 
+De [Gezondheidsmonitor Jongvolwassenen](https://www.monitorgezondheid.nl/gezondheidsmonitor-jongvolwassenen/2022 "https://www.monitorgezondheid.nl/gezondheidsmonitor-jongvolwassenen/2022") 2024 is onderdeel van het [Gezondheidsonderzoek COVID-19](https://www.rivm.nl/gor-covid-19 "https://www.rivm.nl/gor-covid-19") van Netwerk GOR. Daarin brengen het RIVM, GGD’en, GGD GHOR Nederland, het Nivel en ARQ Nationaal Psychotrauma Centrum de gevolgen van de coronaperiode voor de gezondheid in kaart. Dit doen zij in opdracht van het ministerie van VWS en ZonMw.
+
+:::: {layout="[30,70]"}
+::: column
+![](iconen/logo_zonmw.jpg)
+:::
+
+::: column
+:::
+:::
+
 # Achtergrond
 
-Vanwege de betrouwbaarheid van de resultaten en de privacy van de respondenten hanteren wij bij de rapportage een minimum van 100 respondenten die de vraag ingevuld hebben en een minimum van 10 respondenten per specifiek antwoord. Indien de aantallen lager liggen, worden de cijfers niet weergegeven en staat er een * in de tekst of de grafiek.
+Vanwege de betrouwbaarheid van de resultaten en de privacy van de respondenten hanteren wij bij de rapportage een minimum van 100 respondenten die de vraag ingevuld hebben en een minimum van 10 respondenten per specifiek antwoord. Indien de aantallen lager liggen, worden de cijfers niet weergegeven en staat er een - of \* in de tekst of de grafiek. Alle grafieken gaan over de regio tenzij dit anders aangegeven staat.
 
 De cijfers die hier worden gepresenteerd zijn gestandaardiseerd naar GGD-regio, leeftijd (16-17 jaar, 18-20 jaar en 21-25 jaar) en gender (in twee groepen: mannen en vrouwen). Op deze manier geven de cijfers een zo representatief mogelijk beeld van alle jongvolwassenen in uw gemeente en de regio. Ten behoeve van de standaardisatie zijn mensen met gender "non-binair" of "anders” (landelijk 0,9%) willekeurig toegevoegd als man of vrouw. Dit is alleen gebruikt voor het berekenen van standaardisatiefactoren en is niet gebruikt voor de cijfers uitgesplitst naar mannen en vrouwen in deze rapportage.
 
-# ![afb](iconen/achtergrondkenmerken.svg) Achtergrondkenmerken {.h1-icoon}
+# Achtergrondkenmerken
 
-::: {layout="[100]"}
+:::: {layout="[100]"}
 ::: column
 Van de respondenten in uw gemeente is `r monitor_df %>% maak_percentage(var_inhoud = 'AGGSA401', value = 2, niveau = "gemeente")` vrouw en `r monitor_df %>% maak_percentage(var_inhoud = 'AGGSA401', value = 1, niveau = "gemeente")` man. Daarnaast geeft `r monitor_df %>% maak_percentage(var_inhoud = 'AGGSA401', value = 3, niveau = "gemeente")` aan zich anders dan man of vrouw te voelen.
 :::
-:::
+::::
 
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Achtergrondkenmerken 1}
 # Cirkeldiagram gender deelnemers regio
@@ -273,20 +284,20 @@ plot
 
 ::: column
 :::
-:::
+:::::
 
 ::: tussenlijn
 :::
 
-::: {layout="[100]"}
+:::: {layout="[100]"}
 ::: column
 Van de respondenten in uw gemeente is `r monitor_df %>% maak_percentage(var_inhoud = 'AGLFA401', value = 1, niveau = "gemeente")` 16 of 17 jaar, `r monitor_df %>% maak_percentage(var_inhoud = 'AGLFA401', value = 2, niveau = "gemeente")` tussen de 18 en 20 jaar en `r monitor_df %>% maak_percentage(var_inhoud = 'AGLFA401', value = 3, niveau = "gemeente")` tussen de 21 en 25 jaar.
 
 `r monitor_df %>% maak_percentage(var_inhoud = 'AGETS411', value = 1, niveau = "gemeente")` van de respondenten heeft een Nederlandse herkomst.
 :::
-:::
+::::
 
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Achtergrondkenmerken 3, fig.alt=ggplot2::get_alt_text(plot)}
 plot = monitor_df %>% maak_grafiek_cbs_bevolking(
@@ -310,12 +321,12 @@ plot = monitor_df %>%
 plot
 ```
 :::
-:::
+:::::
 
-# ![afb](iconen/Woon-werk.svg) Woon- en werksituatie en financiën {.h1-icoon}
+# Woon- en werksituatie en financiën
 
-::: {layout="[100]"}
-::: column
+::::::: {layout="[100]"}
+:::::: column
 ::: inleiding
 De woon-, werk- en financiële situatie kan veel invloed hebben op het welzijn en de mentale en fysieke gezondheid van jongvolwassenen. In een tijd waarin er sprake is van een woningcrisis en een onzekere financiële situatie is het van belang om deze aspecten goed te monitoren.
 :::
@@ -328,10 +339,10 @@ Woonsituatie
 :::
 
 De meeste jongvolwassenen in uw gemeente `r monitor_df %>% maak_top(var_inhoud = c("AGHHA401", "AGHHA405", "AGHHA406", "AGHHA404"), value = 1, top = 1, niveau = "gemeente")`. `r monitor_df %>% maak_vergelijking(var_inhoud = 'AGHHA401', variabele_label = 'bij ouders/verzorgers woont', var_crossing = 'AGOJB401', niveau = "regio")`
-:::
-:::
+::::::
+:::::::
 
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Woonsituatie, fig.alt=ggplot2::get_alt_text(plot)}
 
@@ -356,32 +367,36 @@ plot
 
 ::: column
 :::
-:::
+:::::
 
 ::: tussenlijn
 :::
 
-::: {layout="[100]"}
-::: column
+::::: {layout="[100]"}
+:::: column
 ::: titel
 Werksituatie
 :::
 
 De meeste werkende jongvolwassenen in uw gemeente werken `r monitor_df %>% maak_top(var_inhoud = 'AGWSA413', value = 1:5, top = 1, niveau = "gemeente")`. `r monitor_df %>% maak_vergelijking(var_inhoud = 'AGWSA409', variabele_label = 'tenminste 32 uur per week werkt', var_crossing = 'AGOJB401', niveau = "regio")`
-:::
-:::
 
-::: {layout="[50,50]"}
+<br>
+
+Regionaal is `r monitor_df %>% maak_percentage(var_inhoud = "AGWSA410", niveau = "regio")`% van de jongvolwassenen werkeloos of werkzoekend. `r monitor_df %>% maak_percentage(var_inhoud = "AGWSA411", niveau = "regio")`% geeft aan arbeidsongeschikt of langdurig ziek te zijn en `r monitor_df %>% maak_percentage(var_inhoud = "AGWSA412", niveau = "regio")`% heeft een bijstandsuitkering.
+::::
+:::::
+
+::::: {layout="[50,50]"}
 ::: column
 ```{r Werksituatie, fig.alt=ggplot2::get_alt_text(plot)}
 plot = monitor_df %>%
-   maak_staafdiagram_meerdere_staven(
-     var_inhoud = "AGWSA413",
-     titel = "Aantal uren werk per week",
-     niveaus = "regio",
-     var_crossing = "AGLFA401")
+  maak_staafdiagram_vergelijking(
+    var_inhoud = "AGWSA407",
+    var_crossings = "AGLFA401",
+    titel = "Heeft tenminste 12 uur per week betaald werk",
+    niveaus = "regio")
 
- plot
+plot
 ```
 :::
 
@@ -397,9 +412,9 @@ plot = monitor_df %>%
 plot
 ```
 :::
-:::
+:::::
 
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Werksituatie 3, fig.alt=ggplot2::get_alt_text(plot)}
 plot = monitor_df %>%
@@ -419,54 +434,37 @@ plot
 plot = monitor_df %>% 
   maak_staafdiagram_meerdere_staven(
     var_inhoud = c("AGWSS402", "AGWSS401"),
-    titel = "Combineert werk met opleiding en werkt niet en volgt geen opleiding",
-    niveaus = c("regio"),
+    titel = "Combinatie werk en opleiding",
+    niveaus = c("gemeente", "regio"),
     var_inhoud_waarde =  1
   )
 
 plot
 ```
 :::
+:::::
+
+::: tussenlijn
 :::
 
-::: {layout="[50,50]"}
-::: column
-```{r Werksituatie 5, fig.alt=ggplot2::get_alt_text(plot)}
-plot = monitor_df %>% 
-  maak_staafdiagram_meerdere_staven(
-    var_inhoud = c("AGWSA410", "AGWSA411", "AGWSA412", "AGWSA406"),
-    titel = "Redenen waarom iemand niet werkt",
-    niveaus = c("regio"),
-    var_inhoud_waarde =  1
-  )
-
-plot
-
-```
-:::
-
-::: column
-:::
-:::
-
-::: {layout="[100]"}
-::: column
+::::: {layout="[100]"}
+:::: column
 ::: titel
 Financiële situatie
 :::
 
 `r monitor_df %>% maak_vergelijking(var_inhoud = 'FIIKA401', variabele_label = 'moeite heeft om alles te betalen wat moet', var_crossing = 'AGLFA401', niveau = "regio")` `r monitor_df %>% maak_vergelijking(var_inhoud = 'FIIKA401', variabele_label = 'moeite heeft om alles te betalen wat moet', var_crossing = 'AGOJB401', niveau = "regio")`
-:::
-:::
+::::
+:::::
 
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Werksituatie 6, fig.alt=ggplot2::get_alt_text(plot)}
 plot = monitor_df %>% 
   maak_staafdiagram_meerdere_staven(
     var_inhoud = c("FIIKA401", "FIIKA402", "FIIKA403"),
     titel = "Financiële problemen",
-    niveaus = c("gemeente"),
+    niveaus = c("gemeente", "regio"),
     var_inhoud_waarde =  1
   )
 
@@ -476,20 +474,20 @@ plot
 
 ::: column
 :::
-:::
+:::::
 
-::: {layout="[100]"}
-::: column
+::::: {layout="[100]"}
+:::: column
 ::: achtergrondkleur
 [Het Nibud](https://www.nibud.nl/) (Nationaal Instituut voor Budgetvoorlichting) geeft advies over onder andere rondkomen, sparen en geldproblemen.
 :::
-:::
-:::
+::::
+:::::
 
-# ![afb](iconen/Gezondheid-geluk.svg) Gezondheid en geluk {.h1-icoon}
+# Gezondheid en geluk
 
-::: {layout="[100]"}
-::: column
+::::: {layout="[100]"}
+:::: column
 ::: titel
 Ervaren gezondheid en geluk
 :::
@@ -503,10 +501,10 @@ Gezondheid is meer dan de afwezigheid van lichamelijke en mentale klachten. Iede
 <br>
 
 `r monitor_df %>% maak_percentage(var_inhoud = "LVPKA407", niveau = "gemeente")` van de jongvolwassenen in uw gemeente voelde zich in de laatste vier weken vaak tot voortdurend gelukkig. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVPKA407', variabele_label = "zich vaak tot voortdurend gelukkig voelt", var_crossing = 'AGOJB401', niveau = 'regio')`
-:::
-:::
+::::
+:::::
 
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Gezondheid 1, fig.alt=ggplot2::get_alt_text(plot)}
 
@@ -538,22 +536,22 @@ plot
 
 ```
 :::
-:::
+:::::
 
 ::: tussenlijn
 :::
 
-::: {layout="[100]"}
-::: column
+::::: {layout="[100]"}
+:::: column
 ::: titel
 Slaap
 :::
 
 Slaap is belangrijk voor het ‘schoonmaken’ van de hersenen, het onthouden van belangrijke dingen en het verwerken van emoties. Slapen is daarom net zo belangrijk als voeding en beweging om gezond te blijven.
-:::
-:::
+::::
+:::::
 
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Slaap 1}
 
@@ -580,22 +578,22 @@ getallen %>%
 
 ```
 :::
-:::
+:::::
 
 ::: tussenlijn
 :::
 
-::: {layout="[100]"}
-::: column
+::::: {layout="[100]"}
+:::: column
 ::: titel
 Tevredenheid met jezelf, je lichaam en je leven
 :::
 
 `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVTEA406', variabele_label = "(zeer) tevreden is met hun leven", var_crossing = 'AGOJB401', niveau = "regio")` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVTEA406', variabele_label = "(zeer) tevreden is met hun leven", var_crossing = 'AGGSA402', niveau = "regio")`
-:::
-:::
+::::
+:::::
 
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Tevredenheid, fig.alt=ggplot2::get_alt_text(plot)}
 plot = monitor_df %>% 
@@ -612,12 +610,12 @@ plot
 
 ::: column
 :::
-:::
+:::::
 
-# ![afb](iconen/Mentaal.svg) Mentaal welbevinden {.h1-icoon}
+# Mentaal welbevinden
 
-::: {layout="[100]"}
-::: column
+::::: {layout="[100]"}
+:::: column
 ::: titel
 Mentale gezondheid
 :::
@@ -627,10 +625,10 @@ Mentale gezondheid en weerbaarheid zijn belangrijke voorwaarden om gezond te lev
 <br>
 
 De ‘Mental Health Inventory 5’ (MHI-5) is een korte vragenlijst met 5 vragen over mentale gezondheid. De score op deze vragen bepaalt in hoeverre iemand angst-of depressieve gevoelens had in de laatste 4 weken. In 2024 is een nieuwe [afkapwaarde](https://www.trimbos.nl/wp-content/uploads/2024/09/TRI32-001-Factsheet-Herijking-afkapwaarden-MHI5-def.pdf) bepaald.
-:::
-:::
+::::
+:::::
 
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Psychische klachten 1}
 
@@ -646,9 +644,9 @@ getallen %>%
 
 ::: column
 :::
-:::
+:::::
 
-::: {layout="[100]"}
+:::: {layout="[100]"}
 ::: column
 `r monitor_df %>% maak_percentage(var_inhoud = 'LVPKA409', value = 1, niveau = "gemeente")` van de jongvolwassenen in uw gemeente beoordeelt hun eigen mentale gezondheid als goed. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVPKA409', variabele_label = 'de mentale gezondheid als goed beoordeelt', var_crossing = 'AGGSA402', niveau = "regio")`
 
@@ -656,9 +654,9 @@ getallen %>%
 
 `r monitor_df %>% maak_percentage(var_inhoud = 'LVPKA406', value = 1, niveau = "gemeente")` van de jongvolwassenen in uw gemeente voelt zich in het dagelijks leven vaak tot voortdurend beperkt voelt door psychische klachten. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVPKA406', variabele_label = 'deze gevoelens had', var_crossing = 'AGOJB401', niveau = "regio")`
 :::
-:::
+::::
 
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Psychische klachten 3, fig.alt=ggplot2::get_alt_text(plot)}
 
@@ -688,30 +686,30 @@ plot = monitor_df %>%
 plot
 ```
 :::
-:::
+:::::
 
-::: {layout="[100]"}
-::: column
+::::: {layout="[100]"}
+:::: column
 ::: achtergrondkleur
 [Happyles](https://www.trimbos.nl/aanbod/programmas/happyles-depressiepreventie-bij-jongeren/) is een klassikale interventie ter bevordering van welbevinden en geluk en ter preventie van depressieklachten bij jongvolwassenen.
 :::
-:::
-:::
+::::
+:::::
 
 ::: tussenlijn
 :::
 
-::: {layout="[100]"}
-::: column
+::::: {layout="[100]"}
+:::: column
 ::: titel
 Suicidegedachten
 :::
 
 Als gevoelens zoals angst, paniek, somberheid, leegte, zelfverwijt, boosheid, schaamte, vernedering of schuld bezit van iemand nemen en gedachten gaan beheersen, kan de dood een oplossing lijken om van deze gedachten af te zijn. Het denken aan het beëindigen van het leven kan een manier van zelfbescherming zijn om de pijn en uitzichtloosheid iets te verzachten.
-:::
-:::
+::::
+:::::
 
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Zelfmoord 1}
 
@@ -737,10 +735,10 @@ getallen %>%
 
 ```
 :::
-:::
+:::::
 
-::: {layout="[100]"}
-::: column
+::::: {layout="[100]"}
+:::: column
 `r monitor_df %>% maak_vergelijking(var_inhoud = 'NGSGA401', variabele_label = 'wel eens serieus heeft nagedacht over suïcide', var_crossing = 'AGOJB401', niveau = "regio")` `r monitor_df %>% maak_vergelijking(var_inhoud = 'NGSGA401', variabele_label = 'wel eens serieus heeft nagedacht over suïcide', var_crossing = 'AGGSA402', niveau = "regio")` `r monitor_df %>% maak_vergelijking(var_inhoud = 'NGSGA401', variabele_label = 'wel eens serieus heeft nagedacht over suïcide', var_crossing = 'AGLFA401', niveau = "regio")`
 
 <br>
@@ -752,14 +750,14 @@ getallen %>%
 ::: achtergrondkleur
 [113 Zelfmoordpreventie](https://www.113.nl/) is er voor inwoners en professionals. Ze geven informatie en trainingen over het herkennen van suïcidaliteit en het bieden van hulp.
 :::
-:::
-:::
+::::
+:::::
 
 ::: tussenlijn
 :::
 
-::: {layout="[100]"}
-::: column
+::::: {layout="[100]"}
+:::: column
 ::: titel
 Eenzaamheid
 :::
@@ -771,14 +769,10 @@ Eenzaamheid is één van de belangrijkste risicofactoren voor het ontwikkelen va
 Van de jongvolwassenen in uw gemeente voelt `r monitor_df %>% maak_percentage(var_inhoud = 'LVEES402', niveau = "gemeente")` zich enigszins eenzaam en `r monitor_df %>% maak_percentage(var_inhoud = 'LVEES402', value = 2, niveau = "gemeente")` voelt zich sterk eenzaam. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVEES402', value = 2, variabele_label = 'zich sterk eenzaam voelt,', var_crossing = 'AGOJB401', niveau = "regio")` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVEES402', value = 2, variabele_label = 'zich sterk eenzaam voelt', var_crossing = 'AGLFA401', niveau = "regio")`
 
 <br>
+::::
+:::::
 
-::: achtergrondkleur
-[Aanpakeenzaamheid.nl](https://aanpakeenzaamheid.nl/jongeren/) bundelt hulpmiddelen die door gemeenten en organisaties in te zetten zijn tegen eenzaamheid.
-:::
-:::
-:::
-
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Eenzaamheid 1, fig.alt = ggplot2::get_alt_text(plot)}
 
@@ -808,12 +802,18 @@ plot = monitor_df %>%
 plot
 ```
 :::
+:::::
+
+:::: {layout="[100]"}
+::: achtergrondkleur
+[Aanpakeenzaamheid.nl](https://aanpakeenzaamheid.nl/jongeren/) bundelt hulpmiddelen die door gemeenten en organisaties in te zetten zijn tegen eenzaamheid.
 :::
+::::
 
-# ![afb](iconen/Stress-prestatiedruk.svg) Stress en prestatiedruk {.h1-icoon}
+# Stress en prestatiedruk
 
-::: {layout="[100]"}
-::: column
+::::: {layout="[100]"}
+:::: column
 ::: titel
 Stress
 :::
@@ -833,10 +833,10 @@ Top 5 bronnen van stress in uw gemeente:
 -   `r maak_top(data = monitor_df, top = 3, niveau = "gemeente", var_inhoud = c("LVSTA420", "LVSTA421", "LVSTA422", "LVSTA423", "LVSTA424", "LVSTA425", "LVSTA426", "LVSTA427", "LVSTA428", "LVSTA429", "LVSTA430", "LVSTA431", "LVSTA432", "LVSTA433"))`
 -   `r maak_top(data = monitor_df, top = 4, niveau = "gemeente", var_inhoud = c("LVSTA420", "LVSTA421", "LVSTA422", "LVSTA423", "LVSTA424", "LVSTA425", "LVSTA426", "LVSTA427", "LVSTA428", "LVSTA429", "LVSTA430", "LVSTA431", "LVSTA432", "LVSTA433"))`
 -   `r maak_top(data = monitor_df, top = 5, niveau = "gemeente", var_inhoud = c("LVSTA420", "LVSTA421", "LVSTA422", "LVSTA423", "LVSTA424", "LVSTA425", "LVSTA426", "LVSTA427", "LVSTA428", "LVSTA429", "LVSTA430", "LVSTA431", "LVSTA432", "LVSTA433"))`
-:::
-:::
+::::
+:::::
 
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Stress 1, fig.alt=ggplot2::get_alt_text(plot)}
 
@@ -872,13 +872,13 @@ plot
 
 ```
 :::
-:::
+:::::
 
 ::: tussenlijn
 :::
 
-::: {layout="[100]"}
-::: column
+::::: {layout="[100]"}
+:::: column
 ::: titel
 Prestatiedruk
 :::
@@ -896,10 +896,10 @@ Top 3 van anderen vanuit wie of wat druk wordt ervaren in uw gemeente:
 -   `r maak_top(data = monitor_df, top = 1, niveau = "gemeente", var_inhoud = c("LVPDA415", "LVPDA416", "LVPDA417", "LVPDA418", "LVPDA419", "LVPDA420", "LVPDA421", "LVPDA422", "LVPDA423", "LVPDA424"))`
 -   `r maak_top(data = monitor_df, top = 2, niveau = "gemeente", var_inhoud = c("LVPDA415", "LVPDA416", "LVPDA417", "LVPDA418", "LVPDA419", "LVPDA420", "LVPDA421", "LVPDA422", "LVPDA423", "LVPDA424"))`
 -   `r maak_top(data = monitor_df, top = 3, niveau = "gemeente", var_inhoud = c("LVPDA415", "LVPDA416", "LVPDA417", "LVPDA418", "LVPDA419", "LVPDA420", "LVPDA421", "LVPDA422", "LVPDA423", "LVPDA424"))`
-:::
-:::
+::::
+:::::
 
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Prestatiedruk 1}
 
@@ -925,9 +925,9 @@ getallen %>%
 
 ```
 :::
-:::
+:::::
 
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Prestatiedruk 3, fig.alt=ggplot2::get_alt_text(plot)}
 
@@ -957,12 +957,12 @@ plot
 
 ```
 :::
-:::
+:::::
 
-# ![afb](iconen/Vertrouwen.svg) Beschermende factoren en vertrouwen in de toekomst {.h1-icoon}
+# Beschermende factoren en vertrouwen in de toekomst
 
-::: {layout="[[100]]"}
-::: column
+::::::: {layout="[[100]]"}
+:::::: column
 ::: inleiding
 Hoe jongvolwassenen omgaan met de uitdagingen van het leven wordt mede bepaald door hun veerkracht en weerbaarheid.
 :::
@@ -973,10 +973,10 @@ Hoe jongvolwassenen omgaan met de uitdagingen van het leven wordt mede bepaald d
 ::: titel
 Veerkracht
 :::
-:::
-:::
+::::::
+:::::::
 
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Veerkracht 1}
 
@@ -1003,25 +1003,28 @@ getallen %>%
 
 ```
 :::
-:::
+:::::
 
-::: {layout="[[100]]"}
-::: column
-`r monitor_df %>% maak_vergelijking(var_inhoud = 'LVVKA403', variabele_label = 'het niet moeilijk vindt om stressvolle gebeurtenissen te doorstaan', var_crossing = 'AGGSA402',  niveau = "regio")` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVVKA401', variabele_label = 'snel herstelt na een moeilijke periode', var_crossing = 'AGGSA402',  niveau = "regio")`
+::::: {layout="[[100]]"}
+:::: column
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'LVVKA403', variabele_label = 'het niet moeilijk vindt om stressvolle gebeurtenissen te doorstaan', var_crossing = 'AGOJB401', niveau = "regio")`
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'LVVKA403', variabele_label = 'dit niet moeilijk vindt', var_crossing = 'AGGSA402',  niveau = "regio")` 
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'LVVKA401', variabele_label = 'snel herstelt na een moeilijke periode', var_crossing = 'AGOJB401', niveau = "regio")`
+`r monitor_df %>% maak_vergelijking(var_inhoud = 'LVVKA401', variabele_label = 'snel herstelt', var_crossing = 'AGGSA402',  niveau = "regio")`
 
 <br>
 
 ::: achtergrondkleur
 [Institute for positive health](https://www.iph.nl/) zet in op positieve gezondheid. Door in gesprek te gaan met jongvolwassenen wordt duidelijk waar hun kracht zit en wat hen helpt om sterker uit een stressvolle of moeilijke periode te komen. Het concept van positieve gezondheid biedt daarvoor aanknopingspunten.
 :::
-:::
-:::
+::::
+:::::
 
 ::: tussenlijn
 :::
 
-::: {layout="[100]"}
-::: column
+::::: {layout="[100]"}
+:::: column
 ::: titel
 Opkomen voor jezelf
 :::
@@ -1031,16 +1034,10 @@ Weerbaarheid is de basis voor een goede psychische gezondheid. Weerbare jongvolw
 <br>
 
 `r monitor_df %>% maak_percentage(var_inhoud = 'OJWHS402', niveau = "gemeente")` van de jongvolwassenen in uw gemeente is voldoende weerbaar (kan voldoende voor zichzelf opkomen). `r monitor_df %>% maak_vergelijking(var_inhoud = 'OJWHS402', variabele_label = 'voldoende weerbaar is,', var_crossing = 'AGOJB401', niveau = "regio")`
+::::
+:::::
 
-<br>
-
-::: achtergrondkleur
-[Movisie](https://www.movisie.nl/publicatie/wat-werkt-versterken-weerbaarheid-jongeren) legt uit wat werkt voor het versterken van weerbaarheid bij jongvolwassenen.
-:::
-:::
-:::
-
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Weerbaarheid, fig.alt=ggplot2::get_alt_text(plot)}
 
@@ -1059,13 +1056,19 @@ plot
 
 ::: column
 :::
+:::::
+
+:::: {layout="[100]"}
+::: achtergrondkleur
+[Movisie](https://www.movisie.nl/publicatie/wat-werkt-versterken-weerbaarheid-jongeren) legt uit wat werkt voor het versterken van weerbaarheid bij jongvolwassenen.
 :::
+::::
 
 ::: tussenlijn
 :::
 
-::: {layout="[[100]]"}
-::: column
+::::: {layout="[[100]]"}
+:::: column
 ::: titel
 Vertrouwen in de toekomst
 :::
@@ -1075,10 +1078,10 @@ Ondanks de uitdagingen die zij in hun leven tegenkomen, heeft een groot deel van
 <br>
 
 `r monitor_df %>% maak_percentage(var_inhoud = 'LVVTS402', value = 1, niveau = "gemeente")` van de jongvolwassenen in uw gemeente maakt zich zorgen om één of meer maatschappelijke thema’s. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVVTS402', variabele_label = 'zich zorgen maakt om maatschappelijke thema’s', var_crossing = 'AGGSA402', niveau = "regio")`
-:::
-:::
+::::
+:::::
 
-::: {layout="[50,50]"}
+:::::: {layout="[50,50]"}
 ::: column
 ```{r Vertrouwen in de toekomst, fig.alt = ggplot2::get_alt_text(plot)}
 
@@ -1099,7 +1102,7 @@ plot
 ```
 :::
 
-::: column
+:::: column
 ::: achtergrondkleur
 Maatschappelijke thema's waar jongvolwassenen in uw gemeente zich het meest zorgen om maken zijn:
 
@@ -1107,18 +1110,18 @@ Maatschappelijke thema's waar jongvolwassenen in uw gemeente zich het meest zorg
 -   `r maak_top(data = monitor_df, top = 2, niveau = "gemeente", var_inhoud = c("LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410", "LVVTA411"))`
 -   `r maak_top(data = monitor_df, top = 3, niveau = "gemeente", var_inhoud = c("LVVTA405", "LVVTA406", "LVVTA407", "LVVTA408", "LVVTA409", "LVVTA410", "LVVTA411"))`
 :::
-:::
-:::
+::::
+::::::
 
-# ![afb](iconen/Bewegen-sporten.svg) Bewegen en sporten {.h1-icoon}
+# Bewegen en sporten
 
-::: {layout="[100]"}
+:::: {layout="[100]"}
 ::: column
 Sporten en bewegen is goed voor zowel fysieke als mentale gezondheid. Het vermindert de kans op een aantal chronische aandoeningen. Daarnaast kan bewegen mensen helpen beter in hun vel te zitten en sociale interactie bevorderen [Kenniscentrum sport & bewegen](https://www.allesoversport.nl/thema/gezonde-leefstijl/de-effecten-van-sport-en-bewegen-op-mentale-gezondheid/).
 :::
-:::
+::::
 
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Sporten 1}
 
@@ -1146,15 +1149,15 @@ getallen %>%
                  
 ```
 :::
-:::
+:::::
 
-::: {layout="[100]"}
+:::: {layout="[100]"}
 ::: column
 `r monitor_df %>% maak_vergelijking(var_inhoud = 'LFBWA401', variabele_label = 'elke dag minimaal een half uur beweegt', var_crossing = 'AGOJB401', niveau = "regio")` `r monitor_df %>% maak_percentage(var_inhoud = 'LFBWA403', niveau = "gemeente")` van de jongvolwassenen in uw gemeente sport minstens één keer per week. Regionaal sport `r monitor_df %>% maak_percentage(var_inhoud = 'LFBWA403', niveau = "regio")` wekelijks.
 :::
-:::
+::::
 
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Sporten 5, fig.alt = ggplot2::get_alt_text(plot)}
 #Staafdiagram met uitsplitsingen naast elkaar, met overlopende kleuren & horizontaal
@@ -1190,12 +1193,12 @@ plot = monitor_df %>%
 plot
 ```
 :::
-:::
+:::::
 
-# ![afb](iconen/Middelengebruik.svg) Middelengebruik {.h1-icoon}
+# Middelengebruik
 
-::: {layout="[100]"}
-::: column
+::::: {layout="[100]"}
+:::: column
 ::: titel
 Alcohol
 :::
@@ -1209,10 +1212,10 @@ Het advies van de Gezondheidsraad is: Drink geen alcohol of in ieder geval niet 
 <br>
 
 `r monitor_df %>% maak_percentage(var_inhoud = 'LFALA416', niveau = "gemeente")` van de jongvolwassenen in uw gemeente geeft aan dat vrienden het normaal vinden om 10 glazen alcohol op één dag of avond te drinken. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LFALA416', variabele_label = 'dit aangeeft', var_crossing = 'AGOJB401', niveau = "regio")` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LFALA416', variabele_label = 'aangeeft dat vrienden het normaal vinden om 10 glazen alcohol op één gelegenheid te drinken', var_crossing = 'AGLFA401')`
-:::
-:::
+::::
+:::::
 
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Alcohol 1}
 
@@ -1229,9 +1232,9 @@ getallen %>%
 
 ::: column
 :::
-:::
+:::::
 
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Alcohol 3, fig.alt=ggplot2::get_alt_text(plot)}
 
@@ -1263,22 +1266,22 @@ plot
 
 ```
 :::
-:::
+:::::
 
 ::: tussenlijn
 :::
 
-::: {layout="[100]"}
-::: column
+::::: {layout="[100]"}
+:::: column
 ::: titel
 Roken, vapen en snus
 :::
 
 Roken is een belangrijke oorzaak van ziekte en sterfte in Nederland. Hoe jonger iemand start met roken, hoe groter de kans is op een rookverslaving. Vapen is een vorm van roken, waarbij vloeistof opgewarmd wordt en niet verbrand. Net als bij roken, zitten in vapes veel stoffen die slecht zijn voor de gezondheid. De nicotinezouten die in sommige vapes zitten, zijn vele malen sterker dan nicotine in een sigaret.
-:::
-:::
+::::
+:::::
 
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Roken 1}
 
@@ -1304,9 +1307,9 @@ getallen %>%
 
 ```
 :::
-:::
+:::::
 
-::: {layout="[100]"}
+:::: {layout="[100]"}
 ::: column
 `r monitor_df %>% maak_vergelijking(var_inhoud = 'LFRKA403', variabele_label = 'wel eens rookt', var_crossing = 'AGOJB401', niveau = "regio")`
 
@@ -1316,9 +1319,9 @@ getallen %>%
 
 Jongvolwassenen kunnen zowel roken als vapen tegelijk. `r monitor_df %>% maak_percentage(var_inhoud = 'LFRKS401', niveau = "gemeente")` van de jongvolwassenen in uw gemeente rookt en/of vapet wel eens.
 :::
-:::
+::::
 
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Roken 3, fig.alt=ggplot2::get_alt_text(plot)}
 
@@ -1337,17 +1340,17 @@ plot
 
 ::: column
 :::
-:::
+:::::
 
-::: {layout="[100]"}
+:::: {layout="[100]"}
 ::: column
 Snus zijn nicotinezakjes die in de mond worden gestopt. Nicotinezakjes verhogen het risico op bepaalde vormen van kanker, zoals kanker in de mondholte.
 
 `r monitor_df %>% maak_vergelijking(var_inhoud = 'LFRKA415', variabele_label = 'snus gebruikt', var_crossing = 'AGLFA401',  niveau = "regio")`
 :::
-:::
+::::
 
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Roken 5}
 
@@ -1364,13 +1367,13 @@ getallen %>%
 
 ::: column
 :::
-:::
+:::::
 
 ::: tussenlijn
 :::
 
-::: {layout="[100]"}
-::: column
+::::: {layout="[100]"}
+:::: column
 ::: titel
 Drugs
 :::
@@ -1388,10 +1391,10 @@ Drugs anders dan cannabis die het vaakst ooit door jongvolwassenen in uw gemeent
 -   `r maak_top(data = monitor_df, top = 1, niveau = "gemeente", var_inhoud = c("LFDGB403", "LFDGB404", "LFDGB405", "LFDGB406", "LFDGB407", "LFDGB408", "LFDGB409", "LFDGB410", "LFDGB411"))`
 -   `r maak_top(data = monitor_df, top = 2, niveau = "gemeente", var_inhoud = c("LFDGB403", "LFDGB404", "LFDGB405", "LFDGB406", "LFDGB407", "LFDGB408", "LFDGB409", "LFDGB410", "LFDGB411"))`
 -   `r maak_top(data = monitor_df, top = 3, niveau = "gemeente", var_inhoud = c("LFDGB403", "LFDGB404", "LFDGB405", "LFDGB406", "LFDGB407", "LFDGB408", "LFDGB409", "LFDGB410", "LFDGB411"))`
-:::
-:::
+::::
+:::::
 
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Drugs 1}
 
@@ -1420,9 +1423,9 @@ getallen %>%
 
 ```
 :::
-:::
+:::::
 
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Middelengebruik 3, fig.alt = ggplot2::get_alt_text(plot)}
 #Staafdiagram met uitsplitsingen naast elkaar, met overlopende kleuren & horizontaal
@@ -1456,11 +1459,11 @@ plot
 
 ```
 :::
-:::
+:::::
 
-# ![afb](iconen/Corona.svg) De coronaperiode {.h1-icoon}
+# De coronaperiode
 
-::: {layout="[100]"}
+:::: {layout="[100]"}
 ::: column
 De coronaperiode ligt inmiddels achter ons, maar de gevolgen kunnen nog wel merkbaar zijn.
 
@@ -1468,31 +1471,9 @@ De coronaperiode ligt inmiddels achter ons, maar de gevolgen kunnen nog wel merk
 
 Jongvolwassen ervaren zowel positieve als negatieve gevolgen van de coronaperiode.
 :::
-:::
+::::
 
-::: {layout="[50,50]"}
-::: column
-::: achtergrondkleur
-Top 3 negatieve gevolgen:
-
--   `r maak_top(data = monitor_df, top = 1, niveau = "gemeente", var_inhoud = c("CPICA434", "CPICA435", "CPICA436", "CPICA437", "CPICA438", "CPICA439", "CPICA440", "CPICA441"))`
--   `r maak_top(data = monitor_df, top = 2, niveau = "gemeente", var_inhoud = c("CPICA434", "CPICA435", "CPICA436", "CPICA437", "CPICA438", "CPICA439", "CPICA440", "CPICA441"))`
--   `r maak_top(data = monitor_df, top = 3, niveau = "gemeente", var_inhoud = c("CPICA434", "CPICA435", "CPICA436", "CPICA437", "CPICA438", "CPICA439", "CPICA440", "CPICA441"))`
-:::
-:::
-
-::: column
-::: achtergrondkleur
-Top 3 positieve gevolgen:
-
--   `r maak_top(data = monitor_df, top = 1, niveau = "gemeente", var_inhoud = c("CPICA443", "CPICA444", "CPICA445", "CPICA446", "CPICA447", "CPICA448", "CPICA449", "CPICA450"))`
--   `r maak_top(data = monitor_df, top = 2, niveau = "gemeente", var_inhoud = c("CPICA443", "CPICA444", "CPICA445", "CPICA446", "CPICA447", "CPICA448", "CPICA449", "CPICA450"))`
--   `r maak_top(data = monitor_df, top = 3, niveau = "gemeente", var_inhoud = c("CPICA443", "CPICA444", "CPICA445", "CPICA446", "CPICA447", "CPICA448", "CPICA449", "CPICA450"))`
-:::
-:::
-:::
-
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Corona 1}
 
@@ -1519,28 +1500,44 @@ getallen %>%
 
 ```
 :::
+:::::
+
+::::::: {layout="[50,50]"}
+:::: column
+::: achtergrondkleur
+Top 3 negatieve gevolgen:
+
+-   `r maak_top(data = monitor_df, top = 1, niveau = "gemeente", var_inhoud = c("CPICA434", "CPICA435", "CPICA436", "CPICA437", "CPICA438", "CPICA439", "CPICA440", "CPICA441"))`
+-   `r maak_top(data = monitor_df, top = 2, niveau = "gemeente", var_inhoud = c("CPICA434", "CPICA435", "CPICA436", "CPICA437", "CPICA438", "CPICA439", "CPICA440", "CPICA441"))`
+-   `r maak_top(data = monitor_df, top = 3, niveau = "gemeente", var_inhoud = c("CPICA434", "CPICA435", "CPICA436", "CPICA437", "CPICA438", "CPICA439", "CPICA440", "CPICA441"))`
 :::
+::::
+
+:::: column
+::: achtergrondkleur
+Top 3 positieve gevolgen:
+
+-   `r maak_top(data = monitor_df, top = 1, niveau = "gemeente", var_inhoud = c("CPICA443", "CPICA444", "CPICA445", "CPICA446", "CPICA447", "CPICA448", "CPICA449", "CPICA450"))`
+-   `r maak_top(data = monitor_df, top = 2, niveau = "gemeente", var_inhoud = c("CPICA443", "CPICA444", "CPICA445", "CPICA446", "CPICA447", "CPICA448", "CPICA449", "CPICA450"))`
+-   `r maak_top(data = monitor_df, top = 3, niveau = "gemeente", var_inhoud = c("CPICA443", "CPICA444", "CPICA445", "CPICA446", "CPICA447", "CPICA448", "CPICA449", "CPICA450"))`
+:::
+::::
+:::::::
 
 ::: tussenlijn
 :::
 
-::: {layout="[100]"}
-::: column
+::::: {layout="[100]"}
+:::: column
 ::: titel
 Post-covid
 :::
 
 `r monitor_df %>% maak_percentage(var_inhoud = 'CPLCA405', niveau = "gemeente")` van de jongvolwassenen in uw gemeente heeft 3 maanden of langer klachten van het coronavirus. Bij `r monitor_df %>% maak_percentage(var_inhoud = 'CPLCA410', niveau = "gemeente")` is post-covid vastgesteld door een arts.
+::::
+:::::
 
-<br>
-
-::: achtergrondkleur
-Meer informatie over post-covid en (financiële) hulp bij post-covid is te vinden op de website van de [rijksoverheid](https://www.rijksoverheid.nl/onderwerpen/coronavirus-covid-19/luchtwegvirussen-zoals-griep-en-corona/post-covid).
-:::
-:::
-:::
-
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Corona 3}
 
@@ -1568,21 +1565,27 @@ getallen %>%
 
 ```
 :::
+:::::
+
+:::: {layout="[100]"}
+::: achtergrondkleur
+Meer informatie over post-covid en (financiële) hulp bij post-covid is te vinden op de website van de [rijksoverheid](https://www.rijksoverheid.nl/onderwerpen/coronavirus-covid-19/luchtwegvirussen-zoals-griep-en-corona/post-covid).
 :::
+::::
 
-# ![afb](iconen/VSlogoDigitale-leefomgevin.svg) Digitale leefomgeving {.h1-icoon}
+# Digitale leefomgeving
 
-::: {layout="[100]"}
-::: column
+::::: {layout="[100]"}
+:::: column
 ::: titel
 Sociale media en gamen
 :::
 
 Als jongvolwassenen het gebruik van sociale media en/of gamen niet meer onder controle hebben, kunnen er problemen ontstaan in het dagelijks functioneren (bijvoorbeeld sociale conflicten, onthoudingsverschijnselen en vluchtgedrag). Dit kan negatieve effecten hebben op verschillende aspecten van gezondheid, zoals mentaal welbevinden, eenzaamheid en slaap.
-:::
-:::
+::::
+:::::
 
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Digitaal 1}
 
@@ -1610,9 +1613,9 @@ getallen %>%
 
 ```
 :::
-:::
+:::::
 
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Digitaal 3, fig.alt = ggplot2::get_alt_text(plot)}
 #Staafdiagram met uitsplitsingen naast elkaar, met overlopende kleuren & horizontaal
@@ -1648,13 +1651,13 @@ plot = monitor_df %>%
 plot
 ```
 :::
-:::
+:::::
 
 ::: tussenlijn
 :::
 
-::: {layout="[100]"}
-::: column
+::::: {layout="[100]"}
+:::: column
 ::: titel
 Online gokken en beleggen
 :::
@@ -1668,10 +1671,10 @@ Online gokken gaat over het spelen van online gokspellen (bijvoorbeeld fruitauto
 <br>
 
 `r monitor_df %>% maak_percentage(var_inhoud = 'DIGOA415', niveau = "gemeente")` van de jongvolwassenen in uw gemeente geeft aan geld te beleggen.
-:::
-:::
+::::
+:::::
 
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Digitaal 5}
 
@@ -1688,9 +1691,9 @@ getallen %>%
 
 ::: column
 :::
-:::
+:::::
 
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r Digitaal 6, fig.alt=ggplot2::get_alt_text(plot)}
 #Staafdiagram met uitsplitsingen naast elkaar, met overlopende kleuren & horizontaal
@@ -1722,12 +1725,12 @@ plot = monitor_df %>%
 plot
 ```
 :::
-:::
+:::::
 
-# ![afb](iconen/Seksualiteit.svg) Seksualiteit {.h1-icoon}
+# Seksualiteit
 
-::: {layout="[100]"}
-::: column
+::::::: {layout="[100]"}
+:::::: column
 ::: inleiding
 Seksualiteit is een onderdeel van gezondheid, net zoals gezond eten, bewegen, slapen en hoe je je mentaal voelt. Onder seksualiteit verstaan we diversiteit in gender, sekse en seksuele oriëntatie, maar ook veilige seks en seksueel risicogedrag.
 :::
@@ -1740,10 +1743,10 @@ LHBTQIA+
 :::
 
 LHBTQIA+ staat voor lesbisch, homoseksueel, biseksueel, transgender, queer, intersekse en aseksueel. De + staat voor alle andere vormen die niet heteroseksueel en cisgender zijn [NJI](https://www.nji.nl/seksualiteit-en-gender/wat-betekent-lhbtiqa?gad_source=1&gclid=EAIaIQobChMIi4jA4vjihwMVJRUGAB1RWw0NEAAYASAAEgLGhfD_BwE). Uit de [rapportage van Corona Gezondheidsmonitor Jongvolwassenen 2022](https://ggdghor.nl/wp-content/uploads/2024/07/Verdiepend-rapport-CGM-Jongvolwassenen-2022-GGD-GHOR-Nederland.pdf) “(On)gezonde start van volwassen leven: inzicht in gezondheidsverschillen van jongvolwassenen in de nasleep van de coronapandemie” bleek dat jongvolwassenen die zichzelf identificeren als LHBTQIA+ vaker een slechtere gezondheid ervaren.
-:::
-:::
+::::::
+:::::::
 
-::: {layout="[50,50]"}
+::::: {layout="[50,50]"}
 ::: column
 ```{r LHBTQIA 1}
 
@@ -1770,22 +1773,22 @@ getallen %>%
 
 ```
 :::
-:::
+:::::
 
 ::: tussenlijn
 :::
 
-::: {layout="[100]"}
-::: column
+::::: {layout="[100]"}
+:::: column
 ::: titel
 Seksualiteit en risicogedrag
 :::
 
 In uw gemeente heeft `r monitor_df %>% maak_percentage(var_inhoud = 'SESEA401', niveau = "gemeente")` van de jongvolwassenen wel eens seks gehad en heeft `r monitor_df %>% maak_percentage(var_inhoud = 'SESEA416', niveau = "gemeente")` seks gehad met verschillende personen in het laatste halfjaar.
-:::
-:::
+::::
+:::::
 
-::: {layout="[50,50]"}
+:::::: {layout="[50,50]"}
 ::: column
 ```{r Seks 1, fig.alt=ggplot2::get_alt_text(plot)}
 
@@ -1801,7 +1804,7 @@ plot
 ```
 :::
 
-::: column
+:::: column
 ::: achtergrondkleur
 In uw gemeente zijn de meest gebruikte anticonceptiemethodes bij de laatste keer seks:
 
@@ -1809,10 +1812,10 @@ In uw gemeente zijn de meest gebruikte anticonceptiemethodes bij de laatste keer
 -   `r maak_top(data = monitor_df, top = 2, niveau = "gemeente", var_inhoud = c("SESEA404", "SESEA405", "SESEA406", "SESEA407", "SESEA408", "SESEA409", "SESEA410", "SESEA411", "SESEA412"))`
 -   `r maak_top(data = monitor_df, top = 3, niveau = "gemeente", var_inhoud = c("SESEA404", "SESEA405", "SESEA406", "SESEA407", "SESEA408", "SESEA409", "SESEA410", "SESEA411", "SESEA412"))`
 :::
-:::
-:::
+::::
+::::::
 
-::: {layout="[100]"}
+:::: {layout="[100]"}
 ::: column
 In uw gemeente gaf `r monitor_df %>% maak_percentage(var_inhoud = 'SESEA420', niveau = "gemeente")` aan [geen]{.underline} of alleen een onbetrouwbare methode van anticonceptie gebruikt te hebben tijdens de laatste keer dat zij seks hadden. Een voorbeeld van een onbetrouwbare methode van anticonceptie is voortijdig terugtrekken of het bijhouden van de cyclus.
 
@@ -1820,27 +1823,27 @@ In uw gemeente gaf `r monitor_df %>% maak_percentage(var_inhoud = 'SESEA420', ni
 
 In uw gemeente heeft `r monitor_df %>% maak_percentage(var_inhoud = 'SESES401', niveau = "gemeente")` in het afgelopen half jaar seks gehad met verschillende partners en gaf aan soms of nooit een condoom of beflapje te gebruiken. Het hebben van verschillende sekspartners en niet altijd gebruiken van een condoom of beflapje is een risico voor SOA.
 :::
-:::
+::::
 
-::: {layout="[100]"}
-::: column
+::::: {layout="[100]"}
+:::: column
 ::: achtergrondkleur
 [Sense](https://sense.info/nl) is een voorlichtingswebsite met betrouwbare informatie over relaties en seksualiteit voor jongvolwassenen. Sense maakt gebruik van video’s, podcasts, games en andere technieken om betrouwbare informatie te delen over onder andere seksueel plezier, veilige seks en wensen en grenzen. Jongvolwassenen kunnen via chat, Whatsapp, telefoon, etc. contact leggen met een hulpverlener of een afspraak maken voor een jongvolwassenenspreekuur. Ook kunnen jongvolwassenen contact zoeken met de regionale [Sense afdeling]().
 :::
-:::
-:::
+::::
+:::::
 
-# ![afb](iconen/kernboodschappen.svg) Kernboodschappen {.h1-icoon}
+# Kernboodschappen
 
 Op deze pagina kunnen GGD’en hun kernboodschappen toevoegen.
 
-# ![afb](iconen/Contactpagina.svg) Contact {.h1-icoon}
+# Contact
 
 Heeft u nog vragen over het onderzoek?
 
 Neem dan contact op met Team Onderzoek via [mail\@organisatie.nl](mailto:mail@organisatie.nl).
 
-::: achtergrondkleur
+:::: achtergrondkleur
 ::: titel
 Meer weten?
 :::
@@ -1848,4 +1851,4 @@ Meer weten?
 In ons digitale dashboard vindt u meer cijfers over de gezondheid van inwoners in de regio. Hier vindt u ook de tabellenboeken van dit onderzoek.
 
 [www.websitevanggd.nl](www.websitevanggd.nl)
-:::
+::::

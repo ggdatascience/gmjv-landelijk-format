@@ -26,7 +26,7 @@ Verouderde libraries / packages kunnen ook voor problemen zorgen. Het is verstan
 -   Klik in de nieuwe sessie op **Tools > Check for Package Updates**
 -   Selecteer de libraries die je wilt updaten en klik op **Install Updates**
 
-### Voor PDF-outdraai: Google Chrome
+### Voor PDF-uitdraai: Google Chrome
 Wanneer je het rapport als PDF wilt uitdraaien is een geupdate versie Google Chrome nodig. Als je versie van Google Chrome verouderd is zal er wel een uitvoer gemaakt worden, maar zullen de knoppen in de inhoudsgave niet goed werken.
 
 Om achter je Chrome versie te komen klik je in google chrome rechtsboven op de drie punten. Vervolgens: **Instellingen > Over Chrome**. De versie moet ten minste **Chrome 128 zijn** (update van Augustus 2024).

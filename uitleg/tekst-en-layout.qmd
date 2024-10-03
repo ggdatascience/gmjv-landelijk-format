@@ -189,6 +189,32 @@ Een blok met achtergrondkleur kan je zelf op de volgende manier toevoegen:
 >
 > \:\:\: 
 
+### Inleiding
+In de standaard rapportage worden sommige teksten als inleiding weergegeven. Deze teksten worden dan dikgedrukt en iets groter weergegeven. Deze opmaak wordt bepaald in custom.css Daar staat de div .inleiding die aangeeft hoe deze eruit ziet. Hier kan je dus ook de eigenschappen van de class veranderen. Dit ziet er standaard zo uit:
+
+```{css}
+/* class voor inleiding*/
+  .inleiding {
+    color: #002c17;
+    font-size: 19px;
+    font-weight: bold;
+  }
+```
+
+Dit ziet er zo uit:
+
+::: inleiding
+Hier tekst die in de inleiding komt.
+:::
+
+Tekst met deze layout kan je zelf op de volgende manier toevoegen:
+
+> \:\:\: inleiding
+> 
+> Hier tekst
+>
+> \:\:\: 
+
 ### Titel
 
 Je kunt op verschillende manieren titels/tussenkoppen toevoegen. 

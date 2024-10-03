@@ -263,6 +263,7 @@ Als je het rapport uitdraait door op de "Render" knop te drukken wordt er één 
 
 -   Open **maak_rapport_per_gemeente.R**
 -   Controleer of de variabelen **file_path** en **gemeentecodes_in_regio** goed staan ingesteld
+-   Controleer of **input** goed ingesteld staat. Deze staat standaard op "voorbeeld_rapportage.qmd" maar mogelijk wil je dit wijzigen naar "Rapportage.qmd".
 -   Draai de rest van de code.
 
 Het script gaat met een *loop* langs alle gemeentecodes en maakt voor iedere gemeente een rapport.
@@ -299,6 +300,7 @@ Als de pagina-einden goed ingesteld staan kan je de rapportage als PDF bestand u
 
 -   Open het bestand **maak_pdf_rapport.R**
 -   Controleer of de variabelen **file_path**, **gemeentecodes_in_regio** goed staan ingesteld.
+-   Controleer of **input** goed ingesteld staat. Deze staat standaard op "voorbeeld_rapportage.qmd" maar mogelijk wil je dit wijzigen naar "Rapportage.qmd".
 -   Draai het hele script.
 -   Controleer de uitvoer.
 

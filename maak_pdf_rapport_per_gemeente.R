@@ -13,7 +13,7 @@ for(gemeentecode in gemeentecodes_in_regio){
   
   #eerst een html maken waarbij expliciet een TOC wordt gegenereerd met render_toc() 
   quarto::quarto_render(
-    input = "voorbeeld_rapportage.qmd",
+    input = "voorbeeld_rapportage.qmd", # Wijzig dit naar "Rapportage.qmd" als je deze voor meerdere gemeentes wil uitdraaien
     output_format = "html",
     output_file = html_file,
     execute_params = list(
