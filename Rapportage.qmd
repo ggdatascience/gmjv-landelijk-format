@@ -14,10 +14,10 @@ params:
   regionaam: 'GGD Limburg-Noord' # Vul naam zoals in data CBS
   path_hulpfuncties: "hulpfuncties.R"
   path_cbs_data: "JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx"
-  path_monitor_data_2022: "C:/Users/sjannes/OneDrive - VRLN/PSchijf/Gezondheidsmonitor/2022 Gezondheidsmonitor jongvolwassenen/4. Analyse/Data/3. Eindbestand (opgeschoond) vanuit RIVM 21 2 2023 v4/" # Vul padnaam naar data 2022 in
-  naam_monitor_data_2022_regionaal: "Regiobestand_CGMJV2022_GGD Limburg-Noord_versie 4.sav" # Vul naam regionaal bestand 2022 in
-  path_monitor_data_2024: "C:/Users/sjannes/OneDrive - VRLN/PSchijf/Gezondheidsmonitor/2024 Gezondheidsmonitor jongvolwassenen/4. Analyse/Data/3. Eindbestanden/" # Vul padnaam naar data 2024 in
-  naam_monitor_data_2024_regionaal: "Regiobestand_GMJV2024_GGD Limburg-Noord_versie 1.sav" # Vul naam regionaal bestand 2024 in
+  path_monitor_data_2022: "C:/Users/.../" # Vul padnaam naar data 2022 in
+  naam_monitor_data_2022_regionaal: "Regiobestand_CGMJV2022_REGIO_versie 4.sav" # Vul naam regionaal bestand 2022 in
+  path_monitor_data_2024: "C:/Users/.../" # Vul padnaam naar data 2024 in
+  naam_monitor_data_2024_regionaal: "Regiobestand_GMJV2024_REGIO_versie 1.sav" # Vul naam regionaal bestand 2024 in
   default_nvar: 100 # Minimum aantal invullers per vraag
   default_ncel: 10  # Minimum aantal invullers oper antwoordoptie
   default_kleuren_grafiek: !expr c("#86B443", "#012C17", "#B2BE97", "#007E48", "#AAD3CC", "#CB8EB9", "#401B65", "#86848D", "#739BD0", "#11265F", "#86848D")
