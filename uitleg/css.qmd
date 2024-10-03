@@ -9,7 +9,6 @@ Dit is de css die gebruikt wordt voor het standaard format GMJV. Zie het bestand
 
 /*Open Sans importeren */
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap');
-/*TODO input ontwerper mbt lettertypen & kleuren verwerken*/
 
 body {
   font-family: 'Open Sans', sans-serif;
