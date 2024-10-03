@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.555">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Uitleg GMJV rapportage in Quarto - 8&nbsp; Overige functies</title>
+<title>8&nbsp; Overige functies – Uitleg GMJV rapportage in Quarto</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -112,13 +112,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./voorbeeld_overige_functies.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Overige functies</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -225,8 +225,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#optionele-argumenten-1" id="toc-optionele-argumenten-1" class="nav-link" data-scroll-target="#optionele-argumenten-1"><span class="header-section-number">10.2</span> Optionele argumenten:</a>
   <ul class="collapse">
   <li><a href="#standaard-bol-met-cijfer" id="toc-standaard-bol-met-cijfer" class="nav-link" data-scroll-target="#standaard-bol-met-cijfer"><span class="header-section-number">10.2.1</span> Standaard bol met cijfer</a></li>
-  <li><a href="#bol-met-cijfer-zonder-omschrijving-en-niveau" id="toc-bol-met-cijfer-zonder-omschrijving-en-niveau" class="nav-link" data-scroll-target="#bol-met-cijfer-zonder-omschrijving-en-niveau"><span class="header-section-number">10.2.2</span> Bol met cijfer zonder omschrijving en niveau</a></li>
-  <li><a href="#bol-met-aangepaste-kleuren" id="toc-bol-met-aangepaste-kleuren" class="nav-link" data-scroll-target="#bol-met-aangepaste-kleuren"><span class="header-section-number">10.2.3</span> Bol met aangepaste kleuren</a></li>
+  <li><a href="#standaard-bol-met-twee-cijfers" id="toc-standaard-bol-met-twee-cijfers" class="nav-link" data-scroll-target="#standaard-bol-met-twee-cijfers"><span class="header-section-number">10.2.2</span> Standaard bol met twee cijfers</a></li>
+  <li><a href="#bol-met-cijfer-zonder-omschrijving-en-niveau" id="toc-bol-met-cijfer-zonder-omschrijving-en-niveau" class="nav-link" data-scroll-target="#bol-met-cijfer-zonder-omschrijving-en-niveau"><span class="header-section-number">10.2.3</span> Bol met cijfer zonder omschrijving en niveau</a></li>
+  <li><a href="#bol-met-aangepaste-kleuren" id="toc-bol-met-aangepaste-kleuren" class="nav-link" data-scroll-target="#bol-met-aangepaste-kleuren"><span class="header-section-number">10.2.4</span> Bol met aangepaste kleuren</a></li>
   </ul></li>
   </ul></li>
   </ul>
@@ -280,23 +281,23 @@ Een character variabele met een alternatief label voor missing waarden (standaar
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>monitor_df <span class="sc">%&gt;%</span> <span class="fu">maak_responstabel</span>(</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">crossings =</span> <span class="fu">c</span>(<span class="st">"AGGSA402"</span>,<span class="st">"AGLFA401"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="rwnzxsvbxy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#rwnzxsvbxy table {
+<div id="mdbpegyrjk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#mdbpegyrjk table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#rwnzxsvbxy thead, #rwnzxsvbxy tbody, #rwnzxsvbxy tfoot, #rwnzxsvbxy tr, #rwnzxsvbxy td, #rwnzxsvbxy th {
+#mdbpegyrjk thead, #mdbpegyrjk tbody, #mdbpegyrjk tfoot, #mdbpegyrjk tr, #mdbpegyrjk td, #mdbpegyrjk th {
   border-style: none;
 }
 
-#rwnzxsvbxy p {
+#mdbpegyrjk p {
   margin: 0;
   padding: 0;
 }
 
-#rwnzxsvbxy .gt_table {
+#mdbpegyrjk .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -322,12 +323,12 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-left-color: #D3D3D3;
 }
 
-#rwnzxsvbxy .gt_caption {
+#mdbpegyrjk .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#rwnzxsvbxy .gt_title {
+#mdbpegyrjk .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -339,7 +340,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-bottom-width: 0;
 }
 
-#rwnzxsvbxy .gt_subtitle {
+#mdbpegyrjk .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -351,7 +352,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-top-width: 0;
 }
 
-#rwnzxsvbxy .gt_heading {
+#mdbpegyrjk .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -363,13 +364,13 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-right-color: #D3D3D3;
 }
 
-#rwnzxsvbxy .gt_bottom_border {
+#mdbpegyrjk .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#rwnzxsvbxy .gt_col_headings {
+#mdbpegyrjk .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -384,7 +385,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-right-color: #D3D3D3;
 }
 
-#rwnzxsvbxy .gt_col_heading {
+#mdbpegyrjk .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -404,7 +405,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   overflow-x: hidden;
 }
 
-#rwnzxsvbxy .gt_column_spanner_outer {
+#mdbpegyrjk .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -416,15 +417,15 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   padding-right: 4px;
 }
 
-#rwnzxsvbxy .gt_column_spanner_outer:first-child {
+#mdbpegyrjk .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#rwnzxsvbxy .gt_column_spanner_outer:last-child {
+#mdbpegyrjk .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#rwnzxsvbxy .gt_column_spanner {
+#mdbpegyrjk .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -436,11 +437,11 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   width: 100%;
 }
 
-#rwnzxsvbxy .gt_spanner_row {
+#mdbpegyrjk .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#rwnzxsvbxy .gt_group_heading {
+#mdbpegyrjk .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -466,7 +467,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   text-align: left;
 }
 
-#rwnzxsvbxy .gt_empty_group_heading {
+#mdbpegyrjk .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -481,15 +482,15 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   vertical-align: middle;
 }
 
-#rwnzxsvbxy .gt_from_md > :first-child {
+#mdbpegyrjk .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#rwnzxsvbxy .gt_from_md > :last-child {
+#mdbpegyrjk .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#rwnzxsvbxy .gt_row {
+#mdbpegyrjk .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -508,7 +509,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   overflow-x: hidden;
 }
 
-#rwnzxsvbxy .gt_stub {
+#mdbpegyrjk .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -521,7 +522,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   padding-right: 5px;
 }
 
-#rwnzxsvbxy .gt_stub_row_group {
+#mdbpegyrjk .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -535,15 +536,15 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   vertical-align: top;
 }
 
-#rwnzxsvbxy .gt_row_group_first td {
+#mdbpegyrjk .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#rwnzxsvbxy .gt_row_group_first th {
+#mdbpegyrjk .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#rwnzxsvbxy .gt_summary_row {
+#mdbpegyrjk .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -553,16 +554,16 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   padding-right: 5px;
 }
 
-#rwnzxsvbxy .gt_first_summary_row {
+#mdbpegyrjk .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#rwnzxsvbxy .gt_first_summary_row.thick {
+#mdbpegyrjk .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#rwnzxsvbxy .gt_last_summary_row {
+#mdbpegyrjk .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -572,7 +573,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-bottom-color: #D3D3D3;
 }
 
-#rwnzxsvbxy .gt_grand_summary_row {
+#mdbpegyrjk .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -582,7 +583,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   padding-right: 5px;
 }
 
-#rwnzxsvbxy .gt_first_grand_summary_row {
+#mdbpegyrjk .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -592,7 +593,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-top-color: #D3D3D3;
 }
 
-#rwnzxsvbxy .gt_last_grand_summary_row_top {
+#mdbpegyrjk .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -602,11 +603,11 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-bottom-color: #D3D3D3;
 }
 
-#rwnzxsvbxy .gt_striped {
+#mdbpegyrjk .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#rwnzxsvbxy .gt_table_body {
+#mdbpegyrjk .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -615,7 +616,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-bottom-color: #D3D3D3;
 }
 
-#rwnzxsvbxy .gt_footnotes {
+#mdbpegyrjk .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -629,7 +630,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-right-color: #D3D3D3;
 }
 
-#rwnzxsvbxy .gt_footnote {
+#mdbpegyrjk .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -638,7 +639,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   padding-right: 5px;
 }
 
-#rwnzxsvbxy .gt_sourcenotes {
+#mdbpegyrjk .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -652,7 +653,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-right-color: #D3D3D3;
 }
 
-#rwnzxsvbxy .gt_sourcenote {
+#mdbpegyrjk .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -660,64 +661,73 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   padding-right: 5px;
 }
 
-#rwnzxsvbxy .gt_left {
+#mdbpegyrjk .gt_left {
   text-align: left;
 }
 
-#rwnzxsvbxy .gt_center {
+#mdbpegyrjk .gt_center {
   text-align: center;
 }
 
-#rwnzxsvbxy .gt_right {
+#mdbpegyrjk .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#rwnzxsvbxy .gt_font_normal {
+#mdbpegyrjk .gt_font_normal {
   font-weight: normal;
 }
 
-#rwnzxsvbxy .gt_font_bold {
+#mdbpegyrjk .gt_font_bold {
   font-weight: bold;
 }
 
-#rwnzxsvbxy .gt_font_italic {
+#mdbpegyrjk .gt_font_italic {
   font-style: italic;
 }
 
-#rwnzxsvbxy .gt_super {
+#mdbpegyrjk .gt_super {
   font-size: 65%;
 }
 
-#rwnzxsvbxy .gt_footnote_marks {
+#mdbpegyrjk .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#rwnzxsvbxy .gt_asterisk {
+#mdbpegyrjk .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#rwnzxsvbxy .gt_indent_1 {
+#mdbpegyrjk .gt_indent_1 {
   text-indent: 5px;
 }
 
-#rwnzxsvbxy .gt_indent_2 {
+#mdbpegyrjk .gt_indent_2 {
   text-indent: 10px;
 }
 
-#rwnzxsvbxy .gt_indent_3 {
+#mdbpegyrjk .gt_indent_3 {
   text-indent: 15px;
 }
 
-#rwnzxsvbxy .gt_indent_4 {
+#mdbpegyrjk .gt_indent_4 {
   text-indent: 20px;
 }
 
-#rwnzxsvbxy .gt_indent_5 {
+#mdbpegyrjk .gt_indent_5 {
   text-indent: 25px;
+}
+
+#mdbpegyrjk .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#mdbpegyrjk div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
 }
 </style>
 
@@ -778,23 +788,23 @@ Een character variabele met een alternatief label voor missing waarden (standaar
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>              )</span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="emawldrnqj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#emawldrnqj table {
+<div id="cbkefdtsdd" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#cbkefdtsdd table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#emawldrnqj thead, #emawldrnqj tbody, #emawldrnqj tfoot, #emawldrnqj tr, #emawldrnqj td, #emawldrnqj th {
+#cbkefdtsdd thead, #cbkefdtsdd tbody, #cbkefdtsdd tfoot, #cbkefdtsdd tr, #cbkefdtsdd td, #cbkefdtsdd th {
   border-style: none;
 }
 
-#emawldrnqj p {
+#cbkefdtsdd p {
   margin: 0;
   padding: 0;
 }
 
-#emawldrnqj .gt_table {
+#cbkefdtsdd .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -820,12 +830,12 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-left-color: #D3D3D3;
 }
 
-#emawldrnqj .gt_caption {
+#cbkefdtsdd .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#emawldrnqj .gt_title {
+#cbkefdtsdd .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -837,7 +847,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-bottom-width: 0;
 }
 
-#emawldrnqj .gt_subtitle {
+#cbkefdtsdd .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -849,7 +859,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-top-width: 0;
 }
 
-#emawldrnqj .gt_heading {
+#cbkefdtsdd .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -861,13 +871,13 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-right-color: #D3D3D3;
 }
 
-#emawldrnqj .gt_bottom_border {
+#cbkefdtsdd .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#emawldrnqj .gt_col_headings {
+#cbkefdtsdd .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -882,7 +892,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-right-color: #D3D3D3;
 }
 
-#emawldrnqj .gt_col_heading {
+#cbkefdtsdd .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -902,7 +912,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   overflow-x: hidden;
 }
 
-#emawldrnqj .gt_column_spanner_outer {
+#cbkefdtsdd .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -914,15 +924,15 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   padding-right: 4px;
 }
 
-#emawldrnqj .gt_column_spanner_outer:first-child {
+#cbkefdtsdd .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#emawldrnqj .gt_column_spanner_outer:last-child {
+#cbkefdtsdd .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#emawldrnqj .gt_column_spanner {
+#cbkefdtsdd .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -934,11 +944,11 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   width: 100%;
 }
 
-#emawldrnqj .gt_spanner_row {
+#cbkefdtsdd .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#emawldrnqj .gt_group_heading {
+#cbkefdtsdd .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -964,7 +974,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   text-align: left;
 }
 
-#emawldrnqj .gt_empty_group_heading {
+#cbkefdtsdd .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -979,15 +989,15 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   vertical-align: middle;
 }
 
-#emawldrnqj .gt_from_md > :first-child {
+#cbkefdtsdd .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#emawldrnqj .gt_from_md > :last-child {
+#cbkefdtsdd .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#emawldrnqj .gt_row {
+#cbkefdtsdd .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1006,7 +1016,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   overflow-x: hidden;
 }
 
-#emawldrnqj .gt_stub {
+#cbkefdtsdd .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1019,7 +1029,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   padding-right: 5px;
 }
 
-#emawldrnqj .gt_stub_row_group {
+#cbkefdtsdd .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1033,15 +1043,15 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   vertical-align: top;
 }
 
-#emawldrnqj .gt_row_group_first td {
+#cbkefdtsdd .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#emawldrnqj .gt_row_group_first th {
+#cbkefdtsdd .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#emawldrnqj .gt_summary_row {
+#cbkefdtsdd .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1051,16 +1061,16 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   padding-right: 5px;
 }
 
-#emawldrnqj .gt_first_summary_row {
+#cbkefdtsdd .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#emawldrnqj .gt_first_summary_row.thick {
+#cbkefdtsdd .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#emawldrnqj .gt_last_summary_row {
+#cbkefdtsdd .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1070,7 +1080,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-bottom-color: #D3D3D3;
 }
 
-#emawldrnqj .gt_grand_summary_row {
+#cbkefdtsdd .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1080,7 +1090,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   padding-right: 5px;
 }
 
-#emawldrnqj .gt_first_grand_summary_row {
+#cbkefdtsdd .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1090,7 +1100,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-top-color: #D3D3D3;
 }
 
-#emawldrnqj .gt_last_grand_summary_row_top {
+#cbkefdtsdd .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1100,11 +1110,11 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-bottom-color: #D3D3D3;
 }
 
-#emawldrnqj .gt_striped {
+#cbkefdtsdd .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#emawldrnqj .gt_table_body {
+#cbkefdtsdd .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1113,7 +1123,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-bottom-color: #D3D3D3;
 }
 
-#emawldrnqj .gt_footnotes {
+#cbkefdtsdd .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1127,7 +1137,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-right-color: #D3D3D3;
 }
 
-#emawldrnqj .gt_footnote {
+#cbkefdtsdd .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1136,7 +1146,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   padding-right: 5px;
 }
 
-#emawldrnqj .gt_sourcenotes {
+#cbkefdtsdd .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1150,7 +1160,7 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   border-right-color: #D3D3D3;
 }
 
-#emawldrnqj .gt_sourcenote {
+#cbkefdtsdd .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1158,64 +1168,73 @@ Een character variabele met een alternatief label voor missing waarden (standaar
   padding-right: 5px;
 }
 
-#emawldrnqj .gt_left {
+#cbkefdtsdd .gt_left {
   text-align: left;
 }
 
-#emawldrnqj .gt_center {
+#cbkefdtsdd .gt_center {
   text-align: center;
 }
 
-#emawldrnqj .gt_right {
+#cbkefdtsdd .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#emawldrnqj .gt_font_normal {
+#cbkefdtsdd .gt_font_normal {
   font-weight: normal;
 }
 
-#emawldrnqj .gt_font_bold {
+#cbkefdtsdd .gt_font_bold {
   font-weight: bold;
 }
 
-#emawldrnqj .gt_font_italic {
+#cbkefdtsdd .gt_font_italic {
   font-style: italic;
 }
 
-#emawldrnqj .gt_super {
+#cbkefdtsdd .gt_super {
   font-size: 65%;
 }
 
-#emawldrnqj .gt_footnote_marks {
+#cbkefdtsdd .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#emawldrnqj .gt_asterisk {
+#cbkefdtsdd .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#emawldrnqj .gt_indent_1 {
+#cbkefdtsdd .gt_indent_1 {
   text-indent: 5px;
 }
 
-#emawldrnqj .gt_indent_2 {
+#cbkefdtsdd .gt_indent_2 {
   text-indent: 10px;
 }
 
-#emawldrnqj .gt_indent_3 {
+#cbkefdtsdd .gt_indent_3 {
   text-indent: 15px;
 }
 
-#emawldrnqj .gt_indent_4 {
+#cbkefdtsdd .gt_indent_4 {
   text-indent: 20px;
 }
 
-#emawldrnqj .gt_indent_5 {
+#cbkefdtsdd .gt_indent_5 {
   text-indent: 25px;
+}
+
+#cbkefdtsdd .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#cbkefdtsdd div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
 }
 </style>
 
@@ -1278,21 +1297,21 @@ Een character variabele met een alternatief label voor missing waarden (standaar
 </section>
 <section id="bol-met-cijfer" class="level1" data-number="10">
 <h1 data-number="10"><span class="header-section-number">10</span> Bol met cijfer</h1>
-<p>Hieronder volgt uitleg voor de Bol met cijfers-functie. De functie <strong>bol_met_cijfer()</strong> maakt een cirkel met een cijfer daarin, een tekst onder de bol die het niveau aangeeft en een tekst naast de bol die de indicator aangeeft. De functie genereert automatisch alt-text.</p>
+<p>Hieronder volgt uitleg voor de Bol met cijfers-functie. De functie <strong>bol_met_cijfer()</strong> maakt een cirkel met een cijfer daarin, een tekst onder de bol die het niveau aangeeft en daaronder een tekst die de indicator aangeeft. De functie genereert automatisch alt-text.</p>
 <section id="nodige-argumenten-1" class="level2" data-number="10.1">
 <h2 data-number="10.1" class="anchored" data-anchor-id="nodige-argumenten-1"><span class="header-section-number">10.1</span> Nodige argumenten:</h2>
 <ul>
 <li><strong>getal:</strong><br>
-Een vector met 1 getal of 1 percentage (bv. 1 of 1%).</li>
+Een vector met 1 of 2 getal(len) of percentage(s) (bv. 1 of 1%).</li>
 </ul>
 </section>
 <section id="optionele-argumenten-1" class="level2" data-number="10.2">
 <h2 data-number="10.2" class="anchored" data-anchor-id="optionele-argumenten-1"><span class="header-section-number">10.2</span> Optionele argumenten:</h2>
 <ul>
 <li><p><strong>omschrijving:</strong><br>
-Een character variabele met een tekst die naast de bol komt te staan, bijvoorbeeld een omschrijving van de indicator.</p></li>
+Een character variabele met een tekst die onder de bol(len) komt te staan, bijvoorbeeld een omschrijving van de indicator.</p></li>
 <li><p><strong>omschrijving2:</strong><br>
-Een character variabele met een tekst die naast de bol komt te staan, bijvoorbeeld een omschrijving van de indicator. Dit is het vervolg van <em>omschrijving</em> wanneer deze niet op één regel past.</p></li>
+Een character variabele met een tekst die onder de bol(len) komt te staan, bijvoorbeeld een omschrijving van de indicator. Dit is het vervolg van <em>omschrijving</em> wanneer deze niet op één regel past.</p></li>
 <li><p><strong>niveau:</strong><br>
 Een character variabele met een tekst die onder de bol komt te staan, bijvoorbeeld het gebiedsniveau van de indicator (zoals Gemeente of Nederland).</p></li>
 <li><p><strong>kleur:</strong><br>
@@ -1302,87 +1321,123 @@ Een kleur die gebruikt wordt voor de omtrek van de bol. Default is wit.</p></li>
 <li><p><strong>kleur_getal:</strong><br>
 Een kleur die gebruikt wordt voor het <em>getal</em> in de bol. Default is wit.</p></li>
 <li><p><strong>kleur_omschrijving:</strong><br>
-Een kleur die gebruikt wordt voor de <em>omschrijving</em> (en eventueel <em>omschrijving2</em>) naast de bol. Default is zwart.</p></li>
+Een kleur die gebruikt wordt voor de <em>omschrijving</em> (en eventueel <em>omschrijving2</em>) naast de bol. Default is #305A5B.</p></li>
 </ul>
 <section id="standaard-bol-met-cijfer" class="level3" data-number="10.2.1">
 <h3 data-number="10.2.1" class="anchored" data-anchor-id="standaard-bol-met-cijfer"><span class="header-section-number">10.2.1</span> Standaard bol met cijfer</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bol_met_cijfer</span>(<span class="at">getal =</span> <span class="st">"4%"</span>, <span class="at">omschrijving =</span> <span class="st">"die aan indicator voldoen."</span>, <span class="at">niveau =</span> <span class="st">"Gemeente"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bol_met_cijfer</span>(<span class="at">getal =</span> <span class="st">"4%"</span>, </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">omschrijving =</span> <span class="st">"die aan indicator voldoen."</span>, </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">niveau =</span> <span class="st">"Gemeente"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<svg role="img" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" space="preserve" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality;" viewbox="0 0 225 75"> # Origineel 0 0 225 75
+<svg role="img" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" space="preserve" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality;" viewbox="0 0 225 100"> # Origineel 0 0 225 75
 <title>4% die aan indicator voldoen. in de Gemeente</title>
 
 <g id="circle">
-    <circle style="fill:#007E48;" cx="25" cy="25" r="20" stroke="#FFFFFF">
+    <circle style="fill:NA;" cx="112" cy="25" r="25" stroke="#FFFFFF">
     </circle>
-    <text x="25" y="25" text-anchor="middle" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="1px" dy=".3em" font-size="1em">4%</text>
-</g>
-    
-<g id="tekst">
-<text x="50" y="25" fill="#000000" stroke="#000000" stroke-width="0.01px" dy=".3em" font-size="0.5em"><tspan>die aan indicator voldoen.</tspan><tspan x="50" dy="1em"> </tspan></text>
+    <text x="112" y="25" text-anchor="middle" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="1px" dy=".3em" font-size="1em">4%</text>
 </g>
 
 <g id="niveau">
-<text x="25" y="50" text-anchor="middle" fill="#007E48" stroke="#007E48" stroke-width="0.01px" dy=".3em" font-size="0.5em">Gemeente</text>
+<text x="112" y="60" text-anchor="middle" fill="NA" stroke="NA" stroke-width="0.01px" dy=".3em" font-size="0.5em" font-weight="bold">Gemeente</text>
+</g>
+
+<g id="tekst">
+<text x="112" y="80" text-anchor="middle" fill="#305A5B" stroke="#305A5B" stroke-width="0.01px" dy=".3em" font-size="0.5em" font-style="italic"><tspan>die aan indicator voldoen.</tspan><tspan x="112" text-anchor="middle" dy="1em"> </tspan></text>
 </g>
 
 </svg>
 </div>
 </div>
 </section>
-<section id="bol-met-cijfer-zonder-omschrijving-en-niveau" class="level3" data-number="10.2.2">
-<h3 data-number="10.2.2" class="anchored" data-anchor-id="bol-met-cijfer-zonder-omschrijving-en-niveau"><span class="header-section-number">10.2.2</span> Bol met cijfer zonder omschrijving en niveau</h3>
+<section id="standaard-bol-met-twee-cijfers" class="level3" data-number="10.2.2">
+<h3 data-number="10.2.2" class="anchored" data-anchor-id="standaard-bol-met-twee-cijfers"><span class="header-section-number">10.2.2</span> Standaard bol met twee cijfers</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># De functie maak_percentage() kan gebruikt worden als input voor bol_met_cijfer</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>monitor_df <span class="sc">%&gt;%</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">maak_percentage</span>(<span class="at">var_inhoud =</span> <span class="st">'LVPKS403'</span>) <span class="sc">%&gt;%</span> <span class="co"># bereken percentage</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bol_met_cijfer</span>() <span class="co"># toon in bol grafiek</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bol_met_cijfer</span>(<span class="at">getal =</span> <span class="fu">c</span>(<span class="st">"4%"</span>, <span class="st">"10%"</span>), </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">omschrijving =</span> <span class="st">"die aan indicator voldoen."</span>, </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">niveau =</span> <span class="fu">c</span>(<span class="st">"Gemeente"</span>, <span class="st">"Regio"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<svg role="img" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" space="preserve" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality;" viewbox="0 0 50 50"> # Origineel 0 0 225 75
-<title>51%</title>
+<svg role="img" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" space="preserve" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality;" viewbox="0 0 225 100"> # Origineel 0 0 225 75
+<title>4% die aan indicator voldoen. in de Gemeente. 10% die aan indicator voldoen. in de Regio</title>
 
 <g id="circle">
-    <circle style="fill:#007E48;" cx="25" cy="25" r="20" stroke="#FFFFFF">
+    <circle style="fill:NA;" cx="75" cy="25" r="25" stroke="#FFFFFF">
     </circle>
-    <text x="25" y="25" text-anchor="middle" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="1px" dy=".3em" font-size="1em">51%</text>
-</g>
-    
-<g id="tekst">
-<text x="50" y="25" fill="#000000" stroke="#000000" stroke-width="0.01px" dy=".3em" font-size="0.5em"><tspan> </tspan><tspan x="50" dy="1em"> </tspan></text>
+    <text x="75" y="25" text-anchor="middle" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="1px" dy=".3em" font-size="1em">4%</text>
 </g>
 
 <g id="niveau">
-<text x="25" y="50" text-anchor="middle" fill="#007E48" stroke="#007E48" stroke-width="0.01px" dy=".3em" font-size="0.5em"> </text>
+<text x="75" y="60" text-anchor="middle" fill="NA" stroke="NA" stroke-width="0.01px" dy=".3em" font-size="0.5em" font-weight="bold">Gemeente</text>
+</g>
+
+<g id="circle">
+    <circle style="fill:NA;" cx="150" cy="25" r="25" stroke="#FFFFFF">
+    </circle>
+    <text x="150" y="25" text-anchor="middle" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="1px" dy=".3em" font-size="1em">10%</text>
+</g>
+
+<g id="niveau">
+<text x="150" y="60" text-anchor="middle" fill="NA" stroke="NA" stroke-width="0.01px" dy=".3em" font-size="0.5em" font-weight="bold">Regio</text>
+</g>
+
+<g id="tekst">
+<text x="112" y="80" text-anchor="middle" fill="#305A5B" stroke="#305A5B" stroke-width="0.01px" dy=".3em" font-size="0.5em" font-style="italic"><tspan>die aan indicator voldoen.</tspan><tspan x="112" text-anchor="middle" dy="1em"> </tspan></text>
 </g>
 
 </svg>
 </div>
 </div>
 </section>
-<section id="bol-met-aangepaste-kleuren" class="level3" data-number="10.2.3">
-<h3 data-number="10.2.3" class="anchored" data-anchor-id="bol-met-aangepaste-kleuren"><span class="header-section-number">10.2.3</span> Bol met aangepaste kleuren</h3>
+<section id="bol-met-cijfer-zonder-omschrijving-en-niveau" class="level3" data-number="10.2.3">
+<h3 data-number="10.2.3" class="anchored" data-anchor-id="bol-met-cijfer-zonder-omschrijving-en-niveau"><span class="header-section-number">10.2.3</span> Bol met cijfer zonder omschrijving en niveau</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># De functie maak_percentage() kan gebruikt worden als input voor bol_met_cijfer</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>monitor_df <span class="sc">%&gt;%</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">maak_percentage</span>(<span class="at">var_inhoud =</span> <span class="st">'LVPKS403'</span>) <span class="sc">%&gt;%</span> <span class="co"># bereken percentage</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bol_met_cijfer</span>(<span class="at">omschrijving =</span> <span class="st">"kan werken met R."</span>, <span class="at">niveau =</span> <span class="st">"Onderzoekers"</span>,</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">kleur =</span> <span class="st">"#FEC805"</span>, <span class="at">kleur_getal =</span> <span class="st">"#009BD9"</span>, <span class="at">kleur_omschrijving =</span> <span class="st">"#1A2C54"</span>) <span class="co"># toon in bol grafiek</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bol_met_cijfer</span>() <span class="co"># toon in bol grafiek</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<svg role="img" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" space="preserve" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality;" viewbox="0 0 225 75"> # Origineel 0 0 225 75
-<title>51% kan werken met R. in de Onderzoekers</title>
+<svg role="img" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" space="preserve" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality;" viewbox="0 0 50 75"> # Origineel 0 0 225 75
+<title>51%</title>
 
 <g id="circle">
-    <circle style="fill:#FEC805;" cx="25" cy="25" r="20" stroke="#FFFFFF">
+    <circle style="fill:NA;" cx="25" cy="25" r="25" stroke="#FFFFFF">
     </circle>
-    <text x="25" y="25" text-anchor="middle" fill="#009BD9" stroke="#009BD9" stroke-width="1px" dy=".3em" font-size="1em">51%</text>
-</g>
-    
-<g id="tekst">
-<text x="50" y="25" fill="#1A2C54" stroke="#1A2C54" stroke-width="0.01px" dy=".3em" font-size="0.5em"><tspan>kan werken met R.</tspan><tspan x="50" dy="1em"> </tspan></text>
+    <text x="25" y="25" text-anchor="middle" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="1px" dy=".3em" font-size="1em">51%</text>
 </g>
 
 <g id="niveau">
-<text x="25" y="50" text-anchor="middle" fill="#FEC805" stroke="#FEC805" stroke-width="0.01px" dy=".3em" font-size="0.5em">Onderzoekers</text>
+<text x="25" y="60" text-anchor="middle" fill="NA" stroke="NA" stroke-width="0.01px" dy=".3em" font-size="0.5em" font-weight="bold"> </text>
+</g>
+
+</svg>
+</div>
+</div>
+</section>
+<section id="bol-met-aangepaste-kleuren" class="level3" data-number="10.2.4">
+<h3 data-number="10.2.4" class="anchored" data-anchor-id="bol-met-aangepaste-kleuren"><span class="header-section-number">10.2.4</span> Bol met aangepaste kleuren</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># De functie maak_percentage() kan gebruikt worden als input voor bol_met_cijfer</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>monitor_df <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">maak_percentage</span>(<span class="at">var_inhoud =</span> <span class="st">'LVPKS403'</span>) <span class="sc">%&gt;%</span> <span class="co"># bereken percentage</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bol_met_cijfer</span>(<span class="at">omschrijving =</span> <span class="st">"kan werken met R."</span>, <span class="at">niveau =</span> <span class="st">"Onderzoekers"</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">kleur =</span> <span class="st">"#FEC805"</span>, <span class="at">kleur_getal =</span> <span class="st">"#009BD9"</span>, <span class="at">kleur_omschrijving =</span> <span class="st">"#1A2C54"</span>) <span class="co"># toon in bol grafiek</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<svg role="img" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" space="preserve" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality;" viewbox="0 0 225 100"> # Origineel 0 0 225 75
+<title>51% kan werken met R. in de Onderzoekers</title>
+
+<g id="circle">
+    <circle style="fill:NA;" cx="112" cy="25" r="25" stroke="#FFFFFF">
+    </circle>
+    <text x="112" y="25" text-anchor="middle" fill="#009BD9" stroke="#009BD9" stroke-width="1px" dy=".3em" font-size="1em">51%</text>
+</g>
+
+<g id="niveau">
+<text x="112" y="60" text-anchor="middle" fill="NA" stroke="NA" stroke-width="0.01px" dy=".3em" font-size="0.5em" font-weight="bold">Onderzoekers</text>
+</g>
+
+<g id="tekst">
+<text x="112" y="80" text-anchor="middle" fill="#1A2C54" stroke="#1A2C54" stroke-width="0.01px" dy=".3em" font-size="0.5em" font-style="italic"><tspan>kan werken met R.</tspan><tspan x="112" text-anchor="middle" dy="1em"> </tspan></text>
 </g>
 
 </svg>
@@ -1430,18 +1485,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1473,7 +1517,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -1481,7 +1547,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {

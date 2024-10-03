@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.555">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Uitleg GMJV rapportage in Quarto - 3&nbsp; Standaard rapportage uitdraaien</title>
+<title>3&nbsp; Standaard rapportage uitdraaien – Uitleg GMJV rapportage in Quarto</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -112,13 +112,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./rapport-uitdraaien.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Standaard rapportage uitdraaien</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -210,19 +210,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#data-klaarzetten-en-samenvoegen" id="toc-data-klaarzetten-en-samenvoegen" class="nav-link active" data-scroll-target="#data-klaarzetten-en-samenvoegen"><span class="header-section-number">3.1</span> Data klaarzetten en samenvoegen</a></li>
-  <li><a href="#configuratie-in-frontmatter" id="toc-configuratie-in-frontmatter" class="nav-link" data-scroll-target="#configuratie-in-frontmatter"><span class="header-section-number">3.2</span> Configuratie in frontmatter</a>
+  <li><a href="#configuratie-in-frontmatter" id="toc-configuratie-in-frontmatter" class="nav-link active" data-scroll-target="#configuratie-in-frontmatter"><span class="header-section-number">3.1</span> Configuratie in frontmatter</a>
   <ul class="collapse">
-  <li><a href="#parameters-onder-params" id="toc-parameters-onder-params" class="nav-link" data-scroll-target="#parameters-onder-params"><span class="header-section-number">3.2.1</span> Parameters onder ‘Params’</a></li>
-  <li><a href="#overige-frontmatter-instellingen" id="toc-overige-frontmatter-instellingen" class="nav-link" data-scroll-target="#overige-frontmatter-instellingen"><span class="header-section-number">3.2.2</span> Overige frontmatter instellingen</a></li>
+  <li><a href="#parameters-onder-params" id="toc-parameters-onder-params" class="nav-link" data-scroll-target="#parameters-onder-params"><span class="header-section-number">3.1.1</span> Parameters onder ‘Params’</a></li>
+  <li><a href="#overige-frontmatter-instellingen" id="toc-overige-frontmatter-instellingen" class="nav-link" data-scroll-target="#overige-frontmatter-instellingen"><span class="header-section-number">3.1.2</span> Overige frontmatter instellingen</a></li>
   </ul></li>
-  <li><a href="#rapporten-per-gemeente-uitdraaien" id="toc-rapporten-per-gemeente-uitdraaien" class="nav-link" data-scroll-target="#rapporten-per-gemeente-uitdraaien"><span class="header-section-number">3.3</span> Rapporten per gemeente uitdraaien</a></li>
-  <li><a href="#pdf-uitdraai-en-printbaarheid" id="toc-pdf-uitdraai-en-printbaarheid" class="nav-link" data-scroll-target="#pdf-uitdraai-en-printbaarheid"><span class="header-section-number">3.4</span> PDF uitdraai en Printbaarheid</a>
+  <li><a href="#rapportage-uitdraaien-met-eigen-data" id="toc-rapportage-uitdraaien-met-eigen-data" class="nav-link" data-scroll-target="#rapportage-uitdraaien-met-eigen-data"><span class="header-section-number">3.2</span> Rapportage uitdraaien met eigen data</a>
   <ul class="collapse">
-  <li><a href="#pagina-einden-bepalen-d.m.v.-header-1" id="toc-pagina-einden-bepalen-d.m.v.-header-1" class="nav-link" data-scroll-target="#pagina-einden-bepalen-d.m.v.-header-1"><span class="header-section-number">3.4.1</span> Pagina-einden bepalen d.m.v. “Header 1”</a></li>
-  <li><a href="#pdf-uitdraaien" id="toc-pdf-uitdraaien" class="nav-link" data-scroll-target="#pdf-uitdraaien"><span class="header-section-number">3.4.2</span> PDF uitdraaien</a></li>
+  <li><a href="#frontmatter-aanpassen" id="toc-frontmatter-aanpassen" class="nav-link" data-scroll-target="#frontmatter-aanpassen"><span class="header-section-number">3.2.1</span> Frontmatter aanpassen</a></li>
+  <li><a href="#codeblok-instellingen-aanpassen" id="toc-codeblok-instellingen-aanpassen" class="nav-link" data-scroll-target="#codeblok-instellingen-aanpassen"><span class="header-section-number">3.2.2</span> Codeblok Instellingen aanpassen</a></li>
   </ul></li>
-  <li><a href="#html-rapporten-uploaden-naar-swing" id="toc-html-rapporten-uploaden-naar-swing" class="nav-link" data-scroll-target="#html-rapporten-uploaden-naar-swing"><span class="header-section-number">3.5</span> HTML-rapporten uploaden naar Swing</a></li>
+  <li><a href="#regionale-enof-landelijke-rapportage-maken" id="toc-regionale-enof-landelijke-rapportage-maken" class="nav-link" data-scroll-target="#regionale-enof-landelijke-rapportage-maken"><span class="header-section-number">3.3</span> Regionale en/of landelijke rapportage maken</a></li>
+  <li><a href="#rapporten-per-gemeente-uitdraaien" id="toc-rapporten-per-gemeente-uitdraaien" class="nav-link" data-scroll-target="#rapporten-per-gemeente-uitdraaien"><span class="header-section-number">3.4</span> Rapporten per gemeente uitdraaien</a></li>
+  <li><a href="#pdf-uitdraai-en-printbaarheid" id="toc-pdf-uitdraai-en-printbaarheid" class="nav-link" data-scroll-target="#pdf-uitdraai-en-printbaarheid"><span class="header-section-number">3.5</span> PDF uitdraai en Printbaarheid</a>
+  <ul class="collapse">
+  <li><a href="#pagina-einden-bepalen-d.m.v.-header-1" id="toc-pagina-einden-bepalen-d.m.v.-header-1" class="nav-link" data-scroll-target="#pagina-einden-bepalen-d.m.v.-header-1"><span class="header-section-number">3.5.1</span> Pagina-einden bepalen d.m.v. “Header 1”</a></li>
+  <li><a href="#pdf-uitdraaien" id="toc-pdf-uitdraaien" class="nav-link" data-scroll-target="#pdf-uitdraaien"><span class="header-section-number">3.5.2</span> PDF uitdraaien</a></li>
+  </ul></li>
+  <li><a href="#html-rapporten-uploaden-naar-swing" id="toc-html-rapporten-uploaden-naar-swing" class="nav-link" data-scroll-target="#html-rapporten-uploaden-naar-swing"><span class="header-section-number">3.6</span> HTML-rapporten uploaden naar Swing</a></li>
   </ul>
 </nav>
     </div>
@@ -248,40 +253,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div class="callout callout-style-default callout-important callout-titled" title="Data 2024 nog niet binnen of verwerkt">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Data 2024 nog niet binnen of verwerkt
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>De data voor 2024 is nog niet beschikbaar. De stappen op deze pagina zijn daarom nog niet volledig uit te voeren. Nadat de data beschikbaar is zal deze pagina geupdated worden.</p>
-<p>Je kan de pagina doornemen a.d.h.v. de voorbeeldrapportage in het bestand <strong>voorbeeld_rapportage.qmd</strong>. Hierbij zullen aanpassingen van de regio- of gemeentecodes echter niet werken.</p>
-</div>
-</div>
-<section id="data-klaarzetten-en-samenvoegen" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="data-klaarzetten-en-samenvoegen"><span class="header-section-number">3.1</span> Data klaarzetten en samenvoegen</h2>
-<p>TODO.</p>
-<blockquote class="blockquote">
-<p>Zodra data 2024 binnen is procedure beschrijven om data in map te zetten en samen te voegen.</p>
-</blockquote>
-</section>
-<section id="configuratie-in-frontmatter" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="configuratie-in-frontmatter"><span class="header-section-number">3.2</span> Configuratie in frontmatter</h2>
+<p>Het is handig de volgende stappen te doorlopen wanneer je voor het eerst de rapportage gaat uitdraaien:</p>
+<ul>
+<li>Test eerst of het lukt om de voorbeeldrapportage uit te draaien. Onder <a href="./beginnen.html#R-project-openen-en-voorbeeldrapport-uitdraaien">R project openen en voorbeeldrapport uitdraaien</a> wordt uitgelegd hoe je dit doet.</li>
+<li>Lukt dit, render dan de voorbeeldrapportage uit met je eigen data. Hieronder staat uitgelegd hoe je dit doet.</li>
+<li>Lukt dit ook, dan kun je de definitieve rapportage uitdraaien. Open hiervoor rechtsonder in Rstudio bij “Files” het bestand <strong>“Rapportage.qmd”</strong>. Zorg dat je ook hier correct verwijst naar je eigen databestanden (zie uitleg hieronder: Rapportage uitdraaien met eigen data).</li>
+</ul>
+<p>Hieronder staat uitgelegd hoe de voorbeeldrapportage en de definitieve rapportage opgebouwd zijn. Een aantal standaard instellingen worden uitgelegd. Ook wordt uitgelegd hoe je je eigen data in kan laden en hoe je meerdere gemeenterapportages en PDF versies hiervan kunt uitdraaien. De voorbeeldrapportage en definitieve rapportage zijn grotendeels gelijk. Indien deze afwijken van elkaar, wordt dit genoemd.</p>
+<section id="configuratie-in-frontmatter" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="configuratie-in-frontmatter"><span class="header-section-number">3.1</span> Configuratie in frontmatter</h2>
 <p>De eigenschappen van Quarto documenten kunnen bovenaan in de <em>YAML</em> <em>frontmatter</em> ingesteld worden. In het voorbeeld hieronder wordt een inhoudsopgave ingesteld met de titel “Inhoudsopgave” en aan de rechterkant van het document geplaatst.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">toc</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">toc-location</span><span class="kw">:</span><span class="at"> right</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">toc-title</span><span class="kw">:</span><span class="at"> </span><span class="st">"Inhoudsopgave"</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Om de standaardrapportage met eigen data uit te draaien moeten enkele aanpassingen gedaan worden in de frontmatter.</p>
-<p>TODO</p>
-<blockquote class="blockquote">
-<p>Zodra data 2024 binnen is naam bestand rapprotage qmd aanpassen &amp; voorbeeld frontmatter bijwerken Voorlopig met voorbeeld_rapportage.qmd</p>
-</blockquote>
 <p>Open <strong>voorbeeld_rapportage.qmd</strong>. Daar zie je de volgende frontmatter staan:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span><span class="kw">:</span><span class="at"> </span><span class="st">""</span></span>
@@ -291,38 +277,50 @@ Data 2024 nog niet binnen of verwerkt
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">page-layout</span><span class="kw">:</span><span class="at"> full</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">css</span><span class="kw">:</span><span class="at"> custom.css</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">toc</span><span class="kw">:</span><span class="at"> </span><span class="ch">TRUE</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">toc-location</span><span class="kw">:</span><span class="at"> left</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">toc-title</span><span class="kw">:</span><span class="at"> </span><span class="st">"Inhoud"</span></span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">embed-resources</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">params</span><span class="kw">:</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">gemeentecode</span><span class="kw">:</span><span class="at"> </span><span class="dv">2</span><span class="at"> </span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">gemeentecode</span><span class="kw">:</span><span class="at"> </span><span class="dv">2</span></span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">regiocode</span><span class="kw">:</span><span class="at"> </span><span class="dv">23</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">regionaam</span><span class="kw">:</span><span class="at"> </span><span class="st">'GGD Limburg-Noord'</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">path_monitor_data</span><span class="kw">:</span><span class="at"> </span><span class="st">"../nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">path_hulpfuncties</span><span class="kw">:</span><span class="at"> </span><span class="st">"../hulpfuncties.R"</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">path_cbs_data</span><span class="kw">:</span><span class="at"> </span><span class="st">"../JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx"</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">default_nvar</span><span class="kw">:</span><span class="at"> </span><span class="dv">100</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">default_ncel</span><span class="kw">:</span><span class="at"> </span><span class="dv">10</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">default_kleuren_grafiek</span><span class="kw">:</span><span class="at"> !expr c("</span><span class="co">#012C17","#76B82A","#007E48")</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">default_kleuren_responstabel</span><span class="kw">:</span><span class="at"> !expr c("header" = "</span><span class="co">#012C17", "kleur_1" = "#007E48", "kleur_2" = "#76B82A","kleur_tekst" = "#FFFFFF")</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="fu">format-links</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>De meeste instellingen kan je laten staan. Het volgende moet aangepast of gecontroleerd worden.:</p>
-<section id="parameters-onder-params" class="level3" data-number="3.2.1">
-<h3 data-number="3.2.1" class="anchored" data-anchor-id="parameters-onder-params"><span class="header-section-number">3.2.1</span> Parameters onder ‘Params’</h3>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">regionaam</span><span class="kw">:</span><span class="at"> </span><span class="st">'GGD Limburg-Noord'</span><span class="co"> # Vul naam zoals in data CBS</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">path_nepdata</span><span class="kw">:</span><span class="at"> </span><span class="st">"nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">path_cbs_data</span><span class="kw">:</span><span class="at"> </span><span class="st">"voorbeeld_JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx"</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">path_monitor_data_2022</span><span class="kw">:</span><span class="at"> </span><span class="st">"C:/Users/.../"</span><span class="co"> # Vul padnaam naar data 2022 in</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">naam_monitor_data_2022_regionaal</span><span class="kw">:</span><span class="at"> </span><span class="st">"Regiobestand_CGMJV2022_REGIO_versie 4.sav"</span><span class="co"> # Vul naam regionaal bestand 2022 in</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">path_monitor_data_2024</span><span class="kw">:</span><span class="at"> </span><span class="st">"C:/Users/.../"</span><span class="co"> # Vul padnaam naar data 2024 in</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">naam_monitor_data_2024_regionaal</span><span class="kw">:</span><span class="at"> </span><span class="st">"Regiobestand_GMJV2024_REGIO_versie 1.sav"</span><span class="co"> # Vul naam regionaal bestand 2024 in</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">path_hulpfuncties</span><span class="kw">:</span><span class="at"> </span><span class="st">"hulpfuncties.R"</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">default_nvar</span><span class="kw">:</span><span class="at"> </span><span class="dv">100</span><span class="co"> # Minimum aantal invullers per vraag</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">default_ncel</span><span class="kw">:</span><span class="at"> </span><span class="dv">10</span><span class="co">  # Minimum aantal invullers oper antwoordoptie</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">default_kleuren_grafiek</span><span class="kw">:</span><span class="at"> !expr c("</span><span class="co">#86B443", "#012C17", "#B2BE97", "#007E48", "#AAD3CC", "#739BD0", "#11265F", "#86848D", "#CB8EB9", "#401B65", "#86848D")</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">default_kleuren_responstabel</span><span class="kw">:</span><span class="at"> !expr c("header" = "</span><span class="co">#012C17", "kleur_1" = "#007E48", "kleur_2" = "#76B82A","kleur_tekst" = "#FFFFFF")</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">is_pdf</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="fu">format-links</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="fu">echo</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="fu">warning</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>De meeste instellingen kan je laten staan. Het volgende moet aangepast of gecontroleerd worden:</p>
+<section id="parameters-onder-params" class="level3" data-number="3.1.1">
+<h3 data-number="3.1.1" class="anchored" data-anchor-id="parameters-onder-params"><span class="header-section-number">3.1.1</span> Parameters onder ‘Params’</h3>
 <ul>
-<li><strong>gemeentecode:</strong> Voer hier een gemeentecode in die bestaat in je data. Dit is als het ware je voorbeeldgemeente. Als je het rapport uitdraait via de “Render” knop zal een rapport voor die gemeente gemaakt worden.</li>
-<li><strong>regiocode:</strong> voer hier de CBS code van je GGD-regio in.</li>
-<li><strong>regionaam:</strong> voer hier de Naam van je GGD-regio in.</li>
-<li><strong>path_..:</strong> voer hier de bestandsnamen van alle databestanden in</li>
-<li><strong>default_nvar:</strong> voer hier het algemene minimum aantal respondenten per vraag in</li>
-<li><strong>default_ncel:</strong> voer hier het algemene minimum aantal respondenten per antwoord in</li>
-<li><strong>default_kleuren_grafiek:</strong> Voer hier een vector in met de standaard kleurcodes voor grafieken.</li>
-<li><strong>default_kleuren_responstabel:</strong> Voer hier een named vector in met 4 kleurcodes als standaard voor responstabellen. Zie het voorbeeld voor de namen.</li>
+<li><strong>gemeentecode:</strong> hier moet een gemeentecode ingevuld staan die bestaat in je data. Dit is als het ware je voorbeeldgemeente. Als je het rapport uitdraait via de “Render” knop zal een rapport voor die gemeente gemaakt worden.</li>
+<li><strong>regiocode:</strong> hier moet de CBS code van je GGD-regio ingevoerd staan. Bij de nepdata staat dit op 23.</li>
+<li><strong>regionaam:</strong> hier moet de naam van je GGD-regio ingevoerd staan. Zorg er voor dat deze naam overeenkomt met de naam van je regio in het bestand “JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx”. Bij de nepdata is dit GGD Limburg-Noord.</li>
+<li><strong>path_..:</strong> voer hier de padnaam naar de map met bestanden in. Er kunnen 2 paths ingevuld worden: één voor de data van 2022 en één voor de data van 2024. path_nepdata, path_cbs_data en path_helpfuncties hoeven <strong>niet</strong> aangepast te worden.</li>
+<li><strong>naam_..:</strong> voer hier de bestandsnaam van het regionale bestand in. Er kunnen 2 namen ingevuld worden: één voor de data van 2022 en één voor de data van 2024.</li>
+<li><strong>default_nvar:</strong> hier is het algemene minimum aantal respondenten per vraag ingevoerd.</li>
+<li><strong>default_ncel:</strong> hier is het algemene minimum aantal respondenten per antwoordoptie ingevoerd.</li>
+<li><strong>default_kleuren_grafiek:</strong> hier is een vector in met de standaard kleurcodes voor grafieken ingevoerd.</li>
+<li><strong>default_kleuren_responstabel:</strong> hier is een named vector ingevoerd met 4 kleurcodes als standaard voor responstabellen. Zie het voorbeeld voor de namen.</li>
+<li><strong>is_pdf:</strong> dit staat standaard op false, zodat standaard geen pdfs uitgedraaid worden. Zie onderwerp ‘PDF uitdraai en Printbaarheid’ hieronder voor hoe je PDFs van de rapportage uitdraait.</li>
 </ul>
 </section>
-<section id="overige-frontmatter-instellingen" class="level3" data-number="3.2.2">
-<h3 data-number="3.2.2" class="anchored" data-anchor-id="overige-frontmatter-instellingen"><span class="header-section-number">3.2.2</span> Overige frontmatter instellingen</h3>
+<section id="overige-frontmatter-instellingen" class="level3" data-number="3.1.2">
+<h3 data-number="3.1.2" class="anchored" data-anchor-id="overige-frontmatter-instellingen"><span class="header-section-number">3.1.2</span> Overige frontmatter instellingen</h3>
 <ul>
+<li><strong>css: costum.css:</strong> hier wordt aangegeven waar de opmaak (in css) gevonden kan worden. Zie ook het hoofdstuk <a href="./css.html">CSS</a>.</li>
+<li><strong>path_hulpfuncties: “hulpfuncties.R”:</strong> hier wordt verwezen naar het R-script met functies.</li>
 <li><strong>warning:</strong> Deze parameter staat in het voorbeeldrapport op false. Als de parameter op true staat worden mogelijke problemen / ‘warnings’ getoond in het rapport. Dit is meestal niet wenselijk voor het eindproduct, maar nuttig tijdens ontwikkeling.</li>
 </ul>
 <div class="callout callout-style-default callout-warning callout-titled" title="Let op">
@@ -340,28 +338,216 @@ Let op
 </div>
 <ul>
 <li><strong>echo:</strong> Standaard op false. Als deze parameter op true staat worden codeblokjes in het rapport getoond.</li>
+<li><strong>message:</strong> Standaard op false. Als deze parameter op true staat worden berichten van packages getoond.</li>
 </ul>
 </section>
 </section>
-<section id="rapporten-per-gemeente-uitdraaien" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="rapporten-per-gemeente-uitdraaien"><span class="header-section-number">3.3</span> Rapporten per gemeente uitdraaien</h2>
+<section id="rapportage-uitdraaien-met-eigen-data" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="rapportage-uitdraaien-met-eigen-data"><span class="header-section-number">3.2</span> Rapportage uitdraaien met eigen data</h2>
+<p>Om de (voorbeeld)rapportage met eigen data uit te draaien moeten enkele aanpassingen gedaan worden in de frontmatter. Standaard wordt namelijk nepdata ingeladen. Dit is data die lijkt op de data van de Gezondheidsmonitor Jongvolwassenen, maar geen echte deelnemers bevat. Het nepdata bestand bevat data op landelijk, regio en gemeentelijk niveau en van onderzoeksjaren 2022 en 2024 (en is daarmee en trendbestand). De nepdata staat op github en wordt standaard meegedownload wanneer je de ‘repository’ <a href="https://github.com/ggdatascience/gmjv-landelijk-format">gmjv-landelijk-format</a> download. Het bestand heet nep ‘testdata GMJV - Regionaal trendbestand 2022-2024.sav’.</p>
+<p>Om je eigen data te gebruiken i.p.v. de nepdata, moeten er 2 dingen gedaan worden:</p>
+<ul>
+<li>Frontmatter aanpassen</li>
+<li>Codeblok Instellingen aanpassen</li>
+</ul>
+<section id="frontmatter-aanpassen" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="frontmatter-aanpassen"><span class="header-section-number">3.2.1</span> Frontmatter aanpassen</h3>
+<p>In de frontmatter moet aangepast worden:</p>
+<ul>
+<li><strong>gemeentecode:</strong> Voer hier een gemeentecode in die bestaat in je data. Dit is als het ware je voorbeeldgemeente. Als je het rapport uitdraait via de “Render” knop zal een rapport voor die gemeente gemaakt worden.</li>
+<li><strong>regiocode:</strong> voer hier de CBS code van je GGD-regio in.</li>
+<li><strong>regionaam:</strong> voer hier de naam van je GGD-regio in. Zorg er voor dat deze naam overeenkomt met de naam van je regio in het bestand “JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx”.</li>
+<li><strong>path_monitor_data_2022</strong>: voer hier de padnaam naar de data van 2022 in en sluit af met een /.</li>
+<li><strong>naam_monitor_data_2022_regionaal:</strong> voer hier de naam van het regionale databestand van 2022 in. Deze moet eindigen op .sav</li>
+<li><strong>path_monitor_data_2024</strong>: voer hier de padnaam naar de data van 2024 in en sluit af met een /.</li>
+<li><strong>naam_monitor_data_2024_regionaal:</strong> voer hier de naam van het regionale databestand van 2022 in. Deze moet eindigen op .sav</li>
+</ul>
+</section>
+<section id="codeblok-instellingen-aanpassen" class="level3" data-number="3.2.2">
+<h3 data-number="3.2.2" class="anchored" data-anchor-id="codeblok-instellingen-aanpassen"><span class="header-section-number">3.2.2</span> Codeblok Instellingen aanpassen</h3>
+<p>Scroll in de (voorbeeld)rapportage naar beneden tot je bij het eerste codeblok komt. Deze heet Instellingen en start met:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Libraries inladen</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Het script maakt gebruik van een aantal packages</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Deze moeten bij de eerste keer lokaal worden geinstalleerd</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># benodigde packages installeren als deze afwezig zijn</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>pkg_nodig <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"gt"</span>, <span class="st">"dplyr"</span>, <span class="st">"ggplot2"</span>, <span class="st">"tidyr"</span>, <span class="st">"haven"</span>, <span class="st">"stringr"</span>, <span class="st">"labelled"</span>, </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>              <span class="st">"survey"</span>, <span class="st">"glue"</span>, <span class="st">"plotly"</span>, <span class="st">"forcats"</span>, <span class="st">"openxlsx"</span>, <span class="st">"showtext"</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (pkg <span class="cf">in</span> pkg_nodig) {</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">system.file</span>(<span class="at">package =</span> pkg) <span class="sc">==</span> <span class="st">""</span>) {</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">install.packages</span>(pkg)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Hieronder worden de benodige packages geladen</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(haven)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co"># etc...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Iets verder in dit blok wordt de data ingeladen. Hier zijn 2 opties: nepdata inladen of eigen data inladen.</p>
+<p>De nepdata wordt standaard ingeladen. Dit gebeurt met deze code:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">## OPTIE 1: Nepdata</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Lees SPSS bestand &amp; converteer 'user-missing' naar missing in R (NA)</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>monitor_df <span class="ot">=</span> haven<span class="sc">::</span><span class="fu">read_spss</span>(params<span class="sc">$</span>path_nepdata, <span class="at">user_na =</span>T) <span class="sc">%&gt;%</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Standaardisatiefactor_regio =</span> Standaardisatiefactor,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">Stratum_regio =</span> Stratum) <span class="sc">%&gt;%</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Standaardisatiefactor_gemeente =</span> Standaardisatiefactor_regio,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">Stratum_gemeente =</span> Stratum_regio) <span class="sc">%&gt;%</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  labelled<span class="sc">::</span><span class="fu">user_na_to_na</span>()</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Label toevoegen aan ongelabelde jaarindicator</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">val_label</span>(monitor_df<span class="sc">$</span>AGOJB401, <span class="dv">2024</span>) <span class="ot">&lt;-</span> <span class="st">'2024'</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="fu">val_label</span>(monitor_df<span class="sc">$</span>AGOJB401, <span class="dv">2022</span>) <span class="ot">&lt;-</span> <span class="st">'2022'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Als je je eigen, echte data wil inladen, moet dit stuk code in comments (#) gezet worden. R ziet dit dan als tekst en niet meer als code. De makkelijkste manier om dit te doen, is om alle regels te selecteren en dan CTRL + Shift + R in te drukken. Op deze manier worden alle regels in één keer een comment. Het ziet er dan zo uit:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ## OPTIE 1: Nepdata</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># #Lees SPSS bestand &amp; converteer 'user-missing' naar missing in R (NA)</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># monitor_df = haven::read_spss(params$path_nepdata, user_na =T) %&gt;%</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   rename(Standaardisatiefactor_regio = Standaardisatiefactor,</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#          Stratum_regio = Stratum) %&gt;%</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   mutate(Standaardisatiefactor_gemeente = Standaardisatiefactor_regio,</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">#          Stratum_gemeente = Stratum_regio) %&gt;%</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">#   labelled::user_na_to_na()</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># # Label toevoegen aan ongelabelde jaarindicator</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># val_label(monitor_df$AGOJB401, 2024) &lt;- '2024'</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># val_label(monitor_df$AGOJB401, 2022) &lt;- '2022'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Vervolgens moeten we zorgen dat optie 2, de optie om eigen data in te laden, aan staat. Hiervoor moeten we alle comments weghalen van dit stuk. Ook daarvoor kun je alle code selecteren en op CTRL + Shift + R in drukken. Alle onderstaande code moet dan <strong>niet</strong> meer in comments staan:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="do">## OPTIE 2: Eigen data invoeren (landelijk + regionaal)</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#Data 2024</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Landelijk bestand inladen</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> haven<span class="sc">::</span><span class="fu">read_spss</span>(<span class="fu">paste0</span>(params<span class="sc">$</span>path_monitor_data_2024, <span class="st">"Totaalbestand_GMJV2024_GGD_versie 1 (N = 135.666).sav"</span>),</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">user_na =</span>T) <span class="sc">%&gt;%</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  labelled<span class="sc">::</span><span class="fu">user_na_to_na</span>()</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Regionaal bestand inladen</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>df_regio <span class="ot">&lt;-</span> haven<span class="sc">::</span><span class="fu">read_spss</span>(<span class="fu">paste0</span>(params<span class="sc">$</span>path_monitor_data_2024, params<span class="sc">$</span>naam_monitor_data_2024_regionaal),</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>                             <span class="at">user_na =</span>T) <span class="sc">%&gt;%</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  labelled<span class="sc">::</span><span class="fu">user_na_to_na</span>()</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Check of aantallen gelijk zijn.</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co"># NB. Alleen deelnemers met landelijke weegfactor zitten in landelijk bestand.</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">sum</span>(df_regio<span class="sc">$</span>Standaardisatiefactor_regio <span class="sc">!=</span> <span class="dv">0</span>, <span class="at">na.rm =</span> T) <span class="sc">!=</span> <span class="fu">nrow</span>(df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(GGDregio <span class="sc">==</span> params<span class="sc">$</span>regiocode))) {</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data."</span>)</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter regio uit landelijk databestand</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(GGDregio <span class="sc">!=</span> params<span class="sc">$</span>regiocode)</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Voeg regiobestand toe aan landelijk bestand</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>monitor_df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(df_regio)</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Opschonen</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(df_regio, df)</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a><span class="co">#Data 2022</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="co">#Landelijk bestand inladen</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> haven<span class="sc">::</span><span class="fu">read_spss</span>(<span class="fu">paste0</span>(params<span class="sc">$</span>path_monitor_data_2022, <span class="st">"Totaalbestand_CGMJV2022_GGD_versie 3 (N = 69.750).sav"</span>),</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>                       <span class="at">user_na =</span>T) <span class="sc">%&gt;%</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Standaardisatiefactor_regio =</span> Standaardisatiefactor,</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>         <span class="at">Stratum_regio =</span> Stratum) <span class="sc">%&gt;%</span> <span class="co"># Standaardidatiefactor en andere indicatoren hernoemen. </span><span class="al">TODO</span><span class="co"> weghalen na trendsyntax?</span></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>  labelled<span class="sc">::</span><span class="fu">user_na_to_na</span>()</span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Regionaal bestand inladen</span></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>df_regio <span class="ot">&lt;-</span> haven<span class="sc">::</span><span class="fu">read_spss</span>(<span class="fu">paste0</span>(params<span class="sc">$</span>path_monitor_data_2022, params<span class="sc">$</span>naam_monitor_data_2022_regionaal),</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>                             <span class="at">user_na =</span>T) <span class="sc">%&gt;%</span></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Standaardisatiefactor_regio =</span> Standaardisatiefactor,</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>         <span class="at">Stratum_regio =</span> Stratum,</span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>         <span class="at">Invulduur =</span> duur) <span class="sc">%&gt;%</span> <span class="co"># Standaardidatiefactor en andere indicatoren hernoemen. </span><span class="al">TODO</span><span class="co"> weghalen na trendsyntax?</span></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>  labelled<span class="sc">::</span><span class="fu">user_na_to_na</span>()</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a><span class="co"># Check of aantallen gelijk zijn.</span></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a><span class="co"># NB. Alleen deelnemers met landelijke weegfactor zitten in landelijk bestand.</span></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">sum</span>(df_regio<span class="sc">$</span>Standaardisatiefactor_regio <span class="sc">!=</span> <span class="dv">0</span>, <span class="at">na.rm =</span> T) <span class="sc">!=</span> <span class="fu">nrow</span>(df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(GGDregio <span class="sc">==</span> params<span class="sc">$</span>regiocode))) {</span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data."</span>)</span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter regio uit landelijk databestand</span></span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(GGDregio <span class="sc">!=</span> params<span class="sc">$</span>regiocode)</span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a><span class="co"># Voeg regiobestand toe aan landelijk bestand</span></span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(df_regio) <span class="sc">%&gt;%</span></span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">colnames</span>(df)[<span class="sc">!</span>(<span class="fu">colnames</span>(df) <span class="sc">%in%</span> <span class="fu">colnames</span>(monitor_df))]) <span class="co"># selecteer alleen kolommen die ook in 2024 data zitten</span></span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a><span class="co"># Voeg bestand van 2022 toe aan bestand van 2024</span></span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a>monitor_df <span class="ot">&lt;-</span> monitor_df <span class="sc">%&gt;%</span></span>
+<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(df)</span>
+<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a><span class="co"># Opschonen</span></span>
+<span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(df_regio, df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Om te testen of R de data goed inlaad, kun je het eerste codeblok los runnen. Dit doe je door in voorbeeld_rapportage.qmd naar het eerste codeblok ({r Instellingen}) toe te gaan en rechtsboven op de groene driehoek te klikken:</p>
+<p><img src="images/clipboard-2050508892.png" class="img-fluid"></p>
+<p>R runt nu alleen dit codeblok. Controleer of je errors krijgt. Veel voorkomende fouten:</p>
+<ul>
+<li><strong>path_monitor_data_2022</strong> en/of <strong>path_monitor_data_2024</strong> eindigt niet op een / waardoor het bestand niet gevonden kan worden. Verander path_monitor_data_2022 en/of path_monitor_data_2024 in de frontmatter.</li>
+<li>De naam van het landelijke databestand uit 2022 en/of 2024 is aangepast, waardoor het bestand niet gevonden kan worden. Verander de naam het bestand in het codeblok, zie naar Totaalbestand_GMJV2022_(…) en Totaalbestand_GMJV2024_(…).</li>
+</ul>
+</section>
+</section>
+<section id="regionale-enof-landelijke-rapportage-maken" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="regionale-enof-landelijke-rapportage-maken"><span class="header-section-number">3.3</span> Regionale en/of landelijke rapportage maken</h2>
+<p>Standaard worden percentages in de (voorbeeld)rapportage getoond op regionaal en/of gemeentelijk niveau. Uitsplitsingen worden standaard op regionaal niveau getoond. Als je een regionale en/of landelijke rapportage wil maken, moet je dit aanpassen. Dit kan door het argument niveau of niveaus aan te passen in alle functies. Zie <a href="./gmjv-functies-gebruiken.html">GMJV Functies gebruiken</a>, <a href="./voorbeeld_grafieken.html">Grafiekfuncties</a>, <a href="./voorbeeld_tekstfuncties.html">Tekstfuncties</a> en <a href="./voorbeeld_overige_functies.html">Overige functies</a> voor meer informatie over functies en hun argumenten.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In Quarto bestanden werkt de CTRL + F shortkey ook. Hiermee kun je woorden zoeken en vervangen. Zoek bijvoorbeeld op “gemeente” om overal het niveau “gemeente” te vervangen.</p>
+</div>
+</div>
+</section>
+<section id="rapporten-per-gemeente-uitdraaien" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="rapporten-per-gemeente-uitdraaien"><span class="header-section-number">3.4</span> Rapporten per gemeente uitdraaien</h2>
 <p>Als je het rapport uitdraait door op de “Render” knop te drukken wordt er één rapport gemaakt dat is ingesteld op de gemeentecode in de <em>frontmatter</em>. Dit is handig om eventuele wijzigingen in het rapport te testen. Als je rapporten voor alle gemeenten wilt uitdraaien volg je de volgende stappen</p>
-<p>TODO</p>
-<blockquote class="blockquote">
-<p>Zodra data 2024 binnen is stappen aanpassen Voorlopig met voorbeeld_rapportage.qmd</p>
-</blockquote>
 <ul>
 <li>Open <strong>maak_rapport_per_gemeente.R</strong></li>
-<li>Controleer of de variabelen <strong>file_path</strong> en <strong>regiocode</strong> goed staan ingesteld</li>
+<li>Controleer of de variabelen <strong>file_path</strong> en <strong>gemeentecodes_in_regio</strong> goed staan ingesteld</li>
+<li>Controleer of <strong>input</strong> goed ingesteld staat. Deze staat standaard op “voorbeeld_rapportage.qmd” maar mogelijk wil je dit wijzigen naar “Rapportage.qmd”.</li>
 <li>Draai de rest van de code.</li>
 </ul>
 <p>Het script gaat met een <em>loop</em> langs alle gemeentecodes en maakt voor iedere gemeente een rapport.</p>
 </section>
-<section id="pdf-uitdraai-en-printbaarheid" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="pdf-uitdraai-en-printbaarheid"><span class="header-section-number">3.4</span> PDF uitdraai en Printbaarheid</h2>
+<section id="pdf-uitdraai-en-printbaarheid" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="pdf-uitdraai-en-printbaarheid"><span class="header-section-number">3.5</span> PDF uitdraai en Printbaarheid</h2>
 <p>Op verzoek is het mogelijk gemaakt de rapportage als PDF op te slaan en te zorgen dat deze printbaar is. De eerste stap hiervoor is bedenken of het wel nodig is om het rapport te printen. Meestal is dat niet zo. Als het toch nodig blijkt volg je de onderstaande stappen.</p>
-<section id="pagina-einden-bepalen-d.m.v.-header-1" class="level3" data-number="3.4.1">
-<h3 data-number="3.4.1" class="anchored" data-anchor-id="pagina-einden-bepalen-d.m.v.-header-1"><span class="header-section-number">3.4.1</span> Pagina-einden bepalen d.m.v. “Header 1”</h3>
+<div class="callout callout-style-default callout-tip callout-titled" title="Rapportages versturen">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Rapportages versturen
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Wil je de rapportages via de mail delen? Kies dan niet voor html bestanden in de bijlage. Dit zijn vrij grote bestanden en sommige spam-filters zien html bestanden als spam. In plaats daarvan kun je in de mail verwijzen naar de website met de html-rapportage. Wil je toch bestanden meesturen met de mail? Draai dan de bestanden als PDF uit en voeg ze als PDF toe als bijlage.</p>
+</div>
+</div>
+</div>
+<section id="pagina-einden-bepalen-d.m.v.-header-1" class="level3" data-number="3.5.1">
+<h3 data-number="3.5.1" class="anchored" data-anchor-id="pagina-einden-bepalen-d.m.v.-header-1"><span class="header-section-number">3.5.1</span> Pagina-einden bepalen d.m.v. “Header 1”</h3>
 <p>In een browser bestaan pagina’s niet echt. De standaard html-uitvoer van het rapport heeft dan ook geen pagina’s. Wanneer je een rapport gaat printen zijn pagina-einden wel belangrijk. Daarom is voor deze rapportage ingesteld dat pagina-einden altijd vóór een kop van niveau 1 vallen.</p>
 <p>Let daarom goed op dat je alleen een kop van niveau 1 maakt als je een nieuwe pagina wilt beginnen.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
@@ -379,7 +565,7 @@ Warning
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled" title="Aangepaste eigenschappen Header 1">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -388,27 +574,28 @@ Aangepaste eigenschappen Header 1
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Headers van niveau 1 krijgen voor de GMJV rapportage standaard een gekleurde achtergrond en beginnen (bij conversie naar pdf) altijd op een nieuwe pagina.</p>
-<p>Dit zijn aangepaste eigenschappen die worden bepaald in het CSS-bestand “custom.css”. Je kan deze eigenschappen in dat bestand uitzetten of wijzigen. Zie ook het hoofdstuk <a href="./css.html">CSS</a></p>
+<p>Dit zijn aangepaste eigenschappen die worden bepaald in het CSS-bestand “custom.css”. Je kan deze eigenschappen in dat bestand uitzetten of wijzigen. Zie ook het hoofdstuk <a href="./css.html">CSS</a>.</p>
 </div>
 </div>
 </div>
 </section>
-<section id="pdf-uitdraaien" class="level3" data-number="3.4.2">
-<h3 data-number="3.4.2" class="anchored" data-anchor-id="pdf-uitdraaien"><span class="header-section-number">3.4.2</span> PDF uitdraaien</h3>
-<p>Als de pagina-einden goed ingesteld staan kan je de rapportage als PDF bestand uitdraaien. Let hierbij op dat je ten minste Google Chrome 128 hebt. Zie daarvoor <a href="./beginnen.html#voor-pdf-uitdraai">‘PDF-uitdraai’ in het hoofdstuk ‘Beginnen’</a></p>
+<section id="pdf-uitdraaien" class="level3" data-number="3.5.2">
+<h3 data-number="3.5.2" class="anchored" data-anchor-id="pdf-uitdraaien"><span class="header-section-number">3.5.2</span> PDF uitdraaien</h3>
+<p>Als de pagina-einden goed ingesteld staan kan je de rapportage als PDF bestand uitdraaien. Let hierbij op dat je ten minste Google Chrome 128 hebt. Zie daarvoor <a href="./beginnen.html#voor-pdf-uitdraai">‘PDF-uitdraai’ in het hoofdstuk ‘Beginnen’</a>.</p>
 <ul>
 <li>Open het bestand <strong>maak_pdf_rapport.R</strong></li>
-<li>Controleer of de variabelen <strong>file_path</strong>, <strong>regiocode</strong> goed staan ingesteld.</li>
+<li>Controleer of de variabelen <strong>file_path</strong>, <strong>gemeentecodes_in_regio</strong> goed staan ingesteld.</li>
+<li>Controleer of <strong>input</strong> goed ingesteld staat. Deze staat standaard op “voorbeeld_rapportage.qmd” maar mogelijk wil je dit wijzigen naar “Rapportage.qmd”.</li>
 <li>Draai het hele script.</li>
 <li>Controleer de uitvoer.</li>
 </ul>
 </section>
 </section>
-<section id="html-rapporten-uploaden-naar-swing" class="level2" data-number="3.5">
-<h2 data-number="3.5" class="anchored" data-anchor-id="html-rapporten-uploaden-naar-swing"><span class="header-section-number">3.5</span> HTML-rapporten uploaden naar Swing</h2>
+<section id="html-rapporten-uploaden-naar-swing" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="html-rapporten-uploaden-naar-swing"><span class="header-section-number">3.6</span> HTML-rapporten uploaden naar Swing</h2>
 <p>Als je een html-bestand naar Swing upload en in de Viewer plaatst gaat dat niet automatisch goed. De layout van het bestand overhoop raken. Dit komt omdat de opmaak (CSS) van Swing zelf ook doorwerkt op het html-document. Dit kan je oplossen door raporten standaard in een ‘iframe’ te plaatsen. Dit is relatief makkelijk in te stellen in Swing.</p>
 <ul>
 <li>Log in bij Swing Studio als Admin</li>
@@ -455,18 +642,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -498,7 +674,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -506,7 +704,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {

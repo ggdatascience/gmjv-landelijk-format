@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.555">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Uitleg GMJV rapportage in Quarto - 4&nbsp; Tekst, Code invoegen en layout aanpassen</title>
+<title>4&nbsp; Tekst, Code invoegen en layout aanpassen – Uitleg GMJV rapportage in Quarto</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -112,13 +112,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./tekst-en-layout.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Tekst, Code invoegen en layout aanpassen</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -214,8 +214,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#stijlelementen-in-tekst" id="toc-stijlelementen-in-tekst" class="nav-link" data-scroll-target="#stijlelementen-in-tekst"><span class="header-section-number">4.2</span> Stijlelementen in tekst</a>
   <ul class="collapse">
   <li><a href="#witregel-toevoegen" id="toc-witregel-toevoegen" class="nav-link" data-scroll-target="#witregel-toevoegen"><span class="header-section-number">4.2.1</span> Witregel toevoegen</a></li>
-  <li><a href="#tussenlijn" id="toc-tussenlijn" class="nav-link" data-scroll-target="#tussenlijn"><span class="header-section-number">4.2.2</span> Tussenlijn</a></li>
-  <li><a href="#achtergrondkleur" id="toc-achtergrondkleur" class="nav-link" data-scroll-target="#achtergrondkleur"><span class="header-section-number">4.2.3</span> Achtergrondkleur</a></li>
+  <li><a href="#websites" id="toc-websites" class="nav-link" data-scroll-target="#websites"><span class="header-section-number">4.2.2</span> Websites</a></li>
+  <li><a href="#tussenlijn" id="toc-tussenlijn" class="nav-link" data-scroll-target="#tussenlijn"><span class="header-section-number">4.2.3</span> Tussenlijn</a></li>
+  <li><a href="#achtergrondkleur" id="toc-achtergrondkleur" class="nav-link" data-scroll-target="#achtergrondkleur"><span class="header-section-number">4.2.4</span> Achtergrondkleur</a></li>
+  <li><a href="#inleiding" id="toc-inleiding" class="nav-link" data-scroll-target="#inleiding"><span class="header-section-number">4.2.5</span> Inleiding</a></li>
+  <li><a href="#titel" id="toc-titel" class="nav-link" data-scroll-target="#titel"><span class="header-section-number">4.2.6</span> Titel</a></li>
   </ul></li>
   <li><a href="#r-code-in-code-blokken" id="toc-r-code-in-code-blokken" class="nav-link" data-scroll-target="#r-code-in-code-blokken"><span class="header-section-number">4.3</span> R code in code-blokken</a></li>
   <li><a href="#r-code-in-lopende-tekst" id="toc-r-code-in-lopende-tekst" class="nav-link" data-scroll-target="#r-code-in-lopende-tekst"><span class="header-section-number">4.4</span> R code in lopende tekst</a></li>
@@ -226,7 +229,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#toelichting" id="toc-toelichting" class="nav-link" data-scroll-target="#toelichting"><span class="header-section-number">4.5.3</span> Toelichting</a></li>
   <li><a href="#x-assen-uitlijnen-bij-verschillende-lengte-labels" id="toc-x-assen-uitlijnen-bij-verschillende-lengte-labels" class="nav-link" data-scroll-target="#x-assen-uitlijnen-bij-verschillende-lengte-labels"><span class="header-section-number">4.5.4</span> X-assen uitlijnen bij verschillende lengte labels</a></li>
   </ul></li>
-  <li><a href="#tabel-en-grafiek-layout-t.b.v-digitoegankelijkheid" id="toc-tabel-en-grafiek-layout-t.b.v-digitoegankelijkheid" class="nav-link" data-scroll-target="#tabel-en-grafiek-layout-t.b.v-digitoegankelijkheid"><span class="header-section-number">4.6</span> Tabel en Grafiek layout t.b.v digitoegankelijkheid</a></li>
+  <li><a href="#afbeelding-invoegen" id="toc-afbeelding-invoegen" class="nav-link" data-scroll-target="#afbeelding-invoegen"><span class="header-section-number">4.6</span> Afbeelding invoegen</a></li>
+  <li><a href="#tabel-en-grafiek-layout-t.b.v-digitoegankelijkheid" id="toc-tabel-en-grafiek-layout-t.b.v-digitoegankelijkheid" class="nav-link" data-scroll-target="#tabel-en-grafiek-layout-t.b.v-digitoegankelijkheid"><span class="header-section-number">4.7</span> Tabel en Grafiek layout t.b.v digitoegankelijkheid</a></li>
   </ul>
 </nav>
     </div>
@@ -280,8 +284,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="4.2.1" class="anchored" data-anchor-id="witregel-toevoegen"><span class="header-section-number">4.2.1</span> Witregel toevoegen</h3>
 <p>Een witregel kan toegevoegd worden door &lt;br&gt;&nbsp;in de tekst toe te voegen.</p>
 </section>
-<section id="tussenlijn" class="level3" data-number="4.2.2">
-<h3 data-number="4.2.2" class="anchored" data-anchor-id="tussenlijn"><span class="header-section-number">4.2.2</span> Tussenlijn</h3>
+<section id="websites" class="level3" data-number="4.2.2">
+<h3 data-number="4.2.2" class="anchored" data-anchor-id="websites"><span class="header-section-number">4.2.2</span> Websites</h3>
+<p>Websites met hyperlink kunnen toegevoegd worden door eerst de gewenste naam van de titel tussen nietjes [] te zetten en meteen daarachter tussen haakjes () de link te zetten:</p>
+<blockquote class="blockquote">
+<p>[Titel van website](www.website.nl)</p>
+</blockquote>
+</section>
+<section id="tussenlijn" class="level3" data-number="4.2.3">
+<h3 data-number="4.2.3" class="anchored" data-anchor-id="tussenlijn"><span class="header-section-number">4.2.3</span> Tussenlijn</h3>
 <p>In de standaard rapportage worden horizontale lijnen gebruikt om tussen verschillende secties. De opmaak van de tussenlijn wordt bepaald in het custom.css bestand. Daar staat de div .tussenlijn die aangeeft hoe deze lijn eruit ziet. Hier kan je dus ook de eigenschappen van de lijn veranderen, zoals kleur of dikte. De ‘div’ met de class ‘tussenlijn’ ziet er zo uit:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode css code-with-copy"><code class="sourceCode css"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">/*Lijntje dat tussen tekstblokken geplaatst kan worden*/</span></span>
@@ -306,8 +317,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>:::</p>
 </blockquote>
 </section>
-<section id="achtergrondkleur" class="level3" data-number="4.2.3">
-<h3 data-number="4.2.3" class="anchored" data-anchor-id="achtergrondkleur"><span class="header-section-number">4.2.3</span> Achtergrondkleur</h3>
+<section id="achtergrondkleur" class="level3" data-number="4.2.4">
+<h3 data-number="4.2.4" class="anchored" data-anchor-id="achtergrondkleur"><span class="header-section-number">4.2.4</span> Achtergrondkleur</h3>
 <p>In de standaard rapportage worden tekstvakken soms voorzien van een achtergrondkleur. Ook de opmaak van dit blok wordt bepaald in het custom.css bestand. Daar staat de div .achtergrondkleur die aangeeft hoe deze lijn eruit ziet. Hier kan je dus ook de eigenschappen van de class veranderen. Het blok ziet er standaard zo uit:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode css code-with-copy"><code class="sourceCode css"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* achtergrond-kleur*/</span></span>
@@ -336,6 +347,82 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>:::</p>
 </blockquote>
 </section>
+<section id="inleiding" class="level3" data-number="4.2.5">
+<h3 data-number="4.2.5" class="anchored" data-anchor-id="inleiding"><span class="header-section-number">4.2.5</span> Inleiding</h3>
+<p>In de standaard rapportage worden sommige teksten als inleiding weergegeven. Deze teksten worden dan dikgedrukt en iets groter weergegeven. Deze opmaak wordt bepaald in custom.css Daar staat de div .inleiding die aangeeft hoe deze eruit ziet. Hier kan je dus ook de eigenschappen van de class veranderen. Dit ziet er standaard zo uit:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode css code-with-copy"><code class="sourceCode css"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* class voor inleiding*/</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">.inleiding</span> {</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">color</span><span class="ch">:</span> <span class="cn">#002c17</span><span class="op">;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">font-size</span><span class="ch">:</span> <span class="dv">19</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">font-weight</span><span class="ch">:</span> <span class="dv">bold</span><span class="op">;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<style type="text/css">
+/* class voor inleiding*/
+  .inleiding {
+    color: #002c17;
+    font-size: 19px;
+    font-weight: bold;
+  }
+</style>
+</div>
+<p>Dit ziet er zo uit:</p>
+<div class="inleiding">
+<p>Hier tekst die in de inleiding komt.</p>
+</div>
+<p>Tekst met deze layout kan je zelf op de volgende manier toevoegen:</p>
+<blockquote class="blockquote">
+<p>::: inleiding</p>
+<p>Hier tekst</p>
+<p>:::</p>
+</blockquote>
+</section>
+<section id="titel" class="level3" data-number="4.2.6">
+<h3 data-number="4.2.6" class="anchored" data-anchor-id="titel"><span class="header-section-number">4.2.6</span> Titel</h3>
+<p>Je kunt op verschillende manieren titels/tussenkoppen toevoegen.</p>
+<p><strong>Headers</strong> worden in de inhoudsopgave getoond. Header 1 heeft in de (voorbeeld)rapportage een aangepaste opmaak. Deze opmaak bepaald in het custom.css bestand. Daar staat de div h1 die aangeeft hoe deze header eruit ziet. Hier kan je dus ook de eigenschappen van de header veranderen, zoals kleur of dikte. De ‘div’ ziet er zo uit:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode css code-with-copy"><code class="sourceCode css"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">/*H1 eigenschappen*/</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  h1 {</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">page-break-before</span><span class="ch">:</span> <span class="dv">always</span><span class="op">;</span> <span class="co">/* Iedere H1 maakt een pagebreak. relevant voor pdf uitdraai */</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">font-family</span><span class="ch">:</span> <span class="st">"Century Gothic"</span><span class="op">;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">font-size</span><span class="ch">:</span> <span class="dv">24</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">color</span><span class="ch">:</span> <span class="cn">white</span><span class="op">;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">background-color</span><span class="ch">:</span> <span class="cn">#007E48</span><span class="op">;</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">padding</span><span class="ch">:</span> <span class="dv">20</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Je kunt headers toevoegen door # Header-naam in te voegen.</p>
+<p>Dit ziet er zo uit: <img src="images/Knipsel2.png" class="img-fluid"></p>
+<p>Een andere optie zijn <strong>titels</strong> in de tekst. Deze worden in de rapportage gebruikt als subkopjes binnen in thema. Ook hiervan wordt de opmaak bepaald in custom.css. Dit ziet er zo uit:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode css code-with-copy"><code class="sourceCode css"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* class voor titels*/</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">.titel</span> {</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">color</span><span class="ch">:</span> <span class="cn">#002c17</span><span class="op">;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">font-size</span><span class="ch">:</span> <span class="dv">21</span><span class="dt">px</span><span class="op">;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">font-weight</span><span class="ch">:</span> <span class="dv">bold</span><span class="op">;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<style type="text/css">
+/* class voor titels*/
+  .titel {
+    color: #002c17;
+    font-size: 21px;
+    font-weight: bold;
+  }
+
+</style>
+</div>
+<p>Een titel ziet er dan zo uit:</p>
+<div class="titel">
+<p>Titel van subkop</p>
+</div>
+<p>Een titel kan je zelf op de volgende manier toevoegen:</p>
+<blockquote class="blockquote">
+<p>::: titel</p>
+<p>Hier titel</p>
+<p>:::</p>
+</blockquote>
+</section>
 </section>
 <section id="r-code-in-code-blokken" class="level2" data-number="4.3">
 <h2 data-number="4.3" class="anchored" data-anchor-id="r-code-in-code-blokken"><span class="header-section-number">4.3</span> R code in code-blokken</h2>
@@ -346,9 +433,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>In de source editor: Zoals hieronder. Type drie backticks ‘```’ gevolgd door ‘{r}’ Sluit het blok af met drie backticks.</p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r naam-blokje, echo=FALSE}</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="in">#Hier R code</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{r naam-blokje, echo=FALSE}</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="in">#Hier R code</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Standaard worden codeblokjes ook in de rapportage getoond. Dat is meestal niet de bedoeling. Daarom is hierboven de <em>chunk-option</em> <strong>‘echo=FALSE’</strong> opgegeven. Optioneel kan je het code-blok een naam geven zoals <strong>naam-blokje</strong> hierboven. Een naam kan helpen met overzicht en het opsporen van fouten.</p>
 </section>
@@ -450,7 +537,7 @@ Warning
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tekst-en-layout_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" alt="staafdiagram met percentages voor verschillende indicatoren bij jongvolwassenen in GGD Limburg-Noord:  Volgt een opleiding : 71%, Ervaart gezondheidals (zeer) goed : 63%, Voelde zich in deafgelopen 4 wekenvaak tot voortdurendgelukkig : 54%, Is tevreden metzijn/haar leven : 79%" width="672"></p>
+<p><img src="tekst-en-layout_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" alt="staafdiagram met percentages voor verschillende indicatoren bij jongvolwassenen in GGD Limburg-Noord:  Volgt een opleiding : 71%, Ervaart gezondheidals (zeer) goed : 63%, Voelde zich in deafgelopen 4 wekenvaak tot voortdurendgelukkig : 54%, Is tevreden metzijn/haar leven : 79%" width="672"></p>
 </figure>
 </div>
 </div>
@@ -461,7 +548,7 @@ Warning
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tekst-en-layout_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" alt="staafdiagram met percentages voor verschillende indicatoren bij jongvolwassenen in GGD Limburg-Noord:  Volgt een opleiding : 71%, Ervaart gezondheidals (zeer) goed : 63%" width="672"></p>
+<p><img src="tekst-en-layout_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" alt="staafdiagram met percentages voor verschillende indicatoren bij jongvolwassenen in GGD Limburg-Noord:  Volgt een opleiding : 71%, Ervaart gezondheidals (zeer) goed : 63%" width="672"></p>
 </figure>
 </div>
 </div>
@@ -480,7 +567,7 @@ Warning
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tekst-en-layout_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" alt="staafdiagram met percentages voor verschillende indicatoren bij jongvolwassenen in GGD Limburg-Noord:  Volgt een opleiding : 71%, Ervaart gezondheidals (zeer) goed : 63%, Voelde zich in deafgelopen 4 wekenvaak tot voortdurendgelukkig : 54%, Is tevreden metzijn/haar leven : 79%" width="672"></p>
+<p><img src="tekst-en-layout_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" alt="staafdiagram met percentages voor verschillende indicatoren bij jongvolwassenen in GGD Limburg-Noord:  Volgt een opleiding : 71%, Ervaart gezondheidals (zeer) goed : 63%, Voelde zich in deafgelopen 4 wekenvaak tot voortdurendgelukkig : 54%, Is tevreden metzijn/haar leven : 79%" width="672"></p>
 </figure>
 </div>
 </div>
@@ -491,7 +578,7 @@ Warning
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="tekst-en-layout_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" alt="staafdiagram met percentages voor verschillende indicatoren bij jongvolwassenen in GGD Limburg-Noord:  Volgt een opleiding : 71%, Ervaart gezondheidals (zeer) goed : 63%" width="672"></p>
+<p><img src="tekst-en-layout_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" alt="staafdiagram met percentages voor verschillende indicatoren bij jongvolwassenen in GGD Limburg-Noord:  Volgt een opleiding : 71%, Ervaart gezondheidals (zeer) goed : 63%" width="672"></p>
 </figure>
 </div>
 </div>
@@ -501,8 +588,19 @@ Warning
 </div>
 </section>
 </section>
-<section id="tabel-en-grafiek-layout-t.b.v-digitoegankelijkheid" class="level2" data-number="4.6">
-<h2 data-number="4.6" class="anchored" data-anchor-id="tabel-en-grafiek-layout-t.b.v-digitoegankelijkheid"><span class="header-section-number">4.6</span> Tabel en Grafiek layout t.b.v digitoegankelijkheid</h2>
+<section id="afbeelding-invoegen" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="afbeelding-invoegen"><span class="header-section-number">4.6</span> Afbeelding invoegen</h2>
+<p>Het is ook mogelijk om afbeeldingen in te voegen in de rapportage. Daarvoor moet de afbeelding zich bevinden in de werkmap. Vervolgens kan hiermee een afbeelding toegevoegd worden:</p>
+<blockquote class="blockquote">
+<p>![](Naam_van_afbeelding.png)</p>
+</blockquote>
+<p>Op een vergelijkbare manier worden ook de iconen toegevoegd aan de header:</p>
+<blockquote class="blockquote">
+<p># ![](Naam_van_afbeelding.png) Header-naam {.h1-icoon}</p>
+</blockquote>
+</section>
+<section id="tabel-en-grafiek-layout-t.b.v-digitoegankelijkheid" class="level2" data-number="4.7">
+<h2 data-number="4.7" class="anchored" data-anchor-id="tabel-en-grafiek-layout-t.b.v-digitoegankelijkheid"><span class="header-section-number">4.7</span> Tabel en Grafiek layout t.b.v digitoegankelijkheid</h2>
 <p>Standaard maken <a href="./voorbeeld_grafieken.html">grafiekfuncties</a> automatisch alt-text o.b.v. de data in de grafiek. Alt-text is één van de manieren om ervoor te zorgen dat de informatie die een grafiek overbrengt digitoegankelijk is. De automatisch gegenereerde alt-text is een opsomming van alle labels in de grafiek en de percentages die daarbij horen. Zo een opsomming kan (zeker bij grafieken met veel groepen en percentages) het nadeel hebben dat er overzicht verloren gaat.</p>
 <p>Een alternatieve benadering is om de grafiek van een digitoegankelijke tabel met de equivalente informatie te voorzien. In alle grafiekfuncties kan dit met de parameter <strong>tabel_en_grafiek</strong>. Wanneer deze optie aantstaat worden er op de plaats van de grafiek twee tabbladen gemaakt: “Tabel en Grafiek”. Hiervoor moeten kleine aanpassingen aan aanroep van codeblokjes gedaan worden.</p>
 <ul>
@@ -510,39 +608,39 @@ Warning
 <li>gebruik results = ‘asis’</li>
 <li>geen ‘plot = monitor_df’ maar direct aanroepen (resulteert anders in ongewenste ‘NULL’ onder plot).</li>
 </ul>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#|echo: fenced</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>monitor_df <span class="sc">%&gt;%</span> </span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">maak_staafdiagram_dubbele_uitsplitsing</span>(</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_inhoud =</span> <span class="st">"LVEES404"</span>,</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_crossing_groep =</span> <span class="st">"AGGSA402"</span>,</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_crossing_kleur =</span> <span class="st">"AGLFA401"</span>,</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">tabel_en_grafiek =</span> <span class="cn">TRUE</span> <span class="co">#tabel_en grafiek staat aan</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#|echo: fenced</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>monitor_df <span class="sc">%&gt;%</span> </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">maak_staafdiagram_dubbele_uitsplitsing</span>(</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_inhoud =</span> <span class="st">"LVEES404"</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_crossing_groep =</span> <span class="st">"AGGSA402"</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">var_crossing_kleur =</span> <span class="st">"AGLFA401"</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">tabel_en_grafiek =</span> <span class="cn">TRUE</span> <span class="co">#tabel_en grafiek staat aan</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Grafiek</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Tabel</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<p><img src="tekst-en-layout_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+<p><img src="tekst-en-layout_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
 </div>
 <div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
-<div id="nzczydieib" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#nzczydieib table {
+<div id="yfglfmhslo" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#yfglfmhslo table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#nzczydieib thead, #nzczydieib tbody, #nzczydieib tfoot, #nzczydieib tr, #nzczydieib td, #nzczydieib th {
+#yfglfmhslo thead, #yfglfmhslo tbody, #yfglfmhslo tfoot, #yfglfmhslo tr, #yfglfmhslo td, #yfglfmhslo th {
   border-style: none;
 }
 
-#nzczydieib p {
+#yfglfmhslo p {
   margin: 0;
   padding: 0;
 }
 
-#nzczydieib .gt_table {
+#yfglfmhslo .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -568,12 +666,12 @@ Warning
   border-left-color: #D3D3D3;
 }
 
-#nzczydieib .gt_caption {
+#yfglfmhslo .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#nzczydieib .gt_title {
+#yfglfmhslo .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -585,7 +683,7 @@ Warning
   border-bottom-width: 0;
 }
 
-#nzczydieib .gt_subtitle {
+#yfglfmhslo .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -597,7 +695,7 @@ Warning
   border-top-width: 0;
 }
 
-#nzczydieib .gt_heading {
+#yfglfmhslo .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -609,13 +707,13 @@ Warning
   border-right-color: #D3D3D3;
 }
 
-#nzczydieib .gt_bottom_border {
+#yfglfmhslo .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#nzczydieib .gt_col_headings {
+#yfglfmhslo .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -630,7 +728,7 @@ Warning
   border-right-color: #D3D3D3;
 }
 
-#nzczydieib .gt_col_heading {
+#yfglfmhslo .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -650,7 +748,7 @@ Warning
   overflow-x: hidden;
 }
 
-#nzczydieib .gt_column_spanner_outer {
+#yfglfmhslo .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -662,15 +760,15 @@ Warning
   padding-right: 4px;
 }
 
-#nzczydieib .gt_column_spanner_outer:first-child {
+#yfglfmhslo .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#nzczydieib .gt_column_spanner_outer:last-child {
+#yfglfmhslo .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#nzczydieib .gt_column_spanner {
+#yfglfmhslo .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -682,11 +780,11 @@ Warning
   width: 100%;
 }
 
-#nzczydieib .gt_spanner_row {
+#yfglfmhslo .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#nzczydieib .gt_group_heading {
+#yfglfmhslo .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -712,7 +810,7 @@ Warning
   text-align: left;
 }
 
-#nzczydieib .gt_empty_group_heading {
+#yfglfmhslo .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -727,15 +825,15 @@ Warning
   vertical-align: middle;
 }
 
-#nzczydieib .gt_from_md > :first-child {
+#yfglfmhslo .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#nzczydieib .gt_from_md > :last-child {
+#yfglfmhslo .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#nzczydieib .gt_row {
+#yfglfmhslo .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -754,7 +852,7 @@ Warning
   overflow-x: hidden;
 }
 
-#nzczydieib .gt_stub {
+#yfglfmhslo .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -767,7 +865,7 @@ Warning
   padding-right: 5px;
 }
 
-#nzczydieib .gt_stub_row_group {
+#yfglfmhslo .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -781,15 +879,15 @@ Warning
   vertical-align: top;
 }
 
-#nzczydieib .gt_row_group_first td {
+#yfglfmhslo .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#nzczydieib .gt_row_group_first th {
+#yfglfmhslo .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#nzczydieib .gt_summary_row {
+#yfglfmhslo .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -799,16 +897,16 @@ Warning
   padding-right: 5px;
 }
 
-#nzczydieib .gt_first_summary_row {
+#yfglfmhslo .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#nzczydieib .gt_first_summary_row.thick {
+#yfglfmhslo .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#nzczydieib .gt_last_summary_row {
+#yfglfmhslo .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -818,7 +916,7 @@ Warning
   border-bottom-color: #D3D3D3;
 }
 
-#nzczydieib .gt_grand_summary_row {
+#yfglfmhslo .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -828,7 +926,7 @@ Warning
   padding-right: 5px;
 }
 
-#nzczydieib .gt_first_grand_summary_row {
+#yfglfmhslo .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -838,7 +936,7 @@ Warning
   border-top-color: #D3D3D3;
 }
 
-#nzczydieib .gt_last_grand_summary_row_top {
+#yfglfmhslo .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -848,11 +946,11 @@ Warning
   border-bottom-color: #D3D3D3;
 }
 
-#nzczydieib .gt_striped {
+#yfglfmhslo .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#nzczydieib .gt_table_body {
+#yfglfmhslo .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -861,7 +959,7 @@ Warning
   border-bottom-color: #D3D3D3;
 }
 
-#nzczydieib .gt_footnotes {
+#yfglfmhslo .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -875,7 +973,7 @@ Warning
   border-right-color: #D3D3D3;
 }
 
-#nzczydieib .gt_footnote {
+#yfglfmhslo .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -884,7 +982,7 @@ Warning
   padding-right: 5px;
 }
 
-#nzczydieib .gt_sourcenotes {
+#yfglfmhslo .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -898,7 +996,7 @@ Warning
   border-right-color: #D3D3D3;
 }
 
-#nzczydieib .gt_sourcenote {
+#yfglfmhslo .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -906,64 +1004,73 @@ Warning
   padding-right: 5px;
 }
 
-#nzczydieib .gt_left {
+#yfglfmhslo .gt_left {
   text-align: left;
 }
 
-#nzczydieib .gt_center {
+#yfglfmhslo .gt_center {
   text-align: center;
 }
 
-#nzczydieib .gt_right {
+#yfglfmhslo .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#nzczydieib .gt_font_normal {
+#yfglfmhslo .gt_font_normal {
   font-weight: normal;
 }
 
-#nzczydieib .gt_font_bold {
+#yfglfmhslo .gt_font_bold {
   font-weight: bold;
 }
 
-#nzczydieib .gt_font_italic {
+#yfglfmhslo .gt_font_italic {
   font-style: italic;
 }
 
-#nzczydieib .gt_super {
+#yfglfmhslo .gt_super {
   font-size: 65%;
 }
 
-#nzczydieib .gt_footnote_marks {
+#yfglfmhslo .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#nzczydieib .gt_asterisk {
+#yfglfmhslo .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#nzczydieib .gt_indent_1 {
+#yfglfmhslo .gt_indent_1 {
   text-indent: 5px;
 }
 
-#nzczydieib .gt_indent_2 {
+#yfglfmhslo .gt_indent_2 {
   text-indent: 10px;
 }
 
-#nzczydieib .gt_indent_3 {
+#yfglfmhslo .gt_indent_3 {
   text-indent: 15px;
 }
 
-#nzczydieib .gt_indent_4 {
+#yfglfmhslo .gt_indent_4 {
   text-indent: 20px;
 }
 
-#nzczydieib .gt_indent_5 {
+#yfglfmhslo .gt_indent_5 {
   text-indent: 25px;
+}
+
+#yfglfmhslo .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#yfglfmhslo div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
 }
 </style>
 <table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
@@ -988,7 +1095,7 @@ Man
 </thead>
 <tbody class="gt_table_body">
 <tr>
-<td headers="" class="gt_row gt_center">
+<td headers=" " class="gt_row gt_center">
 16-17 jaar
 </td>
 <td headers="Vrouw" class="gt_row gt_right">
@@ -999,7 +1106,7 @@ Man
 </td>
 </tr>
 <tr>
-<td headers="" class="gt_row gt_center">
+<td headers=" " class="gt_row gt_center">
 18-20 jaar
 </td>
 <td headers="Vrouw" class="gt_row gt_right">
@@ -1010,7 +1117,7 @@ Man
 </td>
 </tr>
 <tr>
-<td headers="" class="gt_row gt_center">
+<td headers=" " class="gt_row gt_center">
 21-25 jaar
 </td>
 <td headers="Vrouw" class="gt_row gt_right">
@@ -1083,18 +1190,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -1126,7 +1222,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -1134,7 +1252,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {

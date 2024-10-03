@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.555">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Uitleg GMJV rapportage in Quarto - 5&nbsp; GMJV Functies Gebruiken</title>
+<title>5&nbsp; GMJV Functies Gebruiken – Uitleg GMJV rapportage in Quarto</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -33,7 +33,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -112,13 +112,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./gmjv-functies-gebruiken.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">GMJV Functies Gebruiken</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
-      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -212,6 +212,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#filtering-of-vergelijking-per-jaar" id="toc-filtering-of-vergelijking-per-jaar" class="nav-link active" data-scroll-target="#filtering-of-vergelijking-per-jaar"><span class="header-section-number">5.1</span> Filtering of vergelijking per jaar</a></li>
   <li><a href="#filtering-of-vergelijking-per-regio" id="toc-filtering-of-vergelijking-per-regio" class="nav-link" data-scroll-target="#filtering-of-vergelijking-per-regio"><span class="header-section-number">5.2</span> Filtering of vergelijking per regio</a></li>
+  <li><a href="#uitsplitsingen" id="toc-uitsplitsingen" class="nav-link" data-scroll-target="#uitsplitsingen"><span class="header-section-number">5.3</span> Uitsplitsingen</a></li>
+  <li><a href="#labels-van-variabelen-aanpassen" id="toc-labels-van-variabelen-aanpassen" class="nav-link" data-scroll-target="#labels-van-variabelen-aanpassen"><span class="header-section-number">5.4</span> Labels van variabelen aanpassen</a></li>
   </ul>
 </nav>
     </div>
@@ -270,6 +272,38 @@ Tip
 <li><strong>niveaus:</strong> character vector met drie mogelijke waarden c(“nl”,“regio”,“gemeente”)</li>
 </ul>
 <p>Als er één niveau wordt doorgegeven wordt de data gefilterd en gegroepeerd op dat niveau. Als er meerdere niveaus worden doorgegeven worden die niveaus vergeleken als dat mogelijk is.</p>
+</section>
+<section id="uitsplitsingen" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="uitsplitsingen"><span class="header-section-number">5.3</span> Uitsplitsingen</h2>
+<p>In de (voorbeeld)rapportage worden uitsplitsingen standaard op regionaal niveau getoond. Dit omdat veel gemeentes niet genoeg deelnemers hebben voor uitsplitsingen. Mocht je dit willen aanpassen, dan kan dat met het argument niveaus.</p>
+</section>
+<section id="labels-van-variabelen-aanpassen" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="labels-van-variabelen-aanpassen"><span class="header-section-number">5.4</span> Labels van variabelen aanpassen</h2>
+<p>Standaard worden voor de meeste grafiek- en tekstfuncties die labels van de variabelen gebruikt voor de legenda. Deze labels kunnen aangepast worden met de functies val_label() en var_label().</p>
+<ul>
+<li><strong>var_label():</strong> past het label van de variabele aan.</li>
+<li><strong>val_label():</strong> past het label van een bepaalde waarde binnen de variabele aan.</li>
+</ul>
+<p>In het onderstaande voorbeeld wordt val_label gebruikt om de categorieën binnen de variabele LVVTA404 (Vertrouwen in de toekosmt) te hernoemen:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Labels aanpassen</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">val_label</span>(monitor_df<span class="sc">$</span>LVVTA404, <span class="dv">1</span>) <span class="ot">&lt;-</span> <span class="st">'Weinig tot geen (cijfer 5 of lager)'</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">val_label</span>(monitor_df<span class="sc">$</span>LVVTA404, <span class="dv">2</span>) <span class="ot">&lt;-</span> <span class="st">'Matig tot redelijk (cijfer 6 of 7)'</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">val_label</span>(monitor_df<span class="sc">$</span>LVVTA404, <span class="dv">3</span>) <span class="ot">&lt;-</span> <span class="st">'(heel) veel (cijfer 8 of hoger)'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Zoals je ziet heeft val_label 2 argumenten nodig: - Het eerste argument: de variabele waar het over gaat. In dit geval gaat het over de variabele LVVTA404 in de dataset monitor_df, dus monitor_df$LVVTA404 - Het tweede argument: de waarde van de variabele waar het overgaat. De variabele LVVTA404 heeft 3 categorieën en per categorie wordt er een nieuw label toegewezen.</p>
+<p>Het stuk achter de &lt;- geeft aan wat het nieuwe label van deze waarde moet worden. Het nieuwe label van variabele LVVTA404 voor waarde 1 wordt met deze code dus ‘Weinig tot geen (cijfer 5 of lager)’.</p>
+<p>Een ander voorbeeld. In het eerste codeblok in de (voorbeeld)rapportage wordt val_label gebruikt om de namen van de gemeente en de regio aan te passen:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Hernoemen gemeente en regio: labels aanpassen zodat deze anders zijn in grafieken</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Gemeente: gemeente voor gemeentenaam zetten</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">val_label</span>(monitor_df<span class="sc">$</span>Gemeentecode, params<span class="sc">$</span>gemeentecode) <span class="ot">&lt;-</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(<span class="st">'gemeente'</span>, <span class="fu">val_label</span>(monitor_df<span class="sc">$</span>Gemeentecode, params<span class="sc">$</span>gemeentecode))</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Regio: GGD vervangen door regio</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">val_label</span>(monitor_df<span class="sc">$</span>GGDregio, params<span class="sc">$</span>regiocode) <span class="ot">&lt;-</span> </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_replace</span>(<span class="fu">val_label</span>(monitor_df<span class="sc">$</span>GGDregio, params<span class="sc">$</span>regiocode), <span class="st">"GGD"</span>, <span class="st">"regio"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
 </section>
@@ -310,18 +344,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -353,7 +376,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -361,7 +406,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
