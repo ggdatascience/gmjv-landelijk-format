@@ -1,15 +1,22 @@
 # Script met helpfuncties voor GMJV 2024.
 # Packages ----------------------------------------------------------------
 
-#nieuwe grafiek maken die uitsplitsing naast elkaar kan zetten
-
-# Het script maakt gebruik van een aantal packages
-# Deze moeten bij de eerste keer lokaal worden geinstalleerd. 
-# Dat doe je met behulp van de functie: install.packages() 
-# (Verwijder de # aan het begin van onderstaande regel om de code te runnen en de benodigde packages te installeren.)
+# TODOnieuwe grafiek maken die uitsplitsing naast elkaar kan zetten
 # TODO alle alt-texten nakijken. Door recente aanpassingen mogelijk niet meer waterdicht
 # TODO code opschonen; dataverwerking voor grafiek in eigen functies stoppen om complexiteit / lengte van functies te verkleinen.
 
+# Het script maakt gebruik van een aantal packages
+# Deze moeten bij de eerste keer lokaal worden geinstalleerd. 
+
+# benodigde packages installeren als deze afwezig zijn
+pkg_nodig = c("gt", "dplyr", "ggplot2", "tidyr", "stringr", "labelled", 
+              "survey", "glue", "plotly", "forcats", "openxlsx", "showtext")
+
+for (pkg in pkg_nodig) {
+  if (system.file(package = pkg) == "") {
+    install.packages(pkg)
+  }
+}
 # Hieronder worden de benodige packages geladen
 library(gt)
 library(dplyr)
@@ -34,7 +41,7 @@ library(showtext)
 font_family = "Open Sans"
 
 #Titels
-titel_size <- 30
+titel_size <- 40
 
 #Algemeen
 font_size <- 30
@@ -44,15 +51,15 @@ font_size <- 30
 geom_text_percentage <- 10
 
 #Labels op de X-as (waar die relevant zijn)
-as_label_size <- 20
+as_label_size <- 30
 
 #legend titles
 #algemeen:default
-legend_title_size_cirkel <- 20
+legend_title_size_cirkel <- 30
 
 #legend keys
-legend_text_size <- 20
-legend_text_size_cirkel <- 15
+legend_text_size <- 30
+legend_text_size_cirkel <- 25
 
 
 #caption
@@ -678,6 +685,30 @@ maak_regeleinden <- function(label_vector, x_as_label_wrap, x_as_regels_toevoege
   return(label_vector)
 }
 
+#Functie maken om kleuren te bepalen
+
+bepaal_kleuren <- function(kleuren = params$default_kleuren_grafiek, 
+                           niveaus = "regio") {
+  
+  # bepaal kleuren per niveau
+  bepaalde_kleuren <- lapply(niveaus, function(x){
+    
+    if (x == "gemeente") {
+      kleur <- kleuren[c(6:8)]
+    } else if (x == "regio") {
+      kleur <- kleuren[c(1:5)]
+    } else {
+      kleur <- kleuren[c(9,10,8)]
+    }
+    
+    kleur 
+    
+  }) %>% do.call(c,.)
+  
+  return(bepaalde_kleuren)
+  
+}
+
 # Tabelfuncties -------------------------------------------------------
 maak_responstabel <- function(data, crossings, missing_label = "Onbekend",
                               kleuren = params$default_kleuren_responstabel,
@@ -896,6 +927,9 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
       niveaus: {paste(niveaus,collapse = ',')}")
     )
   }
+  
+  # Bepaal kleuren
+  kleuren <- bepaal_kleuren(kleuren = kleuren, niveaus = niveaus)
   
   #Checken of crossvar is ingevoerd en in dat geval jaarvar is
   crossing_is_jaar <- ifelse(
@@ -1129,7 +1163,8 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
 }
 
 
-maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, titel = "",
+maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings = NULL, 
+                                           titel = "",
                                            kleuren = params$default_kleuren_grafiek,
                                            nvar = params$default_nvar, ncel = params$default_ncel,
                                            alt_text = NULL,
@@ -1165,6 +1200,10 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, tite
               Voer maximaal 1 niveau in of kies een ander grafiektype.
               niveaus: {paste(niveaus, collapse = ',')}"))
   }
+  
+  # Bepaal kleuren
+  kleuren <- bepaal_kleuren(kleuren = kleuren, niveaus = niveaus)
+  
   #design en dataset bepalen o.b.v. regio
   if(niveaus == "nl"){
     
@@ -1445,7 +1484,17 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
     }
   }
   
-  
+  # Bepaal kleuren
+  if (is.null(var_crossing)) {
+    kleur <- ifelse(niveaus == "gemeente", kleuren[6],
+                    ifelse(niveaus == "regio", kleuren[4],
+                           kleuren[11]))
+    
+    kleuren <- kleur
+  } else {
+    kleuren <- bepaal_kleuren(kleuren = kleuren, niveaus = niveaus)
+  }
+
   #TODO Optie om het correcter te doen dan gebruikelijk
   # regio zonder gemeente vs gemeente. 
   
@@ -1827,7 +1876,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
 
 
 #TODO Overal chekc inbouwen of een var wel een lbl+dbl is. Of niet afh. van maak_kruistabel() output.
-maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_crossings, titel = "",
+maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_crossings = NULL, titel = "",
                                                         kleuren = params$default_kleuren_grafiek,
                                                         kleuren_per_crossing = F, fade_kleuren = F,
                                                         flip = FALSE, 
@@ -1868,6 +1917,10 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
               Voer maximaal 1 niveau in of kies een ander grafiektype.
               niveaus: {paste(niveaus,collapse = ',')}"))
   }
+  
+  # Bepaal kleuren
+  kleuren <- bepaal_kleuren(kleuren = kleuren, niveaus = niveaus)
+  
   #o.b.v. de orientatie van de grafiek (flip = horizontaal)
   #De correctie van de geom_text aanpassen  zodat deze netjes in het midden v.e. balk komt 
   v_just_text = ifelse(flip,0.5,-1.5)
@@ -2159,6 +2212,14 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
               "))
   }
   
+  # Bepaal kleuren
+  if (length(niveaus > 1 )) {
+    kleuren
+  } else {
+    kleuren <- bepaal_kleuren(kleuren = kleuren, niveaus = niveaus)
+  }
+  
+  
   #Checken of crossvar is ingevoerd en in dat geval jaarvar is
   crossing_is_jaar <- ifelse(is.null(var_crossing), FALSE,
                              ifelse(var_crossing != jaarvar, FALSE, TRUE))
@@ -2395,13 +2456,16 @@ maak_cirkeldiagram <- function(data, var_inhoud, titel = "", kleuren = params$de
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
   }
   
-  
   #niveaus kan hier max length 1 hebben
   if(length(niveaus) > 1){
     stop(glue("Dit grafiektype kan op 1 niveau filteren. Er zijn meer niveaus ingevoerd.
               Voer maximaal 1 niveau in of kies een ander grafiektype.
               niveaus: {paste(niveaus,collapse = ',')}"))
   }
+  
+  # Bepaal kleuren
+  kleuren <- bepaal_kleuren(kleuren = kleuren, niveaus = niveaus)
+  
   #design en dataset bepalen o.b.v. regio
   if(niveaus == "nl"){
     
@@ -2562,8 +2626,18 @@ maak_cirkeldiagram <- function(data, var_inhoud, titel = "", kleuren = params$de
 }
 
 bol_met_cijfer <- function(getal, omschrijving = NA, omschrijving2 = NA, niveau = NA,
-                           kleur = params$default_kleuren_grafiek[3], kleur_outline = "#FFFFFF", 
-                           kleur_getal = "#FFFFFF", kleur_omschrijving = "#000000"){
+                           kleur = params$default_kleuren_grafiek[c(6, 4, 11)], kleur_outline = "#FFFFFF", 
+                           kleur_getal = "#FFFFFF", kleur_omschrijving = "#305A5B"){
+  
+  # Check input
+  if(length(getal) < 1 | length(getal) > 2 ) {
+    
+    stop(glue("
+    Er is geen getal of meer dan 2 getallen ingevoerd. Dit kan niet.
+    Vul 1 of 2 getallen in als input.
+    niveaus: {paste(getal, collapse = ',')}"))
+    
+  }
   
   alt_tekst <- getal
   
@@ -2576,75 +2650,140 @@ bol_met_cijfer <- function(getal, omschrijving = NA, omschrijving2 = NA, niveau 
       alt_tekst <- paste(alt_tekst, regel)
       
       if(length(tekst) == 0){
+        
         tekst <- paste0('<tspan>', regel, '</tspan>')
         
-      }
-      else if (length(tekst) > 0){
-        tekst <- paste0(tekst, '<tspan x=50 dy="1em">', regel, '</tspan>')
+      } else if (length(tekst) > 0){
+        
+        tekst <- paste0(tekst, '<tspan x=112 text-anchor="middle" dy="1em">', regel, '</tspan>')
+        
       }
     } else {
       
       # Als geen omschrijving meegegeven is, voer dan spatie in
       if(length(tekst) == 0){
+        
         tekst <- paste0('<tspan>', " ", '</tspan>')
         
-      }
-      else if (length(tekst) > 0){
-        tekst <- paste0(tekst, '<tspan x=50 dy="1em">', " ", '</tspan>')
+      } else if (length(tekst) > 0){
+        
+        tekst <- paste0(tekst, '<tspan x=112 text-anchor="middle" dy="1em">', " ", '</tspan>')
+        
       }
     }
   }
   
-  if (is.na(omschrijving) & is.na(omschrijving) & is.na(niveau)) {
-    # Als geen omschrijvingen en niveau getoond worden, maak dan de afbeelding kleiner.
-    
-    viewbox = "0 0 50 50"
-    
-  } else if (is.na(omschrijving) & is.na(omschrijving)) {
-    # Als alleen niveau getoond worrdt, maak afbeelding ook kleiner
-    
-    viewbox = "0 0 50 75"
-    
-  } else {
-    
-    viewbox = "0 0 225 75"
-    
-  }
-  
-  # Voeg niveau toe aan alt_tekst
-  if(!is.na(niveau)) {
+  # Voeg niveau toe aan alt_tekst en bepaal kleur
+  if(any(!is.na(niveau))) {
     
     alt_tekst <- paste(alt_tekst, "in de", niveau)
     
+    kleur <- ifelse(niveau == "Gemeente", kleur[1],
+                    ifelse(niveau == "Regio", kleur[2],
+                           kleur[3]))
+    
   } else {
     
-    # Als geen omschrijving meegegeven is, voer dan spatie in
+    # Als geen niveau meegegeven is, voer dan spatie in
     niveau = " "
+    
+    kleur <- kleur[3]
     
   }
   
-  # Voeg de ingevoerde informatie op de juiste plekken in de svg code met behulp van glue
-  svg_code <- glue::glue('<svg role="img" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality;"
+  if (is.na(omschrijving) & is.na(omschrijving) & length(getal) == 1) {
+    # Als geen omschrijvingen en 1 getal, maak dan de afbeelding kleiner.
+    
+    viewbox = "0 0 50 75"
+    
+    # Voeg de ingevoerde informatie op de juiste plekken in de svg code met behulp van glue
+    svg_code <- glue::glue('<svg role="img" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality;"
                 viewBox="{viewbox}"> # Origineel 0 0 225 75
                 <title>{alt_tekst}</title>
                 
                 <g id="circle">
-                    <circle style="fill:{kleur};" cx="25" cy="25" r="20" stroke = "{kleur_outline}">
+                    <circle style="fill:{kleur};" cx="25" cy="25" r="25" stroke = "{kleur_outline}">
                     </circle>
                     <text x=25 y="25" text-anchor="middle" fill="{kleur_getal}" stroke="{kleur_getal}" stroke-width="1px" dy=".3em" font-size="1em">{getal}</text>
                 </g>
-                    
-                <g id="tekst">
-                <text x=50 y="25" fill="{kleur_omschrijving}" stroke="{kleur_omschrijving}" stroke-width="0.01px" dy=".3em" font-size="0.5em">{tekst}</text>
-                </g>
                 
                 <g id="niveau">
-                <text x=25 y="50" text-anchor="middle" fill="{kleur}" stroke="{kleur}" stroke-width="0.01px" dy=".3em" font-size="0.5em">{niveau}</text>
+                <text x=25 y="60" text-anchor="middle" fill="{kleur}" stroke="{kleur}" stroke-width="0.01px" dy=".3em" font-size="0.5em" font-weight = "bold">{niveau}</text>
                 </g>
                 
                 </svg>')
+    
+  } else {
+    # Grotere viewbox bij omschrijving of 2 getallen en geen omschrijving
+    
+    viewbox = "0 0 225 100"
+    
+    # svg-code afhankelijk van 1 of 2 getallen als input
+    if (length(getal) == 1) {
+      # svg_code voor 1 getal
+      # Voeg de ingevoerde informatie op de juiste plekken in de svg code met behulp van glue
+      svg_code <- glue::glue('<svg role="img" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality;"
+                viewBox="{viewbox}"> # Origineel 0 0 225 75
+                <title>{alt_tekst}</title>
+                
+                <g id="circle">
+                    <circle style="fill:{kleur};" cx="112" cy="25" r="25" stroke = "{kleur_outline}">
+                    </circle>
+                    <text x=112 y="25" text-anchor="middle" fill="{kleur_getal}" stroke="{kleur_getal}" stroke-width="1px" dy=".3em" font-size="1em">{getal}</text>
+                </g>
+                
+                <g id="niveau">
+                <text x=112 y="60" text-anchor="middle" fill="{kleur}" stroke="{kleur}" stroke-width="0.01px" dy=".3em" font-size="0.5em" font-weight = "bold">{niveau}</text>
+                </g>
+                
+                <g id="tekst">
+                <text x=112 y="80" text-anchor="middle" fill="{kleur_omschrijving}" stroke="{kleur_omschrijving}" stroke-width="0.01px" dy=".3em" font-size="0.5em" font-style = "italic">{tekst}</text>
+                </g>
+                
+                </svg>')
+      
+    } else {
+      # alt_tekst in één zin zetten
+      alt_tekst = paste0(alt_tekst[1], ". ", alt_tekst[2])
+      
+      # svg_code voor 2 getallen
+      # Voeg de ingevoerde informatie op de juiste plekken in de svg code met behulp van glue
+      svg_code <- glue::glue('<svg role="img" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality;"
+                viewBox="{viewbox}"> # Origineel 0 0 225 75
+                <title>{alt_tekst}</title>
+                
+                <g id="circle">
+                    <circle style="fill:{kleur[1]};" cx="75" cy="25" r="25" stroke = "{kleur_outline}">
+                    </circle>
+                    <text x=75 y="25" text-anchor="middle" fill="{kleur_getal}" stroke="{kleur_getal}" stroke-width="1px" dy=".3em" font-size="1em">{getal[1]}</text>
+                </g>
+                
+                <g id="niveau">
+                <text x=75 y="60" text-anchor="middle" fill="{kleur[1]}" stroke="{kleur[1]}" stroke-width="0.01px" dy=".3em" font-size="0.5em" font-weight = "bold">{niveau[1]}</text>
+                </g>
+                
+                <g id="circle">
+                    <circle style="fill:{kleur[2]};" cx="150" cy="25" r="25" stroke = "{kleur_outline}">
+                    </circle>
+                    <text x=150 y="25" text-anchor="middle" fill="{kleur_getal}" stroke="{kleur_getal}" stroke-width="1px" dy=".3em" font-size="1em">{getal[2]}</text>
+                </g>
+                
+                <g id="niveau">
+                <text x=150 y="60" text-anchor="middle" fill="{kleur[2]}" stroke="{kleur[2]}" stroke-width="0.01px" dy=".3em" font-size="0.5em" font-weight = "bold">{niveau[2]}</text>
+                </g>
+                
+                <g id="tekst">
+                <text x=112 y="80" text-anchor="middle" fill="{kleur_omschrijving}" stroke="{kleur_omschrijving}" stroke-width="0.01px" dy=".3em" font-size="0.5em" font-style = "italic">{tekst}</text>
+                </g>
+                
+                </svg>')
+      
+    }
+    
+  }
   
   return(svg_code %>% knitr::raw_html())
+  
 }
 
 
@@ -2680,7 +2819,11 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
     mutate(gemeentecode = str_extract(gemeentecode,"[:digit:]*") %>% as.numeric()) %>% 
     filter(gemeentecode == gem_code) %>% 
     select(-gemeentecode)
-  
+
+  # cbs_gemeente hernoemen als label van gemeente is aangepast
+  cbs_gemeente$regio <- case_when(str_detect(val_label(data$Gemeentecode,gem_code), cbs_gemeente$regio) ~ val_label(data$Gemeentecode,gem_code),
+                                  TRUE ~ cbs_gemeente$regio)
+    
   cbs_populatiedata <- rbind(cbs_regio, cbs_gemeente) %>% 
     mutate(aantal = as.numeric(aantal))
   
@@ -2891,8 +3034,7 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
     
     maak_panel_tabset(plot, tabel)
   }
-  
-  
+
 }
 
 
@@ -2919,7 +3061,6 @@ maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL,
     crossing: NULL"))
   }
   
-  
   # Checken of var_crossing is ingevoerd en in dat geval var_jaar is
   crossing_is_jaar <- ifelse(is.null(var_crossing), FALSE,
                              ifelse(var_crossing != var_jaar, FALSE, TRUE))
@@ -2945,7 +3086,7 @@ maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL,
         filter(Gemeentecode == params$gemeentecode) %>%
         filter(!is.na(Standaardisatiefactor_gemeente))
       
-    } else{
+    } else {
       
       stop(glue("niveau bestaat niet
               niveau: {x}"))
@@ -2958,7 +3099,7 @@ maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL,
       data_x <<- subset_x
       design_temp <<- design_x 
       
-    } else{
+    } else {
       
       # Standaard alleen laatste jaar overhouden
       # Subset maken van design
@@ -2995,13 +3136,18 @@ maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL,
   
   #temp design verwijderen uit globalEnv.
   rm(design_temp, data_x, envir = .GlobalEnv)
-  
+
+  # Sorteer data van oudere data naar nieuwere data
+  if (crossing_is_jaar) {
+    result <- result %>% arrange(AGOJB401)
+  }
+
   # Check NAs in result$percentage. Stop als deze er zijn.
   if (any(is.na(result$percentage))) {
     
     warning("Indicator heeft geen waarde voor een of meerdere crossings. Daarom kan niet vergeleken worden.")
     
-    return(paste("NIKS TONEN IVM NAs")) # TODO dit nog aanpassen, hoe willen we dit tonen?
+    return(paste("", var_label(var_inhoud))) # Toon niks als indicator geen waarde heeft.
     
   }
   
@@ -3061,8 +3207,17 @@ maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL,
                                           result$ci_lower[2] > result$ci_upper[1] ~ " lager dan ",
                                           TRUE ~ " gelijk aan ")
       
-      return(paste0("Het percentage dat ", label, " is ", crossings[1], resultaat_vergelijking, 
-                    crossings[2], "."))
+      if (resultaat_vergelijking == " gelijk aan ") {
+        
+        return(paste0("Het percentage dat ", label, " is ", crossings[1], resultaat_vergelijking, 
+                      crossings[2], "."))
+        
+      } else {
+        
+        return(paste0("Het percentage dat ", label, " is ", crossings[1], " (", result$percentage[1], "%)", 
+                      resultaat_vergelijking, crossings[2], " (", result$percentage[2], "%)."))
+        
+      }
       
     } else if (length(niveaus) == 3) {
       # Vergelijk 3 niveaus
@@ -3072,17 +3227,17 @@ maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL,
                              niveaus == "nl" ~ "landelijk",
                              .default = "")
       
-      resultaat_vergelijking1 <- case_when(result$ci_lower[1] > result$ci_upper[2] ~ " hoger dan ",
-                                           result$ci_lower[2] > result$ci_upper[1] ~ " lager dan ",
+      resultaat_vergelijking1 <- case_when(result$ci_lower[1] > result$ci_upper[2] ~ " lager dan ",
+                                           result$ci_lower[2] > result$ci_upper[1] ~ " hoger dan ",
                                            TRUE ~ " gelijk aan ")
       
-      resultaat_vergelijking2 <- case_when(result$ci_lower[1] > result$ci_upper[3] ~ " hoger dan ",
-                                           result$ci_lower[3] > result$ci_upper[1] ~ " lager dan ",
+      resultaat_vergelijking2 <- case_when(result$ci_lower[1] > result$ci_upper[3] ~ " lager dan ",
+                                           result$ci_lower[3] > result$ci_upper[1] ~ " hoger dan ",
                                            TRUE ~ " gelijk aan ")
       
-      return(paste0("Het percentage dat ", label, " is ", crossings[2], resultaat_vergelijking1, 
-                    "en ", crossings[3], resultaat_vergelijking2, 
-                    crossings[1], "."))
+      return(paste0("Het percentage dat ", label, " is ", crossings[2], " (", result$percentage[2], "%)", 
+                    resultaat_vergelijking1, "en ", crossings[3], " (", result$percentage[3], "%)", 
+                    resultaat_vergelijking2, crossings[1], " (", result$percentage[1], "%)."))
       
     } else {
       
@@ -3113,17 +3268,26 @@ maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL,
                                         result$ci_lower[2] > result$ci_upper[1] ~ " lager dan ",
                                         TRUE ~ " gelijk aan ")
     
-    return(paste0("In ", label_niveau, " is het percentage dat ", label, " onder ", crossings[1], resultaat_vergelijking, 
-                  "dat van ", crossings[2], "."))
+    if (resultaat_vergelijking == " gelijk aan ") {
+      
+      return(paste0("In ", label_niveau, " is het percentage dat ", label, " onder ", crossings[1], resultaat_vergelijking, 
+                    "dat van ", crossings[2], "."))
+      
+    } else {
+      
+      return(paste0("In ", label_niveau, " is het percentage dat ", label, " onder ", crossings[1], " (", result$percentage[1], "%)",
+                    resultaat_vergelijking, "dat van ", crossings[2], " (", result$percentage[2], "%)."))
+      
+    } 
     
   } else if (nrow(result) == 3 ) { # Vergelijking 3 groepen:
     
-    resultaat_vergelijking1 <- case_when(result$ci_lower[1] > result$ci_upper[2] ~ " hoger dan ",
-                                         result$ci_lower[2] > result$ci_upper[1] ~ " lager dan ",
+    resultaat_vergelijking1 <- case_when(result$ci_lower[1] > result$ci_upper[2] ~ " lager dan ",
+                                         result$ci_lower[2] > result$ci_upper[1] ~ " hoger dan ",
                                          TRUE ~ " gelijk aan ")
     
-    resultaat_vergelijking2 <- case_when(result$ci_lower[1] > result$ci_upper[3] ~ " hoger dan ",
-                                         result$ci_lower[3] > result$ci_upper[1] ~ " lager dan ",
+    resultaat_vergelijking2 <- case_when(result$ci_lower[1] > result$ci_upper[3] ~ " lager dan ",
+                                         result$ci_lower[3] > result$ci_upper[1] ~ " hoger dan ",
                                          TRUE ~ " gelijk aan ")
     
     if (resultaat_vergelijking1 == " gelijk aan " & resultaat_vergelijking2 == " gelijk aan ") {
@@ -3133,8 +3297,9 @@ maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL,
       
     } else {
       
-      return(paste0("In ", label_niveau, " is het percentage dat ", label, " onder ", crossings[2], resultaat_vergelijking1, 
-                    "en onder ", crossings[3], resultaat_vergelijking2, "dat van ", crossings[1], "."))   
+      return(paste0("In ", label_niveau, " is het percentage dat ", label, " onder ", crossings[2], " (", result$percentage[2], "%)",
+                    resultaat_vergelijking1, "en onder ", crossings[3], " (", result$percentage[3], "%)",
+                    resultaat_vergelijking2, "dat van ", crossings[1], " (", result$percentage[1], "%)."))
       
     }
   }
@@ -3347,3 +3512,6 @@ render_toc <- function(
   x <- x[x != ""]
   knitr::asis_output(paste(x, collapse = "\n"))
 }
+
+
+

@@ -129,6 +129,13 @@ In de tekst kunnen verschillende stijlelementen toegevoegd worden, zoals een tus
 
 Een witregel kan toegevoegd worden door \<br>\ in de tekst toe te voegen. 
 
+### Websites
+
+Websites met hyperlink kunnen toegevoegd worden door eerst de gewenste naam van de titel tussen nietjes [] te zetten en meteen daarachter tussen haakjes () de link te zetten:
+
+
+> \[Titel van website](www.website.nl)
+
 ### Tussenlijn
 
 In de standaard rapportage worden horizontale lijnen gebruikt om tussen verschillende secties. 
@@ -182,6 +189,83 @@ Een blok met achtergrondkleur kan je zelf op de volgende manier toevoegen:
 >
 > \:\:\: 
 
+### Inleiding
+In de standaard rapportage worden sommige teksten als inleiding weergegeven. Deze teksten worden dan dikgedrukt en iets groter weergegeven. Deze opmaak wordt bepaald in custom.css Daar staat de div .inleiding die aangeeft hoe deze eruit ziet. Hier kan je dus ook de eigenschappen van de class veranderen. Dit ziet er standaard zo uit:
+
+```{css}
+/* class voor inleiding*/
+  .inleiding {
+    color: #002c17;
+    font-size: 19px;
+    font-weight: bold;
+  }
+```
+
+Dit ziet er zo uit:
+
+::: inleiding
+Hier tekst die in de inleiding komt.
+:::
+
+Tekst met deze layout kan je zelf op de volgende manier toevoegen:
+
+> \:\:\: inleiding
+> 
+> Hier tekst
+>
+> \:\:\: 
+
+### Titel
+
+Je kunt op verschillende manieren titels/tussenkoppen toevoegen. 
+
+**Headers** worden in de inhoudsopgave getoond. Header 1 heeft in de (voorbeeld)rapportage een aangepaste opmaak. Deze opmaak bepaald in het custom.css bestand. Daar staat de div h1 die aangeeft hoe deze header eruit ziet. 
+Hier kan je dus ook de eigenschappen van de header veranderen, zoals kleur of dikte.
+De 'div' ziet er zo uit: 
+
+```{css, eval = F}
+/*H1 eigenschappen*/
+  h1 {
+    page-break-before: always; /* Iedere H1 maakt een pagebreak. relevant voor pdf uitdraai */
+    font-family: "Century Gothic";
+    font-size: 24px;
+    color: white;
+    background-color: #007E48;
+    padding: 20px;
+  }
+
+```
+
+Je kunt headers toevoegen door # Header-naam in te voegen. 
+
+Dit ziet er zo uit:
+![](images/Knipsel2.png)
+
+Een andere optie zijn **titels** in de tekst. Deze worden in de rapportage gebruikt als subkopjes binnen in thema. Ook hiervan wordt de opmaak bepaald in custom.css. Dit ziet er zo uit:
+
+```{css}
+/* class voor titels*/
+  .titel {
+    color: #002c17;
+    font-size: 21px;
+    font-weight: bold;
+  }
+
+```
+
+Een titel ziet er dan zo uit:
+
+::: titel
+Titel van subkop
+:::
+
+Een titel kan je zelf op de volgende manier toevoegen:
+
+> \:\:\: titel
+> 
+> Hier titel
+>
+> \:\:\: 
 
 ## R code in code-blokken
 
@@ -337,9 +421,17 @@ plot = monitor_df %>%
 plot
 ```
 :::
-
 :::
 
+## Afbeelding invoegen
+
+Het is ook mogelijk om afbeeldingen in te voegen in de rapportage. Daarvoor moet de afbeelding zich bevinden in de werkmap. Vervolgens kan hiermee een afbeelding toegevoegd worden: 
+
+> \!\[]\(Naam_van_afbeelding.png)
+
+Op een vergelijkbare manier worden ook de iconen toegevoegd aan de header:
+
+> \# !\[]\(Naam_van_afbeelding.png) Header-naam {.h1-icoon}
 
 ## Tabel en Grafiek layout t.b.v digitoegankelijkheid
 

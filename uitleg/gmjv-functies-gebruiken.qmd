@@ -3,7 +3,6 @@ Voor de rapportage hebben we een aantal R-functies geschreven waarmee de resulta
 
 In de volgende hoofdstukken worden verschillende grafiekfuncties uitgelegd en hoe je deze zelf kunt aanpassen.
 
-
 ::: callout-tip
 In dit document wordt gebruikt gemaakt van de 'pipe-operator' *%\>%*.
 
@@ -37,4 +36,42 @@ Standaard zullen alle functies data op GGD-regio filteren en groeperen. Dit kan 
 -   **niveaus:** character vector met drie mogelijke waarden c("nl","regio","gemeente")
 
 Als er één niveau wordt doorgegeven wordt de data gefilterd en gegroepeerd op dat niveau. Als er meerdere niveaus worden doorgegeven worden die niveaus vergeleken als dat mogelijk is. 
+
+## Uitsplitsingen
+In de (voorbeeld)rapportage worden uitsplitsingen standaard op regionaal niveau getoond. Dit omdat veel gemeentes niet genoeg deelnemers hebben voor uitsplitsingen. Mocht je dit willen aanpassen, dan kan dat met het argument niveaus.
+
+## Labels van variabelen aanpassen
+Standaard worden voor de meeste grafiek- en tekstfuncties die labels van de variabelen gebruikt voor de legenda. Deze labels kunnen aangepast worden met de functies val_label() en var_label(). 
+
+-   **var_label():** past het label van de variabele aan. 
+-   **val_label():** past het label van een bepaalde waarde binnen de variabele aan. 
+
+In het onderstaande voorbeeld wordt val_label gebruikt om de categorieën binnen de variabele LVVTA404 (Vertrouwen in de toekosmt) te hernoemen:
+
+``` {r, eval = F} 
+# Labels aanpassen
+val_label(monitor_df$LVVTA404, 1) <- 'Weinig tot geen (cijfer 5 of lager)'
+val_label(monitor_df$LVVTA404, 2) <- 'Matig tot redelijk (cijfer 6 of 7)'
+val_label(monitor_df$LVVTA404, 3) <- '(heel) veel (cijfer 8 of hoger)'
+```
+
+Zoals je ziet heeft val_label 2 argumenten nodig:
+-   Het eerste argument: de variabele waar het over gaat. In dit geval gaat het over de variabele LVVTA404 in de dataset monitor_df, dus monitor_df$LVVTA404
+-   Het tweede argument: de waarde van de variabele waar het overgaat. De variabele LVVTA404 heeft 3 categorieën en per categorie wordt er een nieuw label toegewezen. 
+
+Het stuk achter de <- geeft aan wat het nieuwe label van deze waarde moet worden. Het nieuwe label van variabele LVVTA404 voor waarde 1 wordt met deze code dus 'Weinig tot geen (cijfer 5 of lager)'.
+
+Een ander voorbeeld. In het eerste codeblok in de (voorbeeld)rapportage wordt val_label gebruikt om de namen van de gemeente en de regio  aan te passen:
+
+``` {r, eval = F}
+# Hernoemen gemeente en regio: labels aanpassen zodat deze anders zijn in grafieken
+# Gemeente: gemeente voor gemeentenaam zetten
+val_label(monitor_df$Gemeentecode, params$gemeentecode) <-
+  paste('gemeente', val_label(monitor_df$Gemeentecode, params$gemeentecode))
+
+# Regio: GGD vervangen door regio
+val_label(monitor_df$GGDregio, params$regiocode) <- 
+  str_replace(val_label(monitor_df$GGDregio, params$regiocode), "GGD", "regio")
+```
+
 
