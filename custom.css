@@ -83,6 +83,7 @@ Positie kan aangepast worden dmv "top" & "left".
     font-size: 24px;
     color: white;
   }
+  
 /*H1 eigenschappen*/
   h1 {
     page-break-before: always; /* Iedere H1 maakt een pagebreak. relevant voor pdf uitdraai */
@@ -103,7 +104,7 @@ Positie kan aangepast worden dmv "top" & "left".
   
 /*Plaatsing van header icons*/
   h1 .img-fluid {
-    height: 150%;
+    height: 100%;
     position: absolute;
     top: -25%;
     left: -24%;

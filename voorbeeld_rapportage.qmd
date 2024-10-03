@@ -12,13 +12,13 @@ params:
   gemeentecode: 2
   regiocode: 23
   regionaam: 'GGD Limburg-Noord' # Vul naam zoals in data CBS
+  path_hulpfuncties: "hulpfuncties.R"  
   path_nepdata: "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
   path_cbs_data: "voorbeeld_JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx"
   path_monitor_data_2022: "C:/Users/.../" # Vul padnaam naar data 2022 in
   naam_monitor_data_2022_regionaal: "Regiobestand_CGMJV2022_REGIO_versie 4.sav" # Vul naam regionaal bestand 2022 in
   path_monitor_data_2024: "C:/Users/.../" # Vul padnaam naar data 2024 in
   naam_monitor_data_2024_regionaal: "Regiobestand_GMJV2024_REGIO_versie 1.sav" # Vul naam regionaal bestand 2024 in
-  path_hulpfuncties: "hulpfuncties.R"
   default_nvar: 100 # Minimum aantal invullers per vraag
   default_ncel: 10  # Minimum aantal invullers oper antwoordoptie
   default_kleuren_grafiek: !expr c("#86B443", "#012C17", "#B2BE97", "#007E48", "#AAD3CC", "#739BD0", "#11265F", "#86848D", "#CB8EB9", "#401B65", "#86848D")
@@ -44,6 +44,9 @@ for (pkg in pkg_nodig) {
     install.packages(pkg)
   }
 }
+
+# Opschonen
+rm(pkg, pkg_nodig)
 
 # Hieronder worden de benodige packages geladen
 library(gt)
@@ -73,6 +76,9 @@ monitor_df = haven::read_spss(params$path_nepdata, user_na =T) %>%
          Stratum_gemeente = Stratum_regio) %>%
   labelled::user_na_to_na()
 
+# Label toevoegen aan ongelabelde jaarindicator
+val_label(monitor_df$AGOJB401, 2024) <- '2024'
+val_label(monitor_df$AGOJB401, 2022) <- '2022'
 
 ## OPTIE 2: Eigen data invoeren (landelijk + regionaal)
 # #Data 2024
@@ -102,6 +108,11 @@ monitor_df = haven::read_spss(params$path_nepdata, user_na =T) %>%
 # 
 # # Opschonen
 # rm(df_regio, df)
+# 
+# # Label toevoegen indien jaarindicator ongelabeld is
+# if (is.null(val_labels(monitor_df$AGOJB401))) {
+#   val_label(monitor_df$AGOJB401, 2024) <- '2024'
+# }
 # 
 # #Data 2022
 # #Landelijk bestand inladen
@@ -134,18 +145,18 @@ monitor_df = haven::read_spss(params$path_nepdata, user_na =T) %>%
 #   full_join(df_regio) %>%
 #   select(-colnames(df)[!(colnames(df) %in% colnames(monitor_df))]) # selecteer alleen kolommen die ook in 2024 data zitten
 # 
+# # Label toevoegen indien jaarindicator ongelabeld is
+# # Dit kan verwijderd worden als het in de trendsyntax gedaan wordt.
+# if (is.null(val_labels(df$AGOJB401))) {
+#   val_label(df$AGOJB401, 2022) <- '2022'
+# }
+#
 # # Voeg bestand van 2022 toe aan bestand van 2024
 # monitor_df <- monitor_df %>%
 #   full_join(df)
 # 
 # # Opschonen
 # rm(df_regio, df)
-
-# Label toevoegen aan ongelabelde jaarindicator
-#TODO verwijderen wanneer dit in syntaxen gedaan is
-val_label(monitor_df$AGOJB401, 2024) <- '2024'
-val_label(monitor_df$AGOJB401, 2022) <- '2022'
-
 
 #Maak survey designs
 # Het landelijk en regionaal design hebben dezelfde weegfactoren. Daarom maken we een landelijk design obv landelijke dataset en een regionaal design obv een subset van het landelijk design.

@@ -12,13 +12,12 @@ params:
   gemeentecode: 984
   regiocode: 23
   regionaam: 'GGD Limburg-Noord' # Vul naam zoals in data CBS
-  path_nepdata: "nep testdata GMJV - Regionaal trendbestand 2022-2024.sav"
+  path_hulpfuncties: "hulpfuncties.R"
   path_cbs_data: "JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx"
   path_monitor_data_2022: "C:/Users/sjannes/OneDrive - VRLN/PSchijf/Gezondheidsmonitor/2022 Gezondheidsmonitor jongvolwassenen/4. Analyse/Data/3. Eindbestand (opgeschoond) vanuit RIVM 21 2 2023 v4/" # Vul padnaam naar data 2022 in
   naam_monitor_data_2022_regionaal: "Regiobestand_CGMJV2022_GGD Limburg-Noord_versie 4.sav" # Vul naam regionaal bestand 2022 in
   path_monitor_data_2024: "C:/Users/sjannes/OneDrive - VRLN/PSchijf/Gezondheidsmonitor/2024 Gezondheidsmonitor jongvolwassenen/4. Analyse/Data/3. Eindbestanden/" # Vul padnaam naar data 2024 in
   naam_monitor_data_2024_regionaal: "Regiobestand_GMJV2024_GGD Limburg-Noord_versie 1.sav" # Vul naam regionaal bestand 2024 in
-  path_hulpfuncties: "hulpfuncties.R"
   default_nvar: 100 # Minimum aantal invullers per vraag
   default_ncel: 10  # Minimum aantal invullers oper antwoordoptie
   default_kleuren_grafiek: !expr c("#86B443", "#012C17", "#B2BE97", "#007E48", "#AAD3CC", "#739BD0", "#11265F", "#86848D", "#CB8EB9", "#401B65", "#86848D")
@@ -44,6 +43,9 @@ for (pkg in pkg_nodig) {
     install.packages(pkg)
   }
 }
+
+# Opschonen
+rm(pkg, pkg_nodig)
 
 # Hieronder worden de benodige packages geladen
 library(gt)
@@ -93,6 +95,11 @@ monitor_df <- df %>%
 # Opschonen
 rm(df_regio, df)
 
+# Label toevoegen indien jaarindicator ongelabeld is
+if (is.null(val_labels(monitor_df$AGOJB401))) {
+  val_label(monitor_df$AGOJB401, 2024) <- '2024'
+}
+
 #Data 2022
 #Landelijk bestand inladen
 df <- haven::read_spss(paste0(params$path_monitor_data_2022, "Totaalbestand_CGMJV2022_GGD_versie 3 (N = 69.750).sav"),
@@ -124,18 +131,18 @@ df <- df %>%
   full_join(df_regio) %>%
   select(-colnames(df)[!(colnames(df) %in% colnames(monitor_df))]) # selecteer alleen kolommen die ook in 2024 data zitten
 
+# Label toevoegen indien jaarindicator ongelabeld is
+# Dit kan verwijderd worden als het in de trendsyntax gedaan wordt.
+if (is.null(val_labels(df$AGOJB401))) {
+  val_label(df$AGOJB401, 2022) <- '2022'
+}
+
 # Voeg bestand van 2022 toe aan bestand van 2024
 monitor_df <- monitor_df %>%
   full_join(df)
 
 # Opschonen
 rm(df_regio, df)
-
-# Label toevoegen aan ongelabelde jaarindicator
-#TODO verwijderen wanneer dit in syntaxen gedaan is
-val_label(monitor_df$AGOJB401, 2024) <- '2024'
-val_label(monitor_df$AGOJB401, 2022) <- '2022'
-
 
 #Maak survey designs
 # Het landelijk en regionaal design hebben dezelfde weegfactoren. Daarom maken we een landelijk design obv landelijke dataset en een regionaal design obv een subset van het landelijk design.
@@ -241,7 +248,7 @@ Vanwege de betrouwbaarheid van de resultaten en de privacy van de respondenten h
 
 De cijfers die hier worden gepresenteerd zijn gestandaardiseerd naar GGD-regio, leeftijd (16-17 jaar, 18-20 jaar en 21-25 jaar) en gender (in twee groepen: mannen en vrouwen). Op deze manier geven de cijfers een zo representatief mogelijk beeld van alle jongvolwassenen in uw gemeente en de regio. Ten behoeve van de standaardisatie zijn mensen met gender "non-binair" of "anders” (landelijk 0,9%) willekeurig toegevoegd als man of vrouw. Dit is alleen gebruikt voor het berekenen van standaardisatiefactoren en is niet gebruikt voor de cijfers uitgesplitst naar mannen en vrouwen in deze rapportage.
 
-# ![](iconen/achtergrondkenmerken.svg) Achtergrondkenmerken {.h1-icoon}
+# ![afb](iconen/achtergrondkenmerken.svg) Achtergrondkenmerken {.h1-icoon}
 
 ::: {layout="[100]"}
 ::: column
@@ -305,7 +312,7 @@ plot
 :::
 :::
 
-# ![](iconen/Woon-werk.svg) Woon- en werksituatie en financiën {.h1-icoon}
+# ![afb](iconen/Woon-werk.svg) Woon- en werksituatie en financiën {.h1-icoon}
 
 ::: {layout="[100]"}
 ::: column
@@ -479,7 +486,7 @@ plot
 :::
 :::
 
-# ![](iconen/Gezondheid-geluk.svg) Gezondheid en geluk {.h1-icoon}
+# ![afb](iconen/Gezondheid-geluk.svg) Gezondheid en geluk {.h1-icoon}
 
 ::: {layout="[100]"}
 ::: column
@@ -607,7 +614,7 @@ plot
 :::
 :::
 
-# ![](iconen/Mentaal.svg) Mentaal welbevinden {.h1-icoon}
+# ![afb](iconen/Mentaal.svg) Mentaal welbevinden {.h1-icoon}
 
 ::: {layout="[100]"}
 ::: column
@@ -803,7 +810,7 @@ plot
 :::
 :::
 
-# ![](iconen/Stress-prestatiedruk.svg) Stress en prestatiedruk {.h1-icoon}
+# ![afb](iconen/Stress-prestatiedruk.svg) Stress en prestatiedruk {.h1-icoon}
 
 ::: {layout="[100]"}
 ::: column
@@ -952,7 +959,7 @@ plot
 :::
 :::
 
-# ![](iconen/Vertrouwen.svg) Beschermende factoren en vertrouwen in de toekomst {.h1-icoon}
+# ![afb](iconen/Vertrouwen.svg) Beschermende factoren en vertrouwen in de toekomst {.h1-icoon}
 
 ::: {layout="[[100]]"}
 ::: column
@@ -1103,7 +1110,7 @@ Maatschappelijke thema's waar jongvolwassenen in uw gemeente zich het meest zorg
 :::
 :::
 
-# ![](iconen/Bewegen-sporten.svg) Bewegen en sporten {.h1-icoon}
+# ![afb](iconen/Bewegen-sporten.svg) Bewegen en sporten {.h1-icoon}
 
 ::: {layout="[100]"}
 ::: column
@@ -1185,7 +1192,7 @@ plot
 :::
 :::
 
-# ![](iconen/Middelengebruik.svg) Middelengebruik {.h1-icoon}
+# ![afb](iconen/Middelengebruik.svg) Middelengebruik {.h1-icoon}
 
 ::: {layout="[100]"}
 ::: column
@@ -1451,7 +1458,7 @@ plot
 :::
 :::
 
-# ![](iconen/Corona.svg) De coronaperiode {.h1-icoon}
+# ![afb](iconen/Corona.svg) De coronaperiode {.h1-icoon}
 
 ::: {layout="[100]"}
 ::: column
@@ -1563,7 +1570,7 @@ getallen %>%
 :::
 :::
 
-# ![](iconen/VSlogoDigitale-leefomgevin.svg) Digitale leefomgeving {.h1-icoon}
+# ![afb](iconen/VSlogoDigitale-leefomgevin.svg) Digitale leefomgeving {.h1-icoon}
 
 ::: {layout="[100]"}
 ::: column
@@ -1717,7 +1724,7 @@ plot
 :::
 :::
 
-# ![](iconen/Seksualiteit.svg) Seksualiteit {.h1-icoon}
+# ![afb](iconen/Seksualiteit.svg) Seksualiteit {.h1-icoon}
 
 ::: {layout="[100]"}
 ::: column
@@ -1823,11 +1830,11 @@ In uw gemeente heeft `r monitor_df %>% maak_percentage(var_inhoud = 'SESES401', 
 :::
 :::
 
-# ![](iconen/kernboodschappen.svg) Kernboodschappen {.h1-icoon}
+# ![afb](iconen/kernboodschappen.svg) Kernboodschappen {.h1-icoon}
 
 Op deze pagina kunnen GGD’en hun kernboodschappen toevoegen.
 
-# ![](iconen/Contactpagina.svg) Contact {.h1-icoon}
+# ![afb](iconen/Contactpagina.svg) Contact {.h1-icoon}
 
 Heeft u nog vragen over het onderzoek?
 

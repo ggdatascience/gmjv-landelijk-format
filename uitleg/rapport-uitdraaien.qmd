@@ -73,6 +73,8 @@ De meeste instellingen kan je laten staan. Het volgende moet aangepast of gecont
 
 ### Overige frontmatter instellingen
 
+-   **css: costum.css:** hier wordt aangegeven waar de opmaak (in css) gevonden kan worden. Zie ook het hoofdstuk [CSS](css.qmd).
+-   **path_hulpfuncties: "hulpfuncties.R":** hier wordt verwezen naar het R-script met functies.
 -   **warning:** Deze parameter staat in het voorbeeldrapport op false. Als de parameter op true staat worden mogelijke problemen / 'warnings' getoond in het rapport. Dit is meestal niet wenselijk voor het eindproduct, maar nuttig tijdens ontwikkeling.
 
 ::: {.callout-warning title="Let op"}
@@ -145,6 +147,10 @@ monitor_df = haven::read_spss(params$path_nepdata, user_na =T) %>%
   mutate(Standaardisatiefactor_gemeente = Standaardisatiefactor_regio,
          Stratum_gemeente = Stratum_regio) %>%
   labelled::user_na_to_na()
+
+# Label toevoegen aan ongelabelde jaarindicator
+val_label(monitor_df$AGOJB401, 2024) <- '2024'
+val_label(monitor_df$AGOJB401, 2022) <- '2022'
 ```
 
 Als je je eigen, echte data wil inladen, moet dit stuk code in comments (#) gezet worden. R ziet dit dan als tekst en niet meer als code. De makkelijkste manier om dit te doen, is om alle regels te selecteren en dan CTRL + Shift + R in te drukken. Op deze manier worden alle regels in één keer een comment. Het ziet er dan zo uit:
@@ -158,6 +164,10 @@ Als je je eigen, echte data wil inladen, moet dit stuk code in comments (#) geze
 #   mutate(Standaardisatiefactor_gemeente = Standaardisatiefactor_regio,
 #          Stratum_gemeente = Stratum_regio) %>%
 #   labelled::user_na_to_na()
+# 
+# # Label toevoegen aan ongelabelde jaarindicator
+# val_label(monitor_df$AGOJB401, 2024) <- '2024'
+# val_label(monitor_df$AGOJB401, 2022) <- '2022'
 ```
 
 Vervolgens moeten we zorgen dat optie 2, de optie om eigen data in te laden, aan staat. Hiervoor moeten we alle comments weghalen van dit stuk. Ook daarvoor kun je alle code selecteren en op CTRL + Shift + R in drukken. Alle onderstaande code moet dan **niet** meer in comments staan:
