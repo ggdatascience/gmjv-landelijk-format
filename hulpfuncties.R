@@ -3449,6 +3449,15 @@ maak_percentage <- function(data, var_inhoud, value = 1, niveau = "regio",
   # Subset maken van data
   data_temp <<- subset_x %>% filter(!!sym(var_jaar) == huidig_jaar)
   
+  # Check of er data is na al deze filters
+  if (nrow(data_temp) == 0) {
+    stop(glue("
+    Er is geen data gevonden met standaardisatiefactor voor var_inhoud {paste(var_inhoud, collapse = ',')} 
+    op niveau {paste(niveau, collapse = ',')} en in jaar {huidig_jaar}. Pas je invoer aan."
+    ))
+  }
+  
+  
   # Bereken gewogen cijfers
   result <- bereken_kruistabel(data = data_temp,
                                survey_design = design_temp, 
