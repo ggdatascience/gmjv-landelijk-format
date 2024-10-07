@@ -97,8 +97,8 @@ div bepaald de positie van die elementen relatief aan het het grotere plaatje. P
   }
   
 /*Plaatsing van header icons*/
-  h1 .img-fluid {
-    height: 100%;
+  h1 .img-fluid,svg {
+    height: 150%;
     position: absolute;
     top: -25%;
     left: -24%;
@@ -106,7 +106,7 @@ div bepaald de positie van die elementen relatief aan het het grotere plaatje. P
   }
   
 /*Plaatje niet laten zien in table of contents*/
-  #TOC .img-fluid {
+  #TOC svg,img-fluid {
     display: none; 
   }
   
