@@ -207,6 +207,19 @@ bereken_kruistabel <- function(data, survey_design = NULL, variabele = NULL, cro
                                var_jaar = NULL, min_observaties_per_vraag = params$default_nvar,
                                min_observaties_per_antwoord = params$default_ncel) { 
   
+  
+  #Check of er wel data is
+  if (nrow(data) == 0) {
+    stop(glue("
+    LEGE dataset ingevoerd
+    Er is geen data gevonden met standaardisatiefactor voor var_inhoud {paste(variabele)} 
+    met gekozen filters. Pas je invoer aan.
+    
+    Een veelvoorkomende oorzaak is dat regiocode/gemeentecode niet bestaat of geen standaardisatiefactor heeft
+    "
+    ))
+  }
+  
   #survey pikt het niet als delen v formules niet in .globalEnv staan. Daarom <<- en later
   #opruimen.
   data_global <<- data
@@ -3448,15 +3461,6 @@ maak_percentage <- function(data, var_inhoud, value = 1, niveau = "regio",
   
   # Subset maken van data
   data_temp <<- subset_x %>% filter(!!sym(var_jaar) == huidig_jaar)
-  
-  # Check of er data is na al deze filters
-  if (nrow(data_temp) == 0) {
-    stop(glue("
-    Er is geen data gevonden met standaardisatiefactor voor var_inhoud {paste(var_inhoud, collapse = ',')} 
-    op niveau {paste(niveau, collapse = ',')} en in jaar {huidig_jaar}. Pas je invoer aan."
-    ))
-  }
-  
   
   # Bereken gewogen cijfers
   result <- bereken_kruistabel(data = data_temp,
