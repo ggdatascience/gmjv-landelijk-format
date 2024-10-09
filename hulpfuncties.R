@@ -35,9 +35,9 @@ library(showtext)
 
 
 # fonts grafieken --------------------------------------------------------
-#voor gemak; 1 plek waar we alle font dingen voor ggplot kunnen aanpassen
+#voor gemak; 1 plek waar we alle tekstopmaak voor ggplot kunnen aanpassen
 
-#alle ggplot grafieken hebben overal dezelfde font-family. kunnen we nog aanpasen. 
+#alle ggplot grafieken hebben overal dezelfde font-family. 
 font_family = "Open Sans"
 
 #Titels
@@ -50,7 +50,7 @@ font_size <- 30
 line_height <- .5
 
 #percentages die boven/naast of in balken staan
-#LET OP size is hierbij op een een andere schaal
+#LET OP size is hierbij op een een andere schaal. omdat het om een geom_ element gaat.
 geom_text_percentage <- 10
 
 #Labels op de X-as (waar die relevant zijn)

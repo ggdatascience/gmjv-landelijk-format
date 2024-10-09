@@ -116,6 +116,7 @@ plot
 ```
 :::
 
+
 ## Staafdiagram: Dubbele uitsplitsing
 
 De functie **maak_staafdiagram_dubbele_uitsplitsing()** maakt een staafdiagram voor een **dichotome variabele** waarbij de percentages 'ja' (1) worden weergeven. Er kunnen twee kruisvariabelen ingevoerd worden. De eerste kruisvariabele splitst de data op de X-as en de tweede kruisvariabele op kleur.
@@ -481,3 +482,50 @@ plot <- monitor_df %>%
 
 plot
 ```
+
+
+## Lettertype en tekstopmaak in grafieken
+
+Alle grafieken worden met de library ggplot2 gemaakt. In het script hulpfuncties worden lettertype en tekstopmaak in de grafieken bepaald dmv. de ggplot2 functie *theme()*. Bovenaan het script *hulpfuncties.R* zijn een paar aantal variabelen definieerd m.b.t. tekstopmaak zodat deze gemakkelijk aangepast kunnen worden.
+
+
+```{r, eval = F}
+
+# fonts grafieken --------------------------------------------------------
+#voor gemak; 1 plek waar we alle tekstopmaak voor ggplot kunnen aanpassen
+
+#alle ggplot grafieken hebben overal dezelfde font-family. 
+font_family = "Open Sans"
+
+#Titels
+titel_size <- 40
+
+#Algemeen
+font_size <- 30
+
+#line_height; ruimte tussen regels
+line_height <- .5
+
+#Labels op de X-as (waar die relevant zijn)
+as_label_size <- 30
+
+#legend titles
+#voor alle grafieken behalve cirkel is font_size aangehouden
+legend_title_size_cirkel <- 30
+
+#legend keys
+legend_text_size <- 30
+legend_text_size_cirkel <- 25
+
+#caption
+caption_size <- 20
+
+#percentages die boven/naast of in balken staan
+#LET OP percentages boven balken zijn een geom_text() element en worden dus niet door theme() bepaald. Size is hierbij op een een andere schaal. 
+geom_text_percentage <- 10
+
+```
+
+Er kan een verschil zijn tussen de relatieve tekstgrootte in een grafiek wanneer je deze bekijkt in Rstudio/Quarto en wanneer je deze bekijkt in de uitgedraaide rapportage. Dit komt omdat de grootte van een lettertype niet relatief wordt bepaald, maar wordt bepaald met een aantal pixels. In een grafiek met een hogere resolutie lijkt het dus dat tekst kleiner is. In werkelijkheid is de grafiek groter geworden en hebben letters nog steeds hetzelfde aantal pixels. Dit is wat er gebeurd wanneer een preview grotere letters heeft dan de grafiek in de uitgedraaide rapportage.
+
+Dit kan vervelend zijn bij het ontwerpen en aanpassen van een rapportage. Om te zorgen dat de 'preview' lijkt op het eindresultaat kan je rechtsboven in het preview raampje op het icoon met "Show in new Window" klikken. De grafiek verschijnt dan in een eigen venster. Vervolgens kan je dit venster naar de juiste grote instellen.
