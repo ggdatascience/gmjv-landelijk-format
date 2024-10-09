@@ -461,7 +461,9 @@ plot = monitor_df %>%
     var_inhoud = c("AGOWA401", "GZGGA402", "LVPKA407", "LVTEA406"),
     titel = "Redenen waarom iemand niet werkt",
     niveaus = c("regio"),
-    var_inhoud_waarde =  1
+    var_inhoud_waarde =  1,
+    x_as_label_wrap = 15
+
   )
 
 plot
