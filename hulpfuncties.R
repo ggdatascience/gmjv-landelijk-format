@@ -1131,8 +1131,8 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
                                 var_label(data[[var_crossing_groep]]),
                                 var_label(data[[var_crossing_kleur]])
                               ),
-                              vars_crossing = c(var_crossing_groep, var_crossing_kleur)
-    )
+                              vars_crossing = c(var_crossing_groep, var_crossing_kleur)) %>% 
+      paste0(". ",caption)
   }
   
   #Alt text en caption toevoegen
@@ -1364,8 +1364,8 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings = NUL
     
     alt_text <- maak_alt_text(data, plot, niveaus = niveaus, 
                               label_inhoud = var_label(data[[var_inhoud]]),
-                              label_crossings = sapply(var_crossings, function(var) var_label(data[[var]]))
-    )
+                              label_crossings = sapply(var_crossings, function(var) var_label(data[[var]]))) %>% 
+      paste0(". ",caption)
     
     
   } 
@@ -1805,7 +1805,8 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
                                 label_crossings = var_label(data[[var_crossing]]),
                                 vars_crossing = c("var_label",var_crossing)
       ) %>% 
-        str_replace("voor de indicator ''","voor verschillende indicatoren")
+        str_replace("voor de indicator ''","voor verschillende indicatoren") %>% 
+        paste0(". ",caption)
       
       
     } else{
@@ -1816,7 +1817,8 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
                                 label_crossings = var_label(data[[var_crossing]]),
                                 vars_crossing = c(var_crossing,var_inhoud),
                                 niveaus = niveaus
-      )
+      ) %>% 
+        paste0(". ",caption)
     }
     
   }
@@ -2148,7 +2150,8 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
     alt_text <- maak_alt_text(data, plot, niveaus = niveaus,
                               label_inhoud = var_label(data[[var_inhoud]]),
                               label_crossings = sapply(var_crossings, function(var) var_label(data[[var]]))
-    )
+    ) %>% 
+      paste0(". ",caption)
     
   } 
   
@@ -2404,8 +2407,8 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
                               type_grafiek = "gestapeld staafdiagram",
                               label_inhoud = var_label(data[[var_inhoud]]),
                               label_crossings = var_label(data[[var_crossing]]),
-                              vars_crossing = c(var_crossing,var_inhoud)
-    )
+                              vars_crossing = c(var_crossing,var_inhoud)) %>% 
+      paste0(". ",caption)
     
   }
   
@@ -2607,7 +2610,8 @@ maak_cirkeldiagram <- function(data, var_inhoud, titel = "", kleuren = params$de
     ) 
     
     
-    alt_text <- glue("Cirkeldiagram voor de indicator '{onderwerp}' bij {doelgroep}: {waarden}")
+    alt_text <- glue("Cirkeldiagram voor de indicator '{onderwerp}' bij {doelgroep}: {waarden}") %>% 
+      paste0(". ",caption)
     
   }
   
@@ -3025,7 +3029,8 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
       "gestapeld staafdiagram met percentages per ",
       crossing_cbs," in de bevolking en bij deelnemers: ",
       str_waarden
-    )
+    ) %>% 
+      paste0(". ",caption)
     
     
   }
