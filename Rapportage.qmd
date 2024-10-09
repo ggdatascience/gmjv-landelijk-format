@@ -10,15 +10,15 @@ format:
     toc-title: "Inhoud"
     embed-resources: true
 params:
-  gemeentecode: 984
-  regiocode: 23
+  gemeentecode: 1948
+  regiocode: 21
   regionaam: 'GGD Limburg-Noord' # Vul naam zoals in data CBS
   path_hulpfuncties: "hulpfuncties.R"
   path_cbs_data: "JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx"
-  path_monitor_data_2022: "C:/Users/.../" # Vul padnaam naar data 2022 in
-  naam_monitor_data_2022_regionaal: "Regiobestand_CGMJV2022_REGIO_versie 4.sav" # Vul naam regionaal bestand 2022 in
-  path_monitor_data_2024: "C:/Users/.../" # Vul padnaam naar data 2024 in
-  naam_monitor_data_2024_regionaal: "Regiobestand_GMJV2024_REGIO_versie 1.sav" # Vul naam regionaal bestand 2024 in
+  path_monitor_data_2022: "C:/../" # Vul padnaam naar data 2022 in
+  naam_monitor_data_2022_regionaal: "Regiobestand_CGMJV2022_GGD Hart voor Brabant_versie 4.sav" # Vul naam regionaal bestand 2022 in
+  path_monitor_data_2024: "C:/../" # Vul padnaam naar data 2024 in
+  naam_monitor_data_2024_regionaal: "Regiobestand_GMJV2024_GGD Hart voor Brabant_versie 1.sav" # Vul naam regionaal bestand 2024 in
   default_nvar: 100 # Minimum aantal invullers per vraag
   default_ncel: 10  # Minimum aantal invullers oper antwoordoptie
   default_kleuren_grafiek: !expr c("#86B443", "#012C17", "#B2BE97", "#007E48", "#AAD3CC", "#CB8EB9", "#401B65", "#86848D", "#739BD0", "#11265F", "#86848D")
@@ -324,7 +324,7 @@ plot
 :::
 :::::
 
-# Woon- en werksituatie en financiën
+# ![](iconen/Woon-werk.svg) Woon- en werksituatie en financiën {.h1-icoon}
 
 ::::::: {layout="[100]"}
 :::::: column
@@ -485,7 +485,7 @@ plot
 ::::
 :::::
 
-# Gezondheid en geluk
+# ![](iconen/Gezondheid-geluk.svg) Gezondheid en geluk {.h1-icoon}
 
 ::::: {layout="[100]"}
 :::: column
@@ -613,7 +613,7 @@ plot
 :::
 :::::
 
-# Mentaal welbevinden
+# ![](iconen/Mentaal.svg) Mentaal welbevinden {.h1-icoon}
 
 ::::: {layout="[100]"}
 :::: column
@@ -811,7 +811,7 @@ plot
 :::
 ::::
 
-# Stress en prestatiedruk
+# ![](iconen/Stress-prestatiedruk.svg) Stress en prestatiedruk {.h1-icoon}
 
 ::::: {layout="[100]"}
 :::: column
@@ -960,7 +960,7 @@ plot
 :::
 :::::
 
-# Beschermende factoren en vertrouwen in de toekomst
+# ![](iconen/Vertrouwen.svg) Beschermende factoren en vertrouwen in de toekomst {.h1-icoon}
 
 ::::::: {layout="[[100]]"}
 :::::: column
@@ -1114,7 +1114,7 @@ Maatschappelijke thema's waar jongvolwassenen in uw gemeente zich het meest zorg
 ::::
 ::::::
 
-# Bewegen en sporten
+# ![](iconen/Bewegen-sporten.svg) Bewegen en sporten {.h1-icoon}
 
 :::: {layout="[100]"}
 ::: column
@@ -1196,7 +1196,7 @@ plot
 :::
 :::::
 
-# Middelengebruik
+# ![](iconen/Middelengebruik.svg) Middelengebruik {.h1-icoon}
 
 ::::: {layout="[100]"}
 :::: column
@@ -1462,7 +1462,7 @@ plot
 :::
 :::::
 
-# De coronaperiode
+# ![](iconen/Corona.svg) De coronaperiode {.h1-icoon}
 
 :::: {layout="[100]"}
 ::: column
@@ -1574,7 +1574,7 @@ Meer informatie over post-covid en (financiële) hulp bij post-covid is te vinde
 :::
 ::::
 
-# Digitale leefomgeving
+# ![](iconen/VSlogoDigitale-leefomgevin.svg) Digitale leefomgeving {.h1-icoon}
 
 ::::: {layout="[100]"}
 :::: column
@@ -1834,11 +1834,11 @@ In uw gemeente heeft `r monitor_df %>% maak_percentage(var_inhoud = 'SESES401', 
 ::::
 :::::
 
-# Kernboodschappen
+# ![](iconen/kernboodschappen.svg) Kernboodschappen {.h1-icoon}
 
 Op deze pagina kunnen GGD’en hun kernboodschappen toevoegen.
 
-# Contact
+# ![](iconen/Contactpagina.svg) Contact {.h1-icoon}
 
 Heeft u nog vragen over het onderzoek?
 
@@ -1853,3 +1853,18 @@ In ons digitale dashboard vindt u meer cijfers over de gezondheid van inwoners i
 
 [www.websitevanggd.nl](www.websitevanggd.nl)
 ::::
+
+
+```{=html}
+<script>
+// Voeg automatisch target="_blank" aan alle links toe m.u.v. de Table of Contents
+// Opent links in nieuw scherm
+
+document.addEventListener("DOMContentLoaded", function() {
+  const links = document.querySelectorAll("a:not(.nav-link)");
+  links.forEach(link => {
+    link.setAttribute("target", "_blank");
+  });
+});
+</script>
+```

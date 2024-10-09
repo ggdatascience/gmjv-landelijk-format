@@ -35,9 +35,9 @@ library(showtext)
 
 
 # fonts grafieken --------------------------------------------------------
-#voor gemak; 1 plek waar we alle font dingen voor ggplot kunnen aanpassen
+#voor gemak; 1 plek waar we alle tekstopmaak voor ggplot kunnen aanpassen
 
-#alle ggplot grafieken hebben overal dezelfde font-family. kunnen we nog aanpasen. 
+#alle ggplot grafieken hebben overal dezelfde font-family. 
 font_family = "Open Sans"
 
 #Titels
@@ -46,8 +46,11 @@ titel_size <- 40
 #Algemeen
 font_size <- 30
 
+#line_height; ruimte tussen regelsregel
+line_height <- .5
+
 #percentages die boven/naast of in balken staan
-#LET OP size is hierbij op een een andere schaal
+#LET OP size is hierbij op een een andere schaal. omdat het om een geom_ element gaat.
 geom_text_percentage <- 10
 
 #Labels op de X-as (waar die relevant zijn)
@@ -60,7 +63,6 @@ legend_title_size_cirkel <- 30
 #legend keys
 legend_text_size <- 30
 legend_text_size_cirkel <- 25
-
 
 #caption
 caption_size <- 20
@@ -1093,11 +1095,14 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
           legend.position = "bottom",
           axis.line.x.bottom = element_line(linewidth = 1),
           #Grootte tekst (behalve annotatie boven balken):
-          text = element_text(family = font_family), 
+          text = element_text(family = font_family,
+                              lineheight = line_height
+                              ), 
           plot.title = element_text(hjust = .5, size = titel_size),
           axis.text = element_text(size = as_label_size),
           legend.text = element_text(size = legend_text_size),
           plot.caption = element_text(size = caption_size, hjust = 0.5)
+          
     )
   
   #Plot verder opmaken o.b.v. instellingen
@@ -1126,8 +1131,8 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
                                 var_label(data[[var_crossing_groep]]),
                                 var_label(data[[var_crossing_kleur]])
                               ),
-                              vars_crossing = c(var_crossing_groep, var_crossing_kleur)
-    )
+                              vars_crossing = c(var_crossing_groep, var_crossing_kleur)) %>% 
+      paste0(". ",caption)
   }
   
   #Alt text en caption toevoegen
@@ -1330,7 +1335,8 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings = NUL
           legend.position = "bottom",
           axis.line.x.bottom = element_line(linewidth = 1, colour = "black"),
           #Grootte tekst (behalve annotatie boven balken):
-          text = element_text(family = font_family), 
+          text = element_text(family = font_family,
+                              lineheight = line_height), 
           plot.title = element_text(hjust = .5, size = titel_size),
           axis.text = element_text(size = as_label_size),
           legend.text = element_text(size = legend_text_size),
@@ -1358,8 +1364,8 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings = NUL
     
     alt_text <- maak_alt_text(data, plot, niveaus = niveaus, 
                               label_inhoud = var_label(data[[var_inhoud]]),
-                              label_crossings = sapply(var_crossings, function(var) var_label(data[[var]]))
-    )
+                              label_crossings = sapply(var_crossings, function(var) var_label(data[[var]]))) %>% 
+      paste0(". ",caption)
     
     
   } 
@@ -1746,7 +1752,8 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
           legend.position = "bottom",
           axis.line.x.bottom = element_line(linewidth = 1),
           #Grootte tekst (behalve annotatie boven balken):
-          text = element_text(family = font_family), 
+          text = element_text(family = font_family,
+                              lineheight = line_height), 
           plot.title = element_text(hjust = .5, size = titel_size),
           axis.text = element_text(size = as_label_size),
           legend.text = element_text(size = legend_text_size),
@@ -1798,7 +1805,8 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
                                 label_crossings = var_label(data[[var_crossing]]),
                                 vars_crossing = c("var_label",var_crossing)
       ) %>% 
-        str_replace("voor de indicator ''","voor verschillende indicatoren")
+        str_replace("voor de indicator ''","voor verschillende indicatoren") %>% 
+        paste0(". ",caption)
       
       
     } else{
@@ -1809,7 +1817,8 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
                                 label_crossings = var_label(data[[var_crossing]]),
                                 vars_crossing = c(var_crossing,var_inhoud),
                                 niveaus = niveaus
-      )
+      ) %>% 
+        paste0(". ",caption)
     }
     
   }
@@ -2088,7 +2097,8 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
           legend.position = "none",
           axis.line.y.left = element_line(linewidth = 1),
           #Grootte tekst (behalve annotatie boven balken):
-          text = element_text(family = font_family), 
+          text = element_text(family = font_family,
+                              lineheight = line_height), 
           plot.title = element_text(hjust = .5, size = titel_size),
           axis.text = element_text(size = as_label_size),
           legend.text = element_text(size = legend_text_size),
@@ -2140,7 +2150,8 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
     alt_text <- maak_alt_text(data, plot, niveaus = niveaus,
                               label_inhoud = var_label(data[[var_inhoud]]),
                               label_crossings = sapply(var_crossings, function(var) var_label(data[[var]]))
-    )
+    ) %>% 
+      paste0(". ",caption)
     
   } 
   
@@ -2366,7 +2377,8 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
       axis.line.y.left = element_line(linewidth = 1),
       
       #Grootte tekst (behalve annotatie boven balken):
-      text = element_text(family = font_family), 
+      text = element_text(family = font_family,
+                          lineheight = line_height), 
       plot.title = element_text(hjust = .5, size = titel_size),
       axis.text = element_text(size = as_label_size),
       legend.text = element_text(size = legend_text_size),
@@ -2395,8 +2407,8 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
                               type_grafiek = "gestapeld staafdiagram",
                               label_inhoud = var_label(data[[var_inhoud]]),
                               label_crossings = var_label(data[[var_crossing]]),
-                              vars_crossing = c(var_crossing,var_inhoud)
-    )
+                              vars_crossing = c(var_crossing,var_inhoud)) %>% 
+      paste0(". ",caption)
     
   }
   
@@ -2571,7 +2583,8 @@ maak_cirkeldiagram <- function(data, var_inhoud, titel = "", kleuren = params$de
     theme_void() +
     theme(
       #Grootte tekst (behalve annotatie boven balken):
-      text = element_text(family = font_family),
+      text = element_text(family = font_family,
+                          lineheight = line_height),
       plot.title = element_text(hjust = .5, size = titel_size),
       #We willen geen axis tekst bij een cirkeldiagram
       #axis.text = element_text(size = as_label_size),
@@ -2597,7 +2610,8 @@ maak_cirkeldiagram <- function(data, var_inhoud, titel = "", kleuren = params$de
     ) 
     
     
-    alt_text <- glue("Cirkeldiagram voor de indicator '{onderwerp}' bij {doelgroep}: {waarden}")
+    alt_text <- glue("Cirkeldiagram voor de indicator '{onderwerp}' bij {doelgroep}: {waarden}") %>% 
+      paste0(". ",caption)
     
   }
   
@@ -2963,7 +2977,8 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
       legend.position = "bottom",
       axis.line.y.left = element_line(linewidth = 1),
       #Grootte tekst (behalve annotatie boven balken):
-      text = element_text(family = font_family), 
+      text = element_text(family = font_family,
+                          lineheight = line_height), 
       plot.title = element_text(hjust = .5, size = titel_size),
       axis.text = element_text(size = as_label_size),
       legend.text = element_text(size = legend_text_size),
@@ -3014,7 +3029,8 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
       "gestapeld staafdiagram met percentages per ",
       crossing_cbs," in de bevolking en bij deelnemers: ",
       str_waarden
-    )
+    ) %>% 
+      paste0(". ",caption)
     
     
   }
