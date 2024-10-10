@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="nl" xml:lang="nl"><head>
 
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.5.57">
@@ -89,17 +89,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   ],
   "show-item-context": false,
   "language": {
-    "search-no-results-text": "No results",
-    "search-matching-documents-text": "matching documents",
-    "search-copy-link-title": "Copy link to search",
-    "search-hide-matches-text": "Hide additional matches",
-    "search-more-match-text": "more match in this document",
-    "search-more-matches-text": "more matches in this document",
-    "search-clear-button-title": "Clear",
+    "search-no-results-text": "Geen resultaten",
+    "search-matching-documents-text": "Gevonden documenten",
+    "search-copy-link-title": "Kopieer link om te zoeken",
+    "search-hide-matches-text": "Extra overeenkomsten verbergen",
+    "search-more-match-text": "meer overeenkomst in dit document",
+    "search-more-matches-text": "meer overeenkomsten in dit document",
+    "search-clear-button-title": "Wissen",
     "search-text-placeholder": "",
-    "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit",
-    "search-label": "Search"
+    "search-detached-cancel-button-title": "Annuleren",
+    "search-submit-button-title": "Verzenden",
+    "search-label": "Zoeken"
   }
 }</script>
 
@@ -112,13 +112,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <header id="quarto-header" class="headroom fixed-top">
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./gmjv-functies-gebruiken.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">GMJV Functies Gebruiken</span></a></li></ol></nav>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
-      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+      <button type="button" class="btn quarto-search-button" aria-label="Zoeken" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
@@ -135,7 +135,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
         <div class="sidebar-search">
-        <div id="quarto-search" class="" title="Search"></div>
+        <div id="quarto-search" class="" title="Zoeken"></div>
         </div>
         </div>
     <div class="sidebar-menu-container"> 
@@ -207,7 +207,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Table of contents</h2>
+    <h2 id="toc-title">Inhoudsopgave</h2>
    
   <ul>
   <li><a href="#filtering-of-vergelijking-per-jaar" id="toc-filtering-of-vergelijking-per-jaar" class="nav-link active" data-scroll-target="#filtering-of-vergelijking-per-jaar"><span class="header-section-number">5.1</span> Filtering of vergelijking per jaar</a></li>
@@ -254,9 +254,9 @@ Tip
 <p>In dit document wordt gebruikt gemaakt van de ‘pipe-operator’ <em>%&gt;%</em>.</p>
 <p>De pipe-operator stuurt een resultaat door naar de volgende functie. Op deze manier kunnen meerdere bewerkingen in R overzichtelijk aan elkaar gekoppeld worden. Lees <a href="#0">hier</a> een uitleg van de magrittr pipe (en de voordelen).</p>
 <p>Zonder de pipe-operator zou het aanroepen van maak_responstabel er zo uit zien:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">maak_responstabel</span>(<span class="at">data =</span> monitor_df, <span class="at">crossings =</span> <span class="st">"gender_2cat"</span>, ...)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">maak_responstabel</span>(<span class="at">data =</span> monitor_df, <span class="at">crossings =</span> <span class="st">"gender_2cat"</span>, ...)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Met pipe-operator</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>monitor_df <span class="sc">%&gt;%</span> <span class="fu">maak_responstabel</span>(<span class="at">crossings =</span> <span class="st">"gender_2cat"</span>, ...)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>monitor_df <span class="sc">%&gt;%</span> <span class="fu">maak_responstabel</span>(<span class="at">crossings =</span> <span class="st">"gender_2cat"</span>, ...)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Alle functies in dit document hebben als eerste argument ‘data’, waar een dataframe wordt verwacht. Dit argument zal niet per functie uitgelegd worden omdat het altijd nodig is.</p>
 </div>
 </div>
@@ -289,7 +289,7 @@ Tip
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Labels aanpassen</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">val_label</span>(monitor_df<span class="sc">$</span>LVVTA404, <span class="dv">1</span>) <span class="ot">&lt;-</span> <span class="st">'Weinig tot geen (cijfer 5 of lager)'</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">val_label</span>(monitor_df<span class="sc">$</span>LVVTA404, <span class="dv">2</span>) <span class="ot">&lt;-</span> <span class="st">'Matig tot redelijk (cijfer 6 of 7)'</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">val_label</span>(monitor_df<span class="sc">$</span>LVVTA404, <span class="dv">3</span>) <span class="ot">&lt;-</span> <span class="st">'(heel) veel (cijfer 8 of hoger)'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">val_label</span>(monitor_df<span class="sc">$</span>LVVTA404, <span class="dv">3</span>) <span class="ot">&lt;-</span> <span class="st">'(heel) veel (cijfer 8 of hoger)'</span></span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Zoals je ziet heeft val_label 2 argumenten nodig: - Het eerste argument: de variabele waar het over gaat. In dit geval gaat het over de variabele LVVTA404 in de dataset monitor_df, dus monitor_df$LVVTA404 - Het tweede argument: de waarde van de variabele waar het overgaat. De variabele LVVTA404 heeft 3 categorieën en per categorie wordt er een nieuw label toegewezen.</p>
 <p>Het stuk achter de &lt;- geeft aan wat het nieuwe label van deze waarde moet worden. Het nieuwe label van variabele LVVTA404 voor waarde 1 wordt met deze code dus ‘Weinig tot geen (cijfer 5 of lager)’.</p>
@@ -302,7 +302,7 @@ Tip
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Regio: GGD vervangen door regio</span></span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">val_label</span>(monitor_df<span class="sc">$</span>GGDregio, params<span class="sc">$</span>regiocode) <span class="ot">&lt;-</span> </span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_replace</span>(<span class="fu">val_label</span>(monitor_df<span class="sc">$</span>GGDregio, params<span class="sc">$</span>regiocode), <span class="st">"GGD"</span>, <span class="st">"regio"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_replace</span>(<span class="fu">val_label</span>(monitor_df<span class="sc">$</span>GGDregio, params<span class="sc">$</span>regiocode), <span class="st">"GGD"</span>, <span class="st">"regio"</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
@@ -352,12 +352,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // flash "checked"
     button.classList.add('code-copy-button-checked');
     var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
+    button.setAttribute("title", "Gekopieerd!");
     let tooltip;
     if (window.bootstrap) {
       button.setAttribute("data-bs-toggle", "tooltip");
       button.setAttribute("data-bs-placement", "left");
-      button.setAttribute("data-bs-title", "Copied!");
+      button.setAttribute("data-bs-title", "Gekopieerd!");
       tooltip = new bootstrap.Tooltip(button, 
         { trigger: "manual", 
           customClass: "code-copy-button-tooltip",
