@@ -100,13 +100,13 @@ div bepaald de positie van die elementen relatief aan het het grotere plaatje. P
   h1 > .img-fluid, h1 > svg {
     width: 10%;
     position: absolute;
-    top: -320%;
+    top: -13%;
     left: -5%;
     z-index: 10;
   }
   
 /*Plaatje niet laten zien in table of contents*/
-  #TOC svg,img-fluid {
+  #TOC .img-fluid {
     display: none; 
   }
   
