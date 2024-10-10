@@ -240,6 +240,13 @@ Je kunt headers toevoegen door # Header-naam in te voegen.
 
 Dit ziet er zo uit:
 ![](images/Knipsel2.png)
+Je kunt ook headers met iconen toevoegen. Dat kan d.m.v. de volgende code:
+
+> \# !\[]\(Naam_van_afbeelding.png) Header-naam {.h1-icoon}
+
+Dit ziet er dan bijvoorbeeld zo uit bij de header Achtergrondkenmerken met afbeelding iconen/achtergrondkenmerken.svg:
+
+![](images/Knipsel3.png)
 
 Een andere optie zijn **titels** in de tekst. Deze worden in de rapportage gebruikt als subkopjes binnen in thema. Ook hiervan wordt de opmaak bepaald in custom.css. Dit ziet er zo uit:
 

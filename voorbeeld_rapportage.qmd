@@ -84,7 +84,7 @@ val_label(monitor_df$AGOJB401, 2022) <- '2022'
 # # OPTIE 2: Eigen data invoeren (landelijk + regionaal)
 # #Data 2024
 # #Landelijk bestand inladen
-# df <- haven::read_spss(paste0(params$path_monitor_data_2024, "Totaalbestand_GMJV2024_GGD_versie 1 (N = 135.666).sav"),
+# df_land <- haven::read_spss(paste0(params$path_monitor_data_2024, "Totaalbestand_GMJV2024_GGD_versie 1 (N = 135.666).sav"),
 #                        user_na =T) %>%
 #   labelled::user_na_to_na()
 # 
@@ -95,20 +95,20 @@ val_label(monitor_df$AGOJB401, 2022) <- '2022'
 # 
 # # Check of aantallen gelijk zijn.
 # # NB. Alleen deelnemers met landelijke weegfactor zitten in landelijk bestand.
-# if (sum(df_regio$Standaardisatiefactor_regio != 0, na.rm = T) != nrow(df %>% filter(GGDregio == params$regiocode))) {
+# if (sum(df_regio$Standaardisatiefactor_regio != 0, na.rm = T) != nrow(df_land %>% filter(GGDregio == params$regiocode))) {
 #   print("Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data.")
 # }
 # 
 # # Filter regio uit landelijk databestand
-# df <- df %>%
+# df_land <- df_land %>%
 #   filter(GGDregio != params$regiocode)
 # 
 # # Voeg regiobestand toe aan landelijk bestand
-# monitor_df <- df %>%
+# monitor_df <- df_land %>%
 #   full_join(df_regio)
 # 
 # # Opschonen
-# rm(df_regio, df)
+# rm(df_regio, df_land)
 # 
 # # Label toevoegen indien jaarindicator ongelabeld is
 # if (is.null(val_labels(monitor_df$AGOJB401))) {
@@ -116,35 +116,48 @@ val_label(monitor_df$AGOJB401, 2022) <- '2022'
 # }
 # 
 # #Data 2022
-# #Landelijk bestand inladen
-# df <- haven::read_spss(paste0(params$path_monitor_data_2022, "Totaalbestand_CGMJV2022_GGD_versie 3 (N = 69.750).sav"),
-#                        user_na =T) %>%
-#   rename(Standaardisatiefactor_regio = Standaardisatiefactor,
-#          Stratum_regio = Stratum) %>% # Standaardidatiefactor en andere indicatoren hernoemen. TODO weghalen na trendsyntax?
-#   labelled::user_na_to_na()
-# 
 # # Regionaal bestand inladen
 # df_regio <- haven::read_spss(paste0(params$path_monitor_data_2022, params$naam_monitor_data_2022_regionaal),
 #                              user_na =T) %>%
-#   rename(Standaardisatiefactor_regio = Standaardisatiefactor,
-#          Stratum_regio = Stratum,
-#          Invulduur = duur) %>% # Standaardidatiefactor en andere indicatoren hernoemen. TODO weghalen na trendsyntax?
+#   #rename(Standaardisatiefactor_regio = Standaardisatiefactor, # Weghalen als je trendsyntax gerund hebt
+#   #       Stratum_regio = Stratum) %>% # Weghalen als je trendsyntax gerund hebt
+#   rename(Invulduur = duur) %>% # invulduur hernoemen. TODO weghalen als dit toegevoegd is aan trendsyntax
+#   labelled::user_na_to_na()
+# 
+# #Landelijk bestand inladen
+# # Dit is alleen nodig als je trends tussen 2022 en 2024 op landelijk niveau wil laten zien. 
+# # Anders kun je dit stuk in comments zetten tot het aangegeven wordt.
+# df_land <- haven::read_spss(paste0(params$path_monitor_data_2022, "Totaalbestand_CGMJV2022_GGD_versie 3 (N = 69.750).sav"),
+#                        user_na =T) %>%
+#   rename(Standaardisatiefactor_regio = Standaardisatiefactor, # Weghalen als je trendsyntax gerund hebt
+#          Stratum_regio = Stratum) %>% # Weghalen als je trendsyntax gerund hebt
+#   rename(Invulduur = duur) %>% # invulduur hernoemen. TODO weghalen als dit toegevoegd is aan trendsyntax
 #   labelled::user_na_to_na()
 # 
 # # Check of aantallen gelijk zijn.
 # # NB. Alleen deelnemers met landelijke weegfactor zitten in landelijk bestand.
-# if (sum(df_regio$Standaardisatiefactor_regio != 0, na.rm = T) != nrow(df %>% filter(GGDregio == params$regiocode))) {
+# if (sum(df_regio$Standaardisatiefactor_regio != 0, na.rm = T) != nrow(df_land %>% filter(GGDregio == params$regiocode))) {
 #   print("Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data.")
 # }
 # 
 # # Filter regio uit landelijk databestand
-# df <- df %>%
+# df_land <- df_land %>%
 #   filter(GGDregio != params$regiocode)
 # 
 # # Voeg regiobestand toe aan landelijk bestand
-# df <- df %>%
+# df <- df_land %>%
 #   full_join(df_regio) %>%
-#   select(-colnames(df)[!(colnames(df) %in% colnames(monitor_df))]) # selecteer alleen kolommen die ook in 2024 data zitten
+#   select(-colnames(df_land)[!(colnames(df_land) %in% colnames(monitor_df))]) # selecteer alleen kolommen die ook in 2024 data zitten
+# 
+# # Einde stuk dat in comments kan als je landelijke data van 2022 niet wil inladen
+# 
+# # Als landelijk bestand 2022 niet is ingeladen, dan wordt df_regio hernoemd tot df
+# if(!exists('df_land')) {
+#   
+#   df <- df_regio %>%
+#     select(-colnames(df_regio)[!(colnames(df_regio) %in% colnames(monitor_df))]) # selecteer alleen kolommen die ook in 2024 data zitten
+#   
+# }
 # 
 # # Label toevoegen indien jaarindicator ongelabeld is
 # # Dit kan verwijderd worden als het in de trendsyntax gedaan wordt.
@@ -157,7 +170,7 @@ val_label(monitor_df$AGOJB401, 2022) <- '2022'
 #   full_join(df)
 # 
 # # Opschonen
-# rm(df_regio, df)
+# rm(df_regio, df_land, df)
 
 #Maak survey designs
 # Het landelijk en regionaal design hebben dezelfde weegfactoren. Daarom maken we een landelijk design obv landelijke dataset en een regionaal design obv een subset van het landelijk design.
@@ -274,7 +287,7 @@ Vanwege de betrouwbaarheid van de resultaten en de privacy van de respondenten h
 
 De cijfers die hier worden gepresenteerd zijn gestandaardiseerd naar GGD-regio, leeftijd (16-17 jaar, 18-20 jaar en 21-25 jaar) en gender (in twee groepen: mannen en vrouwen). Op deze manier geven de cijfers een zo representatief mogelijk beeld van alle jongvolwassenen in uw gemeente en de regio. Ten behoeve van de standaardisatie zijn mensen met gender "non-binair" of "anders” willekeurig toegevoegd als man of vrouw (landelijk 0,9%). Dit is alleen gebruikt voor het berekenen van standaardisatiefactoren en is niet gebruikt voor de cijfers uitgesplitst naar mannen en vrouwen in deze rapportage.
 
-# Achtergrondkenmerken 
+# ![afb](iconen/achtergrondkenmerken.svg) Achtergrondkenmerken {.h1-icoon}
 
 :::: {layout="[100]"}
 ::: column
@@ -338,7 +351,7 @@ plot
 :::
 :::::
 
-# Woon- en werksituatie en financiën
+# ![afb](iconen/Woon-werk.svg) Woon- en werksituatie en financiën {.h1-icoon}
 
 ::::::: {layout="[100]"}
 :::::: column
@@ -506,7 +519,7 @@ plot
 :::
 :::::
 
-# Gezondheid en geluk 
+# ![afb](iconen/Gezondheid-geluk.svg) Gezondheid en geluk {.h1-icoon}
 
 ::::: {layout="[100]"}
 :::: column
@@ -634,7 +647,7 @@ plot
 :::
 :::::
 
-# Mentaal welbevinden 
+# ![afb](iconen/Mentaal.svg) Mentaal welbevinden {.h1-icoon}
 
 ::::: {layout="[100]"}
 :::: column
@@ -829,7 +842,7 @@ plot
 :::
 :::::
 
-# Stress en prestatiedruk
+# ![afb](iconen/Stress-prestatiedruk.svg) Stress en prestatiedruk {.h1-icoon}
 
 ::::: {layout="[100]"}
 :::: column
@@ -978,7 +991,7 @@ plot
 :::
 :::::
 
-# Beschermende factoren en vertrouwen in de toekomst
+# ![afb](iconen/Vertrouwen.svg) Beschermende factoren en vertrouwen in de toekomst {.h1-icoon}
 
 ::::::: {layout="[[100]]"}
 :::::: column
@@ -1129,7 +1142,7 @@ Maatschappelijke thema's waar jongvolwassenen in uw gemeente zich het meest zorg
 ::::
 ::::::
 
-# Bewegen en sporten 
+# ![afb](iconen/Bewegen-sporten.svg) Bewegen en sporten {.h1-icoon}
 
 :::: {layout="[100]"}
 ::: column
@@ -1209,7 +1222,7 @@ plot
 :::
 :::::
 
-# Middelengebruik 
+# ![afb](iconen/Middelengebruik.svg) Middelengebruik {.h1-icoon}
 
 ::::: {layout="[100]"}
 :::: column
@@ -1470,7 +1483,7 @@ plot
 :::
 :::::
 
-# De coronaperiode 
+# ![afb](iconen/Corona.svg) De coronaperiode {.h1-icoon}
 
 :::: {layout="[100]"}
 ::: column
@@ -1582,7 +1595,7 @@ getallen %>%
 :::
 :::::
 
-# Digitale leefomgeving 
+# ![afb](iconen/VSlogoDigitale-leefomgevin.svg) Digitale leefomgeving {.h1-icoon}
 
 ::::: {layout="[100]"}
 :::: column
@@ -1697,7 +1710,7 @@ plot
 :::
 :::::
 
-# Seksualiteit 
+# ![afb](iconen/Seksualiteit.svg) Seksualiteit {.h1-icoon}
 
 ::::::: {layout="[100]"}
 :::::: column
@@ -1822,11 +1835,11 @@ getallen %>%
 ::::
 :::::
 
-# Kernboodschappen 
+# ![afb](iconen/kernboodschappen.svg) Kernboodschappen {.h1-icoon}
 
 Op deze pagina kunnen GGD’en hun kernboodschappen toevoegen.
 
-# Contact 
+# ![afb](iconen/Contactpagina.svg) Contact {.h1-icoon}
 
 Heeft u nog vragen over het onderzoek?
 
