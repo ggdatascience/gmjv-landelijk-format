@@ -97,11 +97,11 @@ div bepaald de positie van die elementen relatief aan het het grotere plaatje. P
   }
   
 /*Plaatsing van header icons*/
-  h1 .img-fluid,svg {
-    height: 150%;
+  h1 > .img-fluid, h1 > svg {
+    width: 10%;
     position: absolute;
-    top: -25%;
-    left: -24%;
+    top: -320%;
+    left: -5%;
     z-index: 10;
   }
   
