@@ -8,7 +8,7 @@ params:
   path_cbs_data: "../voorbeeld_JongVolWassenenNaarGeslachtEnLeeftijd1Jan2024.xlsx"
   default_nvar: 100
   default_ncel: 10
-  default_kleuren_grafiek: !expr c("#012C17","#76B82A","#007E48")
+  default_kleuren_grafiek: !expr c("#86B443", "#012C17", "#B2BE97", "#007E48", "#AAD3CC", "#CB8EB9", "#401B65", "#86848D", "#739BD0", "#11265F", "#86848D")
   default_kleuren_responstabel: !expr c("header" = "#012C17", "kleur_1" = "#007E48", "kleur_2" = "#76B82A","kleur_tekst" = "#FFFFFF")
 ---
 
