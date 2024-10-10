@@ -275,7 +275,7 @@ Vanwege de betrouwbaarheid van de resultaten en de privacy van de respondenten h
 
 De cijfers die hier worden gepresenteerd zijn gestandaardiseerd naar GGD-regio, leeftijd (16-17 jaar, 18-20 jaar en 21-25 jaar) en gender (in twee groepen: mannen en vrouwen). Op deze manier geven de cijfers een zo representatief mogelijk beeld van alle jongvolwassenen in uw gemeente en de regio. Ten behoeve van de standaardisatie zijn mensen met gender "non-binair" of "anders” willekeurig toegevoegd als man of vrouw (landelijk 0,9%). Dit is alleen gebruikt voor het berekenen van standaardisatiefactoren en is niet gebruikt voor de cijfers uitgesplitst naar mannen en vrouwen in deze rapportage.
 
-# Achtergrondkenmerken 
+# ![afb](iconen/achtergrondkenmerken.svg) Achtergrondkenmerken {.h1-icoon}
 
 :::: {layout="[100]"}
 ::: column
@@ -339,7 +339,7 @@ plot
 :::
 :::::
 
-# Woon- en werksituatie en financiën
+# ![afb](iconen/Woon-werk.svg) Woon- en werksituatie en financiën {.h1-icoon}
 
 ::::::: {layout="[100]"}
 :::::: column
@@ -507,7 +507,7 @@ plot
 :::
 :::::
 
-# Gezondheid en geluk 
+# ![afb](iconen/Gezondheid-geluk.svg) Gezondheid en geluk {.h1-icoon}
 
 ::::: {layout="[100]"}
 :::: column
@@ -635,7 +635,7 @@ plot
 :::
 :::::
 
-# Mentaal welbevinden 
+# ![afb](iconen/Mentaal.svg) Mentaal welbevinden {.h1-icoon}
 
 ::::: {layout="[100]"}
 :::: column
@@ -830,7 +830,7 @@ plot
 :::
 :::::
 
-# Stress en prestatiedruk
+# ![afb](iconen/Stress-prestatiedruk.svg) Stress en prestatiedruk {.h1-icoon}
 
 ::::: {layout="[100]"}
 :::: column
@@ -979,7 +979,7 @@ plot
 :::
 :::::
 
-# Beschermende factoren en vertrouwen in de toekomst
+# ![afb](iconen/Vertrouwen.svg) Beschermende factoren en vertrouwen in de toekomst {.h1-icoon}
 
 ::::::: {layout="[[100]]"}
 :::::: column
@@ -1130,7 +1130,7 @@ Maatschappelijke thema's waar jongvolwassenen in uw gemeente zich het meest zorg
 ::::
 ::::::
 
-# Bewegen en sporten 
+# ![afb](iconen/Bewegen-sporten.svg) Bewegen en sporten {.h1-icoon}
 
 :::: {layout="[100]"}
 ::: column
@@ -1210,7 +1210,7 @@ plot
 :::
 :::::
 
-# Middelengebruik 
+# ![afb](iconen/Middelengebruik.svg) Middelengebruik {.h1-icoon}
 
 ::::: {layout="[100]"}
 :::: column
@@ -1471,7 +1471,7 @@ plot
 :::
 :::::
 
-# De coronaperiode 
+# ![afb](iconen/Corona.svg) De coronaperiode {.h1-icoon}
 
 :::: {layout="[100]"}
 ::: column
@@ -1583,7 +1583,7 @@ getallen %>%
 :::
 :::::
 
-# Digitale leefomgeving 
+# ![afb](iconen/VSlogoDigitale-leefomgevin.svg) Digitale leefomgeving {.h1-icoon}
 
 ::::: {layout="[100]"}
 :::: column
@@ -1698,7 +1698,7 @@ plot
 :::
 :::::
 
-# Seksualiteit 
+# ![afb](iconen/Seksualiteit.svg) Seksualiteit {.h1-icoon}
 
 ::::::: {layout="[100]"}
 :::::: column
@@ -1823,11 +1823,11 @@ getallen %>%
 ::::
 :::::
 
-# Kernboodschappen 
+# ![afb](iconen/kernboodschappen.svg) Kernboodschappen {.h1-icoon}
 
 Op deze pagina kunnen GGD’en hun kernboodschappen toevoegen.
 
-# Contact 
+# ![afb](iconen/Contactpagina.svg) Contact {.h1-icoon}
 
 Heeft u nog vragen over het onderzoek?
 
