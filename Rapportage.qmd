@@ -105,16 +105,17 @@ if (is.null(val_labels(monitor_df$AGOJB401))) {
 #Landelijk bestand inladen
 df <- haven::read_spss(paste0(params$path_monitor_data_2022, "Totaalbestand_CGMJV2022_GGD_versie 3 (N = 69.750).sav"),
                        user_na =T) %>%
-  rename(Standaardisatiefactor_regio = Standaardisatiefactor,
-         Stratum_regio = Stratum) %>% # Standaardidatiefactor en andere indicatoren hernoemen. TODO weghalen na trendsyntax?
+  rename(Standaardisatiefactor_regio = Standaardisatiefactor, # Weghalen als je trendsyntax gerund hebt
+         Stratum_regio = Stratum) %>% # Weghalen als je trendsyntax gerund hebt
+  rename(Invulduur = duur) %>% # invulduur hernoemen. TODO weghalen als dit toegevoegd is aan trendsyntax
   labelled::user_na_to_na()
 
 # Regionaal bestand inladen
 df_regio <- haven::read_spss(paste0(params$path_monitor_data_2022, params$naam_monitor_data_2022_regionaal),
                              user_na =T) %>%
-  rename(Standaardisatiefactor_regio = Standaardisatiefactor,
-         Stratum_regio = Stratum,
-         Invulduur = duur) %>% # Standaardidatiefactor en andere indicatoren hernoemen. TODO weghalen na trendsyntax?
+  rename(Standaardisatiefactor_regio = Standaardisatiefactor, # Weghalen als je trendsyntax gerund hebt
+         Stratum_regio = Stratum) %>% # Weghalen als je trendsyntax gerund hebt
+  rename(Invulduur = duur) %>% # invulduur hernoemen. TODO weghalen als dit toegevoegd is aan trendsyntax
   labelled::user_na_to_na()
 
 # Check of aantallen gelijk zijn.
