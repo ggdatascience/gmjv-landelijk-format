@@ -26,6 +26,7 @@ Open **voorbeeld_rapportage.qmd**. Daar zie je de volgende frontmatter staan:
 ---
 title: ""
 author: ""
+lang: nl
 format:
   html:
     page-layout: full
@@ -73,7 +74,8 @@ De meeste instellingen kan je laten staan. Het volgende moet aangepast of gecont
 
 ### Overige frontmatter instellingen
 
--   **css: costum.css:** hier wordt aangegeven waar de opmaak (in css) gevonden kan worden. Zie ook het hoofdstuk [CSS](css.qmd).
+-   **lang: nl:** de taal (language) waarin een screenreader de html moet lezen. Deze is standaard ingesteld op Nederlands (nl).
+-   **css: custom.css:** hier wordt aangegeven waar de opmaak (in css) gevonden kan worden. Zie ook het hoofdstuk [CSS](css.qmd).
 -   **path_hulpfuncties: "hulpfuncties.R":** hier wordt verwezen naar het R-script met functies.
 -   **warning:** Deze parameter staat in het voorbeeldrapport op false. Als de parameter op true staat worden mogelijke problemen / 'warnings' getoond in het rapport. Dit is meestal niet wenselijk voor het eindproduct, maar nuttig tijdens ontwikkeling.
 

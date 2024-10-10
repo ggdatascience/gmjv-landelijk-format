@@ -84,7 +84,7 @@ val_label(monitor_df$AGOJB401, 2022) <- '2022'
 # # OPTIE 2: Eigen data invoeren (landelijk + regionaal)
 # #Data 2024
 # #Landelijk bestand inladen
-# df <- haven::read_spss(paste0(params$path_monitor_data_2024, "Totaalbestand_GMJV2024_GGD_versie 1 (N = 135.666).sav"),
+# df_land <- haven::read_spss(paste0(params$path_monitor_data_2024, "Totaalbestand_GMJV2024_GGD_versie 1 (N = 135.666).sav"),
 #                        user_na =T) %>%
 #   labelled::user_na_to_na()
 # 
@@ -95,20 +95,20 @@ val_label(monitor_df$AGOJB401, 2022) <- '2022'
 # 
 # # Check of aantallen gelijk zijn.
 # # NB. Alleen deelnemers met landelijke weegfactor zitten in landelijk bestand.
-# if (sum(df_regio$Standaardisatiefactor_regio != 0, na.rm = T) != nrow(df %>% filter(GGDregio == params$regiocode))) {
+# if (sum(df_regio$Standaardisatiefactor_regio != 0, na.rm = T) != nrow(df_land %>% filter(GGDregio == params$regiocode))) {
 #   print("Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data.")
 # }
 # 
 # # Filter regio uit landelijk databestand
-# df <- df %>%
+# df_land <- df_land %>%
 #   filter(GGDregio != params$regiocode)
 # 
 # # Voeg regiobestand toe aan landelijk bestand
-# monitor_df <- df %>%
+# monitor_df <- df_land %>%
 #   full_join(df_regio)
 # 
 # # Opschonen
-# rm(df_regio, df)
+# rm(df_regio, df_land)
 # 
 # # Label toevoegen indien jaarindicator ongelabeld is
 # if (is.null(val_labels(monitor_df$AGOJB401))) {
@@ -116,35 +116,48 @@ val_label(monitor_df$AGOJB401, 2022) <- '2022'
 # }
 # 
 # #Data 2022
-# #Landelijk bestand inladen
-# df <- haven::read_spss(paste0(params$path_monitor_data_2022, "Totaalbestand_CGMJV2022_GGD_versie 3 (N = 69.750).sav"),
-#                        user_na =T) %>%
-#   rename(Standaardisatiefactor_regio = Standaardisatiefactor,
-#          Stratum_regio = Stratum) %>% # Standaardidatiefactor en andere indicatoren hernoemen. TODO weghalen na trendsyntax?
-#   labelled::user_na_to_na()
-# 
 # # Regionaal bestand inladen
 # df_regio <- haven::read_spss(paste0(params$path_monitor_data_2022, params$naam_monitor_data_2022_regionaal),
 #                              user_na =T) %>%
-#   rename(Standaardisatiefactor_regio = Standaardisatiefactor,
-#          Stratum_regio = Stratum,
-#          Invulduur = duur) %>% # Standaardidatiefactor en andere indicatoren hernoemen. TODO weghalen na trendsyntax?
+#   #rename(Standaardisatiefactor_regio = Standaardisatiefactor, # Weghalen als je trendsyntax gerund hebt
+#   #       Stratum_regio = Stratum) %>% # Weghalen als je trendsyntax gerund hebt
+#   rename(Invulduur = duur) %>% # invulduur hernoemen. TODO weghalen als dit toegevoegd is aan trendsyntax
+#   labelled::user_na_to_na()
+# 
+# #Landelijk bestand inladen
+# # Dit is alleen nodig als je trends tussen 2022 en 2024 op landelijk niveau wil laten zien. 
+# # Anders kun je dit stuk in comments zetten tot het aangegeven wordt.
+# df_land <- haven::read_spss(paste0(params$path_monitor_data_2022, "Totaalbestand_CGMJV2022_GGD_versie 3 (N = 69.750).sav"),
+#                        user_na =T) %>%
+#   rename(Standaardisatiefactor_regio = Standaardisatiefactor, # Weghalen als je trendsyntax gerund hebt
+#          Stratum_regio = Stratum) %>% # Weghalen als je trendsyntax gerund hebt
+#   rename(Invulduur = duur) %>% # invulduur hernoemen. TODO weghalen als dit toegevoegd is aan trendsyntax
 #   labelled::user_na_to_na()
 # 
 # # Check of aantallen gelijk zijn.
 # # NB. Alleen deelnemers met landelijke weegfactor zitten in landelijk bestand.
-# if (sum(df_regio$Standaardisatiefactor_regio != 0, na.rm = T) != nrow(df %>% filter(GGDregio == params$regiocode))) {
+# if (sum(df_regio$Standaardisatiefactor_regio != 0, na.rm = T) != nrow(df_land %>% filter(GGDregio == params$regiocode))) {
 #   print("Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data.")
 # }
 # 
 # # Filter regio uit landelijk databestand
-# df <- df %>%
+# df_land <- df_land %>%
 #   filter(GGDregio != params$regiocode)
 # 
 # # Voeg regiobestand toe aan landelijk bestand
-# df <- df %>%
+# df <- df_land %>%
 #   full_join(df_regio) %>%
-#   select(-colnames(df)[!(colnames(df) %in% colnames(monitor_df))]) # selecteer alleen kolommen die ook in 2024 data zitten
+#   select(-colnames(df_land)[!(colnames(df_land) %in% colnames(monitor_df))]) # selecteer alleen kolommen die ook in 2024 data zitten
+# 
+# # Einde stuk dat in comments kan als je landelijke data van 2022 niet wil inladen
+# 
+# # Als landelijk bestand 2022 niet is ingeladen, dan wordt df_regio hernoemd tot df
+# if(!exists('df_land')) {
+#   
+#   df <- df_regio %>%
+#     select(-colnames(df_regio)[!(colnames(df_regio) %in% colnames(monitor_df))]) # selecteer alleen kolommen die ook in 2024 data zitten
+#   
+# }
 # 
 # # Label toevoegen indien jaarindicator ongelabeld is
 # # Dit kan verwijderd worden als het in de trendsyntax gedaan wordt.
@@ -157,7 +170,7 @@ val_label(monitor_df$AGOJB401, 2022) <- '2022'
 #   full_join(df)
 # 
 # # Opschonen
-# rm(df_regio, df)
+# rm(df_regio, df_land, df)
 
 #Maak survey designs
 # Het landelijk en regionaal design hebben dezelfde weegfactoren. Daarom maken we een landelijk design obv landelijke dataset en een regionaal design obv een subset van het landelijk design.
@@ -340,6 +353,7 @@ plot
 
 # ![](iconen/Woon-werk_XL.png) Woon- en werksituatie en financiën {.h1-icoon}
 
+
 ::::::: {layout="[100]"}
 :::::: column
 ::: inleiding
@@ -508,6 +522,7 @@ plot
 
 # ![](iconen/Gezondheid-geluk_XL.png) Gezondheid en geluk {.h1-icoon}
 
+
 ::::: {layout="[100]"}
 :::: column
 ::: titel
@@ -635,6 +650,7 @@ plot
 :::::
 
 # ![](iconen/Mentaal_XL.png) Mentaal welbevinden {.h1-icoon}
+
 
 ::::: {layout="[100]"}
 :::: column
@@ -980,6 +996,7 @@ plot
 
 # ![](iconen/Vertrouwen_XL.png) Beschermende factoren en vertrouwen in de toekomst {.h1-icoon}
 
+
 ::::::: {layout="[[100]]"}
 :::::: column
 ::: inleiding
@@ -1210,6 +1227,7 @@ plot
 :::::
 
 # ![](iconen/Middelengebruik_XL.png) Middelengebruik {.h1-icoon}
+
 
 ::::: {layout="[100]"}
 :::: column
@@ -1471,6 +1489,7 @@ plot
 :::::
 
 # ![](iconen/Corona_XL.png) De coronaperiode {.h1-icoon}
+
 
 :::: {layout="[100]"}
 ::: column
@@ -1822,11 +1841,13 @@ getallen %>%
 ::::
 :::::
 
+
 # ![](iconen/kernboodschappen_XL.png) Kernboodschappen {.h1-icoon}
 
 Op deze pagina kunnen GGD’en hun kernboodschappen toevoegen.
 
 # ![](iconen/Contactpagina_XL.png) Contact {.h1-icoon}
+
 
 Heeft u nog vragen over het onderzoek?
 
