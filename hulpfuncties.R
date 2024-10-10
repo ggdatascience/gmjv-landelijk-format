@@ -1,7 +1,6 @@
 # Script met helpfuncties voor GMJV 2024.
 # Packages ----------------------------------------------------------------
 
-# TODOnieuwe grafiek maken die uitsplitsing naast elkaar kan zetten
 # TODO alle alt-texten nakijken. Door recente aanpassingen mogelijk niet meer waterdicht
 # TODO code opschonen; dataverwerking voor grafiek in eigen functies stoppen om complexiteit / lengte van functies te verkleinen.
 
@@ -1478,7 +1477,8 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
                                               toon_y = FALSE,
                                               toon_aslabel = TRUE,
                                               x_as_label_wrap = NULL,
-                                              x_as_regels_toevoegen = 0
+                                              x_as_regels_toevoegen = 0,
+                                              aflopend = FALSE
                                               
 ){
   
@@ -1690,14 +1690,22 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
   namen_kleuren <- unique(df_plot[[var_crossing]])
   kleuren <- kleuren[1:length(namen_kleuren)]
   
-  #volgorde var_inhoud_plot vastzetten obv waarde
-  #tenzij er meerdere var_inhoud zijn ingevoerd
+  #als 1 var_inhoud: volgorde plot sorteren obv waarde
   if(length(var_inhoud) == 1){
     df_plot <- df_plot %>%
       mutate(!!sym(var_inhoud_plot) := fct_reorder(!!sym(var_inhoud_plot),
                                                    as.numeric(waarde),
-                                                   .desc = TRUE)
+                                                   .desc = aflopend)
       )
+  } else{
+  #anders sorteren obv volgorde van voorkomen in vector var_inhoud
+    df_plot <- df_plot %>% 
+      mutate(volgorde = match(varcode, var_inhoud), #wijs nummer toe o.b.v plaats in var-inhoud vector
+             !!sym(var_inhoud_plot):= fct_reorder(!!sym(var_inhoud_plot),
+                                                  volgorde,
+                                                  .desc = aflopend)) 
+    
+    
   }
   
   plot =
@@ -2206,7 +2214,8 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
                                         tabel_en_grafiek = FALSE,
                                         toon_y = FALSE,
                                         x_as_label_wrap = 20,
-                                        x_as_regels_toevoegen = 0
+                                        x_as_regels_toevoegen = 0,
+                                        aflopend = FALSE
 ){
   
   #TODO
@@ -2344,7 +2353,8 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
   df_plot <- df_plot %>% 
     mutate(!!sym(var_inhoud) := fct_reorder(!!sym(var_inhoud),
                                             as.numeric(waarde),
-                                            .desc = TRUE))
+                                            .desc = !aflopend) #logica omdraaien. bij aflopend willen we laagste waarde links hebben.
+           )
   
   namen_kleuren <- levels(df_plot[[var_inhoud]])
   kleuren <- kleuren[1:length(namen_kleuren)]
@@ -2472,7 +2482,7 @@ maak_cirkeldiagram <- function(data, var_inhoud, titel = "", kleuren = params$de
                                nvar = params$default_nvar, ncel = params$default_ncel, alt_text = NULL,
                                niveaus = "regio", huidig_jaar = 2024, jaarvar = "AGOJB401",
                                caption = "",
-                               desc = FALSE,
+                               aflopend = FALSE,
                                tabel_en_grafiek = FALSE,
                                x_as_label_wrap = 50
 ) {
@@ -2560,12 +2570,18 @@ maak_cirkeldiagram <- function(data, var_inhoud, titel = "", kleuren = params$de
   df_plot <- df_plot %>%
     mutate(!!sym(var_inhoud) := fct_reorder(!!sym(var_inhoud),
                                             as.numeric(waarde),
-                                            .desc = desc))
+                                            .desc = !aflopend) #logica omdraaien. bij clockwise; Laagste waarde is eerste stuk v/d klok
+           )
   
   #kleuren labelen o.b.v. levels var_inhoud
   namen_kleuren <- levels(df_plot[[var_inhoud]])
   
   kleuren <- kleuren[1:length(namen_kleuren)]
+  
+  if(!aflopend){ #kleuren omdraaien bij aflopend
+    kleuren <- rev(kleuren)
+  }
+  
   
   # GGPLOT PIE CHART
   plot <- ggplot(df_plot, aes(x = "", y = percentage, fill = !!sym(var_inhoud))) +
@@ -2579,7 +2595,9 @@ maak_cirkeldiagram <- function(data, var_inhoud, titel = "", kleuren = params$de
     scale_fill_manual(
       str_wrap(var_label(data[[var_inhoud]]),50), #var_label is naam legend
       label = str_wrap(namen_kleuren,x_as_label_wrap), #legend key labels; val_labels
-      values = kleuren) + 
+      values = kleuren,
+      guid = guide_legend(reverse = T)
+      ) + 
     theme_void() +
     theme(
       #Grootte tekst (behalve annotatie boven balken):
