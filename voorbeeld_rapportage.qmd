@@ -338,7 +338,7 @@ plot
 :::
 :::::
 
-# Woon- en werksituatie en financiën
+# ![](iconen/Woon-werk.svg) Woon- en werksituatie en financiën {.h1-icoon}
 
 ::::::: {layout="[100]"}
 :::::: column
@@ -506,7 +506,7 @@ plot
 :::
 :::::
 
-# Gezondheid en geluk 
+# ![](iconen/Gezondheid-geluk.svg) Gezondheid en geluk {.h1-icoon}
 
 ::::: {layout="[100]"}
 :::: column
@@ -634,7 +634,7 @@ plot
 :::
 :::::
 
-# Mentaal welbevinden 
+# ![](iconen/Mentaal.svg) Mentaal welbevinden {.h1-icoon}
 
 ::::: {layout="[100]"}
 :::: column
@@ -1129,7 +1129,7 @@ Maatschappelijke thema's waar jongvolwassenen in uw gemeente zich het meest zorg
 ::::
 ::::::
 
-# Bewegen en sporten 
+# ![](iconen/Bewegen-sporten.svg) Bewegen en sporten {.h1-icoon}
 
 :::: {layout="[100]"}
 ::: column
@@ -1209,7 +1209,7 @@ plot
 :::
 :::::
 
-# Middelengebruik 
+# ![](iconen/Middelengebruik.svg) Middelengebruik {.h1-icoon}
 
 ::::: {layout="[100]"}
 :::: column
@@ -1470,7 +1470,7 @@ plot
 :::
 :::::
 
-# De coronaperiode 
+# ![](iconen/Corona.svg) De coronaperiode {.h1-icoon}
 
 :::: {layout="[100]"}
 ::: column
@@ -1582,7 +1582,7 @@ getallen %>%
 :::
 :::::
 
-# Digitale leefomgeving 
+# ![](iconen/VSlogoDigitale-leefomgevin.svg) Digitale leefomgeving {.h1-icoon}
 
 ::::: {layout="[100]"}
 :::: column
@@ -1822,11 +1822,11 @@ getallen %>%
 ::::
 :::::
 
-# Kernboodschappen 
+# ![](iconen/kernboodschappen.svg) Kernboodschappen {.h1-icoon}
 
 Op deze pagina kunnen GGD’en hun kernboodschappen toevoegen.
 
-# Contact 
+# ![](iconen/Contactpagina.svg) Contact {.h1-icoon}
 
 Heeft u nog vragen over het onderzoek?
 
