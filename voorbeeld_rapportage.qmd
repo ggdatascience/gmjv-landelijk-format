@@ -96,7 +96,7 @@ val_label(monitor_df$AGOJB401, 2022) <- '2022'
 # # Check of aantallen gelijk zijn.
 # # NB. Alleen deelnemers met landelijke weegfactor zitten in landelijk bestand.
 # if (sum(df_regio$Standaardisatiefactor_regio != 0, na.rm = T) != nrow(df_land %>% filter(GGDregio == params$regiocode))) {
-#   print("Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data.")
+#   warning("Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data.")
 # }
 # 
 # # Filter regio uit landelijk databestand
@@ -119,9 +119,8 @@ val_label(monitor_df$AGOJB401, 2022) <- '2022'
 # # Regionaal bestand inladen
 # df_regio <- haven::read_spss(paste0(params$path_monitor_data_2022, params$naam_monitor_data_2022_regionaal),
 #                              user_na =T) %>%
-#   #rename(Standaardisatiefactor_regio = Standaardisatiefactor, # Weghalen als je trendsyntax gerund hebt
-#   #       Stratum_regio = Stratum) %>% # Weghalen als je trendsyntax gerund hebt
-#   rename(Invulduur = duur) %>% # invulduur hernoemen. TODO weghalen als dit toegevoegd is aan trendsyntax
+#   #rename(Standaardisatiefactor_regio = Standaardisatiefactor, # Deze regel weghalen als je trendsyntax gerund hebt
+#   #       Stratum_regio = Stratum) %>% # Deze regel weghalen als je trendsyntax gerund hebt
 #   labelled::user_na_to_na()
 # 
 # #Landelijk bestand inladen
@@ -129,15 +128,14 @@ val_label(monitor_df$AGOJB401, 2022) <- '2022'
 # # Anders kun je dit stuk in comments zetten tot het aangegeven wordt.
 # df_land <- haven::read_spss(paste0(params$path_monitor_data_2022, "Totaalbestand_CGMJV2022_GGD_versie 3 (N = 69.750).sav"),
 #                        user_na =T) %>%
-#   rename(Standaardisatiefactor_regio = Standaardisatiefactor, # Weghalen als je trendsyntax gerund hebt
-#          Stratum_regio = Stratum) %>% # Weghalen als je trendsyntax gerund hebt
-#   rename(Invulduur = duur) %>% # invulduur hernoemen. TODO weghalen als dit toegevoegd is aan trendsyntax
+#   #rename(Standaardisatiefactor_regio = Standaardisatiefactor, # Deze regel weghalen als je trendsyntax gerund hebt
+#   #       Stratum_regio = Stratum) %>% # Deze regel weghalen als je trendsyntax gerund hebt
 #   labelled::user_na_to_na()
 # 
 # # Check of aantallen gelijk zijn.
 # # NB. Alleen deelnemers met landelijke weegfactor zitten in landelijk bestand.
 # if (sum(df_regio$Standaardisatiefactor_regio != 0, na.rm = T) != nrow(df_land %>% filter(GGDregio == params$regiocode))) {
-#   print("Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data.")
+#   warning("Aantal deelnemers in regio is niet hetzelfde in beide bestanden, check data.")
 # }
 # 
 # # Filter regio uit landelijk databestand
