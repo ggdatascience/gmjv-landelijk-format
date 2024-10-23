@@ -2,9 +2,6 @@
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 library(dplyr)
 
-#Hier regiocode invoeren
-regiocode <- 23
-
 #vector met numerieke waarden gemeentecodes in regio
 gemeentecodes_in_regio = c(2,3,4,5,6) #codes nepgemeenten voorbeeldrapportage
   
@@ -21,7 +18,6 @@ for(gemeentecode in gemeentecodes_in_regio){
     output_file = html_file,
     execute_params = list(
       gemeentecode = gemeentecode,
-      regiocode = regiocode,
       is_pdf = TRUE
     ),
     #Metadata aanpassen zodat inhoudsopgave naar body verplaatst wordt
