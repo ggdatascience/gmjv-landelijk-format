@@ -250,7 +250,7 @@ In de periode april tot juli 2024 vond de **Gezondheidsmonitor Jongvolwassenen**
 
 Voor de Gezondheidsmonitor Jongvolwassenen 2024 is geen steekproef getrokken. De vragenlijst was in te vullen via een open link en respondenten zijn geworven via een online sociale media campagne.
 
-In totaal hebben `r monitor_df %>% filter(GGDregio == params$regiocode) %>% nrow()` jongvolwassenen uit `r params$regionaam` de vragenlijst ingevuld. Van deze respondenten komen `r monitor_df %>% filter(Gemeentecode == params$gemeentecode) %>% nrow()` jongvolwassenen uit `r monitor_df %>% filter(Gemeentecode == params$gemeentecode) %>% labelled_naar_character("Gemeentecode") %>% unique()`.
+In totaal hebben `r monitor_df %>% filter(GGDregio == params$regiocode, AGOJB401 == 2024) %>% nrow()` jongvolwassenen uit `r params$regionaam` de vragenlijst ingevuld. Van deze respondenten komen `r monitor_df %>% filter(Gemeentecode == params$gemeentecode, AGOJB401 == 2024) %>% nrow()` jongvolwassenen uit `r monitor_df %>% filter(Gemeentecode == params$gemeentecode) %>% labelled_naar_character("Gemeentecode") %>% unique()`.
 
 De resultaten kunnen helpen bij de invulling en ontwikkeling van het gezondheidsbeleid. Uit de resultaten kan bijvoorbeeld blijken dat het nodig is om meer hulp te bieden aan bepaalde groepen jongvolwassenen of extra voorzieningen op te zetten in de regio of in een gemeente.
 
