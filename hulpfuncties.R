@@ -3451,7 +3451,7 @@ maak_top <- function(data, var_inhoud, toon_label = T, value = 1, niveau = "regi
 }
 
 maak_percentage <- function(data, var_inhoud, value = 1, niveau = "regio",
-                            huidig_jaar = 2024, var_jaar = "AGOJB401") {
+                            huidig_jaar = 2024, var_jaar = "AGOJB401", ongewogen = FALSE) {
   
   # Input is één dichotome variabele met één niveau 
   if(length(niveau) > 1 | length(var_inhoud) > 1){
@@ -3488,6 +3488,31 @@ maak_percentage <- function(data, var_inhoud, value = 1, niveau = "regio",
               niveau: {niveau}"))
     
   }
+  
+  
+  #Ongewogen berekening
+  if(ongewogen){
+    tabel_percentage = subset_x %>% group_by(!!sym(var_inhoud)) %>% 
+      summarise(aantal = n()) %>% ungroup() %>% 
+      mutate(totaal = sum(aantal), percentage = round(aantal / totaal * 100,0)) %>% 
+      filter(!!sym(var_inhoud) %in% value)
+    
+    
+    #Checken of tabel leeg is: "-%"
+    percentage <- if (nrow(tabel_percentage) < 1) {
+      "-%"
+    } else {
+      #Anders checken of kleine & grote N is voldaan
+      case_when(
+        tabel_percentage$totaal < params$default_nvar | tabel_percentage$totaal < params$default_ncel ~ "-%",
+        TRUE ~ paste0(tabel_percentage$percentage,"%")
+      )
+    }
+    
+    return(percentage)
+
+  }
+  
   
   # Standaard alleen laatste jaar overhouden
   # Subset maken van design
