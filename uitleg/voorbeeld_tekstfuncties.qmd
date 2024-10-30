@@ -119,6 +119,10 @@ De functie **maak_percentage()** berekent een percentage van een indicator. De f
 -   **var_jaar:**\
     De indicator die aangeeft uit welk jaar de deelnemer is. Default is "AGOJB401".
     
+-   **ongewogen**\
+    Standaard op FALSE. Wanneer TRUE worden ongewogen percentages uitgerekend.
+
+    
 ### Standaard percentage
 
 ```{r Maak percentage 1, warning = F}
