@@ -275,20 +275,18 @@ De cijfers die hier worden gepresenteerd zijn gestandaardiseerd naar GGD-regio, 
 
 :::: {layout="[100]"}
 ::: column
-Van de respondenten in uw gemeente is `r monitor_df %>% maak_percentage(var_inhoud = 'AGGSA401', value = 2, niveau = "gemeente")` vrouw en `r monitor_df %>% maak_percentage(var_inhoud = 'AGGSA401', value = 1, niveau = "gemeente")` man. Daarnaast geeft `r monitor_df %>% maak_percentage(var_inhoud = 'AGGSA401', value = 3, niveau = "gemeente")` aan zich anders dan man of vrouw te voelen.
+Van de respondenten in uw gemeente is `r monitor_df %>% maak_percentage(var_inhoud = 'AGGSA401', value = 2, niveau = "gemeente", ongewogen = T)` vrouw en `r monitor_df %>% maak_percentage(var_inhoud = 'AGGSA401', value = 1, niveau = "gemeente", ongewogen = T)` man. Daarnaast geeft `r monitor_df %>% maak_percentage(var_inhoud = 'AGGSA401', value = 3, niveau = "gemeente", ongewogen = T)` aan zich anders dan man of vrouw te voelen.
 :::
 ::::
 
 ::::: {layout="[50,50]"}
 ::: column
-```{r Achtergrondkenmerken 1}
-# Cirkeldiagram gender deelnemers regio
-plot = monitor_df %>% 
-  maak_cirkeldiagram(
-    var_inhoud = "AGGSA401",
-    titel = paste("Gender deelnemers", params$regionaam),
-    niveaus = "regio"
-  )
+```{r Achtergrondkenmerken 1, fig.alt=ggplot2::get_alt_text(plot)}
+plot = monitor_df %>% maak_grafiek_cbs_bevolking(
+   niveaus = c("gemeente", "regio"),
+   titel = "Gender",
+   crossing_cbs = "geslacht"
+ )
 
 plot
 ```
@@ -303,9 +301,9 @@ plot
 
 :::: {layout="[100]"}
 ::: column
-Van de respondenten in uw gemeente is `r monitor_df %>% maak_percentage(var_inhoud = 'AGLFA401', value = 1, niveau = "gemeente")` 16 of 17 jaar, `r monitor_df %>% maak_percentage(var_inhoud = 'AGLFA401', value = 2, niveau = "gemeente")` tussen de 18 en 20 jaar en `r monitor_df %>% maak_percentage(var_inhoud = 'AGLFA401', value = 3, niveau = "gemeente")` tussen de 21 en 25 jaar.
+Van de respondenten in uw gemeente is `r monitor_df %>% maak_percentage(var_inhoud = 'AGLFA401', value = 1, niveau = "gemeente", ongewogen = T)` 16 of 17 jaar, `r monitor_df %>% maak_percentage(var_inhoud = 'AGLFA401', value = 2, niveau = "gemeente", ongewogen = T)` tussen de 18 en 20 jaar en `r monitor_df %>% maak_percentage(var_inhoud = 'AGLFA401', value = 3, niveau = "gemeente", ongewogen = T)` tussen de 21 en 25 jaar.
 
-`r monitor_df %>% maak_percentage(var_inhoud = 'AGETS411', value = 1, niveau = "gemeente")` van de respondenten heeft een Nederlandse herkomst.
+`r monitor_df %>% maak_percentage(var_inhoud = 'AGETS411', value = 1, niveau = "gemeente", ongewogen = T)` van de respondenten heeft een Nederlandse herkomst.
 :::
 ::::
 
