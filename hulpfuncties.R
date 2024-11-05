@@ -2849,7 +2849,7 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
   
   #leeftijd en geslacht aan varnamen uit monitor koppelen
   crossing_monitor <- c("leeftijd" = "AGLFA401",
-                        "geslacht" = "AGGSA402")
+                        "geslacht" = "AGGSA401")
   
   #vector monitor crossvars filteren op invoer
   crossing_monitor <- crossing_monitor[names(crossing_monitor) %in% crossing_cbs]
@@ -3489,28 +3489,31 @@ maak_percentage <- function(data, var_inhoud, value = 1, niveau = "regio",
     
   }
   
-  
   #Ongewogen berekening
   if(ongewogen){
     tabel_percentage = subset_x %>% group_by(!!sym(var_inhoud)) %>% 
       summarise(aantal = n()) %>% ungroup() %>% 
-      mutate(totaal = sum(aantal), percentage = round(aantal / totaal * 100,0)) %>% 
-      filter(!!sym(var_inhoud) %in% value)
+      mutate(totaal = sum(aantal), percentage = round(aantal / totaal * 100,0)) #%>% 
+      #filter(!!sym(var_inhoud) %in% value)
     
+    # Checken of kleine & grote N is voldaan
+    tabel_percentage$percentage <- 
+      case_when(tabel_percentage$totaal < params$default_nvar | any(tabel_percentage$aantal < params$default_ncel) ~ "-%",
+                TRUE ~ paste0(tabel_percentage$percentage,"%"))
     
-    #Checken of tabel leeg is: "-%"
-    percentage <- if (nrow(tabel_percentage) < 1) {
-      "-%"
-    } else {
-      #Anders checken of kleine & grote N is voldaan
-      case_when(
-        tabel_percentage$totaal < params$default_nvar | tabel_percentage$totaal < params$default_ncel ~ "-%",
-        TRUE ~ paste0(tabel_percentage$percentage,"%")
-      )
+    # Checken of er nog labels missen, dan zijn hebben deze groepen 0 respondenten en moeten dus niet getoond worden
+    if (length(val_labels(monitor_df[[var_inhoud]])) != nrow(tabel_percentage)) {
+      tabel_percentage$percentage <- "-%"
     }
     
-    return(percentage)
-
+    tabel_percentage <- tabel_percentage %>% filter(!!sym(var_inhoud) %in% value)
+    
+    #Checken of tabel leeg is: "-%"
+    if (nrow(tabel_percentage) < 1) {
+      return("-%")
+    } else {
+      return(tabel_percentage$percentage)
+    }
   }
   
   
