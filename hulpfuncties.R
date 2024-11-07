@@ -2879,7 +2879,10 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
     mutate(type = "Bevolking")
   
   
-  #response monitor ophale voor crossing
+  #response monitor ophalen voor crossing
+  #aantal labels opslaan
+  aantal_labels <- length(val_labels(data[[crossing_monitor]]))
+  
   #Variabelen naar character omzetten
   data[[crossing_monitor]] <- labelled_naar_character(data, crossing_monitor)
   
@@ -2894,6 +2897,13 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
            type = "Deelnemers"
     )  
   
+  # Check kleine N
+  if(sum(aantallen_regio$aantal) < params$default_nvar | any(aantallen_regio$aantal < params$default_ncel)){
+    aantallen_regio$aantal <- NA
+  } else if (nrow(aantallen_regio) != aantal_labels) { # Checken of er nog labels missen, dan zijn hebben deze groepen 0 respondenten en moeten dus niet getoond worden
+    aantallen_regio$aantal <- NA
+  }
+  
   aantallen_gemeente <- data %>% 
     filter(Gemeentecode == gem_code) %>% 
     group_by(!!sym(crossing_monitor)) %>% 
@@ -2904,6 +2914,13 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
            type = "Deelnemers"
     )
   
+  # Check kleine N
+  if(sum(aantallen_gemeente$aantal) < params$default_nvar | any(aantallen_gemeente$aantal < params$default_ncel)){
+    aantallen_gemeente$aantal <- NA
+  } else if (nrow(aantallen_gemeente) != aantal_labels) { # Checken of er nog labels missen, dan zijn hebben deze groepen 0 respondenten en moeten dus niet getoond worden
+    aantallen_gemeente$aantal <- NA
+  }
+  
   aantallen_landelijk <-  data %>% 
     group_by(!!sym(crossing_monitor)) %>% 
     summarise(aantal = n()) %>%
@@ -2913,11 +2930,20 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
            type = "Deelnemers"
     )  
   
+  # Check kleine N
+  if(sum(aantallen_landelijk$aantal) < params$default_nvar | any(aantallen_landelijk$aantal < params$default_ncel)){
+    aantallen_landelijk$aantal <- NA
+  } else if (nrow(aantallen_landelijk) != aantal_labels) { # Checken of er nog labels missen, dan zijn hebben deze groepen 0 respondenten en moeten dus niet getoond worden
+    aantallen_landelijk$aantal <- NA
+  }
+
+  
   #regio en gemeente responsedata samenvoegen  
   monitor_responsedata <- rbind(aantallen_regio, aantallen_gemeente, aantallen_landelijk) %>% 
     mutate(crossing = str_remove(crossing," jaar") %>% #" jaar" verwijderen uit lft crossing van monitordata
              tolower()) %>% #alles tolower om verschil man Man vrouw Vrouw weg te strepen.
-    select(regio, crossing, aantal, type)
+    select(regio, crossing, aantal, type) %>%
+    drop_na(aantal) # Verwijder rijen zonder aantallen 
   
   #als missing_bewaren FALSE is; verwijderen
   if(!missing_bewaren){
