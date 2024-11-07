@@ -814,11 +814,6 @@ plot
 :::
 :::::
 
-:::: {layout="[100]"}
-::: achtergrondkleur
-[Aanpakeenzaamheid.nl](https://aanpakeenzaamheid.nl/jongeren/) bundelt hulpmiddelen die door gemeenten en organisaties in te zetten zijn tegen eenzaamheid.
-:::
-::::
 
 # ![](iconen/Stress-prestatiedruk_XL.png) Stress en prestatiedruk {.h1-icoon}
 

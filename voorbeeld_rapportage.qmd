@@ -803,11 +803,6 @@ Eenzaamheid is één van de belangrijkste risicofactoren voor het ontwikkelen va
 
 Van de jongvolwassenen in uw gemeente voelt `r monitor_df %>% maak_percentage(var_inhoud = 'LVEES402', niveau = "gemeente")` zich enigszins eenzaam en `r monitor_df %>% maak_percentage(var_inhoud = 'LVEES402', value = 2, niveau = "gemeente")` voelt zich sterk eenzaam. `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVEES402', value = 2, variabele_label = 'zich sterk eenzaam voelt,', var_crossing = 'AGOJB401')` `r monitor_df %>% maak_vergelijking(var_inhoud = 'LVEES402', value = 2, variabele_label = 'zich sterk eenzaam voelt', var_crossing = 'AGLFA401')`
 
-<br>
-
-::: achtergrondkleur
-[Aanpakeenzaamheid.nl](https://aanpakeenzaamheid.nl/jongeren/) bundelt hulpmiddelen die door gemeenten en organisaties in te zetten zijn tegen eenzaamheid.
-:::
 :::::
 ::::::
 
