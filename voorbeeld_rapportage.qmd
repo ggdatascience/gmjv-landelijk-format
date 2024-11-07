@@ -268,7 +268,7 @@ In totaal hebben `r monitor_df %>% filter(GGDregio == params$regiocode) %>% nrow
 
 De resultaten kunnen helpen bij de invulling en ontwikkeling van het gezondheidsbeleid. Uit de resultaten kan bijvoorbeeld blijken dat het nodig is om meer hulp te bieden aan bepaalde groepen jongvolwassenen of extra voorzieningen op te zetten in de regio of in een gemeente.
 
-De [Gezondheidsmonitor Jongvolwassenen](https://www.monitorgezondheid.nl/gezondheidsmonitor-jongvolwassenen/2022 "https://www.monitorgezondheid.nl/gezondheidsmonitor-jongvolwassenen/2022") 2024 is onderdeel van het [Gezondheidsonderzoek COVID-19](https://www.rivm.nl/gor-covid-19 "https://www.rivm.nl/gor-covid-19") van Netwerk GOR. Daarin brengen het RIVM, GGD’en, GGD GHOR Nederland, het Nivel en ARQ Nationaal Psychotrauma Centrum de gevolgen van de coronaperiode voor de gezondheid in kaart. Dit doen zij in opdracht van het ministerie van VWS en ZonMw.
+De [Gezondheidsmonitor Jongvolwassenen](https://www.monitorgezondheid.nl/gezondheidsmonitor-jongvolwassenen/2022 "https://www.monitorgezondheid.nl/gezondheidsmonitor-jongvolwassenen/2024") 2024 is onderdeel van het [Gezondheidsonderzoek COVID-19](https://www.rivm.nl/gor-covid-19 "https://www.rivm.nl/gor-covid-19") van Netwerk GOR. Daarin brengen het RIVM, GGD’en, GGD GHOR Nederland, het Nivel en ARQ Nationaal Psychotrauma Centrum de gevolgen van de coronaperiode voor de gezondheid in kaart. Dit doen zij in opdracht van het ministerie van VWS en ZonMw.
 
 :::: {layout="[30,70]"}
 ::: column
