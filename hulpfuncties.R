@@ -3518,19 +3518,18 @@ maak_percentage <- function(data, var_inhoud, value = 1, niveau = "regio",
   #Ongewogen berekening
   if(ongewogen){
     tabel_percentage = subset_x %>% group_by(!!sym(var_inhoud)) %>% 
-      summarise(aantal = n()) %>% ungroup() %>% 
-      mutate(totaal = sum(aantal), percentage = round(aantal / totaal * 100,0)) #%>% 
+      summarise(aantal = n()) %>% 
+      ungroup() %>% 
+      filter(!is.na(!!sym(var_inhoud))) %>% 
+      mutate(totaal = sum(aantal),
+             percentage = round(aantal / totaal * 100,0)) #%>% 
       #filter(!!sym(var_inhoud) %in% value)
     
     # Checken of kleine & grote N is voldaan
     tabel_percentage$percentage <- 
-      case_when(tabel_percentage$totaal < params$default_nvar | any(tabel_percentage$aantal < params$default_ncel) ~ "-%",
+      case_when(tabel_percentage$totaal < params$default_nvar 
+                | any(tabel_percentage$aantal < params$default_ncel) ~ "-%",
                 TRUE ~ paste0(tabel_percentage$percentage,"%"))
-    
-    # Checken of er nog labels missen, dan zijn hebben deze groepen 0 respondenten en moeten dus niet getoond worden
-    if (length(val_labels(monitor_df[[var_inhoud]])) != nrow(tabel_percentage)) {
-      tabel_percentage$percentage <- "-%"
-    }
     
     tabel_percentage <- tabel_percentage %>% filter(!!sym(var_inhoud) %in% value)
     
