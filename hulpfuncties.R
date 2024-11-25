@@ -2843,6 +2843,8 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
                                        x_label = "",
                                        alt_text = NULL,
                                        caption = "",
+                                       huidig_jaar = 2024,
+                                       jaarvar = "AGOJB401",
                                        tabel_en_grafiek = FALSE,
                                        toon_y = FALSE
 ){
@@ -2885,6 +2887,10 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
   
   #Variabelen naar character omzetten
   data[[crossing_monitor]] <- labelled_naar_character(data, crossing_monitor)
+  
+  #data filteren op jaar
+  data <- data %>% 
+    filter(!!sym(jaarvar) == huidig_jaar)
   
   #Aantallen uitrekenen. Missing labelen als missing_label
   aantallen_regio <- data %>% 
@@ -3520,7 +3526,7 @@ maak_percentage <- function(data, var_inhoud, value = 1, niveau = "regio",
     tabel_percentage = subset_x %>% group_by(!!sym(var_inhoud)) %>% 
       summarise(aantal = n()) %>% 
       ungroup() %>% 
-      filter(!is.na(!!sym(var_inhoud))) %>% 
+      filter(!is.na(!!sym(var_inhoud))) %>% #missing wissen
       mutate(totaal = sum(aantal),
              percentage = round(aantal / totaal * 100,0)) #%>% 
       #filter(!!sym(var_inhoud) %in% value)
@@ -3530,6 +3536,12 @@ maak_percentage <- function(data, var_inhoud, value = 1, niveau = "regio",
       case_when(tabel_percentage$totaal < params$default_nvar 
                 | any(tabel_percentage$aantal < params$default_ncel) ~ "-%",
                 TRUE ~ paste0(tabel_percentage$percentage,"%"))
+    
+        
+    # # Checken of er nog labels missen, dan zijn hebben deze groepen 0 respondenten en moeten dus niet getoond worden
+    if (length(val_labels(monitor_df[[var_inhoud]])) != nrow(tabel_percentage)) {
+      tabel_percentage$percentage <- "-%"
+    }
     
     tabel_percentage <- tabel_percentage %>% filter(!!sym(var_inhoud) %in% value)
     
