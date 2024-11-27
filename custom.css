@@ -89,11 +89,10 @@ div bepaald de positie van die elementen relatief aan het het grotere plaatje. P
   
 /*css om het mogelijk te maken icoontjes aan headers toe te voegen*/
   .h1-icoon h1 {
-    /* om te zorgen dat er plaatje met relatieve positie overheen geprojecteerd kan worden
+    /* om te zorgen dat er plaatje met relatieve positie overheen geprojecteerd kan worden*/
     position: relative;
     /* moet ook een offest vanaf links zijn zodat de plaatjes ruimte krijgen*/
-    position: relative;
-    text-indent: 80px;
+    padding-left: 80px;
   }
   
 /*Plaatsing van header icons*/
