@@ -1478,7 +1478,8 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
                                               toon_aslabel = TRUE,
                                               x_as_label_wrap = NULL,
                                               x_as_regels_toevoegen = 0,
-                                              aflopend = FALSE
+                                              aflopend = FALSE,
+                                              max_as = 101
                                               
 ){
   
@@ -1743,7 +1744,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
     #kleuren voor sterretje
     scale_color_manual(values= kleuren) + 
     
-    scale_y_continuous(limits = c(0,100),
+    scale_y_continuous(limits = c(0,max_as),
                        breaks = seq(0,100, by = 10),
                        labels = paste0(seq(0,100, by = 10),"%"),
                        expand = expansion(mult = c(0, 0.05))
@@ -1768,7 +1769,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
           plot.caption = element_text(size = caption_size, hjust = 0.5)
     )
   
-  
+
   #Aslabel verwijderen als als dat is aangegeven.
   if(!toon_aslabel){
     plot <- plot +  theme(axis.text = element_blank()) 
@@ -2215,7 +2216,8 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
                                         toon_y = FALSE,
                                         x_as_label_wrap = 20,
                                         x_as_regels_toevoegen = 0,
-                                        aflopend = FALSE
+                                        aflopend = FALSE,
+                                        max_as = 101,
 ){
   
   #TODO
@@ -2370,7 +2372,7 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
     
     scale_fill_manual(values= kleuren) +
     scale_x_continuous(
-      limits = c(0,101),
+      limits = c(0,max_as),
       breaks = seq(0,101, by = 10),
       labels = paste0(seq(0,100, by = 10),"%"),
       expand = expansion(mult = c(0, 0.05)))+
