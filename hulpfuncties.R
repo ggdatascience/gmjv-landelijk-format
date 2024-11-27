@@ -2217,7 +2217,7 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
                                         x_as_label_wrap = 20,
                                         x_as_regels_toevoegen = 0,
                                         aflopend = FALSE,
-                                        max_as = 101,
+                                        max_as = 101
 ){
   
   #TODO
@@ -3122,7 +3122,7 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
 # Tekstfuncties -----------------------------------------------------------
 maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL, 
                               var_crossing = NULL, value = 1, niveaus = "regio",
-                              huidig_jaar = 2024, var_jaar = "AGOJB401") {
+                              huidig_jaar = 2024, var_jaar = "AGOJB401", met_percentage_huidig = FALSE) {
   
   # Check input: Als var_crossing is ingevuld, dan mag maar één niveau ingevuld zijn
   if(!is.null(var_crossing) & length(niveaus) > 1){
@@ -3328,18 +3328,27 @@ maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL,
     
   } else if (var_crossing == 'AGOJB401') { # Vergelijking 2 jaren
     
+    #Toevoeging 27-11 Pieter; Optie om % huidig jaar ook te tonen
+    huidig_percentage <- ""
+    if(met_percentage_huidig){
+      
+    huidig_percentage <- paste0(" (",result$percentage[2],"%)")
+      
+    }
+    
+    
     resultaat_vergelijking <- case_when(result$ci_lower[1] > result$ci_upper[2] ~ " afgenomen ",
                                         result$ci_lower[2] > result$ci_upper[1] ~ " toegenomen ",
                                         TRUE ~ " gelijk gebleven ")
     
     if (resultaat_vergelijking == " gelijk gebleven ") {
       
-      return(paste0("In ", label_niveau, " is het percentage jongvolwassenen dat ", label, resultaat_vergelijking, 
+      return(paste0("In ", label_niveau, " is het percentage jongvolwassenen dat ", label, huidig_percentage, resultaat_vergelijking, 
                     "t.o.v. ", crossings[1], "."))
       
     } else {
       
-      return(paste0("In ", label_niveau, " is het percentage jongvolwassenen dat ", label, resultaat_vergelijking, 
+      return(paste0("In ", label_niveau, " is het percentage jongvolwassenen dat ", label, huidig_percentage, resultaat_vergelijking, 
                     "t.o.v. ", crossings[1], " (", result$percentage[1], "%)."))
       
     } 
