@@ -2950,7 +2950,17 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
   monitor_responsedata <- rbind(aantallen_regio, aantallen_gemeente, aantallen_landelijk) %>% 
     mutate(crossing = str_remove(crossing," jaar") %>% #" jaar" verwijderen uit lft crossing van monitordata
              tolower()) %>% #alles tolower om verschil man Man vrouw Vrouw weg te strepen.
-    select(regio, crossing, aantal, type) %>%
+    select(regio, crossing, aantal, type) 
+  
+  #Melden als er te lage aantallen zijn
+  if(any(is.na(monitor_responsedata$aantal))){
+    
+    niveaus_te_laag <- monitor_responsedata$regio[is.na(monitor_responsedata$aantal)] %>% unique() %>% paste0(collapse = ",")
+    
+    warning(glue("Aantallen voor: {niveaus_te_laag} te laag om te tonen met instellingen default_nvar: {params$default_nvar}"))
+  }
+  
+  monitor_responsedata <- monitor_responsedata %>% 
     drop_na(aantal) # Verwijder rijen zonder aantallen 
   
   #als missing_bewaren FALSE is; verwijderen
