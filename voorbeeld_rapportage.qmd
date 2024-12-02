@@ -429,7 +429,7 @@ plot = monitor_df %>%
   maak_staafdiagram_vergelijking(
     var_inhoud = "AGWSA401",
     var_crossings = "AGLFA401",
-     titel = "Heeft betaald werk")
+    titel = "Heeft betaald werk")
 plot
 ```
 :::
