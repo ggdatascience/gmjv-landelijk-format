@@ -1182,6 +1182,7 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
 
 maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings = NULL, 
                                            titel = "",
+                                           subtitel = FALSE,
                                            kleuren = params$default_kleuren_grafiek,
                                            nvar = params$default_nvar, ncel = params$default_ncel,
                                            alt_text = NULL,
@@ -1226,11 +1227,13 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings = NUL
     
     design_x <- design_land
     subset_x <- data
+    niveau_label <- "Nederland" # niveau voor subtitel
     
   } else if(niveaus == "regio"){
     
     design_x <- design_regio
     subset_x <- data %>% filter(GGDregio == params$regiocode)
+    niveau_label <- val_label(data$GGDregio, params$regiocode) # niveau voor subtitel
     
   } else if (niveaus == "gemeente"){
     
@@ -1238,11 +1241,17 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings = NUL
     subset_x <<- data %>% 
       filter(Gemeentecode == params$gemeentecode) %>%
       filter(!is.na(Standaardisatiefactor_gemeente))
+    niveau_label <- val_label(data$Gemeentecode, params$gemeentecode) # niveau voor subtitel
     
   } else{
     
     stop(glue("niveau bestaat niet
                 niveau: {niveaus}"))
+  }
+  
+  # niveau_label niet tonen als argument subtitel = FALSE
+  if (subtitel == FALSE) {
+    niveau_label = ""
   }
   
   #design altijd filteren op jaar in maak_staafdiagram_vergelijking
@@ -1310,7 +1319,7 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings = NUL
                show.legend = FALSE,
                na.rm = T
     ) +
-    ggtitle(str_wrap(titel, 50)) +
+    ggtitle(str_wrap(titel, 50), subtitle = niveau_label) + 
     #Hier worden de kleuren en volgorde bepaald.
     scale_fill_manual(values= kleuren,
                       guide = guide_legend(nrow = 1, byrow = TRUE,
@@ -1337,6 +1346,7 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings = NUL
           text = element_text(family = font_family,
                               lineheight = line_height), 
           plot.title = element_text(hjust = .5, size = titel_size),
+          plot.subtitle = element_text(hjust = .5, size = (titel_size - 5), face = "italic"),
           axis.text = element_text(size = as_label_size),
           legend.text = element_text(size = legend_text_size),
           plot.caption = element_text(size = caption_size, hjust = 0.5)
@@ -1907,7 +1917,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
 
 
 #TODO Overal chekc inbouwen of een var wel een lbl+dbl is. Of niet afh. van maak_kruistabel() output.
-maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_crossings = NULL, titel = "",
+maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_crossings = NULL, titel = "", subtitel = FALSE,
                                                         kleuren = params$default_kleuren_grafiek,
                                                         kleuren_per_crossing = F, fade_kleuren = F,
                                                         flip = FALSE, 
@@ -1963,11 +1973,13 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
     
     design_x <- design_land
     subset_x <- data
+    niveau_label <- "Nederland" # niveau voor subtitel
     
   } else if(niveaus == "regio"){
     
     design_x <- design_regio
     subset_x <- data %>% filter(GGDregio == params$regiocode)
+    niveau_label <- val_label(data$GGDregio, params$regiocode) # niveau voor subtitel
     
   } else if (niveaus == "gemeente"){
     
@@ -1975,11 +1987,17 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
     subset_x <<- data %>% 
       filter(Gemeentecode == params$gemeentecode) %>%
       filter(!is.na(Standaardisatiefactor_gemeente))
+    niveau_label <- val_label(data$Gemeentecode, params$gemeentecode) # niveau voor subtitel
     
   } else{
     
     stop(glue("niveau bestaat niet
                 niveau: {niveaus}"))
+  }
+  
+  # niveau_label niet tonen als argument subtitel = FALSE
+  if (subtitel == FALSE) {
+    niveau_label = ""
   }
   
   #design altijd filteren op jaar in maak_staafdiagram_vergelijking
@@ -2101,7 +2119,7 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
     #kleuren voor balken
     scale_fill_manual(values = kleuren) + 
     
-    ggtitle(str_wrap(titel, 50)) +
+    ggtitle(str_wrap(titel, 50), subtitle = niveau_label) +
     theme(panel.background = element_blank(),
           legend.position = "none",
           axis.line.y.left = element_line(linewidth = 1),
@@ -2109,6 +2127,7 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
           text = element_text(family = font_family,
                               lineheight = line_height), 
           plot.title = element_text(hjust = .5, size = titel_size),
+          plot.subtitle = element_text(hjust = .5, size = (titel_size - 5), face = "italic"),
           axis.text = element_text(size = as_label_size),
           legend.text = element_text(size = legend_text_size),
           plot.caption = element_text(size = caption_size, hjust = 0.5)
@@ -2204,7 +2223,8 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
 }
 
 #horizontaal gestapeld staafdiagram
-maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, titel = "",
+maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, titel = "", 
+                                        subtitel = "",
                                         kleuren = params$default_kleuren_grafiek, x_label = "",
                                         nvar = params$default_nvar, ncel = params$default_ncel,
                                         alt_text = NULL,
@@ -2376,7 +2396,7 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
       breaks = seq(0,101, by = 10),
       labels = paste0(seq(0,100, by = 10),"%"),
       expand = expansion(mult = c(0, 0.05)))+
-    ggtitle(str_wrap(titel, 50)) + 
+    ggtitle(str_wrap(titel, 50), subtitle = subtitel) +
     ylab(x_label) + 
     theme(
       axis.title = element_blank(),
@@ -2392,6 +2412,7 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
       text = element_text(family = font_family,
                           lineheight = line_height), 
       plot.title = element_text(hjust = .5, size = titel_size),
+      plot.subtitle = element_text(hjust = .5, size = (titel_size - 5), face = "italic"),
       axis.text = element_text(size = as_label_size),
       legend.text = element_text(size = legend_text_size),
       plot.caption = element_text(size = caption_size, hjust = 0.5)
