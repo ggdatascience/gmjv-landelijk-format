@@ -2983,7 +2983,7 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
     #% berekenen 
     mutate(label = paste(type,regio)) %>%
     group_by(label) %>% 
-    mutate(percentage = aantal/sum(aantal)*100 %>% round(1))
+    mutate(percentage = aantal/sum(aantal)*100)
   
   #filteren op opgevraagde niveaus
   #named vector maken die inhoud regiovar in df_plot koppelt aan vector niveaus()
@@ -3560,7 +3560,7 @@ maak_percentage <- function(data, var_inhoud, value = 1, niveau = "regio",
       ungroup() %>% 
       filter(!is.na(!!sym(var_inhoud))) %>% #missing wissen
       mutate(totaal = sum(aantal),
-             percentage = round(aantal / totaal * 100,0)) #%>% 
+             percentage = round(aantal / totaal * 100, 0)) #%>% 
       #filter(!!sym(var_inhoud) %in% value)
     
     # Checken of kleine & grote N is voldaan
