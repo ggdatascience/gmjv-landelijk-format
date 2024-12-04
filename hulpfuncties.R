@@ -3515,7 +3515,11 @@ maak_top <- function(data, var_inhoud, toon_label = T, value = 1, niveau = "regi
 }
 
 maak_percentage <- function(data, var_inhoud, value = 1, niveau = "regio",
-                            huidig_jaar = 2024, var_jaar = "AGOJB401", ongewogen = FALSE) {
+                            huidig_jaar = 2024, var_jaar = "AGOJB401",
+                            ongewogen = FALSE,
+                            subset_var = NULL,
+                            subset_val = NULL
+                            ) {
   
   # Input is één dichotome variabele met één niveau 
   if(length(niveau) > 1 | length(var_inhoud) > 1){
@@ -3553,6 +3557,15 @@ maak_percentage <- function(data, var_inhoud, value = 1, niveau = "regio",
     
   }
   
+  #Optie voor Inhoudelijke subset; tbv https://github.com/ggdatascience/gmjv-landelijk-format/issues/93
+  if(!is.null(subset_var) & !is.null(subset_val)){
+    
+    design_x <- subset(design_x, get(subset_var) == subset_val) #design subsetten
+    subset_x <- subset_x %>%
+      filter(!!sym(subset_var) == subset_val) #data subsetten
+  }
+  
+  
   #Ongewogen berekening
   if(ongewogen){
     tabel_percentage = subset_x %>% group_by(!!sym(var_inhoud)) %>% 
@@ -3584,7 +3597,6 @@ maak_percentage <- function(data, var_inhoud, value = 1, niveau = "regio",
       return(tabel_percentage$percentage)
     }
   }
-  
   
   # Standaard alleen laatste jaar overhouden
   # Subset maken van design
