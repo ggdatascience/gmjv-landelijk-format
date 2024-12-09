@@ -1053,6 +1053,7 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
     geom_text(aes(x = !!sym(var_crossing_groep),
                   y = percentage,
                   label = paste0(percentage,"%"),
+                  group = !!sym(var_crossing_kleur),
                   vjust = -1),
               position = position_dodge2(width = 0.8),
               size = geom_text_percentage, # Hier grootte van percentages aanpassen
