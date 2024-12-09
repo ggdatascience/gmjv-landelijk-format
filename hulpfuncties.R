@@ -895,7 +895,8 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
                                                    tabel_en_grafiek = FALSE,
                                                    toon_y = FALSE,
                                                    x_as_label_wrap = 20,
-                                                   x_as_regels_toevoegen = 0
+                                                   x_as_regels_toevoegen = 0,
+                                                   max_as = 101
 ){
   
   if(!labelled::is.labelled(data[[var_inhoud]])){
@@ -1053,6 +1054,7 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
     geom_text(aes(x = !!sym(var_crossing_groep),
                   y = percentage,
                   label = paste0(percentage,"%"),
+                  group = !!sym(var_crossing_kleur),
                   vjust = -1),
               position = position_dodge2(width = 0.8),
               size = geom_text_percentage, # Hier grootte van percentages aanpassen
@@ -1079,7 +1081,7 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
     
     #Y-as axis ticks definiëren en met expand zorgen dat die netjes aansluit op 0.
     scale_y_continuous(
-      limits = c(0,100),
+      limits = c(0,max_as),
       breaks = seq(0,100, by = 10),
       labels = paste0(seq(0,100, by = 10),"%"),
       expand = expansion(mult = c(0, 0.05))) + 
