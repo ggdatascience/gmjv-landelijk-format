@@ -3570,6 +3570,10 @@ maak_percentage <- function(data, var_inhoud, value = 1, niveau = "regio",
   
   #Ongewogen berekening
   if(ongewogen){
+    # Filter op juiste jaar
+    subset_x <- subset_x %>% 
+      filter(!!sym(var_jaar) == huidig_jaar)
+    
     tabel_percentage = subset_x %>% group_by(!!sym(var_inhoud)) %>% 
       summarise(aantal = n()) %>% 
       ungroup() %>% 
