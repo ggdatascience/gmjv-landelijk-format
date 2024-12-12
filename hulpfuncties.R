@@ -723,6 +723,22 @@ bepaal_kleuren <- function(kleuren = params$default_kleuren_grafiek,
   
 }
 
+valideer_kleurvector <- function(kleuren) {
+  # Regex voor geldige patronen
+  #Begint met '#'
+  #Daarna 3 OF 6 alfanumerieke tekens
+  #Daarna niks
+  hex_patroon <- "^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$"
+  
+  #controleer geldigheid
+  is_geldig <- grepl(hex_patroon, kleuren)
+  
+  return(is_geldig)
+}
+
+
+
+
 # Tabelfuncties -------------------------------------------------------
 maak_responstabel <- function(data, crossings, missing_label = "Onbekend",
                               kleuren = params$default_kleuren_responstabel,
@@ -731,6 +747,15 @@ maak_responstabel <- function(data, crossings, missing_label = "Onbekend",
                               niveaus = "regio"
                               
 ){
+  
+  #Kleuren valideren: zijn het allemaal geldige hexwaarden?
+  if(!all(valideer_kleurvector(kleuren))){ #Als NIET alle kleurcodes valide zijn: print warning
+    
+    warning(
+      glue("LET OP. Fout in kleuren. Controleer de hex-codes
+           {paste(kleuren, collapse = ', ')}")
+    )
+    }
   
   #TODO Hoe om te gaan met missing waarden? Meetellen als 'onbekend' of niet weergeven?
   #In laatste geval kloppen de totalen van crossings onderling niet. Kan prima zijn
@@ -898,6 +923,15 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
                                                    x_as_regels_toevoegen = 0,
                                                    max_as = 101
 ){
+  
+  #Kleuren valideren: zijn het allemaal geldige hexwaarden?
+  if(!all(valideer_kleurvector(kleuren))){ #Als NIET alle kleurcodes valide zijn: print warning
+    
+    warning(
+      glue("LET OP. Fout in kleuren. Controleer de hex-codes
+           {paste(kleuren, collapse = ', ')}")
+    )
+  }
   
   if(!labelled::is.labelled(data[[var_inhoud]])){
     stop(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
@@ -1195,6 +1229,15 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings = NUL
                                            tabel_en_grafiek = FALSE,
                                            toon_y = FALSE
 ){
+  
+  #Kleuren valideren: zijn het allemaal geldige hexwaarden?
+  if(!all(valideer_kleurvector(kleuren))){ #Als NIET alle kleurcodes valide zijn: print warning
+    
+    warning(
+      glue("LET OP. Fout in kleuren. Controleer de hex-codes
+           {paste(kleuren, collapse = ', ')}")
+    )
+  }
   
   if(!labelled::is.labelled(data[[var_inhoud]])){
     stop(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele. 
@@ -1495,6 +1538,14 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
                                               
 ){
   
+  #Kleuren valideren: zijn het allemaal geldige hexwaarden?
+  if(!all(valideer_kleurvector(kleuren))){ #Als NIET alle kleurcodes valide zijn: print warning
+    
+    warning(
+      glue("LET OP. Fout in kleuren. Controleer de hex-codes
+           {paste(kleuren, collapse = ', ')}")
+    )
+  }
   #Keuzes die we gebruikers willen bieden mbt niveau:
   # - filteren op niveau OF
   # - uitsplitsen op niveau
@@ -1945,6 +1996,15 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
                                                         x_as_regels_toevoegen = 0
 ){
   
+  #Kleuren valideren: zijn het allemaal geldige hexwaarden?
+  if(!all(valideer_kleurvector(kleuren))){ #Als NIET alle kleurcodes valide zijn: print warning
+    
+    warning(
+      glue("LET OP. Fout in kleuren. Controleer de hex-codes
+           {paste(kleuren, collapse = ', ')}")
+    )
+  }
+  
   if(!labelled::is.labelled(data[[var_inhoud]])){
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
   }
@@ -2251,6 +2311,15 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
                                         max_as = 101
 ){
   
+  #Kleuren valideren: zijn het allemaal geldige hexwaarden?
+  if(!all(valideer_kleurvector(kleuren))){ #Als NIET alle kleurcodes valide zijn: print warning
+    
+    warning(
+      glue("LET OP. Fout in kleuren. Controleer de hex-codes
+           {paste(kleuren, collapse = ', ')}")
+    )
+  }
+  
   #TODO
   #nu wordt de hele grafiek uitgezet zodra 1 percentage te laag is. bij gebruik var_crossing
   #kan het nuttig zijn alleen de crossings met te lage percentages te verwijderen en de grafiek toch
@@ -2520,6 +2589,15 @@ maak_cirkeldiagram <- function(data, var_inhoud, titel = "", kleuren = params$de
                                tabel_en_grafiek = FALSE,
                                x_as_label_wrap = 50
 ) {
+  
+  #Kleuren valideren: zijn het allemaal geldige hexwaarden?
+  if(!all(valideer_kleurvector(kleuren))){ #Als NIET alle kleurcodes valide zijn: print warning
+    
+    warning(
+      glue("LET OP. Fout in kleuren. Controleer de hex-codes
+           {paste(kleuren, collapse = ', ')}")
+    )
+  }
   
   if(!labelled::is.labelled(data[[var_inhoud]])){
     warning(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele"))
@@ -2882,6 +2960,16 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
                                        tabel_en_grafiek = FALSE,
                                        toon_y = FALSE
 ){
+  
+  
+  #Kleuren valideren: zijn het allemaal geldige hexwaarden?
+  if(!all(valideer_kleurvector(kleuren))){ #Als NIET alle kleurcodes valide zijn: print warning
+    
+    warning(
+      glue("LET OP. Fout in kleuren. Controleer de hex-codes
+           {paste(kleuren, collapse = ', ')}")
+    )
+  }
   
   #leeftijd en geslacht aan varnamen uit monitor koppelen
   crossing_monitor <- c("leeftijd" = "AGLFA401",
