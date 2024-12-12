@@ -1725,10 +1725,9 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
   
   #Niveau moet ook een gesorteerde factorvariabele worden zodat kleurcoderingen altijd kloppen
   #Anders krijg je alfabetische indeling v kleuren.
-  df_plot <- df_plot %>% mutate(volgorde = match(niveau, namen_kleuren), #volgorde van factorvar bepalen op volgorde namen_kleuren
-                                niveau = fct_reorder(niveau,
-                                                     volgorde)
-                                  )
+  df_plot <- df_plot %>% 
+    mutate(volgorde = match(niveau, namen_kleuren), #volgorde van factorvar bepalen op volgorde namen_kleuren
+           niveau = fct_reorder(niveau,volgorde))
   
   
   plot =
@@ -2419,7 +2418,7 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
       legend.spacing.x = unit(.1,"cm"),
       legend.position = "bottom",
       axis.line.y.left = element_line(linewidth = 1),
-      
+      legend.justification = c(1,0), 
       #Grootte tekst (behalve annotatie boven balken):
       text = element_text(family = font_family,
                           lineheight = line_height), 
@@ -3060,6 +3059,7 @@ maak_grafiek_cbs_bevolking <- function(data, gem_code = params$gemeentecode,
       legend.title = element_blank(),
       legend.spacing.x = unit(.1,"cm"),
       legend.position = "bottom",
+      legend.justification = c(1,0), 
       axis.line.y.left = element_line(linewidth = 1),
       #Grootte tekst (behalve annotatie boven balken):
       text = element_text(family = font_family,
