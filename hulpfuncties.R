@@ -1518,10 +1518,11 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
   
   # Bepaal kleuren
   if (is.null(var_crossing)) {
+    
     kleur <- ifelse(niveaus == "gemeente", kleuren[6],
                     ifelse(niveaus == "regio", kleuren[4],
                            kleuren[11]))
-    
+
     kleuren <- kleur
   } else {
     kleuren <- bepaal_kleuren(kleuren = kleuren, niveaus = niveaus)
@@ -1562,7 +1563,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
         filter(Gemeentecode == params$gemeentecode) %>%
         filter(!is.na(Standaardisatiefactor_gemeente))
       niveau_label <- val_label(data$Gemeentecode, params$gemeentecode)
-      
+
     } else{
       
       stop(glue("niveau bestaat niet
@@ -1698,7 +1699,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
   
   #regeleinden invoegen
   df_plot[[x_as_label]] <- maak_regeleinden(df_plot[[x_as_label]], x_as_label_wrap, x_as_regels_toevoegen)
-  
+ 
   #kleuren aan labels koppelen
   namen_kleuren <- unique(df_plot[[var_crossing]])
   kleuren <- kleuren[1:length(namen_kleuren)]
@@ -1720,6 +1721,15 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
     
     
   }
+  
+  
+  #Niveau moet ook een gesorteerde factorvariabele worden zodat kleurcoderingen altijd kloppen
+  #Anders krijg je alfabetische indeling v kleuren.
+  df_plot <- df_plot %>% mutate(volgorde = match(niveau, namen_kleuren), #volgorde van factorvar bepalen op volgorde namen_kleuren
+                                niveau = fct_reorder(niveau,
+                                                     volgorde)
+                                  )
+  
   
   plot =
     ggplot(df_plot) +
