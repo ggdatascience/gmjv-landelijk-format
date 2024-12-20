@@ -1395,7 +1395,7 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings = NUL
           axis.text = element_text(size = as_label_size),
           legend.text = element_text(size = legend_text_size),
           plot.caption = element_text(size = caption_size, hjust = 0.5)
-    )
+          )
   
   
   #toon y: laat Y as zien met rechte lijn + ticklabels
@@ -2124,6 +2124,24 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
   #temp dataframe & design verwijderen uit globalEnv.
   rm(data_jaar, design_jaar, envir = .GlobalEnv)
   
+  
+  #Als alles leeg is: leeg plot teruggeven:
+  if(all(is.na(df_plot$percentage))){
+    warning(glue("Plot kan niet gemaakt worden! Te weinig observaties voor {var_inhoud}. De instellingen zijn: nvar = {nvar} en ncel = {ncel}"))
+    
+    #leeg plot tonen & functie vroegtijdig afbreken
+    return(
+      ggplot() +
+        annotate("text", x = 0.5, y = 0.5,
+                 label =  glue("Onvoldoende respondenten in {niveaus}
+                                voor grafiek: {str_wrap(titel, 40)}"),
+                 size = 6, hjust = 0.5, vjust = 0.5) +
+        theme_void() +
+        theme(plot.margin = margin(50, 50, 50, 50)) # Add margin to take up space)
+    )
+  }
+  
+  
   #voeg regeleinden toe als nodig:
   #x_as_label_wrap bepaald wanneer labels te lang zijn om naast elkaar te passen
   #x_as_regels_toeveogen bepaald of er regels toegevoegd moeten worden om plots die naast elkaar staan
@@ -2157,10 +2175,8 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
   #volgorde onderdeel vastzetten o.b.v dataframe 
   df_plot$onderdeel <- factor(df_plot$onderdeel, levels = df_plot$onderdeel)
   
-  
-  #missing percentages met 0 vervangen (na.rm = T werkt niet bij geom_bar() bij position_stack)
-  df_plot$percentage[is.na(df_plot$percentage)] <- 0
-  
+  #na.rm werkt niet bij geom_bar() met position_stack. Hierdoor komt er een warning.
+
   plot <- ggplot(df_plot) +
     geom_bar(aes(x = onderdeel, y = percentage, fill = onderdeel),
              stat = "identity", width = 0.8
@@ -3618,7 +3634,10 @@ maak_percentage <- function(data, var_inhoud, value = 1, niveau = "regio",
                             huidig_jaar = 2024, var_jaar = "AGOJB401",
                             ongewogen = FALSE,
                             subset_var = NULL,
-                            subset_val = NULL
+                            subset_val = NULL,
+                            nvar = params$default_nvar,
+                            ncel = params$default_ncel
+                            
                             ) {
   
   # Input is één dichotome variabele met één niveau 
@@ -3712,7 +3731,10 @@ maak_percentage <- function(data, var_inhoud, value = 1, niveau = "regio",
   # Bereken gewogen cijfers
   result <- bereken_kruistabel(data = data_temp,
                                survey_design = design_temp, 
-                               variabele = var_inhoud) %>%
+                               variabele = var_inhoud,
+                               min_observaties_per_vraag = nvar,
+                               min_observaties_per_antwoord = ncel
+                               ) %>%
     filter(waarde %in% value) #%>% # Filter de gegevens voor value eruit. Standaard is dit 1.
   
   #temp design verwijderen uit globalEnv.
