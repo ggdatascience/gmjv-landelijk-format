@@ -3634,7 +3634,10 @@ maak_percentage <- function(data, var_inhoud, value = 1, niveau = "regio",
                             huidig_jaar = 2024, var_jaar = "AGOJB401",
                             ongewogen = FALSE,
                             subset_var = NULL,
-                            subset_val = NULL
+                            subset_val = NULL,
+                            nvar = params$default_nvar,
+                            ncel = params$default_ncel
+                            
                             ) {
   
   # Input is één dichotome variabele met één niveau 
@@ -3728,7 +3731,10 @@ maak_percentage <- function(data, var_inhoud, value = 1, niveau = "regio",
   # Bereken gewogen cijfers
   result <- bereken_kruistabel(data = data_temp,
                                survey_design = design_temp, 
-                               variabele = var_inhoud) %>%
+                               variabele = var_inhoud,
+                               min_observaties_per_vraag = nvar,
+                               min_observaties_per_antwoord = ncel
+                               ) %>%
     filter(waarde %in% value) #%>% # Filter de gegevens voor value eruit. Standaard is dit 1.
   
   #temp design verwijderen uit globalEnv.
