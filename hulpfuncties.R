@@ -1993,7 +1993,8 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
                                                         tabel_en_grafiek = FALSE,
                                                         toon_y = FALSE,
                                                         x_as_label_wrap = NULL,
-                                                        x_as_regels_toevoegen = 0
+                                                        x_as_regels_toevoegen = 0,
+                                                        max_as = 101
 ){
   
   #Kleuren valideren: zijn het allemaal geldige hexwaarden?
@@ -2223,7 +2224,7 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
   
   if(flip){
     plot <- plot + 
-      scale_y_continuous(limits = c(0,100),
+      scale_y_continuous(limits = c(0,max_as),
                          expand = expansion(mult = c(0, 0.05))) +
       # scale_x_discrete(labels = function(x) str_wrap(x,width = 50)) +
       coord_flip() +
@@ -2235,7 +2236,7 @@ maak_staafdiagram_uitsplitsing_naast_elkaar <- function(data, var_inhoud, var_cr
   } else{
     plot <- plot + 
       theme(axis.line.x.bottom = (element_line(linewidth = 1))) +
-      scale_y_continuous(limits = c(0,100),
+      scale_y_continuous(limits = c(0,max_as),
                          expand = expansion(mult = c(0, 0))) +
       #  scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
       theme(
