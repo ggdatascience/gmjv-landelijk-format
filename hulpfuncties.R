@@ -1227,7 +1227,8 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings,
                                            jaarvar = "AGOJB401",
                                            niveaus = "regio",
                                            tabel_en_grafiek = FALSE,
-                                           toon_y = FALSE
+                                           toon_y = FALSE,
+                                           ongewogen = FALSE
 ){
   
   #Kleuren valideren: zijn het allemaal geldige hexwaarden?
@@ -1316,7 +1317,10 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings,
                                       survey_design = design_temp,
                                       min_observaties_per_vraag = nvar,
                                       min_observaties_per_antwoord = ncel) %>% 
-      
+      #toevoeging jan 2025 tbv argument 'ongewogen'. variabele aantal_groep. zodat ongewogen aantal berekend kan worden.
+      group_by(!!sym(crossing)) %>% 
+      mutate(aantal_groep = sum(as.numeric(aantal_antwoord))) %>% 
+      ungroup() %>% 
       filter(waarde == 1) %>% 
       rename(onderdeel = !!sym(crossing)) %>%  #crossinglevel naar 'onderdeel' hernoemen
       mutate(groep = factor(var_label_crossing)#,  #varlabel crossing als 'groep' toevoegen
@@ -1344,6 +1348,16 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings,
   kleuren <- df_plot$kleuren
   names(kleuren) <- onderdeel_levels
   
+  #Als ongewogen = TRUE moeten ongewogen percentages uitgerekend worden. Dit is eigenlijk veel simpeler
+  #en sneller door R berekend dan de gewogen data & zou idealiter ingebouwd worden op een manier waarbij R géén gewogen cijfers hoeft
+  #te berekenen. Vanwege beperkte tijd & capiciteit halen we de ongewogen percentages uit de bestaande output uit de
+  #functie die gewogen cijfers berekend in bereken_kruistabel().
+  #we overschrijven de variabele percentage met een percentage o.b.v. aantal_antwoord
+  if(ongewogen){
+    df_plot <- df_plot %>% 
+      mutate(percentage = round(as.numeric(aantal_antwoord) / aantal_groep * 100, 0))
+    
+  }
   
   plot = ggplot(df_plot) +
     geom_col(aes(x = groep, y = percentage, fill = onderdeel),
