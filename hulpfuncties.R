@@ -1216,7 +1216,7 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
 }
 
 
-maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings = NULL, 
+maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, 
                                            titel = "",
                                            subtitel = FALSE,
                                            kleuren = params$default_kleuren_grafiek,
@@ -1238,6 +1238,8 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings = NUL
            {paste(kleuren, collapse = ', ')}")
     )
   }
+  
+  
   
   if(!labelled::is.labelled(data[[var_inhoud]])){
     stop(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele. 
