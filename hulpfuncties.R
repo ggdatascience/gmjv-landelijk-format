@@ -1533,7 +1533,7 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings,
 }
 
 
-
+#TODO implementatie ongewogen voor zowel met als zonder crossings
 maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = NULL, 
                                               titel = "",
                                               kleuren = params$default_kleuren_grafiek,
@@ -1550,7 +1550,8 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
                                               x_as_label_wrap = NULL,
                                               x_as_regels_toevoegen = 0,
                                               aflopend = FALSE,
-                                              max_as = 101
+                                              max_as = 101,
+                                              ongewogen = TRUE
                                               
 ){
   
@@ -1669,8 +1670,12 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
                            crossing = var_crossing,
                            survey_design = design_temp,
                            min_observaties_per_vraag = nvar,
-                           min_observaties_per_antwoord = ncel
-        ) %>% 
+                           min_observaties_per_antwoord = ncel) %>%
+          
+          #toevoeging jan 2025 tbv argument 'ongewogen'. variabele aantal_groep. zodat ongewogen aantal berekend kan worden.
+          # group_by(!!sym(var_crossing)) %>%
+          # mutate(aantal_groep = sum(as.numeric(aantal_antwoord))) %>%
+          # ungroup() %>%
           filter(waarde == 1) %>% 
           mutate(niveau = niveau_label,
                  var_label = var_label(data[[y]]) %>% as.factor()  #Nieuwe variabele met varlabel var_inhoud; y
