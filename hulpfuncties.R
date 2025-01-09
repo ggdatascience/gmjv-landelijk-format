@@ -2852,10 +2852,10 @@ bol_met_cijfer <- function(getal, omschrijving = NA, omschrijving2 = NA, niveau 
     
     alt_tekst <- paste(alt_tekst, "in de", niveau)
     
-    kleur <- ifelse(niveau == "Gemeente", kleur[1],
-                    ifelse(niveau == "Regio", kleur[2],
-                           kleur[3]))
-    
+    # kleur <- ifelse(niveau == "Gemeente", kleur[1],
+    #                 ifelse(niveau == "Regio", kleur[2],
+    #                        kleur[3]))
+    # 
   } else {
     
     # Als geen niveau meegegeven is, voer dan spatie in
