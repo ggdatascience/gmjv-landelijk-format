@@ -1417,8 +1417,8 @@ getallen %>%
 ::: column
 ```{r Drugs 2}
 
-getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'LFDGS404', niveau = "gemeente"),
-             monitor_df %>% maak_percentage(var_inhoud = 'LFDGS404', niveau = "regio"))
+getallen = c(monitor_df %>% maak_percentage(var_inhoud = 'LFDGS402', niveau = "gemeente"),
+             monitor_df %>% maak_percentage(var_inhoud = 'LFDGS402', niveau = "regio"))
 
 getallen %>% 
   bol_met_cijfer(niveau = c("Gemeente", "Regio"), 
