@@ -3499,7 +3499,7 @@ maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL,
     vorig_percentage_bij_gelijk <- "."
     if(met_percentage_vorig_bij_gelijk_gebleven){
       
-      vorig_percentage_bij_gelijk <- paste0(" (",result$percentage[2],"%)")
+      vorig_percentage_bij_gelijk <- paste0(" (",result$percentage[1],"%).")
       
     }
     
