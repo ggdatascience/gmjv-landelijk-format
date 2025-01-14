@@ -1216,7 +1216,7 @@ maak_staafdiagram_dubbele_uitsplitsing <- function(data, var_inhoud,
 }
 
 
-maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings = NULL, 
+maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings, 
                                            titel = "",
                                            subtitel = FALSE,
                                            kleuren = params$default_kleuren_grafiek,
@@ -1227,7 +1227,8 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings = NUL
                                            jaarvar = "AGOJB401",
                                            niveaus = "regio",
                                            tabel_en_grafiek = FALSE,
-                                           toon_y = FALSE
+                                           toon_y = FALSE,
+                                           ongewogen = FALSE
 ){
   
   #Kleuren valideren: zijn het allemaal geldige hexwaarden?
@@ -1238,6 +1239,8 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings = NUL
            {paste(kleuren, collapse = ', ')}")
     )
   }
+  
+  
   
   if(!labelled::is.labelled(data[[var_inhoud]])){
     stop(glue("variabele {var_inhoud} is geen gelabelde SPSS variabele. 
@@ -1314,7 +1317,10 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings = NUL
                                       survey_design = design_temp,
                                       min_observaties_per_vraag = nvar,
                                       min_observaties_per_antwoord = ncel) %>% 
-      
+      #toevoeging jan 2025 tbv argument 'ongewogen'. variabele aantal_groep. zodat ongewogen aantal berekend kan worden.
+      group_by(!!sym(crossing)) %>% 
+      mutate(aantal_groep = sum(as.numeric(aantal_antwoord))) %>% 
+      ungroup() %>% 
       filter(waarde == 1) %>% 
       rename(onderdeel = !!sym(crossing)) %>%  #crossinglevel naar 'onderdeel' hernoemen
       mutate(groep = factor(var_label_crossing)#,  #varlabel crossing als 'groep' toevoegen
@@ -1342,6 +1348,16 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings = NUL
   kleuren <- df_plot$kleuren
   names(kleuren) <- onderdeel_levels
   
+  #Als ongewogen = TRUE moeten ongewogen percentages uitgerekend worden. Dit is eigenlijk veel simpeler
+  #en sneller door R berekend dan de gewogen data & zou idealiter ingebouwd worden op een manier waarbij R géén gewogen cijfers hoeft
+  #te berekenen. Vanwege beperkte tijd & capiciteit halen we de ongewogen percentages uit de bestaande output uit de
+  #functie die gewogen cijfers berekend in bereken_kruistabel().
+  #we overschrijven de variabele percentage met een percentage o.b.v. aantal_antwoord
+  if(ongewogen){
+    df_plot <- df_plot %>% 
+      mutate(percentage = round(as.numeric(aantal_antwoord) / aantal_groep * 100, 0))
+    
+  }
   
   plot = ggplot(df_plot) +
     geom_col(aes(x = groep, y = percentage, fill = onderdeel),
@@ -1517,7 +1533,6 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings = NUL
 }
 
 
-
 maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = NULL, 
                                               titel = "",
                                               kleuren = params$default_kleuren_grafiek,
@@ -1534,7 +1549,8 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
                                               x_as_label_wrap = NULL,
                                               x_as_regels_toevoegen = 0,
                                               aflopend = FALSE,
-                                              max_as = 101
+                                              max_as = 101,
+                                              ongewogen = FALSE
                                               
 ){
   
@@ -1634,9 +1650,7 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
       #subset maken v design
       data_temp <<- subset_x %>% filter(!!sym(jaarvar) == huidig_jaar)
     }
-    
-    
-    
+
     #Er kunnen meerdere var_inhouds ingevoerd worden als dat zo is: interne loop over die var inhouds
     #In dat geval worden de variabelen
     #Als dichotoom behandeld: de waarde "1" wordt voor die set var_inhoud getoond met het var-label
@@ -1648,32 +1662,76 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
       lapply(var_inhoud, function(y){
         
         #kruistabel maken voor 1 variabele; alle waarden tonen
-        bereken_kruistabel(data_temp,
-                           variabele = y,
-                           crossing = var_crossing,
-                           survey_design = design_temp,
-                           min_observaties_per_vraag = nvar,
-                           min_observaties_per_antwoord = ncel
-        ) %>% 
+        
+        kruistabel_df <- bereken_kruistabel(
+          data_temp,
+          variabele = y,
+          crossing = var_crossing,
+          survey_design = design_temp,
+          min_observaties_per_vraag = nvar,
+          min_observaties_per_antwoord = ncel
+          ) 
+        
+        #toevoeging jan 2025 tbv argument 'ongewogen'. 
+        #variabele aantal_groep maken . zodat ongewogen aantal berekend kan worden.
+        
+        #groepeervar: variabele aanmaken die ofwel var_crossing vastlegt; danwel arbitraire waarde "1"
+        #dit is nodig voor group_by() functie in pipe (Kan niet met NULL omgaan). 
+        if(!is.null(var_crossing)){
+          
+          kruistabel_df$groepeervar <- kruistabel_df[[var_crossing]]
+          
+        } else{
+          
+          kruistabel_df$groepeervar <- "1"
+        }
+
+
+        kruistabel_df %>%         
+          group_by(groepeervar) %>%
+          mutate(aantal_groep = sum(as.numeric(aantal_antwoord))) %>% #maak aantal groep
+          ungroup() %>%
           filter(waarde == 1) %>% 
           mutate(niveau = niveau_label,
                  var_label = var_label(data[[y]]) %>% as.factor()  #Nieuwe variabele met varlabel var_inhoud; y
           ) %>% 
-          select(-all_of(y)) 
+          select(-all_of(y))
       }) %>% do.call(rbind,.)
       
       
       
     } else {
       #kruistabel maken voor 1 variabele; alle waarden tonen
-      bereken_kruistabel(data_temp,
-                         variabele = var_inhoud,
-                         crossing = var_crossing,
-                         survey_design = design_temp,
-                         min_observaties_per_vraag = nvar,
-                         min_observaties_per_antwoord = ncel
-      ) %>% 
+      
+      kruistabel_df <- bereken_kruistabel(
+        data_temp,
+        variabele = var_inhoud,
+        crossing = var_crossing,
+        survey_design = design_temp,
+        min_observaties_per_vraag = nvar,
+        min_observaties_per_antwoord = ncel
+        ) %>%
         mutate(niveau = niveau_label)
+      
+      #toevoeging jan 2025 tbv argument 'ongewogen'. 
+      #variabele aantal_groep maken . zodat ongewogen aantal berekend kan worden.
+      
+      #groepeervar: variabele aanmaken die ofwel var_crossing vastlegt; danwel arbitraire waarde "1"
+      #dit is nodig voor group_by() functie in pipe (Kan niet met NULL omgaan). 
+      if(!is.null(var_crossing)){
+        
+        kruistabel_df$groepeervar <- kruistabel_df[[var_crossing]]
+        
+      } else{
+        
+        kruistabel_df$groepeervar <- "1"
+      }
+      
+      kruistabel_df %>%         
+        group_by(groepeervar) %>%
+        mutate(aantal_groep = sum(as.numeric(aantal_antwoord))) %>% #maak aantal groep
+        ungroup()
+      
     }
     
   })  %>% do.call(rbind,.)
@@ -1779,6 +1837,17 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
   df_plot <- df_plot %>% 
     mutate(volgorde = match(niveau, namen_kleuren), #volgorde van factorvar bepalen op volgorde namen_kleuren
            niveau = fct_reorder(niveau,volgorde))
+  
+  #Als ongewogen = TRUE moeten ongewogen percentages uitgerekend worden. Dit is eigenlijk veel simpeler
+  #en sneller door R berekend dan de gewogen data & zou idealiter ingebouwd worden op een manier waarbij R géén gewogen cijfers hoeft
+  #te berekenen. Vanwege beperkte tijd & capiciteit halen we de ongewogen percentages uit de bestaande output uit de
+  #functie die gewogen cijfers berekend in bereken_kruistabel().
+  #we overschrijven de variabele percentage met een percentage o.b.v. aantal_antwoord
+  if(ongewogen){
+    df_plot <- df_plot %>% 
+      mutate(percentage = round(as.numeric(aantal_antwoord) / aantal_groep * 100, 0))
+    
+  }
   
   
   plot =
@@ -3478,7 +3547,7 @@ maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL,
     vorig_percentage_bij_gelijk <- "."
     if(met_percentage_vorig_bij_gelijk_gebleven){
       
-      vorig_percentage_bij_gelijk <- paste0(" (",result$percentage[2],"%)")
+      vorig_percentage_bij_gelijk <- paste0(" (",result$percentage[1],"%).")
       
     }
     
