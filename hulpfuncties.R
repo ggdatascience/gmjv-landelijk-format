@@ -2365,7 +2365,7 @@ maak_staafdiagram_gestapeld <- function(data, var_inhoud, var_crossing = NULL, t
   }
   
   # Bepaal kleuren
-  if (length(niveaus > 1 )) {
+  if (length(niveaus) > 1 ) {
     kleuren
   } else {
     kleuren <- bepaal_kleuren(kleuren = kleuren, niveaus = niveaus)
