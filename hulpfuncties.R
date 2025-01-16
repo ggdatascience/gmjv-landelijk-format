@@ -1354,8 +1354,12 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings,
   #functie die gewogen cijfers berekend in bereken_kruistabel().
   #we overschrijven de variabele percentage met een percentage o.b.v. aantal_antwoord
   if(ongewogen){
-    df_plot <- df_plot %>% 
-      mutate(percentage = round(as.numeric(aantal_antwoord) / aantal_groep * 100, 0))
+      mutate(
+        percentage = case_when(
+          is.na(weggestreept) ~ round(as.numeric(aantal_antwoord) / aantal_groep * 100, 0),
+          TRUE ~ NA
+          )
+        )
     
   }
   
@@ -1536,7 +1540,8 @@ maak_staafdiagram_vergelijking <- function(data, var_inhoud, var_crossings,
 maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = NULL, 
                                               titel = "",
                                               kleuren = params$default_kleuren_grafiek,
-                                              flip = FALSE, nvar = params$default_nvar, ncel = params$default_ncel,
+                                              flip = FALSE,
+                                              nvar = params$default_nvar, ncel = params$default_ncel,
                                               alt_text = NULL,
                                               caption = "",
                                               huidig_jaar = 2024,
@@ -1845,7 +1850,13 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
   #we overschrijven de variabele percentage met een percentage o.b.v. aantal_antwoord
   if(ongewogen){
     df_plot <- df_plot %>% 
-      mutate(percentage = round(as.numeric(aantal_antwoord) / aantal_groep * 100, 0))
+      mutate(
+        percentage = case_when(
+          is.na(weggestreept) ~ round(as.numeric(aantal_antwoord) / aantal_groep * 100, 0),
+          TRUE ~ NA
+          )
+        )
+
     
   }
   
