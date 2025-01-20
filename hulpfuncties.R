@@ -3790,8 +3790,8 @@ maak_percentage <- function(data, var_inhoud, value = 1, niveau = "regio",
     
     # Checken of kleine & grote N is voldaan
     tabel_percentage$percentage <- 
-      case_when(tabel_percentage$totaal < params$default_nvar 
-                | any(tabel_percentage$aantal < params$default_ncel) ~ "-%",
+      case_when(tabel_percentage$totaal < nvar 
+                | any(tabel_percentage$aantal < ncel) ~ "-%",
                 TRUE ~ paste0(tabel_percentage$percentage,"%"))
     
         
