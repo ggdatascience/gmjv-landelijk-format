@@ -253,10 +253,94 @@ R runt nu alleen dit codeblok. Controleer of je errors krijgt. Veel voorkomende 
 -   De naam van het landelijke databestand uit 2022 en/of 2024 is aangepast, waardoor het bestand niet gevonden kan worden. Verander de naam het bestand in het codeblok, zie naar Totaalbestand_GMJV2022\_(...) en Totaalbestand_GMJV2024\_(...).
 
 ## Regionale en/of landelijke rapportage maken
-Standaard worden percentages in de (voorbeeld)rapportage getoond op regionaal en/of gemeentelijk niveau. Uitsplitsingen worden standaard op regionaal niveau getoond. Als je een regionale en/of landelijke rapportage wil maken, moet je dit aanpassen. Dit kan door het argument niveau of niveaus aan te passen in alle functies. Zie [GMJV Functies gebruiken](gmjv-functies-gebruiken.qmd), [Grafiekfuncties](voorbeeld_grafieken.qmd), [Tekstfuncties](voorbeeld_tekstfuncties.qmd) en [Overige functies](voorbeeld_overige_functies.qmd) voor meer informatie over functies en hun argumenten.
+
+Standaard worden percentages in de (voorbeeld)rapportage getoond op regionaal en/of gemeentelijk niveau. Uitsplitsingen worden standaard op regionaal niveau getoond. Als je een regionale en/of landelijke rapportage wil maken, moet je dit aanpassen. Dit kan door het argument niveau of niveaus aan te passen in alle functies. Dit staat hieronder in stappen uitgewerkt. Alle aanpassingen zijn in Rapportage.qmd.
+
+1.  Bepaal eerst welke grafieken/teksten je op regioniveau wil tonen en welke op landelijk niveau.
+
+2.  Pas de gewenste grafieken/teksten (alle maak\_-functies) aan van regioniveau naar landelijk niveau.
+
+    **Let op:** aan het einde van het codeblok Instellingen staat een keer “regio” die je zo moet laten staan en niet moet wijzigen naar “nl”. Dat is dit stuk code:
+
+```{r, eval = F}
+# Regio: GGD vervangen door regio
+val_label(monitor_df$GGDregio, params$regiocode) <- 
+  str_replace(val_label(monitor_df$GGDregio, params$regiocode), "GGD", "regio")
+```
 
 ::: callout-tip
-In Quarto bestanden werkt de CTRL + F shortkey ook. Hiermee kun je woorden zoeken en vervangen. Zoek bijvoorbeeld op "gemeente" om overal het niveau "gemeente" te vervangen.
+In Quarto bestanden werkt de CTRL + F shortkey ook. Hiermee kun je woorden zoeken en vervangen. Zoek bijvoorbeeld op "regio" om overal het niveau "regio" te vervangen (middels Replace). Vink hierbij “Match case” aan, zodat dit hoofdlettergevoelig is.
+:::
+
+3.  Pas de gewenste grafieken/teksten (alle maak\_-functies) aan van gemeenteniveau naar regioniveau. Dit kan op dezelfde manier als bij de vorige stap, alleen vervang je nu “gemeente” door “regio”.
+
+4.  Pas het niveau-argument in de bol-grafieken aan. In de functie bol_met_cijfer() wordt het argument ‘niveau’ gebruikt om het label van de bol (“Gemeente” en “Regio” in onderstaand voorbeeld) en de kleur te bepalen. Dit heb je echter zojuist mogelijk gewijzigd. Je kunt dit makkelijk aanpassen door middels CTRL + F te zoeken op “Gemeente”, “Regio”. Vink hierbij “Match case” aan, zodat dit hoofdlettergevoelig is. Vervolgens kun “Gemeente”, “Regio” vervangen (Replace) door “Regio”, “Nederland”. 
+
+    ![](images/clipboard-1679098156.png)
+
+5.  In de tekst wordt een aantal keer verwezen naar gemeentes. Dit heb je waarschijnlijk zojuist gewijzigd naar regioniveau. Pas daarom indien nodig aan:
+
+    -   Op de voorpagina: de tekst onder ::: voorblad_gemeentenaam
+
+    -   Onder het kopje “Over de Gezondheidsmonitor Jongvolwassenen”: in de derde alinea worden de aantallen in de regio en gemeente gegeven. Gemeente kan hierin gewijzigd worden naar Nederland.
+
+    -   Overal waar “uw gemeente” in de tekst staat. Dit kan bijvoorbeeld gewijzigd worden naar “de regio”. (Tip: CTRL + F) Ook bij regionale cijfers die nu omgezet zijn naar Nederlandse cijfers dient dit in de tekst gewijzigd te worden.
+
+6.  Check **voordat je de rapportage rendert** of je de juiste data inlaadt in het codeblok Instellingen. Zorg er voor dat zowel de regionale als landelijke data van 2022 en 2024 ingeladen zijn. Hiervoor moet in het codeblok Instellingen vanaf het stuk
+
+```{r, eval = F}
+#SPSS data inlezen
+```
+
+tot het stuk
+
+```{r, eval = F}
+# Einde stuk dat in comments kan als je landelijke data van 2022 niet wil inladen
+```
+
+alle code gebruikt worden (en dus niet achter een hashtag (#) staan).
+
+7.  Je kunt nu de rapportage renderen. Dit gaat mogelijk langzamer dan met gemeenterapportages, omdat het gebruikte databestand groter is (als je de landelijke data van 2022 ook ingeladen hebt).
+
+8.  Check of het renderen goed gaat:
+
+    -   Check of de juiste kleuren en labels gebruikt worden in de bol-grafieken.
+
+    -   Check de tekst: staat er nog ergens gemeente genoemd? Klopt het regiogemiddelde?
+
+    -   Check eventueel of alle maak\_-functies een argument “niveau” hebben. Voeg bij dit argument toe met gewenst niveau bij functies die dit niet hebben.
+
+    -   Check of alle grafieken de gewenste kleuren hebben.
+
+::: callout-tip
+Mochten kleuren niet goed gaan in grafieken, dan kunnen deze stappen helpen:
+
+1.  Controleer in welke functie(s) de kleuren niet goed gaan.
+
+2.  Ga in helpfuncties naar deze functie toe en zet het stuk over ‘Bepaal kleuren’ in comments.
+
+    -   Voorbeeld: functie maak_staafdiagram_dubbele_uitsplitsing:
+
+    ```{r, eval = F}
+    # Bepaal kleuren 
+    #kleuren <- bepaal_kleuren(kleuren = kleuren, niveaus = niveaus) # ZET EEN HASHTAG VOOR DEZE REGEL
+    ```
+
+3.  Voeg in je rapportage (bv. Rapportage.qmd) de gewenste kleuren toe aan de functie.
+
+    -   Voorbeeld: functie maak_staafdiagram_dubbele_uitsplitsing:
+
+    ```{r, eval = F}
+    plot = monitor_df %>%
+    	  maak_staafdiagram_dubbele_uitsplitsing(
+    	    var_inhoud = "LVPDA414",
+    	    var_crossing_groep = "AGLFA401",
+    	    titel = "Ervaart prestatiedruk vanuit anderen",
+    	    niveaus = c("nl", "regio"),
+          kleuren = c("#007E48", "#739BD0") # VOEG HET ARGUMENT kleuren TOE
+    	  )
+    plot
+    ```
 :::
 
 ## Rapporten per gemeente uitdraaien
