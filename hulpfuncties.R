@@ -1832,15 +1832,14 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
              !!sym(var_inhoud_plot):= fct_reorder(!!sym(var_inhoud_plot),
                                                   volgorde,
                                                   .desc = aflopend)) 
-    
-    
+  
   }
   
   
   #Niveau moet ook een gesorteerde factorvariabele worden zodat kleurcoderingen altijd kloppen
   #Anders krijg je alfabetische indeling v kleuren.
-  
-  if(var_crossing != "leeg"){
+  #3-2-2025, dit moet niet altijd gebeuren, maar alleen als var crossing niveau is.
+  if(var_crossing == "niveau"){
   df_plot <- df_plot %>% 
     mutate(volgorde = match(niveau, namen_kleuren), #volgorde van factorvar bepalen op volgorde namen_kleuren
            niveau = fct_reorder(niveau,volgorde))
