@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="nl" xml:lang="nl"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.6.39">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -71,10 +71,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-77205cbbef6a5b90ba72edc25dea2156.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -736,7 +736,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" alt="gestapeld staafdiagram met percentages per leeftijd in de bevolking en bij deelnemers: Bevolking Totaal Nederland: 16-17: 17%, 18-20: 30%, 21-25: 53%, Deelnemers Totaal Nederland: 16-17: 22%, 18-20: 31%, 21-25: 47%, Bevolking GGD Limburg-Noord: 16-17: 19%, 18-20: 29%, 21-25: 52%, Deelnemers GGD Limburg-Noord: 16-17: 22%, 18-20: 32%, 21-25: 46%, Bevolking NepgemeenteB: 16-17: 7%, 18-20: 30%, 21-25: 63%, Deelnemers NepgemeenteB: 16-17: 23%, 18-20: 29%, 21-25: 48%. " width="672"></p>
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" alt="gestapeld staafdiagram met percentages per leeftijd in de bevolking en bij deelnemers: Bevolking Totaal Nederland: 16-17: 17%, 18-20: 30%, 21-25: 53%, Deelnemers Totaal Nederland: 16-17: 22%, 18-20: 30%, 21-25: 47%, Bevolking GGD Limburg-Noord: 16-17: 19%, 18-20: 29%, 21-25: 52%, Deelnemers GGD Limburg-Noord: 16-17: 23%, 18-20: 30%, 21-25: 47%, Bevolking NepgemeenteB: 16-17: 7%, 18-20: 30%, 21-25: 63%, Deelnemers NepgemeenteB: 16-17: 25%, 18-20: 28%, 21-25: 47%. " width="672"></p>
 </figure>
 </div>
 </div>
@@ -758,7 +758,7 @@ Tip
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" alt="gestapeld staafdiagram met percentages per geslacht in de bevolking en bij deelnemers: Bevolking GGD Limburg-Noord: man: 52%, vrouw: 48%, Deelnemers GGD Limburg-Noord: man: 30%, vrouw: 69%, niet ingevuld: 1%, Bevolking NepgemeenteB: man: 46%, vrouw: 54%, Deelnemers NepgemeenteB: man: 29%, vrouw: 70%, niet ingevuld: 1%. " width="672"></p>
+<p><img src="voorbeeld_grafieken_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" alt="gestapeld staafdiagram met percentages per geslacht in de bevolking en bij deelnemers: Bevolking GGD Limburg-Noord: man: 52%, vrouw: 48%, Deelnemers GGD Limburg-Noord: anders: 1%, man: 30%, vrouw: 70%, Bevolking NepgemeenteB: man: 46%, vrouw: 54%. " width="672"></p>
 </figure>
 </div>
 </div>
@@ -891,8 +891,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -1003,7 +1001,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {

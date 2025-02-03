@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Pieter Seinen">
-<meta name="author" content="Sjanne van der Stappen">
 
-<title>Uitleg GMJV rapportage in Quarto</title>
+<title>5&nbsp; GMJV Functies Gebruiken – Uitleg GMJV rapportage in Quarto</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,26 +20,61 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="docs/site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="docs/site_libs/quarto-nav/headroom.min.js"></script>
-<script src="docs/site_libs/clipboard/clipboard.min.js"></script>
-<script src="docs/site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="docs/site_libs/quarto-search/fuse.min.js"></script>
-<script src="docs/site_libs/quarto-search/quarto-search.js"></script>
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="beginnen.html" rel="next">
-<script src="docs/site_libs/quarto-html/quarto.js"></script>
-<script src="docs/site_libs/quarto-html/popper.min.js"></script>
-<script src="docs/site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="docs/site_libs/quarto-html/anchor.min.js"></script>
-<link href="docs/site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="docs/site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="docs/site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="docs/site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="docs/site_libs/bootstrap/bootstrap-77205cbbef6a5b90ba72edc25dea2156.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="./voorbeeld_grafieken.html" rel="next">
+<link href="./tekst-en-layout.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-77205cbbef6a5b90ba72edc25dea2156.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -74,9 +107,9 @@ ul.task-list li input[type="checkbox"] {
 
 <!--[if gte mso 9]><xml>
 <mso:CustomDocumentProperties>
-<mso:_dlc_DocId msdt:dt="string">HVBDOC-2105918694-172907</mso:_dlc_DocId>
-<mso:_dlc_DocIdItemGuid msdt:dt="string">7b1e8fcb-e510-46c6-8ba4-fc9a586abf58</mso:_dlc_DocIdItemGuid>
-<mso:_dlc_DocIdUrl msdt:dt="string">https://hetservicecentrum.sharepoint.com/sites/hvbtonderzoek/_layouts/15/DocIdRedir.aspx?ID=HVBDOC-2105918694-172907, HVBDOC-2105918694-172907</mso:_dlc_DocIdUrl>
+<mso:_dlc_DocId msdt:dt="string">HVBDOC-2105918694-172921</mso:_dlc_DocId>
+<mso:_dlc_DocIdItemGuid msdt:dt="string">922a3668-ef0d-4a37-8e08-2eebd81fd643</mso:_dlc_DocIdItemGuid>
+<mso:_dlc_DocIdUrl msdt:dt="string">https://hetservicecentrum.sharepoint.com/sites/hvbtonderzoek/_layouts/15/DocIdRedir.aspx?ID=HVBDOC-2105918694-172921, HVBDOC-2105918694-172921</mso:_dlc_DocIdUrl>
 </mso:CustomDocumentProperties>
 </xml><![endif]-->
 </head>
@@ -90,7 +123,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="index.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introductie</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./gmjv-functies-gebruiken.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">GMJV Functies Gebruiken</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Zoeken" onclick="window.quartoOpenSearch();">
@@ -105,7 +138,7 @@ ul.task-list li input[type="checkbox"] {
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../uitleg">Uitleg GMJV rapportage in Quarto</a> 
+      <a href="./">Uitleg GMJV rapportage in Quarto</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -117,61 +150,61 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introductie</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="beginnen.html" class="sidebar-item-text sidebar-link">
+  <a href="./beginnen.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Beginnen</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="docs/rapport-uitdraaien-HSC-PC-9667.html" class="sidebar-item-text sidebar-link">
+  <a href="./rapport-uitdraaien.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Standaard rapportage uitdraaien</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="tekst-en-layout.html" class="sidebar-item-text sidebar-link">
+  <a href="./tekst-en-layout.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Tekst, Code invoegen en layout aanpassen</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="gmjv-functies-gebruiken.html" class="sidebar-item-text sidebar-link">
+  <a href="./gmjv-functies-gebruiken.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">GMJV Functies Gebruiken</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="voorbeeld_grafieken.html" class="sidebar-item-text sidebar-link">
+  <a href="./voorbeeld_grafieken.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Grafiekfuncties</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="voorbeeld_tekstfuncties.html" class="sidebar-item-text sidebar-link">
+  <a href="./voorbeeld_tekstfuncties.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Tekstfuncties</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="voorbeeld_overige_functies.html" class="sidebar-item-text sidebar-link">
+  <a href="./voorbeeld_overige_functies.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Overige functies</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="handige-bronnen.html" class="sidebar-item-text sidebar-link">
+  <a href="./handige-bronnen.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Handige bronnen</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="css.html" class="sidebar-item-text sidebar-link">
+  <a href="./css.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Aangepaste CSS</span></span></a>
   </div>
 </li>
@@ -185,11 +218,10 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Inhoudsopgave</h2>
    
   <ul>
-  <li><a href="#introductie" id="toc-introductie" class="nav-link active" data-scroll-target="#introductie"><span class="header-section-number">1</span> Introductie</a>
-  <ul class="collapse">
-  <li><a href="#iets-melden" id="toc-iets-melden" class="nav-link" data-scroll-target="#iets-melden"><span class="header-section-number">1.1</span> Iets melden</a></li>
-  <li><a href="#op-de-hoogte-blijven-van-updates" id="toc-op-de-hoogte-blijven-van-updates" class="nav-link" data-scroll-target="#op-de-hoogte-blijven-van-updates"><span class="header-section-number">1.2</span> Op de hoogte blijven van updates</a></li>
-  </ul></li>
+  <li><a href="#filtering-of-vergelijking-per-jaar" id="toc-filtering-of-vergelijking-per-jaar" class="nav-link active" data-scroll-target="#filtering-of-vergelijking-per-jaar"><span class="header-section-number">5.1</span> Filtering of vergelijking per jaar</a></li>
+  <li><a href="#filtering-of-vergelijking-per-regio" id="toc-filtering-of-vergelijking-per-regio" class="nav-link" data-scroll-target="#filtering-of-vergelijking-per-regio"><span class="header-section-number">5.2</span> Filtering of vergelijking per regio</a></li>
+  <li><a href="#uitsplitsingen" id="toc-uitsplitsingen" class="nav-link" data-scroll-target="#uitsplitsingen"><span class="header-section-number">5.3</span> Uitsplitsingen</a></li>
+  <li><a href="#labels-van-variabelen-aanpassen" id="toc-labels-van-variabelen-aanpassen" class="nav-link" data-scroll-target="#labels-van-variabelen-aanpassen"><span class="header-section-number">5.4</span> Labels van variabelen aanpassen</a></li>
   </ul>
 </nav>
     </div>
@@ -198,35 +230,14 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Uitleg GMJV rapportage in Quarto</h1>
+<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">GMJV Functies Gebruiken</span></h1>
 </div>
 
 
-<div class="quarto-title-meta-author">
-  <div class="quarto-title-meta-heading">Auteurs</div>
-  <div class="quarto-title-meta-heading">Affiliaties</div>
-  
-    <div class="quarto-title-meta-contents">
-    <p class="author">Pieter Seinen </p>
-  </div>
-  <div class="quarto-title-meta-contents">
-        <p class="affiliation">
-            GGD Hart voor Brabant
-          </p>
-      </div>
-    <div class="quarto-title-meta-contents">
-    <p class="author">Sjanne van der Stappen </p>
-  </div>
-  <div class="quarto-title-meta-contents">
-        <p class="affiliation">
-            GGD Limburg-Noord
-          </p>
-      </div>
-  </div>
 
 <div class="quarto-title-meta">
 
-      
+    
   
     
   </div>
@@ -236,39 +247,77 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="introductie" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Introductie</h1>
-<p>Op deze website wordt uitgelegd hoe je de rapportage voor GMJV 2024 kan uitdraaien en aanpassen. De rapportage is (net als deze website) gemaakt met Quarto. Met Quarto kunnen opgemaakte tekst en afbeeldingen gecombineerd worden met code. De uitleg zal ingaan op de enkele technieken die gebruikt kunnen worden om de rapportage aan te passen. Het is géén uitleg van R, Quarto of HTML en CSS. Daar zijn betere bronnen voor (zie het hoofdstuk <a href="handige-bronnen.html">handige bronnen</a>).</p>
-<p>Naast het Quarto boek zijn er ook filmpjes met uitleg gemaakt. Die vind je hier <a href="https://www.youtube.com/playlist?list=PL7kVlO1ksUH3ovDR74F9nG3G0OJCnMqIb">Uitlegvideo’s standaardrapportage GMJV</a>.</p>
-<section id="iets-melden" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="iets-melden"><span class="header-section-number">1.1</span> Iets melden</h2>
-<p>Het is de bedoeling dat je hier alle informatie vindt die nodig is om de rapportage uit te draaien en aan te passen. Dat is vast niet in één keer gelukt. Als je merkt dat er informatie ontbreekt, je een idee voor verbetering hebt of als je vastloopt op een foutmelding kan je dat doorgeven. Lees hieronder goed hoe dat werkt.</p>
-<div class="callout callout-style-default callout-important callout-titled" title="Verzoeken en problemen melden">
+<p>Voor de rapportage hebben we een aantal R-functies geschreven waarmee de resultaten van de monitor enigzins gebruiksvriendelijk in de lopende tekst, grafieken of tabellen gezet kunnen worden.</p>
+<p>In de volgende hoofdstukken worden verschillende grafiekfuncties uitgelegd en hoe je deze zelf kunt aanpassen.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Verzoeken en problemen melden
+Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Ideeën verzoeken en foutmeldingen worden afgehandeld via GitHub en <strong>niet via e-mail</strong>. Op deze manier kunnen issues op tijd worden opgepakt en wordt onnodig werk voorkomen. Volg de volgende stappen:</p>
+<p>In dit document wordt gebruikt gemaakt van de ‘pipe-operator’ <em>%&gt;%</em>.</p>
+<p>De pipe-operator stuurt een resultaat door naar de volgende functie. Op deze manier kunnen meerdere bewerkingen in R overzichtelijk aan elkaar gekoppeld worden. <a href="https://research.sbcs.qmul.ac.uk/r.knell/intro_R_3rd_ed/pipelines-in-r.html#magrittr-pipes">Een uitleg van de magrittr pipe</a> (en de voordelen).</p>
+<p>Zonder de pipe-operator zou het aanroepen van maak_responstabel er zo uit zien:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">maak_responstabel</span>(<span class="at">data =</span> monitor_df, <span class="at">crossings =</span> <span class="st">"gender_2cat"</span>, ...)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Met pipe-operator</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>monitor_df <span class="sc">%&gt;%</span> <span class="fu">maak_responstabel</span>(<span class="at">crossings =</span> <span class="st">"gender_2cat"</span>, ...)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Alle functies in dit document hebben als eerste argument ‘data’, waar een dataframe wordt verwacht. Dit argument zal niet per functie uitgelegd worden omdat het altijd nodig is.</p>
+</div>
+</div>
+<section id="filtering-of-vergelijking-per-jaar" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="filtering-of-vergelijking-per-jaar"><span class="header-section-number">5.1</span> Filtering of vergelijking per jaar</h2>
+<p>Standaard zullen alle functies data op jaar filteren zodat alleen de gegevens van 2024 worden getoond.</p>
+<p>Als het de bedoeling is om de data van 2022 met die van 2024 te vergelijken kan dit gedaan worden door de <strong>jaarvariabele</strong> in te voeren bij een <strong>var_crossing</strong>. De variabelcode voor de jaarvariabele is: “AGOJB401”. Let op, dit is niet voor alle functies mogelijk.</p>
+</section>
+<section id="filtering-of-vergelijking-per-regio" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="filtering-of-vergelijking-per-regio"><span class="header-section-number">5.2</span> Filtering of vergelijking per regio</h2>
+<p>Standaard zullen alle functies data op GGD-regio filteren en groeperen. Dit kan gewijzigd worden met het argument niveaus.</p>
 <ul>
-<li><p>Zorg bij een foutmelding eerst dat je in elk geval de voorbeeldrapportage kan uitdraaien. Als dat niet lukt controleer je eerst de stappen bij <a href="beginnen.html#up-to-date-software">Up-to-date software</a>.</p></li>
-<li><p>Ga naar <a href="https://github.com/ggdatascience/gmjv-landelijk-format">gmjv-landelijk-format</a> en klik op ‘Issues’.</p></li>
-<li><p>Lees de bestaande issues en kijk of je verzoek of foutmelding al door iemand anders is gemeld.</p></li>
-<li><p>Als je verzoek of foutmelding nog niet bestaat maak je een nieuw issue aan. Je kan een bestaand issue eventueel aanvullen door er commentaar aan toe te voegen. Voeg indien mogelijk een afbeelding, screen shot of de tekst van de error mee.</p></li>
+<li><strong>niveaus:</strong> character vector met drie mogelijke waarden c(“nl”,“regio”,“gemeente”)</li>
 </ul>
-</div>
-</div>
+<p>Als er één niveau wordt doorgegeven wordt de data gefilterd en gegroepeerd op dat niveau. Als er meerdere niveaus worden doorgegeven worden die niveaus vergeleken als dat mogelijk is.</p>
 </section>
-<section id="op-de-hoogte-blijven-van-updates" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="op-de-hoogte-blijven-van-updates"><span class="header-section-number">1.2</span> Op de hoogte blijven van updates</h2>
-<p>Volg <strong>gmjv-landelijk-format</strong> door in github het oogje met “watch” te klikken. Je kan dan instellen dat je berichten te ontvangt wanneer er updates zijn. Op die manier word je van wijzigingen op de hoogte gehouden.</p>
+<section id="uitsplitsingen" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="uitsplitsingen"><span class="header-section-number">5.3</span> Uitsplitsingen</h2>
+<p>In de (voorbeeld)rapportage worden uitsplitsingen standaard op regionaal niveau getoond. Dit omdat veel gemeentes niet genoeg deelnemers hebben voor uitsplitsingen. Mocht je dit willen aanpassen, dan kan dat met het argument niveaus.</p>
+</section>
+<section id="labels-van-variabelen-aanpassen" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="labels-van-variabelen-aanpassen"><span class="header-section-number">5.4</span> Labels van variabelen aanpassen</h2>
+<p>Standaard worden voor de meeste grafiek- en tekstfuncties die labels van de variabelen gebruikt voor de legenda. Deze labels kunnen aangepast worden met de functies val_label() en var_label().</p>
+<ul>
+<li><strong>var_label():</strong> past het label van de variabele aan.</li>
+<li><strong>val_label():</strong> past het label van een bepaalde waarde binnen de variabele aan.</li>
+</ul>
+<p>In het onderstaande voorbeeld wordt val_label gebruikt om de categorieën binnen de variabele LVVTA404 (Vertrouwen in de toekosmt) te hernoemen:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Labels aanpassen</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">val_label</span>(monitor_df<span class="sc">$</span>LVVTA404, <span class="dv">1</span>) <span class="ot">&lt;-</span> <span class="st">'Weinig tot geen (cijfer 5 of lager)'</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">val_label</span>(monitor_df<span class="sc">$</span>LVVTA404, <span class="dv">2</span>) <span class="ot">&lt;-</span> <span class="st">'Matig tot redelijk (cijfer 6 of 7)'</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">val_label</span>(monitor_df<span class="sc">$</span>LVVTA404, <span class="dv">3</span>) <span class="ot">&lt;-</span> <span class="st">'(heel) veel (cijfer 8 of hoger)'</span></span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Zoals je ziet heeft val_label 2 argumenten nodig:</p>
+<ul>
+<li>Het eerste argument: de variabele waar het over gaat. In dit geval gaat het over de variabele LVVTA404 in de dataset monitor_df, dus monitor_df$LVVTA404</li>
+<li>Het tweede argument: de waarde van de variabele waar het overgaat. De variabele LVVTA404 heeft 3 categorieën en per categorie wordt er een nieuw label toegewezen.</li>
+</ul>
+<p>Het stuk achter de &lt;- geeft aan wat het nieuwe label van deze waarde moet worden. Het nieuwe label van variabele LVVTA404 voor waarde 1 wordt met deze code dus ‘Weinig tot geen (cijfer 5 of lager)’.</p>
+<p>Een ander voorbeeld. In het eerste codeblok in de (voorbeeld)rapportage wordt val_label gebruikt om de namen van de gemeente en de regio aan te passen:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Hernoemen gemeente en regio: labels aanpassen zodat deze anders zijn in grafieken</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Gemeente: gemeente voor gemeentenaam zetten</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">val_label</span>(monitor_df<span class="sc">$</span>Gemeentecode, params<span class="sc">$</span>gemeentecode) <span class="ot">&lt;-</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(<span class="st">'gemeente'</span>, <span class="fu">val_label</span>(monitor_df<span class="sc">$</span>Gemeentecode, params<span class="sc">$</span>gemeentecode))</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Regio: GGD vervangen door regio</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">val_label</span>(monitor_df<span class="sc">$</span>GGDregio, params<span class="sc">$</span>regiocode) <span class="ot">&lt;-</span> </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">str_replace</span>(<span class="fu">val_label</span>(monitor_df<span class="sc">$</span>GGDregio, params<span class="sc">$</span>regiocode), <span class="st">"GGD"</span>, <span class="st">"regio"</span>)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -691,10 +740,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./tekst-en-layout.html" class="pagination-link" aria-label="Tekst, Code invoegen en layout aanpassen">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Tekst, Code invoegen en layout aanpassen</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="beginnen.html" class="pagination-link" aria-label="Beginnen">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Beginnen</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./voorbeeld_grafieken.html" class="pagination-link" aria-label="Grafiekfuncties">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Grafiekfuncties</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Pieter Seinen">
-<meta name="author" content="Sjanne van der Stappen">
 
-<title>Uitleg GMJV rapportage in Quarto</title>
+<title>2&nbsp; Beginnen – Uitleg GMJV rapportage in Quarto</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -32,7 +64,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="docs/site_libs/quarto-search/fuse.min.js"></script>
 <script src="docs/site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="beginnen.html" rel="next">
+<link href="docs/rapport-uitdraaien-HSC-PC-9667.html" rel="next">
+<link href="docs/index-HSC-PC-9667.html" rel="prev">
 <script src="docs/site_libs/quarto-html/quarto.js"></script>
 <script src="docs/site_libs/quarto-html/popper.min.js"></script>
 <script src="docs/site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -74,9 +107,9 @@ ul.task-list li input[type="checkbox"] {
 
 <!--[if gte mso 9]><xml>
 <mso:CustomDocumentProperties>
-<mso:_dlc_DocId msdt:dt="string">HVBDOC-2105918694-172907</mso:_dlc_DocId>
-<mso:_dlc_DocIdItemGuid msdt:dt="string">7b1e8fcb-e510-46c6-8ba4-fc9a586abf58</mso:_dlc_DocIdItemGuid>
-<mso:_dlc_DocIdUrl msdt:dt="string">https://hetservicecentrum.sharepoint.com/sites/hvbtonderzoek/_layouts/15/DocIdRedir.aspx?ID=HVBDOC-2105918694-172907, HVBDOC-2105918694-172907</mso:_dlc_DocIdUrl>
+<mso:_dlc_DocId msdt:dt="string">HVBDOC-2105918694-172911</mso:_dlc_DocId>
+<mso:_dlc_DocIdItemGuid msdt:dt="string">d3f9e700-ab5f-485e-aa9d-b29d5119b689</mso:_dlc_DocIdItemGuid>
+<mso:_dlc_DocIdUrl msdt:dt="string">https://hetservicecentrum.sharepoint.com/sites/hvbtonderzoek/_layouts/15/DocIdRedir.aspx?ID=HVBDOC-2105918694-172911, HVBDOC-2105918694-172911</mso:_dlc_DocIdUrl>
 </mso:CustomDocumentProperties>
 </xml><![endif]-->
 </head>
@@ -90,7 +123,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="index.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introductie</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="beginnen.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Beginnen</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Schakel zijbalknavigatie" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Zoeken" onclick="window.quartoOpenSearch();">
@@ -117,13 +150,13 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="index.html" class="sidebar-item-text sidebar-link active">
+  <a href="docs/index-HSC-PC-9667.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introductie</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="beginnen.html" class="sidebar-item-text sidebar-link">
+  <a href="beginnen.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Beginnen</span></span></a>
   </div>
 </li>
@@ -185,11 +218,14 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Inhoudsopgave</h2>
    
   <ul>
-  <li><a href="#introductie" id="toc-introductie" class="nav-link active" data-scroll-target="#introductie"><span class="header-section-number">1</span> Introductie</a>
+  <li><a href="#up-to-date-software" id="toc-up-to-date-software" class="nav-link active" data-scroll-target="#up-to-date-software"><span class="header-section-number">2.1</span> Up-to-date software</a>
   <ul class="collapse">
-  <li><a href="#iets-melden" id="toc-iets-melden" class="nav-link" data-scroll-target="#iets-melden"><span class="header-section-number">1.1</span> Iets melden</a></li>
-  <li><a href="#op-de-hoogte-blijven-van-updates" id="toc-op-de-hoogte-blijven-van-updates" class="nav-link" data-scroll-target="#op-de-hoogte-blijven-van-updates"><span class="header-section-number">1.2</span> Op de hoogte blijven van updates</a></li>
+  <li><a href="#r-en-rstudio" id="toc-r-en-rstudio" class="nav-link" data-scroll-target="#r-en-rstudio"><span class="header-section-number">2.1.1</span> R en RStudio</a></li>
+  <li><a href="#r-libraries-updaten" id="toc-r-libraries-updaten" class="nav-link" data-scroll-target="#r-libraries-updaten"><span class="header-section-number">2.1.2</span> R libraries updaten</a></li>
+  <li><a href="#voor-pdf-uitdraai-google-chrome" id="toc-voor-pdf-uitdraai-google-chrome" class="nav-link" data-scroll-target="#voor-pdf-uitdraai-google-chrome"><span class="header-section-number">2.1.3</span> Voor PDF-uitdraai: Google Chrome</a></li>
   </ul></li>
+  <li><a href="#bestanden-rapportagescript-downloaden-van-github" id="toc-bestanden-rapportagescript-downloaden-van-github" class="nav-link" data-scroll-target="#bestanden-rapportagescript-downloaden-van-github"><span class="header-section-number">2.2</span> Bestanden rapportagescript downloaden van Github</a></li>
+  <li><a href="#r-project-openen-en-voorbeeldrapport-uitdraaien" id="toc-r-project-openen-en-voorbeeldrapport-uitdraaien" class="nav-link" data-scroll-target="#r-project-openen-en-voorbeeldrapport-uitdraaien"><span class="header-section-number">2.3</span> R project openen en voorbeeldrapport uitdraaien</a></li>
   </ul>
 </nav>
     </div>
@@ -198,35 +234,14 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Uitleg GMJV rapportage in Quarto</h1>
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Beginnen</span></h1>
 </div>
 
 
-<div class="quarto-title-meta-author">
-  <div class="quarto-title-meta-heading">Auteurs</div>
-  <div class="quarto-title-meta-heading">Affiliaties</div>
-  
-    <div class="quarto-title-meta-contents">
-    <p class="author">Pieter Seinen </p>
-  </div>
-  <div class="quarto-title-meta-contents">
-        <p class="affiliation">
-            GGD Hart voor Brabant
-          </p>
-      </div>
-    <div class="quarto-title-meta-contents">
-    <p class="author">Sjanne van der Stappen </p>
-  </div>
-  <div class="quarto-title-meta-contents">
-        <p class="affiliation">
-            GGD Limburg-Noord
-          </p>
-      </div>
-  </div>
 
 <div class="quarto-title-meta">
 
-      
+    
   
     
   </div>
@@ -236,39 +251,58 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="introductie" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Introductie</h1>
-<p>Op deze website wordt uitgelegd hoe je de rapportage voor GMJV 2024 kan uitdraaien en aanpassen. De rapportage is (net als deze website) gemaakt met Quarto. Met Quarto kunnen opgemaakte tekst en afbeeldingen gecombineerd worden met code. De uitleg zal ingaan op de enkele technieken die gebruikt kunnen worden om de rapportage aan te passen. Het is géén uitleg van R, Quarto of HTML en CSS. Daar zijn betere bronnen voor (zie het hoofdstuk <a href="handige-bronnen.html">handige bronnen</a>).</p>
-<p>Naast het Quarto boek zijn er ook filmpjes met uitleg gemaakt. Die vind je hier <a href="https://www.youtube.com/playlist?list=PL7kVlO1ksUH3ovDR74F9nG3G0OJCnMqIb">Uitlegvideo’s standaardrapportage GMJV</a>.</p>
-<section id="iets-melden" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="iets-melden"><span class="header-section-number">1.1</span> Iets melden</h2>
-<p>Het is de bedoeling dat je hier alle informatie vindt die nodig is om de rapportage uit te draaien en aan te passen. Dat is vast niet in één keer gelukt. Als je merkt dat er informatie ontbreekt, je een idee voor verbetering hebt of als je vastloopt op een foutmelding kan je dat doorgeven. Lees hieronder goed hoe dat werkt.</p>
-<div class="callout callout-style-default callout-important callout-titled" title="Verzoeken en problemen melden">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<section id="up-to-date-software" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="up-to-date-software"><span class="header-section-number">2.1</span> Up-to-date software</h2>
+<p>Het is belangrijk om ervoor te zorgen dat software up-to-date is. Dit is het eerste om na te kijken wanneer je tegen een foutmelding aanloopt.</p>
+<section id="r-en-rstudio" class="level3" data-number="2.1.1">
+<h3 data-number="2.1.1" class="anchored" data-anchor-id="r-en-rstudio"><span class="header-section-number">2.1.1</span> R en RStudio</h3>
+<p>Als je met verouderde versies van Rstudio en R werkt is het mogelijk dat het script niet of anders dan bedoeld werkt. Dit geldt ook voor de libraries waar het script gebruik van maakt.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Rstudio: Format ontwikkeld met versie 2024.04 (Chocolate Cosmos) </span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>rstudioapi<span class="sc">::</span><span class="fu">getVersion</span>()<span class="sc">$</span>version</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>rstudioapi<span class="sc">::</span><span class="fu">getVersion</span>()<span class="sc">$</span>release_name</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#R: Format ontwikkeld met versie 4.30</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#Libraries: zo up to date mogelijk. </span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">old.packages</span>() <span class="co">#om te zien welke libraries verouderd zijn. </span></span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="callout-title-container flex-fill">
-Verzoeken en problemen melden
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Ideeën verzoeken en foutmeldingen worden afgehandeld via GitHub en <strong>niet via e-mail</strong>. Op deze manier kunnen issues op tijd worden opgepakt en wordt onnodig werk voorkomen. Volg de volgende stappen:</p>
+</section>
+<section id="r-libraries-updaten" class="level3" data-number="2.1.2">
+<h3 data-number="2.1.2" class="anchored" data-anchor-id="r-libraries-updaten"><span class="header-section-number">2.1.2</span> R libraries updaten</h3>
+<p>Verouderde libraries / packages kunnen ook voor problemen zorgen. Het is verstandig om updates voor libraries uit te voeren in een lege sessie waarin nog geen libraries geladen zijn. Je kan libraries als volgt updaten:</p>
 <ul>
-<li><p>Zorg bij een foutmelding eerst dat je in elk geval de voorbeeldrapportage kan uitdraaien. Als dat niet lukt controleer je eerst de stappen bij <a href="beginnen.html#up-to-date-software">Up-to-date software</a>.</p></li>
-<li><p>Ga naar <a href="https://github.com/ggdatascience/gmjv-landelijk-format">gmjv-landelijk-format</a> en klik op ‘Issues’.</p></li>
-<li><p>Lees de bestaande issues en kijk of je verzoek of foutmelding al door iemand anders is gemeld.</p></li>
-<li><p>Als je verzoek of foutmelding nog niet bestaat maak je een nieuw issue aan. Je kan een bestaand issue eventueel aanvullen door er commentaar aan toe te voegen. Voeg indien mogelijk een afbeelding, screen shot of de tekst van de error mee.</p></li>
+<li>Klik bovenin op <strong>Session &gt; New Session</strong></li>
+<li>Klik in de nieuwe sessie op <strong>Tools &gt; Check for Package Updates</strong></li>
+<li>Selecteer de libraries die je wilt updaten en klik op <strong>Install Updates</strong></li>
 </ul>
-</div>
-</div>
 </section>
-<section id="op-de-hoogte-blijven-van-updates" class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="op-de-hoogte-blijven-van-updates"><span class="header-section-number">1.2</span> Op de hoogte blijven van updates</h2>
-<p>Volg <strong>gmjv-landelijk-format</strong> door in github het oogje met “watch” te klikken. Je kan dan instellen dat je berichten te ontvangt wanneer er updates zijn. Op die manier word je van wijzigingen op de hoogte gehouden.</p>
+<section id="voor-pdf-uitdraai-google-chrome" class="level3" data-number="2.1.3">
+<h3 data-number="2.1.3" class="anchored" data-anchor-id="voor-pdf-uitdraai-google-chrome"><span class="header-section-number">2.1.3</span> Voor PDF-uitdraai: Google Chrome</h3>
+<p>Wanneer je het rapport als PDF wilt uitdraaien is een geupdate versie Google Chrome nodig. Als je versie van Google Chrome verouderd is zal er wel een uitvoer gemaakt worden, maar zullen de knoppen in de inhoudsgave niet goed werken.</p>
+<p>Om achter je Chrome versie te komen klik je in google chrome rechtsboven op de drie punten. Vervolgens: <strong>Instellingen &gt; Over Chrome</strong>. De versie moet ten minste <strong>Chrome 128 zijn</strong> (update van Augustus 2024).</p>
+</section>
+</section>
+<section id="bestanden-rapportagescript-downloaden-van-github" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="bestanden-rapportagescript-downloaden-van-github"><span class="header-section-number">2.2</span> Bestanden rapportagescript downloaden van Github</h2>
+<ul>
+<li><p>Ga naar de ‘repository’ <a href="https://github.com/ggdatascience/gmjv-landelijk-format">gmjv-landelijk-format</a> op de githubpagina van GGDAta.</p></li>
+<li><p>Klik op de groene knop <strong>Code</strong> en selecteer in het drop-down menu. “Download Zip”.</p></li>
+<li><p>Open het Zip-bestand en kies “Alles Uitpakken”. Selecteer een geschikte werkmap.</p></li>
+</ul>
+</section>
+<section id="r-project-openen-en-voorbeeldrapport-uitdraaien" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="r-project-openen-en-voorbeeldrapport-uitdraaien"><span class="header-section-number">2.3</span> R project openen en voorbeeldrapport uitdraaien</h2>
+<p>Er is een voorbeeldrapportage die gebruik maakt van fictieve data. Deze rapportage kan je als test uitdraaien. Als dit fout gaat is er waarschijnlijk iets verouderd aan je installatie van R, Rstudio of libraries.</p>
+<ul>
+<li><p>Open het bestand <strong>“gmjv-landelijk-format.Rproj”</strong> in Rstudio. Door het project te openen in plaats van een los bestand, is de werkmap automatisch ingesteld.</p></li>
+<li><p>Zoek rechtsonder in Rstudio bij “Files” het bestand <strong>“voorbeeld_rapportage.qmd”</strong> op en open dit door er op te klikken.</p></li>
+<li><p>Als je dit bestand hebt geopend zal Rstudio het aangeven als er nog ‘libraries’ zijn die je moet installeren. Er verschijnt dan een gele balk bovenaan het scherm. Klik in dat geval op “install” en wacht tot de pakketjes zijn geinstalleerd.</p></li>
+<li><p>Klik nu bovenaan het scherm op “Render”. R gaat nu de rapportage genereren en zal het opslaan als een html bestand <strong>“voorbeeld_rapportage.html”</strong> in de werkmap.</p></li>
+</ul>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -691,10 +725,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="docs/index-HSC-PC-9667.html" class="pagination-link" aria-label="Introductie">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introductie</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="beginnen.html" class="pagination-link" aria-label="Beginnen">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Beginnen</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="docs/rapport-uitdraaien-HSC-PC-9667.html" class="pagination-link" aria-label="Standaard rapportage uitdraaien">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Standaard rapportage uitdraaien</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

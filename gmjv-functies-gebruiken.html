@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="nl" xml:lang="nl"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.6.39">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -71,10 +71,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-e26003cea8cd680ca0c55a263523d882.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-77205cbbef6a5b90ba72edc25dea2156.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -252,7 +252,7 @@ Tip
 </div>
 <div class="callout-body-container callout-body">
 <p>In dit document wordt gebruikt gemaakt van de ‘pipe-operator’ <em>%&gt;%</em>.</p>
-<p>De pipe-operator stuurt een resultaat door naar de volgende functie. Op deze manier kunnen meerdere bewerkingen in R overzichtelijk aan elkaar gekoppeld worden. Lees <a href="#0">hier</a> een uitleg van de magrittr pipe (en de voordelen).</p>
+<p>De pipe-operator stuurt een resultaat door naar de volgende functie. Op deze manier kunnen meerdere bewerkingen in R overzichtelijk aan elkaar gekoppeld worden. <a href="https://research.sbcs.qmul.ac.uk/r.knell/intro_R_3rd_ed/pipelines-in-r.html#magrittr-pipes">Een uitleg van de magrittr pipe</a> (en de voordelen).</p>
 <p>Zonder de pipe-operator zou het aanroepen van maak_responstabel er zo uit zien:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">maak_responstabel</span>(<span class="at">data =</span> monitor_df, <span class="at">crossings =</span> <span class="st">"gender_2cat"</span>, ...)</span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Met pipe-operator</p>
@@ -291,7 +291,11 @@ Tip
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">val_label</span>(monitor_df<span class="sc">$</span>LVVTA404, <span class="dv">2</span>) <span class="ot">&lt;-</span> <span class="st">'Matig tot redelijk (cijfer 6 of 7)'</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">val_label</span>(monitor_df<span class="sc">$</span>LVVTA404, <span class="dv">3</span>) <span class="ot">&lt;-</span> <span class="st">'(heel) veel (cijfer 8 of hoger)'</span></span></code><button title="Kopieer naar klembord" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Zoals je ziet heeft val_label 2 argumenten nodig: - Het eerste argument: de variabele waar het over gaat. In dit geval gaat het over de variabele LVVTA404 in de dataset monitor_df, dus monitor_df$LVVTA404 - Het tweede argument: de waarde van de variabele waar het overgaat. De variabele LVVTA404 heeft 3 categorieën en per categorie wordt er een nieuw label toegewezen.</p>
+<p>Zoals je ziet heeft val_label 2 argumenten nodig:</p>
+<ul>
+<li>Het eerste argument: de variabele waar het over gaat. In dit geval gaat het over de variabele LVVTA404 in de dataset monitor_df, dus monitor_df$LVVTA404</li>
+<li>Het tweede argument: de waarde van de variabele waar het overgaat. De variabele LVVTA404 heeft 3 categorieën en per categorie wordt er een nieuw label toegewezen.</li>
+</ul>
 <p>Het stuk achter de &lt;- geeft aan wat het nieuwe label van deze waarde moet worden. Het nieuwe label van variabele LVVTA404 voor waarde 1 wordt met deze code dus ‘Weinig tot geen (cijfer 5 of lager)’.</p>
 <p>Een ander voorbeeld. In het eerste codeblok in de (voorbeeld)rapportage wordt val_label gebruikt om de namen van de gemeente en de regio aan te passen:</p>
 <div class="cell">
@@ -391,8 +395,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -503,7 +505,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
