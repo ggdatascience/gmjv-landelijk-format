@@ -6,7 +6,7 @@ In de volgende hoofdstukken worden verschillende grafiekfuncties uitgelegd en ho
 ::: callout-tip
 In dit document wordt gebruikt gemaakt van de 'pipe-operator' *%\>%*.
 
-De pipe-operator stuurt een resultaat door naar de volgende functie. Op deze manier kunnen meerdere bewerkingen in R overzichtelijk aan elkaar gekoppeld worden. Lees [hier](#0) een uitleg van de magrittr pipe (en de voordelen).
+De pipe-operator stuurt een resultaat door naar de volgende functie. Op deze manier kunnen meerdere bewerkingen in R overzichtelijk aan elkaar gekoppeld worden. [Een uitleg van de magrittr pipe](https://research.sbcs.qmul.ac.uk/r.knell/intro_R_3rd_ed/pipelines-in-r.html#magrittr-pipes) (en de voordelen).
 
 Zonder de pipe-operator zou het aanroepen van maak_responstabel er zo uit zien:
 
@@ -56,6 +56,7 @@ val_label(monitor_df$LVVTA404, 3) <- '(heel) veel (cijfer 8 of hoger)'
 ```
 
 Zoals je ziet heeft val_label 2 argumenten nodig:
+
 -   Het eerste argument: de variabele waar het over gaat. In dit geval gaat het over de variabele LVVTA404 in de dataset monitor_df, dus monitor_df$LVVTA404
 -   Het tweede argument: de waarde van de variabele waar het overgaat. De variabele LVVTA404 heeft 3 categorieën en per categorie wordt er een nieuw label toegewezen. 
 
