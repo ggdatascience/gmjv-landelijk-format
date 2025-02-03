@@ -1839,9 +1839,12 @@ maak_staafdiagram_meerdere_staven <- function(data, var_inhoud, var_crossing = N
   
   #Niveau moet ook een gesorteerde factorvariabele worden zodat kleurcoderingen altijd kloppen
   #Anders krijg je alfabetische indeling v kleuren.
+  
+  if(var_crossing != "leeg"){
   df_plot <- df_plot %>% 
     mutate(volgorde = match(niveau, namen_kleuren), #volgorde van factorvar bepalen op volgorde namen_kleuren
            niveau = fct_reorder(niveau,volgorde))
+  }
   
   #Als ongewogen = TRUE moeten ongewogen percentages uitgerekend worden. Dit is eigenlijk veel simpeler
   #en sneller door R berekend dan de gewogen data & zou idealiter ingebouwd worden op een manier waarbij R géén gewogen cijfers hoeft
