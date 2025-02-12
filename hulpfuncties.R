@@ -3464,7 +3464,7 @@ maak_vergelijking <- function(data, var_inhoud, variabele_label = NULL,
   if (length(niveaus) > 1) {
     
     warning("Je maakt een vergelijking tussen niveaus. 
-      Houdt er rekening mee dat deelnemers op een lager niveau (bv. gemeente)
+      Houd er rekening mee dat deelnemers op een lager niveau (bv. gemeente)
       ook aanwezig zijn op een hoger niveau (bv. regio) en deze vergelijking 
       dus statistisch niet correct is.")
     
